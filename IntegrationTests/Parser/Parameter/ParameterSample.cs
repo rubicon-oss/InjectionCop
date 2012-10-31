@@ -11,24 +11,43 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 using System;
+using System.Data;
+using System.Data.SqlClient;
 using InjectionCop.Attributes;
 
 namespace InjectionCop.IntegrationTests.Parser.Parameter
 {
   class ParameterSample: TypeParserSample
   {
-    public void FragmentOutParameterSafe()
+    public void BlackMtcUnsafeMethodParameter(string unsafeParam)
     {
-      string makeSafe;
-      FragmentOutParameter (out makeSafe);
-      RequiresSqlFragment(makeSafe);
+      IDbCommand command = new SqlCommand();
+      command.CommandText = unsafeParam;
     }
 
-    public void OutParameterUnsafe()
+    public void BlackMtcSafeMethodParameter([SqlFragment]string safeParam)
     {
-      string unSafe;
-      OutParameter(out unSafe);
+      IDbCommand command = new SqlCommand();
+      command.CommandText = safeParam;
+    }
+
+    public void FragmentOutParameterSafe()
+    {
+      // ReSharper disable RedundantAssignment
+      string staySafe = SafeSource();
+      // ReSharper restore RedundantAssignment
+      FragmentOutParameter (out staySafe);
+      RequiresSqlFragment(staySafe);
+    }
+
+    public void FragmentOutParameterUnsafe()
+    {
+      // ReSharper disable RedundantAssignment
+      string unSafe = UnsafeSource();
+      // ReSharper restore RedundantAssignment
+      FragmentOutParameter (out unSafe);
       RequiresSqlFragment(unSafe);
     }
 
@@ -37,9 +56,64 @@ namespace InjectionCop.IntegrationTests.Parser.Parameter
       safe = "safe";
     }
 
+    public void OutParameterUnsafeOperand()
+    {
+      // ReSharper disable RedundantAssignment
+      string unSafe = UnsafeSource();
+      // ReSharper restore RedundantAssignment
+      OutParameter(out unSafe);
+      RequiresSqlFragment(unSafe);
+    }
+
+    public void OutParameterSafeOperand()
+    {
+      // ReSharper disable RedundantAssignment
+      string turnUnsafe = SafeSource();
+      // ReSharper restore RedundantAssignment
+      OutParameter(out turnUnsafe);
+      RequiresSqlFragment(turnUnsafe);
+    }
+
     private void OutParameter(out string unSafe)
     {
       unSafe = "unsafe";
+    }
+
+    public void FragmentRefParameterSafe()
+    {
+      string staySafe = "";
+      FragmentRefParameter (ref staySafe, 0);
+      RequiresSqlFragment (staySafe);
+    }
+
+    public void FragmentRefParameterUnsafe()
+    {
+      string unSafe = UnsafeSource();
+      FragmentRefParameter (ref unSafe, 0);
+    }
+
+    private void FragmentRefParameter([SqlFragment] ref string safe, int dummy)
+    {
+      safe = "safe" + safe + dummy;
+    }
+
+    public void RefParameterUnsafeOperand()
+    {
+      string unSafe = UnsafeSource();
+      RefParameter (ref unSafe, 0);
+      RequiresSqlFragment (unSafe);
+    }
+
+    public void RefParameterSafeOperand()
+    {
+      string turnUnsafe = SafeSource();
+      RefParameter (ref turnUnsafe, 0);
+      RequiresSqlFragment (turnUnsafe);
+    }
+
+    private void RefParameter(ref string unSafe, int dummy)
+    {
+      unSafe = unSafe + dummy;
     }
   }
 }

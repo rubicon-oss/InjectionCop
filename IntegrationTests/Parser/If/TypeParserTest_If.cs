@@ -17,49 +17,52 @@ using InjectionCop.Parser;
 using Microsoft.FxCop.Sdk;
 using NUnit.Framework;
 
-namespace InjectionCop.IntegrationTests.Parser.AssignmentPropagation
+namespace InjectionCop.IntegrationTests.Parser.If
 {
-  class TypeParserTest_AssignmentPropagation: TypeParserTest
+  class TypeParserTest_If: TypeParserTest
   {
     [Test]
-    [Category("AssignmentPropagation")]
-    public void Check_ValidSafenessPropagation_NoProblem()
+    [Category("If")]
+    public void Check_ValidExampleInsideIf_NoProblem()
     {
-      Method sample = TestHelper.GetSample<AssignmentPropagationSample>("ValidSafenessPropagation");
+      Method sample = TestHelper.GetSample<IfSample>("ValidExampleInsideIf");
       ProblemCollection result = parser.Check (sample);
 
       Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
     }
 
     [Test]
-    [Category("AssignmentPropagation")]
-    public void Check_InvalidSafenessPropagationParameter_ReturnsProblem()
+    [Category("If")]
+    public void Check_InvalidExampleInsideIf_ReturnsProblem()
     {
-      TypeNode stringTypeNode = Helper.TypeNodeFactory<string>();
-      Method sample = TestHelper.GetSample<AssignmentPropagationSample>("InvalidSafenessPropagationParameter", stringTypeNode);
+      TypeNode intTypeNode = Helper.TypeNodeFactory<int>();
+      Method sample = TestHelper.GetSample<IfSample>("InvalidExampleInsideIf", intTypeNode, intTypeNode);
+      ProblemCollection result = parser.Check (sample);
+
+      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+    }
+
+    
+    [Test]
+    [Category("If")]
+    public void Check_InvalidExampleInsideElse_ReturnsProblem()
+    {
+      TypeNode intTypeNode = Helper.TypeNodeFactory<int>();
+      Method sample = TestHelper.GetSample<IfSample>("InvalidExampleInsideElse", intTypeNode, intTypeNode);
       ProblemCollection result = parser.Check (sample);
 
       Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
     }
 
     [Test]
-    [Category("AssignmentPropagation")]
-    public void Check_InvalidSafenessPropagationVariable_ReturnsProblem()
+    [Category("If")]
+    public void Check_UnsafeAssignmentInsideIf_ReturnsProblem()
     {
-      Method sample = TestHelper.GetSample<AssignmentPropagationSample>("InvalidSafenessPropagationVariable");
+      TypeNode intTypeNode = Helper.TypeNodeFactory<int>();
+      Method sample = TestHelper.GetSample<IfSample>("UnsafeAssignmentInsideIf", intTypeNode, intTypeNode);
       ProblemCollection result = parser.Check (sample);
 
       Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
-    }
-
-    [Test]
-    [Category("AssignmentPropagation")]
-    public void Check_ValidSafenessPropagationVariable_ReturnsProblem()
-    {
-      Method sample = TestHelper.GetSample<AssignmentPropagationSample>("ValidSafenessPropagationVariable");
-      ProblemCollection result = parser.Check (sample);
-
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
     }
   }
 }

@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 using System;
 using System.Data;
 using System.Data.SqlClient;
@@ -38,6 +39,16 @@ namespace InjectionCop.IntegrationTests.Parser.AssignmentPropagation
     {
       string temp = SafeSource();
       temp = UnsafeSource(temp);
+      IDbCommand command = new SqlCommand();
+      command.CommandText = temp;
+    }
+
+    public void ValidSafenessPropagationVariable()
+    {
+      // ReSharper disable RedundantAssignment
+      string temp = UnsafeSource();
+      // ReSharper restore RedundantAssignment
+      temp = SafeSource();
       IDbCommand command = new SqlCommand();
       command.CommandText = temp;
     }

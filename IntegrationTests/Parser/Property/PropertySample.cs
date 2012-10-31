@@ -14,16 +14,28 @@
 
 using System;
 
-namespace InjectionCop
+namespace InjectionCop.IntegrationTests.Parser.Property
 {
-  [Serializable]
-  class InjectionCopException: Exception
+  class PropertySample: TypeParserSample
   {
-    public InjectionCopException() { }
-    public InjectionCopException(string message) : base(message) { }
-    public InjectionCopException(string message, System.Exception inner) : base(message, inner) { }
+    public void CallWithUnsafeProperty()
+    {
+      RequiresSqlFragment (UnsafeProp);
+    }
 
-    protected InjectionCopException(System.Runtime.Serialization.SerializationInfo info,
-        System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+    public void CallWithSafeProperty()
+    {
+      RequiresSqlFragment (SafeProp);
+    }
+
+    public void SetPropSafe()
+    {
+      SafeProp = "safe";
+    }
+
+    public void SetPropUnsafe()
+    {
+      SafeProp = UnsafeSource();
+    }
   }
 }

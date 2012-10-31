@@ -68,8 +68,12 @@
     <Compile Include="Parser\AttributePropagation\AttributePropagationSample.cs" />
     <Compile Include="Parser\BlackMethod\BlackMethodSample.cs" />
     <Compile Include="Parser\IDbCommandBlackTypesStub.cs" />
+    <Compile Include="Parser\If\IfSample.cs" />
+    <Compile Include="Parser\If\TypeParserTest_If.cs" />
     <Compile Include="Parser\Parameter\ParameterSample.cs" />
     <Compile Include="Parser\Parameter\TypeParserTest_Parameter.cs" />
+    <Compile Include="Parser\Property\PropertySample.cs" />
+    <Compile Include="Parser\Property\TypeParserTest_Property.cs" />
     <Compile Include="Parser\TestHelper.cs" />
     <Compile Include="Parser\AssignmentPropagation\TypeParserTest_AssignmentPropagation.cs" />
     <Compile Include="Parser\AttributePropagation\TypeParserTest_AttributePropagation.cs" />
@@ -87,6 +91,7 @@
   <ItemGroup>
     <None Include="IntegrationTests.licenseheader" />
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

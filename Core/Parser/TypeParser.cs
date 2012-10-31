@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +37,7 @@ namespace InjectionCop.Parser
       Method method = member as Method;
       if(method == null)
         return Problems;
- 
+      
       foreach (Parameter parameter in method.Parameters)
       {
         if(Is<SqlFragment>(parameter))
@@ -47,6 +48,14 @@ namespace InjectionCop.Parser
       
       foreach (Statement topLevelStatement in method.Body.Statements)
       {
+        /*
+        if(topLevelStatement is Branch)
+        {
+          Console.WriteLine("got branch");
+          Branch branch = topLevelStatement as Branch;
+          branch.
+        }*/
+
         Block methodBodyBlock = topLevelStatement as Block;
         if (methodBodyBlock == null)
           continue;
@@ -65,7 +74,7 @@ namespace InjectionCop.Parser
             
             case NodeType.AssignmentStatement:
               AssignmentStatement asgn = (AssignmentStatement) stmt;
-              Identifier symbol = GetIdentifier(asgn.Target);
+              Identifier symbol = GetVariableIdentifier(asgn.Target);
               safeSymbols[symbol] = IsSafe(asgn.Source);
 
               Check (asgn.Source);
@@ -81,7 +90,7 @@ namespace InjectionCop.Parser
       return Problems;
     }
 
-    private Identifier GetIdentifier (Expression target)
+    private Identifier GetVariableIdentifier (Expression target)
     {
       if(target is Local)
         return ((Local) target).Name;
@@ -89,7 +98,22 @@ namespace InjectionCop.Parser
       if(target is Parameter)
         return ((Parameter) target).Name;
 
+      if(target is UnaryExpression)
+        return GetVariableIdentifier (((UnaryExpression) target).Operand);
+
       throw new InjectionCopException("Failed to extract Identifier");
+    }
+
+    private bool IsVariable(Expression target)
+    {
+      if(target is UnaryExpression)
+      {
+        Expression operand = ((UnaryExpression) target).Operand;
+        return IsVariable (operand);
+      }
+
+      return target is Local
+             || target is Parameter;
     }
 
     private void Check (Expression expression)
@@ -116,9 +140,13 @@ namespace InjectionCop.Parser
       Method method = ExtractMethod (mtc);
       for(int i = 0; i < mtc.Operands.Count; i++)
       {
-        if(method.Parameters[i].IsOut)
+        if(!IsVariable(mtc.Operands[i]))
+          continue;
+
+        if( method.Parameters[i].IsOut 
+            || (!method.Parameters[i].IsOut && !method.Parameters[i].IsIn))
         {
-          Identifier symbol = GetIdentifier(mtc.Operands[i]);
+          Identifier symbol = GetVariableIdentifier(mtc.Operands[i]);
           bool safeness = Contains<SqlFragment> (method.Parameters[i].Attributes);
           safeSymbols[symbol] = safeness;
         }
@@ -135,8 +163,7 @@ namespace InjectionCop.Parser
       {
         Parameter parameter = (Parameter) expression;
         if(safeSymbols.ContainsKey(parameter.Name))
-          tableLookup = safeSymbols[parameter.Name];
-        
+          tableLookup = safeSymbols[parameter.Name];        
       }
 
       if(expression is Local)
@@ -144,7 +171,6 @@ namespace InjectionCop.Parser
         Local local = (Local) expression;
         if(safeSymbols.ContainsKey(local.Name))
           tableLookup = safeSymbols[local.Name];
-        
       }
 
       bool safeMethodCall = false;
@@ -153,6 +179,9 @@ namespace InjectionCop.Parser
         Method mtd = ExtractMethod((MethodCall) expression);
         safeMethodCall = Contains<SqlFragment> (mtd.ReturnAttributes);
       }
+
+      if(expression is UnaryExpression)
+        return IsSafe(((UnaryExpression) expression).Operand);
 
       return expressionCheck || tableLookup || safeMethodCall;
     }

@@ -11,8 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 using System;
-using InjectionCop.Parser;
 using Microsoft.FxCop.Sdk;
 using NUnit.Framework;
 
@@ -20,28 +20,6 @@ namespace InjectionCop.IntegrationTests.Parser.BlackMethod
 {
   class TypeParserTest_BlackMethod: TypeParserTest
   {
-    [Test]
-    [Category("BlackMethod")]
-    public void Check_BlackMtcUnsafeMethodParameter_ReturnsProblem()
-    {
-      TypeNode stringTypeNode = Helper.TypeNodeFactory<string>();
-      Method sample = TestHelper.GetSample<BlackMethodSample>("BlackMtcUnsafeMethodParameter", stringTypeNode);
-      ProblemCollection result = parser.Check(sample);
-      
-      Assert.That(TestHelper.ContainsProblemID("IC_SQLi", result), Is.True);
-    }
-
-    [Test]
-    [Category("BlackMethod")]
-    public void Check_BlackMtcSafeMethodParameter_NoProblem()
-    {
-      TypeNode stringTypeNode = InjectionCop.Parser.Helper.TypeNodeFactory<string>();
-      Method sample = TestHelper.GetSample<BlackMethodSample>("BlackMtcSafeMethodParameter", stringTypeNode);
-      ProblemCollection result = parser.Check(sample);
-      
-      Assert.That(TestHelper.ContainsProblemID("IC_SQLi", result), Is.False);
-    }
-    
     [Test]
     [Category("BlackMethod")]
     public void Check_BlackMtcLiteral_NoProblem()

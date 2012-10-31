@@ -11,27 +11,15 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 using System;
 using System.Data;
 using System.Data.SqlClient;
-using InjectionCop.Attributes;
 
 namespace InjectionCop.IntegrationTests.Parser.BlackMethod
 {
   class BlackMethodSample: TypeParserSample
   {
-    public void BlackMtcUnsafeMethodParameter(string unsafeParam)
-    {
-      IDbCommand command = new SqlCommand();
-      command.CommandText = unsafeParam;
-    }
-
-    public void BlackMtcSafeMethodParameter([SqlFragment]string safeParam)
-    {
-      IDbCommand command = new SqlCommand();
-      command.CommandText = safeParam;
-    }
-
     public void BlackMtcLiteral()
     {
       IDbCommand command = new SqlCommand();
