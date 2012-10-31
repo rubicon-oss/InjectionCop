@@ -1,0 +1,384 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--This file represents the results of running a test suite-->
+<test-results name="C:\Development\Static Code Analysis\InjectionCop\InjectionCopTest.nunit" total="14" errors="14" failures="0" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2012-10-25" time="11:49:36">
+  <environment nunit-version="2.6.2.12296" clr-version="2.0.50727.6387" os-version="Microsoft Windows NT 6.2.9200.0" platform="Win32NT" cwd="C:\Development\NUnit-2.6.2\bin" machine-name="W0384" user="michael.racz" user-domain="RUBICON" />
+  <culture-info current-culture="de-AT" current-uiculture="en-US" />
+  <test-suite type="Project" name="C:\Development\Static Code Analysis\InjectionCop\InjectionCopTest.nunit" executed="True" result="Failure" success="False" time="0.406" asserts="0">
+    <results>
+      <test-suite type="Assembly" name="C:\Development\Static Code Analysis\InjectionCop\IntegrationTests\bin\Debug\InjectionCop.IntegrationTests.dll" executed="True" result="Failure" success="False" time="0.390" asserts="0">
+        <results>
+          <test-suite type="Namespace" name="InjectionCop" executed="True" result="Failure" success="False" time="0.390" asserts="0">
+            <results>
+              <test-suite type="Namespace" name="IntegrationTests" executed="True" result="Failure" success="False" time="0.390" asserts="0">
+                <results>
+                  <test-suite type="Namespace" name="Parser" executed="True" result="Failure" success="False" time="0.390" asserts="0">
+                    <results>
+                      <test-suite type="TestFixture" name="TypeParserTest" executed="True" result="Failure" success="False" time="0.374" asserts="0">
+                        <results>
+                          <test-case name="InjectionCop.IntegrationTests.Parser.TypeParserTest.Check_BlackMtcLiteral_NoProblem" executed="True" result="Error" success="False" time="0.218" asserts="0">
+                            <failure>
+                              <message><![CDATA[Microsoft.FxCop.Sdk.InvalidMetadataException : The following error was encountered while reading module 'InjectionCop.IntegrationTests': Assembly reference cannot be resolved: InjectionCop, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null.]]></message>
+                              <stack-trace><![CDATA[at Microsoft.FxCop.Sdk.Reader.HandleError(ModuleNode mod, String errorMessage)
+at Microsoft.FxCop.Sdk.Reader.GetAssemblyFromReference(AssemblyReference assemblyReference)
+at Microsoft.FxCop.Sdk.AssemblyReference.get_Assembly()
+at Microsoft.FxCop.Sdk.Reader.GetTypeFromRef(Int32 i, Boolean expectStruct)
+at Microsoft.FxCop.Sdk.Reader.GetTypeFromRef(Int32 i)
+at Microsoft.FxCop.Sdk.Reader.GetMemberFromRef(Int32 i, TypeNodeCollection& varArgTypes, Int32 numGenericArgs)
+at Microsoft.FxCop.Sdk.Reader.GetConstructorDefOrRef(Int32 codedIndex, TypeNodeCollection& varArgTypes)
+at Microsoft.FxCop.Sdk.Reader.GetCustomAttribute(Int32 i)
+at Microsoft.FxCop.Sdk.Reader.GetCustomAttributesFor(Int32 parentIndex)
+at Microsoft.FxCop.Sdk.Reader.AddMoreStuffToParameters(Method method, ParameterCollection parameters, Int32 start, Int32 end)
+at Microsoft.FxCop.Sdk.Reader.GetMethodFromDef(Int32 index, TypeNode declaringType)
+at Microsoft.FxCop.Sdk.Reader.AddMethodsToType(TypeNode type, MethodPtrRow[] methodPtrs, Int32 start, Int32 end)
+at Microsoft.FxCop.Sdk.Reader.GetTypeMembers(TypeNode type, Object handle)
+at Microsoft.FxCop.Sdk.TypeNode.get_Members()
+at Microsoft.FxCop.Sdk.TypeNode.GetMembersNamed(Identifier name)
+at Microsoft.FxCop.Sdk.TypeNode.GetMethod(Identifier name, TypeNode[] types)
+at InjectionCop.Parser.Helper.MethodFactory[T](Identifier methodName, TypeNode[] methodParameters) in c:\Development\Static Code Analysis\InjectionCop\Core\Parser\Helper.cs:line 24
+at InjectionCop.IntegrationTests.Parser.TestHelper.GetSample(String methodName, TypeNode[] methodParameters) in c:\Development\Static Code Analysis\InjectionCop\IntegrationTests\Parser\TestHelper.cs:line 18
+at InjectionCop.IntegrationTests.Parser.TypeParserTest.Check_BlackMtcLiteral_NoProblem() in c:\Development\Static Code Analysis\InjectionCop\IntegrationTests\Parser\TypeParserTest.cs:line 45
+]]></stack-trace>
+                            </failure>
+                          </test-case>
+                          <test-case name="InjectionCop.IntegrationTests.Parser.TypeParserTest.Check_BlackMtcSafeMethodParameter_NoProblem" executed="True" result="Error" success="False" time="0.000" asserts="0">
+                            <failure>
+                              <message><![CDATA[Microsoft.FxCop.Sdk.InvalidMetadataException : The following error was encountered while reading module 'InjectionCop.IntegrationTests': Assembly reference cannot be resolved: InjectionCop, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null.]]></message>
+                              <stack-trace><![CDATA[at Microsoft.FxCop.Sdk.Reader.HandleError(ModuleNode mod, String errorMessage)
+at Microsoft.FxCop.Sdk.Reader.GetAssemblyFromReference(AssemblyReference assemblyReference)
+at Microsoft.FxCop.Sdk.AssemblyReference.get_Assembly()
+at Microsoft.FxCop.Sdk.Reader.GetTypeFromRef(Int32 i, Boolean expectStruct)
+at Microsoft.FxCop.Sdk.Reader.GetTypeFromRef(Int32 i)
+at Microsoft.FxCop.Sdk.Reader.GetMemberFromRef(Int32 i, TypeNodeCollection& varArgTypes, Int32 numGenericArgs)
+at Microsoft.FxCop.Sdk.Reader.GetConstructorDefOrRef(Int32 codedIndex, TypeNodeCollection& varArgTypes)
+at Microsoft.FxCop.Sdk.Reader.GetCustomAttribute(Int32 i)
+at Microsoft.FxCop.Sdk.Reader.GetCustomAttributesFor(Int32 parentIndex)
+at Microsoft.FxCop.Sdk.Reader.AddMoreStuffToParameters(Method method, ParameterCollection parameters, Int32 start, Int32 end)
+at Microsoft.FxCop.Sdk.Reader.GetMethodFromDef(Int32 index, TypeNode declaringType)
+at Microsoft.FxCop.Sdk.Reader.AddMethodsToType(TypeNode type, MethodPtrRow[] methodPtrs, Int32 start, Int32 end)
+at Microsoft.FxCop.Sdk.Reader.GetTypeMembers(TypeNode type, Object handle)
+at Microsoft.FxCop.Sdk.TypeNode.get_Members()
+at Microsoft.FxCop.Sdk.TypeNode.GetMembersNamed(Identifier name)
+at Microsoft.FxCop.Sdk.TypeNode.GetMethod(Identifier name, TypeNode[] types)
+at InjectionCop.Parser.Helper.MethodFactory[T](Identifier methodName, TypeNode[] methodParameters) in c:\Development\Static Code Analysis\InjectionCop\Core\Parser\Helper.cs:line 24
+at InjectionCop.IntegrationTests.Parser.TestHelper.GetSample(String methodName, TypeNode[] methodParameters) in c:\Development\Static Code Analysis\InjectionCop\IntegrationTests\Parser\TestHelper.cs:line 18
+at InjectionCop.IntegrationTests.Parser.TypeParserTest.Check_BlackMtcSafeMethodParameter_NoProblem() in c:\Development\Static Code Analysis\InjectionCop\IntegrationTests\Parser\TypeParserTest.cs:line 36
+]]></stack-trace>
+                            </failure>
+                          </test-case>
+                          <test-case name="InjectionCop.IntegrationTests.Parser.TypeParserTest.Check_BlackMtcSafeSource_NoProblem" executed="True" result="Error" success="False" time="0.000" asserts="0">
+                            <failure>
+                              <message><![CDATA[Microsoft.FxCop.Sdk.InvalidMetadataException : The following error was encountered while reading module 'InjectionCop.IntegrationTests': Assembly reference cannot be resolved: InjectionCop, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null.]]></message>
+                              <stack-trace><![CDATA[at Microsoft.FxCop.Sdk.Reader.HandleError(ModuleNode mod, String errorMessage)
+at Microsoft.FxCop.Sdk.Reader.GetAssemblyFromReference(AssemblyReference assemblyReference)
+at Microsoft.FxCop.Sdk.AssemblyReference.get_Assembly()
+at Microsoft.FxCop.Sdk.Reader.GetTypeFromRef(Int32 i, Boolean expectStruct)
+at Microsoft.FxCop.Sdk.Reader.GetTypeFromRef(Int32 i)
+at Microsoft.FxCop.Sdk.Reader.GetMemberFromRef(Int32 i, TypeNodeCollection& varArgTypes, Int32 numGenericArgs)
+at Microsoft.FxCop.Sdk.Reader.GetConstructorDefOrRef(Int32 codedIndex, TypeNodeCollection& varArgTypes)
+at Microsoft.FxCop.Sdk.Reader.GetCustomAttribute(Int32 i)
+at Microsoft.FxCop.Sdk.Reader.GetCustomAttributesFor(Int32 parentIndex)
+at Microsoft.FxCop.Sdk.Reader.AddMoreStuffToParameters(Method method, ParameterCollection parameters, Int32 start, Int32 end)
+at Microsoft.FxCop.Sdk.Reader.GetMethodFromDef(Int32 index, TypeNode declaringType)
+at Microsoft.FxCop.Sdk.Reader.AddMethodsToType(TypeNode type, MethodPtrRow[] methodPtrs, Int32 start, Int32 end)
+at Microsoft.FxCop.Sdk.Reader.GetTypeMembers(TypeNode type, Object handle)
+at Microsoft.FxCop.Sdk.TypeNode.get_Members()
+at Microsoft.FxCop.Sdk.TypeNode.GetMembersNamed(Identifier name)
+at Microsoft.FxCop.Sdk.TypeNode.GetMethod(Identifier name, TypeNode[] types)
+at InjectionCop.Parser.Helper.MethodFactory[T](Identifier methodName, TypeNode[] methodParameters) in c:\Development\Static Code Analysis\InjectionCop\Core\Parser\Helper.cs:line 24
+at InjectionCop.IntegrationTests.Parser.TestHelper.GetSample(String methodName, TypeNode[] methodParameters) in c:\Development\Static Code Analysis\InjectionCop\IntegrationTests\Parser\TestHelper.cs:line 18
+at InjectionCop.IntegrationTests.Parser.TypeParserTest.Check_BlackMtcSafeSource_NoProblem() in c:\Development\Static Code Analysis\InjectionCop\IntegrationTests\Parser\TypeParserTest.cs:line 63
+]]></stack-trace>
+                            </failure>
+                          </test-case>
+                          <test-case name="InjectionCop.IntegrationTests.Parser.TypeParserTest.Check_BlackMtcUnsafeMethodParameter_ReturnsProblem" executed="True" result="Error" success="False" time="0.000" asserts="0">
+                            <failure>
+                              <message><![CDATA[Microsoft.FxCop.Sdk.InvalidMetadataException : The following error was encountered while reading module 'InjectionCop.IntegrationTests': Assembly reference cannot be resolved: InjectionCop, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null.]]></message>
+                              <stack-trace><![CDATA[at Microsoft.FxCop.Sdk.Reader.HandleError(ModuleNode mod, String errorMessage)
+at Microsoft.FxCop.Sdk.Reader.GetAssemblyFromReference(AssemblyReference assemblyReference)
+at Microsoft.FxCop.Sdk.AssemblyReference.get_Assembly()
+at Microsoft.FxCop.Sdk.Reader.GetTypeFromRef(Int32 i, Boolean expectStruct)
+at Microsoft.FxCop.Sdk.Reader.GetTypeFromRef(Int32 i)
+at Microsoft.FxCop.Sdk.Reader.GetMemberFromRef(Int32 i, TypeNodeCollection& varArgTypes, Int32 numGenericArgs)
+at Microsoft.FxCop.Sdk.Reader.GetConstructorDefOrRef(Int32 codedIndex, TypeNodeCollection& varArgTypes)
+at Microsoft.FxCop.Sdk.Reader.GetCustomAttribute(Int32 i)
+at Microsoft.FxCop.Sdk.Reader.GetCustomAttributesFor(Int32 parentIndex)
+at Microsoft.FxCop.Sdk.Reader.AddMoreStuffToParameters(Method method, ParameterCollection parameters, Int32 start, Int32 end)
+at Microsoft.FxCop.Sdk.Reader.GetMethodFromDef(Int32 index, TypeNode declaringType)
+at Microsoft.FxCop.Sdk.Reader.AddMethodsToType(TypeNode type, MethodPtrRow[] methodPtrs, Int32 start, Int32 end)
+at Microsoft.FxCop.Sdk.Reader.GetTypeMembers(TypeNode type, Object handle)
+at Microsoft.FxCop.Sdk.TypeNode.get_Members()
+at Microsoft.FxCop.Sdk.TypeNode.GetMembersNamed(Identifier name)
+at Microsoft.FxCop.Sdk.TypeNode.GetMethod(Identifier name, TypeNode[] types)
+at InjectionCop.Parser.Helper.MethodFactory[T](Identifier methodName, TypeNode[] methodParameters) in c:\Development\Static Code Analysis\InjectionCop\Core\Parser\Helper.cs:line 24
+at InjectionCop.IntegrationTests.Parser.TestHelper.GetSample(String methodName, TypeNode[] methodParameters) in c:\Development\Static Code Analysis\InjectionCop\IntegrationTests\Parser\TestHelper.cs:line 18
+at InjectionCop.IntegrationTests.Parser.TypeParserTest.Check_BlackMtcUnsafeMethodParameter_ReturnsProblem() in c:\Development\Static Code Analysis\InjectionCop\IntegrationTests\Parser\TypeParserTest.cs:line 26
+]]></stack-trace>
+                            </failure>
+                          </test-case>
+                          <test-case name="InjectionCop.IntegrationTests.Parser.TypeParserTest.Check_BlackMtcUnsafeSource_ReturnsProblem" executed="True" result="Error" success="False" time="0.000" asserts="0">
+                            <failure>
+                              <message><![CDATA[Microsoft.FxCop.Sdk.InvalidMetadataException : The following error was encountered while reading module 'InjectionCop.IntegrationTests': Assembly reference cannot be resolved: InjectionCop, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null.]]></message>
+                              <stack-trace><![CDATA[at Microsoft.FxCop.Sdk.Reader.HandleError(ModuleNode mod, String errorMessage)
+at Microsoft.FxCop.Sdk.Reader.GetAssemblyFromReference(AssemblyReference assemblyReference)
+at Microsoft.FxCop.Sdk.AssemblyReference.get_Assembly()
+at Microsoft.FxCop.Sdk.Reader.GetTypeFromRef(Int32 i, Boolean expectStruct)
+at Microsoft.FxCop.Sdk.Reader.GetTypeFromRef(Int32 i)
+at Microsoft.FxCop.Sdk.Reader.GetMemberFromRef(Int32 i, TypeNodeCollection& varArgTypes, Int32 numGenericArgs)
+at Microsoft.FxCop.Sdk.Reader.GetConstructorDefOrRef(Int32 codedIndex, TypeNodeCollection& varArgTypes)
+at Microsoft.FxCop.Sdk.Reader.GetCustomAttribute(Int32 i)
+at Microsoft.FxCop.Sdk.Reader.GetCustomAttributesFor(Int32 parentIndex)
+at Microsoft.FxCop.Sdk.Reader.AddMoreStuffToParameters(Method method, ParameterCollection parameters, Int32 start, Int32 end)
+at Microsoft.FxCop.Sdk.Reader.GetMethodFromDef(Int32 index, TypeNode declaringType)
+at Microsoft.FxCop.Sdk.Reader.AddMethodsToType(TypeNode type, MethodPtrRow[] methodPtrs, Int32 start, Int32 end)
+at Microsoft.FxCop.Sdk.Reader.GetTypeMembers(TypeNode type, Object handle)
+at Microsoft.FxCop.Sdk.TypeNode.get_Members()
+at Microsoft.FxCop.Sdk.TypeNode.GetMembersNamed(Identifier name)
+at Microsoft.FxCop.Sdk.TypeNode.GetMethod(Identifier name, TypeNode[] types)
+at InjectionCop.Parser.Helper.MethodFactory[T](Identifier methodName, TypeNode[] methodParameters) in c:\Development\Static Code Analysis\InjectionCop\Core\Parser\Helper.cs:line 24
+at InjectionCop.IntegrationTests.Parser.TestHelper.GetSample(String methodName, TypeNode[] methodParameters) in c:\Development\Static Code Analysis\InjectionCop\IntegrationTests\Parser\TestHelper.cs:line 18
+at InjectionCop.IntegrationTests.Parser.TypeParserTest.Check_BlackMtcUnsafeSource_ReturnsProblem() in c:\Development\Static Code Analysis\InjectionCop\IntegrationTests\Parser\TypeParserTest.cs:line 54
+]]></stack-trace>
+                            </failure>
+                          </test-case>
+                          <test-case name="InjectionCop.IntegrationTests.Parser.TypeParserTest.Check_BlackMtcUnsafeSourceWithSafeParameter_ReturnsProblem" executed="True" result="Error" success="False" time="0.016" asserts="0">
+                            <failure>
+                              <message><![CDATA[Microsoft.FxCop.Sdk.InvalidMetadataException : The following error was encountered while reading module 'InjectionCop.IntegrationTests': Assembly reference cannot be resolved: InjectionCop, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null.]]></message>
+                              <stack-trace><![CDATA[at Microsoft.FxCop.Sdk.Reader.HandleError(ModuleNode mod, String errorMessage)
+at Microsoft.FxCop.Sdk.Reader.GetAssemblyFromReference(AssemblyReference assemblyReference)
+at Microsoft.FxCop.Sdk.AssemblyReference.get_Assembly()
+at Microsoft.FxCop.Sdk.Reader.GetTypeFromRef(Int32 i, Boolean expectStruct)
+at Microsoft.FxCop.Sdk.Reader.GetTypeFromRef(Int32 i)
+at Microsoft.FxCop.Sdk.Reader.GetMemberFromRef(Int32 i, TypeNodeCollection& varArgTypes, Int32 numGenericArgs)
+at Microsoft.FxCop.Sdk.Reader.GetConstructorDefOrRef(Int32 codedIndex, TypeNodeCollection& varArgTypes)
+at Microsoft.FxCop.Sdk.Reader.GetCustomAttribute(Int32 i)
+at Microsoft.FxCop.Sdk.Reader.GetCustomAttributesFor(Int32 parentIndex)
+at Microsoft.FxCop.Sdk.Reader.AddMoreStuffToParameters(Method method, ParameterCollection parameters, Int32 start, Int32 end)
+at Microsoft.FxCop.Sdk.Reader.GetMethodFromDef(Int32 index, TypeNode declaringType)
+at Microsoft.FxCop.Sdk.Reader.AddMethodsToType(TypeNode type, MethodPtrRow[] methodPtrs, Int32 start, Int32 end)
+at Microsoft.FxCop.Sdk.Reader.GetTypeMembers(TypeNode type, Object handle)
+at Microsoft.FxCop.Sdk.TypeNode.get_Members()
+at Microsoft.FxCop.Sdk.TypeNode.GetMembersNamed(Identifier name)
+at Microsoft.FxCop.Sdk.TypeNode.GetMethod(Identifier name, TypeNode[] types)
+at InjectionCop.Parser.Helper.MethodFactory[T](Identifier methodName, TypeNode[] methodParameters) in c:\Development\Static Code Analysis\InjectionCop\Core\Parser\Helper.cs:line 24
+at InjectionCop.IntegrationTests.Parser.TestHelper.GetSample(String methodName, TypeNode[] methodParameters) in c:\Development\Static Code Analysis\InjectionCop\IntegrationTests\Parser\TestHelper.cs:line 18
+at InjectionCop.IntegrationTests.Parser.TypeParserTest.Check_BlackMtcUnsafeSourceWithSafeParameter_ReturnsProblem() in c:\Development\Static Code Analysis\InjectionCop\IntegrationTests\Parser\TypeParserTest.cs:line 72
+]]></stack-trace>
+                            </failure>
+                          </test-case>
+                          <test-case name="InjectionCop.IntegrationTests.Parser.TypeParserTest.Check_InvalidSafenessPropagationParameter_ReturnsProblem" executed="True" result="Error" success="False" time="0.000" asserts="0">
+                            <failure>
+                              <message><![CDATA[Microsoft.FxCop.Sdk.InvalidMetadataException : The following error was encountered while reading module 'InjectionCop.IntegrationTests': Assembly reference cannot be resolved: InjectionCop, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null.]]></message>
+                              <stack-trace><![CDATA[at Microsoft.FxCop.Sdk.Reader.HandleError(ModuleNode mod, String errorMessage)
+at Microsoft.FxCop.Sdk.Reader.GetAssemblyFromReference(AssemblyReference assemblyReference)
+at Microsoft.FxCop.Sdk.AssemblyReference.get_Assembly()
+at Microsoft.FxCop.Sdk.Reader.GetTypeFromRef(Int32 i, Boolean expectStruct)
+at Microsoft.FxCop.Sdk.Reader.GetTypeFromRef(Int32 i)
+at Microsoft.FxCop.Sdk.Reader.GetMemberFromRef(Int32 i, TypeNodeCollection& varArgTypes, Int32 numGenericArgs)
+at Microsoft.FxCop.Sdk.Reader.GetConstructorDefOrRef(Int32 codedIndex, TypeNodeCollection& varArgTypes)
+at Microsoft.FxCop.Sdk.Reader.GetCustomAttribute(Int32 i)
+at Microsoft.FxCop.Sdk.Reader.GetCustomAttributesFor(Int32 parentIndex)
+at Microsoft.FxCop.Sdk.Reader.AddMoreStuffToParameters(Method method, ParameterCollection parameters, Int32 start, Int32 end)
+at Microsoft.FxCop.Sdk.Reader.GetMethodFromDef(Int32 index, TypeNode declaringType)
+at Microsoft.FxCop.Sdk.Reader.AddMethodsToType(TypeNode type, MethodPtrRow[] methodPtrs, Int32 start, Int32 end)
+at Microsoft.FxCop.Sdk.Reader.GetTypeMembers(TypeNode type, Object handle)
+at Microsoft.FxCop.Sdk.TypeNode.get_Members()
+at Microsoft.FxCop.Sdk.TypeNode.GetMembersNamed(Identifier name)
+at Microsoft.FxCop.Sdk.TypeNode.GetMethod(Identifier name, TypeNode[] types)
+at InjectionCop.Parser.Helper.MethodFactory[T](Identifier methodName, TypeNode[] methodParameters) in c:\Development\Static Code Analysis\InjectionCop\Core\Parser\Helper.cs:line 24
+at InjectionCop.IntegrationTests.Parser.TestHelper.GetSample(String methodName, TypeNode[] methodParameters) in c:\Development\Static Code Analysis\InjectionCop\IntegrationTests\Parser\TestHelper.cs:line 18
+at InjectionCop.IntegrationTests.Parser.TypeParserTest.Check_InvalidSafenessPropagationParameter_ReturnsProblem() in c:\Development\Static Code Analysis\InjectionCop\IntegrationTests\Parser\TypeParserTest.cs:line 136
+]]></stack-trace>
+                            </failure>
+                          </test-case>
+                          <test-case name="InjectionCop.IntegrationTests.Parser.TypeParserTest.Check_InvalidSafenessPropagationVariable_ReturnsProblem" executed="True" result="Error" success="False" time="0.000" asserts="0">
+                            <categories>
+                              <category name="safeness propagation by assignment" />
+                            </categories>
+                            <failure>
+                              <message><![CDATA[Microsoft.FxCop.Sdk.InvalidMetadataException : The following error was encountered while reading module 'InjectionCop.IntegrationTests': Assembly reference cannot be resolved: InjectionCop, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null.]]></message>
+                              <stack-trace><![CDATA[at Microsoft.FxCop.Sdk.Reader.HandleError(ModuleNode mod, String errorMessage)
+at Microsoft.FxCop.Sdk.Reader.GetAssemblyFromReference(AssemblyReference assemblyReference)
+at Microsoft.FxCop.Sdk.AssemblyReference.get_Assembly()
+at Microsoft.FxCop.Sdk.Reader.GetTypeFromRef(Int32 i, Boolean expectStruct)
+at Microsoft.FxCop.Sdk.Reader.GetTypeFromRef(Int32 i)
+at Microsoft.FxCop.Sdk.Reader.GetMemberFromRef(Int32 i, TypeNodeCollection& varArgTypes, Int32 numGenericArgs)
+at Microsoft.FxCop.Sdk.Reader.GetConstructorDefOrRef(Int32 codedIndex, TypeNodeCollection& varArgTypes)
+at Microsoft.FxCop.Sdk.Reader.GetCustomAttribute(Int32 i)
+at Microsoft.FxCop.Sdk.Reader.GetCustomAttributesFor(Int32 parentIndex)
+at Microsoft.FxCop.Sdk.Reader.AddMoreStuffToParameters(Method method, ParameterCollection parameters, Int32 start, Int32 end)
+at Microsoft.FxCop.Sdk.Reader.GetMethodFromDef(Int32 index, TypeNode declaringType)
+at Microsoft.FxCop.Sdk.Reader.AddMethodsToType(TypeNode type, MethodPtrRow[] methodPtrs, Int32 start, Int32 end)
+at Microsoft.FxCop.Sdk.Reader.GetTypeMembers(TypeNode type, Object handle)
+at Microsoft.FxCop.Sdk.TypeNode.get_Members()
+at Microsoft.FxCop.Sdk.TypeNode.GetMembersNamed(Identifier name)
+at Microsoft.FxCop.Sdk.TypeNode.GetMethod(Identifier name, TypeNode[] types)
+at InjectionCop.Parser.Helper.MethodFactory[T](Identifier methodName, TypeNode[] methodParameters) in c:\Development\Static Code Analysis\InjectionCop\Core\Parser\Helper.cs:line 24
+at InjectionCop.IntegrationTests.Parser.TestHelper.GetSample(String methodName, TypeNode[] methodParameters) in c:\Development\Static Code Analysis\InjectionCop\IntegrationTests\Parser\TestHelper.cs:line 18
+at InjectionCop.IntegrationTests.Parser.TypeParserTest.Check_InvalidSafenessPropagationVariable_ReturnsProblem() in c:\Development\Static Code Analysis\InjectionCop\IntegrationTests\Parser\TypeParserTest.cs:line 146
+]]></stack-trace>
+                            </failure>
+                          </test-case>
+                          <test-case name="InjectionCop.IntegrationTests.Parser.TypeParserTest.Check_SafeCallOfSqlFragmentCallee_NoProblem" executed="True" result="Error" success="False" time="0.000" asserts="0">
+                            <failure>
+                              <message><![CDATA[Microsoft.FxCop.Sdk.InvalidMetadataException : The following error was encountered while reading module 'InjectionCop.IntegrationTests': Assembly reference cannot be resolved: InjectionCop, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null.]]></message>
+                              <stack-trace><![CDATA[at Microsoft.FxCop.Sdk.Reader.HandleError(ModuleNode mod, String errorMessage)
+at Microsoft.FxCop.Sdk.Reader.GetAssemblyFromReference(AssemblyReference assemblyReference)
+at Microsoft.FxCop.Sdk.AssemblyReference.get_Assembly()
+at Microsoft.FxCop.Sdk.Reader.GetTypeFromRef(Int32 i, Boolean expectStruct)
+at Microsoft.FxCop.Sdk.Reader.GetTypeFromRef(Int32 i)
+at Microsoft.FxCop.Sdk.Reader.GetMemberFromRef(Int32 i, TypeNodeCollection& varArgTypes, Int32 numGenericArgs)
+at Microsoft.FxCop.Sdk.Reader.GetConstructorDefOrRef(Int32 codedIndex, TypeNodeCollection& varArgTypes)
+at Microsoft.FxCop.Sdk.Reader.GetCustomAttribute(Int32 i)
+at Microsoft.FxCop.Sdk.Reader.GetCustomAttributesFor(Int32 parentIndex)
+at Microsoft.FxCop.Sdk.Reader.AddMoreStuffToParameters(Method method, ParameterCollection parameters, Int32 start, Int32 end)
+at Microsoft.FxCop.Sdk.Reader.GetMethodFromDef(Int32 index, TypeNode declaringType)
+at Microsoft.FxCop.Sdk.Reader.AddMethodsToType(TypeNode type, MethodPtrRow[] methodPtrs, Int32 start, Int32 end)
+at Microsoft.FxCop.Sdk.Reader.GetTypeMembers(TypeNode type, Object handle)
+at Microsoft.FxCop.Sdk.TypeNode.get_Members()
+at Microsoft.FxCop.Sdk.TypeNode.GetMembersNamed(Identifier name)
+at Microsoft.FxCop.Sdk.TypeNode.GetMethod(Identifier name, TypeNode[] types)
+at InjectionCop.Parser.Helper.MethodFactory[T](Identifier methodName, TypeNode[] methodParameters) in c:\Development\Static Code Analysis\InjectionCop\Core\Parser\Helper.cs:line 24
+at InjectionCop.IntegrationTests.Parser.TestHelper.GetSample(String methodName, TypeNode[] methodParameters) in c:\Development\Static Code Analysis\InjectionCop\IntegrationTests\Parser\TestHelper.cs:line 18
+at InjectionCop.IntegrationTests.Parser.TypeParserTest.Check_SafeCallOfSqlFragmentCallee_NoProblem() in c:\Development\Static Code Analysis\InjectionCop\IntegrationTests\Parser\TypeParserTest.cs:line 108
+]]></stack-trace>
+                            </failure>
+                          </test-case>
+                          <test-case name="InjectionCop.IntegrationTests.Parser.TypeParserTest.Check_SafeSource_NoProblem" executed="True" result="Error" success="False" time="0.000" asserts="0">
+                            <failure>
+                              <message><![CDATA[Microsoft.FxCop.Sdk.InvalidMetadataException : The following error was encountered while reading module 'InjectionCop.IntegrationTests': Assembly reference cannot be resolved: InjectionCop, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null.]]></message>
+                              <stack-trace><![CDATA[at Microsoft.FxCop.Sdk.Reader.HandleError(ModuleNode mod, String errorMessage)
+at Microsoft.FxCop.Sdk.Reader.GetAssemblyFromReference(AssemblyReference assemblyReference)
+at Microsoft.FxCop.Sdk.AssemblyReference.get_Assembly()
+at Microsoft.FxCop.Sdk.Reader.GetTypeFromRef(Int32 i, Boolean expectStruct)
+at Microsoft.FxCop.Sdk.Reader.GetTypeFromRef(Int32 i)
+at Microsoft.FxCop.Sdk.Reader.GetMemberFromRef(Int32 i, TypeNodeCollection& varArgTypes, Int32 numGenericArgs)
+at Microsoft.FxCop.Sdk.Reader.GetConstructorDefOrRef(Int32 codedIndex, TypeNodeCollection& varArgTypes)
+at Microsoft.FxCop.Sdk.Reader.GetCustomAttribute(Int32 i)
+at Microsoft.FxCop.Sdk.Reader.GetCustomAttributesFor(Int32 parentIndex)
+at Microsoft.FxCop.Sdk.Reader.AddMoreStuffToParameters(Method method, ParameterCollection parameters, Int32 start, Int32 end)
+at Microsoft.FxCop.Sdk.Reader.GetMethodFromDef(Int32 index, TypeNode declaringType)
+at Microsoft.FxCop.Sdk.Reader.AddMethodsToType(TypeNode type, MethodPtrRow[] methodPtrs, Int32 start, Int32 end)
+at Microsoft.FxCop.Sdk.Reader.GetTypeMembers(TypeNode type, Object handle)
+at Microsoft.FxCop.Sdk.TypeNode.get_Members()
+at Microsoft.FxCop.Sdk.TypeNode.GetMembersNamed(Identifier name)
+at Microsoft.FxCop.Sdk.TypeNode.GetMethod(Identifier name, TypeNode[] types)
+at InjectionCop.Parser.Helper.MethodFactory[T](Identifier methodName, TypeNode[] methodParameters) in c:\Development\Static Code Analysis\InjectionCop\Core\Parser\Helper.cs:line 24
+at InjectionCop.IntegrationTests.Parser.TestHelper.GetSample(String methodName, TypeNode[] methodParameters) in c:\Development\Static Code Analysis\InjectionCop\IntegrationTests\Parser\TestHelper.cs:line 18
+at InjectionCop.IntegrationTests.Parser.TypeParserTest.Check_SafeSource_NoProblem() in c:\Development\Static Code Analysis\InjectionCop\IntegrationTests\Parser\TypeParserTest.cs:line 90
+]]></stack-trace>
+                            </failure>
+                          </test-case>
+                          <test-case name="InjectionCop.IntegrationTests.Parser.TypeParserTest.Check_UnsafeCallOfSqlFragmentCallee_ReturnsProblem" executed="True" result="Error" success="False" time="0.000" asserts="0">
+                            <failure>
+                              <message><![CDATA[Microsoft.FxCop.Sdk.InvalidMetadataException : The following error was encountered while reading module 'InjectionCop.IntegrationTests': Assembly reference cannot be resolved: InjectionCop, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null.]]></message>
+                              <stack-trace><![CDATA[at Microsoft.FxCop.Sdk.Reader.HandleError(ModuleNode mod, String errorMessage)
+at Microsoft.FxCop.Sdk.Reader.GetAssemblyFromReference(AssemblyReference assemblyReference)
+at Microsoft.FxCop.Sdk.AssemblyReference.get_Assembly()
+at Microsoft.FxCop.Sdk.Reader.GetTypeFromRef(Int32 i, Boolean expectStruct)
+at Microsoft.FxCop.Sdk.Reader.GetTypeFromRef(Int32 i)
+at Microsoft.FxCop.Sdk.Reader.GetMemberFromRef(Int32 i, TypeNodeCollection& varArgTypes, Int32 numGenericArgs)
+at Microsoft.FxCop.Sdk.Reader.GetConstructorDefOrRef(Int32 codedIndex, TypeNodeCollection& varArgTypes)
+at Microsoft.FxCop.Sdk.Reader.GetCustomAttribute(Int32 i)
+at Microsoft.FxCop.Sdk.Reader.GetCustomAttributesFor(Int32 parentIndex)
+at Microsoft.FxCop.Sdk.Reader.AddMoreStuffToParameters(Method method, ParameterCollection parameters, Int32 start, Int32 end)
+at Microsoft.FxCop.Sdk.Reader.GetMethodFromDef(Int32 index, TypeNode declaringType)
+at Microsoft.FxCop.Sdk.Reader.AddMethodsToType(TypeNode type, MethodPtrRow[] methodPtrs, Int32 start, Int32 end)
+at Microsoft.FxCop.Sdk.Reader.GetTypeMembers(TypeNode type, Object handle)
+at Microsoft.FxCop.Sdk.TypeNode.get_Members()
+at Microsoft.FxCop.Sdk.TypeNode.GetMembersNamed(Identifier name)
+at Microsoft.FxCop.Sdk.TypeNode.GetMethod(Identifier name, TypeNode[] types)
+at InjectionCop.Parser.Helper.MethodFactory[T](Identifier methodName, TypeNode[] methodParameters) in c:\Development\Static Code Analysis\InjectionCop\Core\Parser\Helper.cs:line 24
+at InjectionCop.IntegrationTests.Parser.TestHelper.GetSample(String methodName, TypeNode[] methodParameters) in c:\Development\Static Code Analysis\InjectionCop\IntegrationTests\Parser\TestHelper.cs:line 18
+at InjectionCop.IntegrationTests.Parser.TypeParserTest.Check_UnsafeCallOfSqlFragmentCallee_ReturnsProblem() in c:\Development\Static Code Analysis\InjectionCop\IntegrationTests\Parser\TypeParserTest.cs:line 117
+]]></stack-trace>
+                            </failure>
+                          </test-case>
+                          <test-case name="InjectionCop.IntegrationTests.Parser.TypeParserTest.Check_ValidSafenessPropagation_NoProblem" executed="True" result="Error" success="False" time="0.000" asserts="0">
+                            <failure>
+                              <message><![CDATA[Microsoft.FxCop.Sdk.InvalidMetadataException : The following error was encountered while reading module 'InjectionCop.IntegrationTests': Assembly reference cannot be resolved: InjectionCop, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null.]]></message>
+                              <stack-trace><![CDATA[at Microsoft.FxCop.Sdk.Reader.HandleError(ModuleNode mod, String errorMessage)
+at Microsoft.FxCop.Sdk.Reader.GetAssemblyFromReference(AssemblyReference assemblyReference)
+at Microsoft.FxCop.Sdk.AssemblyReference.get_Assembly()
+at Microsoft.FxCop.Sdk.Reader.GetTypeFromRef(Int32 i, Boolean expectStruct)
+at Microsoft.FxCop.Sdk.Reader.GetTypeFromRef(Int32 i)
+at Microsoft.FxCop.Sdk.Reader.GetMemberFromRef(Int32 i, TypeNodeCollection& varArgTypes, Int32 numGenericArgs)
+at Microsoft.FxCop.Sdk.Reader.GetConstructorDefOrRef(Int32 codedIndex, TypeNodeCollection& varArgTypes)
+at Microsoft.FxCop.Sdk.Reader.GetCustomAttribute(Int32 i)
+at Microsoft.FxCop.Sdk.Reader.GetCustomAttributesFor(Int32 parentIndex)
+at Microsoft.FxCop.Sdk.Reader.AddMoreStuffToParameters(Method method, ParameterCollection parameters, Int32 start, Int32 end)
+at Microsoft.FxCop.Sdk.Reader.GetMethodFromDef(Int32 index, TypeNode declaringType)
+at Microsoft.FxCop.Sdk.Reader.AddMethodsToType(TypeNode type, MethodPtrRow[] methodPtrs, Int32 start, Int32 end)
+at Microsoft.FxCop.Sdk.Reader.GetTypeMembers(TypeNode type, Object handle)
+at Microsoft.FxCop.Sdk.TypeNode.get_Members()
+at Microsoft.FxCop.Sdk.TypeNode.GetMembersNamed(Identifier name)
+at Microsoft.FxCop.Sdk.TypeNode.GetMethod(Identifier name, TypeNode[] types)
+at InjectionCop.Parser.Helper.MethodFactory[T](Identifier methodName, TypeNode[] methodParameters) in c:\Development\Static Code Analysis\InjectionCop\Core\Parser\Helper.cs:line 24
+at InjectionCop.IntegrationTests.Parser.TestHelper.GetSample(String methodName, TypeNode[] methodParameters) in c:\Development\Static Code Analysis\InjectionCop\IntegrationTests\Parser\TestHelper.cs:line 18
+at InjectionCop.IntegrationTests.Parser.TypeParserTest.Check_ValidSafenessPropagation_NoProblem() in c:\Development\Static Code Analysis\InjectionCop\IntegrationTests\Parser\TypeParserTest.cs:line 126
+]]></stack-trace>
+                            </failure>
+                          </test-case>
+                          <test-case name="InjectionCop.IntegrationTests.Parser.TypeParserTest.Check_WhiteMtc_NoProblem" executed="True" result="Error" success="False" time="0.000" asserts="0">
+                            <failure>
+                              <message><![CDATA[Microsoft.FxCop.Sdk.InvalidMetadataException : The following error was encountered while reading module 'InjectionCop.IntegrationTests': Assembly reference cannot be resolved: InjectionCop, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null.]]></message>
+                              <stack-trace><![CDATA[at Microsoft.FxCop.Sdk.Reader.HandleError(ModuleNode mod, String errorMessage)
+at Microsoft.FxCop.Sdk.Reader.GetAssemblyFromReference(AssemblyReference assemblyReference)
+at Microsoft.FxCop.Sdk.AssemblyReference.get_Assembly()
+at Microsoft.FxCop.Sdk.Reader.GetTypeFromRef(Int32 i, Boolean expectStruct)
+at Microsoft.FxCop.Sdk.Reader.GetTypeFromRef(Int32 i)
+at Microsoft.FxCop.Sdk.Reader.GetMemberFromRef(Int32 i, TypeNodeCollection& varArgTypes, Int32 numGenericArgs)
+at Microsoft.FxCop.Sdk.Reader.GetConstructorDefOrRef(Int32 codedIndex, TypeNodeCollection& varArgTypes)
+at Microsoft.FxCop.Sdk.Reader.GetCustomAttribute(Int32 i)
+at Microsoft.FxCop.Sdk.Reader.GetCustomAttributesFor(Int32 parentIndex)
+at Microsoft.FxCop.Sdk.Reader.AddMoreStuffToParameters(Method method, ParameterCollection parameters, Int32 start, Int32 end)
+at Microsoft.FxCop.Sdk.Reader.GetMethodFromDef(Int32 index, TypeNode declaringType)
+at Microsoft.FxCop.Sdk.Reader.AddMethodsToType(TypeNode type, MethodPtrRow[] methodPtrs, Int32 start, Int32 end)
+at Microsoft.FxCop.Sdk.Reader.GetTypeMembers(TypeNode type, Object handle)
+at Microsoft.FxCop.Sdk.TypeNode.get_Members()
+at Microsoft.FxCop.Sdk.TypeNode.GetMembersNamed(Identifier name)
+at Microsoft.FxCop.Sdk.TypeNode.GetMethod(Identifier name, TypeNode[] types)
+at InjectionCop.Parser.Helper.MethodFactory[T](Identifier methodName, TypeNode[] methodParameters) in c:\Development\Static Code Analysis\InjectionCop\Core\Parser\Helper.cs:line 24
+at InjectionCop.IntegrationTests.Parser.TestHelper.GetSample(String methodName, TypeNode[] methodParameters) in c:\Development\Static Code Analysis\InjectionCop\IntegrationTests\Parser\TestHelper.cs:line 18
+at InjectionCop.IntegrationTests.Parser.TypeParserTest.Check_WhiteMtc_NoProblem() in c:\Development\Static Code Analysis\InjectionCop\IntegrationTests\Parser\TypeParserTest.cs:line 81
+]]></stack-trace>
+                            </failure>
+                          </test-case>
+                          <test-case name="InjectionCop.IntegrationTests.Parser.TypeParserTest.Check_WrongAttribution_ReturnsProblem" executed="True" result="Error" success="False" time="0.000" asserts="0">
+                            <failure>
+                              <message><![CDATA[Microsoft.FxCop.Sdk.InvalidMetadataException : The following error was encountered while reading module 'InjectionCop.IntegrationTests': Assembly reference cannot be resolved: InjectionCop, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null.]]></message>
+                              <stack-trace><![CDATA[at Microsoft.FxCop.Sdk.Reader.HandleError(ModuleNode mod, String errorMessage)
+at Microsoft.FxCop.Sdk.Reader.GetAssemblyFromReference(AssemblyReference assemblyReference)
+at Microsoft.FxCop.Sdk.AssemblyReference.get_Assembly()
+at Microsoft.FxCop.Sdk.Reader.GetTypeFromRef(Int32 i, Boolean expectStruct)
+at Microsoft.FxCop.Sdk.Reader.GetTypeFromRef(Int32 i)
+at Microsoft.FxCop.Sdk.Reader.GetMemberFromRef(Int32 i, TypeNodeCollection& varArgTypes, Int32 numGenericArgs)
+at Microsoft.FxCop.Sdk.Reader.GetConstructorDefOrRef(Int32 codedIndex, TypeNodeCollection& varArgTypes)
+at Microsoft.FxCop.Sdk.Reader.GetCustomAttribute(Int32 i)
+at Microsoft.FxCop.Sdk.Reader.GetCustomAttributesFor(Int32 parentIndex)
+at Microsoft.FxCop.Sdk.Reader.AddMoreStuffToParameters(Method method, ParameterCollection parameters, Int32 start, Int32 end)
+at Microsoft.FxCop.Sdk.Reader.GetMethodFromDef(Int32 index, TypeNode declaringType)
+at Microsoft.FxCop.Sdk.Reader.AddMethodsToType(TypeNode type, MethodPtrRow[] methodPtrs, Int32 start, Int32 end)
+at Microsoft.FxCop.Sdk.Reader.GetTypeMembers(TypeNode type, Object handle)
+at Microsoft.FxCop.Sdk.TypeNode.get_Members()
+at Microsoft.FxCop.Sdk.TypeNode.GetMembersNamed(Identifier name)
+at Microsoft.FxCop.Sdk.TypeNode.GetMethod(Identifier name, TypeNode[] types)
+at InjectionCop.Parser.Helper.MethodFactory[T](Identifier methodName, TypeNode[] methodParameters) in c:\Development\Static Code Analysis\InjectionCop\Core\Parser\Helper.cs:line 24
+at InjectionCop.IntegrationTests.Parser.TestHelper.GetSample(String methodName, TypeNode[] methodParameters) in c:\Development\Static Code Analysis\InjectionCop\IntegrationTests\Parser\TestHelper.cs:line 18
+at InjectionCop.IntegrationTests.Parser.TypeParserTest.Check_WrongAttribution_ReturnsProblem() in c:\Development\Static Code Analysis\InjectionCop\IntegrationTests\Parser\TypeParserTest.cs:line 99
+]]></stack-trace>
+                            </failure>
+                          </test-case>
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+      <test-suite type="Assembly" name="C:\Development\Static Code Analysis\InjectionCop\Core\bin\Debug\InjectionCop.dll" executed="True" result="Inconclusive" success="False" time="0.000" asserts="0" />
+    </results>
+  </test-suite>
+</test-results>
