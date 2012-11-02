@@ -21,169 +21,180 @@ using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser
 {
-  public class TypeParser: BaseFxCopRule
+  public class TypeParser : BaseFxCopRule
   {
-    private IBlackTypes blackTypes;
-    private Dictionary<Identifier, bool> safeSymbols;
+    private readonly IBlackTypes _blackTypes;
+    private readonly Dictionary<Identifier, bool> _safeSymbols;
 
-    public TypeParser (IBlackTypes _blackTypes): base("TypeParser")
+    public TypeParser (IBlackTypes _blackTypes)
+        : base ("TypeParser")
     {
-      blackTypes = _blackTypes;
-      safeSymbols = new Dictionary<Identifier, bool>();
+      this._blackTypes = _blackTypes;
+      _safeSymbols = new Dictionary<Identifier, bool>();
     }
 
     public override ProblemCollection Check (Member member)
     {
       Method method = member as Method;
-      if(method == null)
-        return Problems;
-      
-      foreach (Parameter parameter in method.Parameters)
-      {
-        if(Is<SqlFragment>(parameter))
-          safeSymbols[parameter.Name] = true;
-        else
-          safeSymbols[parameter.Name] =  false;
-      }
-      
-      foreach (Statement topLevelStatement in method.Body.Statements)
-      {
-        /*
-        if(topLevelStatement is Branch)
-        {
-          Console.WriteLine("got branch");
-          Branch branch = topLevelStatement as Branch;
-          branch.
-        }*/
 
-        Block methodBodyBlock = topLevelStatement as Block;
-        if (methodBodyBlock == null)
-          continue;
-
-        foreach (Statement stmt in methodBodyBlock.Statements)
+      if (method != null)
+      {
+        foreach (Parameter parameter in method.Parameters)
         {
-          switch (stmt.NodeType)
+          if (Is<SqlFragmentAttribute> (parameter))
           {
-            case NodeType.ExpressionStatement:
-              ExpressionStatement exprStmt = stmt as ExpressionStatement;
-              if (exprStmt == null)
-                continue;
+            _safeSymbols[parameter.Name] = true;
+          }
+          else
+          {
+            _safeSymbols[parameter.Name] = false;
+          }
+        }
 
-              Check (exprStmt.Expression);
-              break;
-            
-            case NodeType.AssignmentStatement:
-              AssignmentStatement asgn = (AssignmentStatement) stmt;
-              Identifier symbol = GetVariableIdentifier(asgn.Target);
-              safeSymbols[symbol] = IsSafe(asgn.Source);
-
-              Check (asgn.Source);
-              break;
-              
-            case NodeType.Return:
-              ReturnNode returnNode = (ReturnNode) stmt;
-              Check (returnNode.Expression);
-              break;
+        foreach (Statement topLevelStatement in method.Body.Statements)
+        {
+          Block methodBodyBlock = topLevelStatement as Block;
+          if (methodBodyBlock != null)
+          {
+            Inspect (methodBodyBlock);
           }
         }
       }
+
       return Problems;
+    }
+
+    private void Inspect (Block methodBodyBlock)
+    {
+      foreach (Statement stmt in methodBodyBlock.Statements)
+      {
+        switch (stmt.NodeType)
+        {
+          case NodeType.ExpressionStatement:
+            ExpressionStatement exprStmt = (ExpressionStatement) stmt;
+            Inspect (exprStmt.Expression);
+            break;
+
+          case NodeType.AssignmentStatement:
+            AssignmentStatement asgn = (AssignmentStatement) stmt;
+            Identifier symbol = GetVariableIdentifier (asgn.Target);
+            _safeSymbols[symbol] = IsSafe (asgn.Source);
+            Inspect (asgn.Source);
+            break;
+
+          case NodeType.Return:
+            ReturnNode returnNode = (ReturnNode) stmt;
+            Inspect (returnNode.Expression);
+            break;
+
+          case NodeType.Branch:
+            Branch branch = (Branch) stmt;
+            Inspect (branch.Target);
+            break;
+        }
+      }
     }
 
     private Identifier GetVariableIdentifier (Expression target)
     {
-      if(target is Local)
-        return ((Local) target).Name;
-              
-      if(target is Parameter)
-        return ((Parameter) target).Name;
+      Identifier identifier;
 
-      if(target is UnaryExpression)
-        return GetVariableIdentifier (((UnaryExpression) target).Operand);
+      if (target is Local)
+      {
+        identifier = ((Local) target).Name;
+      }
+      else if (target is Parameter)
+      {
+        identifier = ((Parameter) target).Name;
+      }
+      else if (target is UnaryExpression)
+      {
+        identifier = GetVariableIdentifier (((UnaryExpression) target).Operand);
+      }
+      else
+      {
+        throw new InjectionCopException ("Failed to extract Identifier");
+      }
 
-      throw new InjectionCopException("Failed to extract Identifier");
+      return identifier;
     }
 
-    private bool IsVariable(Expression target)
+    private bool IsVariable (Expression target)
     {
-      if(target is UnaryExpression)
+      if (target is UnaryExpression)
       {
         Expression operand = ((UnaryExpression) target).Operand;
         return IsVariable (operand);
       }
 
-      return target is Local
-             || target is Parameter;
+      return target is Local || target is Parameter;
     }
 
-    private void Check (Expression expression)
+    private void Inspect (Expression expression)
     {
       if (expression is MethodCall)
       {
-        MethodCall mtc = (MethodCall) expression;
-        if (!ParametersSafe (mtc))
+        MethodCall methodCall = (MethodCall) expression;
+        if (!ParametersSafe (methodCall))
+        {
           AddProblem();
-
-        UpdateSafeOutParameters (mtc);
-        return;
+        }
+        UpdateSafeOutParameters (methodCall);
       }
-
-      if (expression is UnaryExpression)
+      else if (expression is UnaryExpression)
       {
-        UnaryExpression uExpression = (UnaryExpression) expression;
-        Check (uExpression.Operand);
+        UnaryExpression unaryExpression = (UnaryExpression) expression;
+        Inspect (unaryExpression.Operand);
       }
     }
 
-    private void UpdateSafeOutParameters (MethodCall mtc)
+    private void UpdateSafeOutParameters (MethodCall methodCall)
     {
-      Method method = ExtractMethod (mtc);
-      for(int i = 0; i < mtc.Operands.Count; i++)
-      {
-        if(!IsVariable(mtc.Operands[i]))
-          continue;
+      Method method = ExtractMethod (methodCall);
 
-        if( method.Parameters[i].IsOut 
-            || (!method.Parameters[i].IsOut && !method.Parameters[i].IsIn))
+      for (int i = 0; i < methodCall.Operands.Count; i++)
+      {
+        if (IsVariable (methodCall.Operands[i]))
         {
-          Identifier symbol = GetVariableIdentifier(mtc.Operands[i]);
-          bool safeness = Contains<SqlFragment> (method.Parameters[i].Attributes);
-          safeSymbols[symbol] = safeness;
+          bool isRef = !method.Parameters[i].IsOut && !method.Parameters[i].IsIn;
+          if (method.Parameters[i].IsOut || isRef)
+          {
+            Identifier symbol = GetVariableIdentifier (methodCall.Operands[i]);
+            bool safeness = Contains<SqlFragmentAttribute> (method.Parameters[i].Attributes);
+            _safeSymbols[symbol] = safeness;
+          }
         }
       }
     }
 
-    private bool IsSafe(Expression expression)
+    private bool IsSafe (Expression expression)
     {
-      bool expressionCheck = expression is Literal
-                             || Returns<SqlFragment> (expression);
-      
-      bool tableLookup = false;
-      if(expression is Parameter)
+      bool literalOrFragment = expression is Literal || Returns<SqlFragmentAttribute> (expression);
+      bool safeVariable = false;
+      bool safeUnaryExpression = false;
+
+      if (expression is Parameter)
       {
         Parameter parameter = (Parameter) expression;
-        if(safeSymbols.ContainsKey(parameter.Name))
-          tableLookup = safeSymbols[parameter.Name];        
+        if (_safeSymbols.ContainsKey (parameter.Name))
+        {
+          safeVariable = _safeSymbols[parameter.Name];
+        }
       }
-
-      if(expression is Local)
+      else if (expression is Local)
       {
         Local local = (Local) expression;
-        if(safeSymbols.ContainsKey(local.Name))
-          tableLookup = safeSymbols[local.Name];
+        if (_safeSymbols.ContainsKey (local.Name))
+        {
+          safeVariable = _safeSymbols[local.Name];
+        }
       }
-
-      bool safeMethodCall = false;
-      if(expression is MethodCall)
+      else if (expression is UnaryExpression)
       {
-        Method mtd = ExtractMethod((MethodCall) expression);
-        safeMethodCall = Contains<SqlFragment> (mtd.ReturnAttributes);
+        safeUnaryExpression = IsSafe (((UnaryExpression) expression).Operand);
       }
 
-      if(expression is UnaryExpression)
-        return IsSafe(((UnaryExpression) expression).Operand);
-
-      return expressionCheck || tableLookup || safeMethodCall;
+      return literalOrFragment || safeVariable || safeUnaryExpression;
     }
 
     private bool IsNotSafe (Expression expression)
@@ -191,85 +202,99 @@ namespace InjectionCop.Parser
       return !IsSafe (expression);
     }
 
-    private bool ParametersSafe(MethodCall mtc)
+    private bool ParametersSafe (MethodCall methodCall)
     {
-      Method calleeMtd = ExtractMethod (mtc);
+      bool parameterSafe = true;
+      Method calleeMethod = ExtractMethod (methodCall);
 
-      if(blackTypes.IsBlackMethod(calleeMtd.DeclaringType.FullName, calleeMtd.Name.Name))
+      if (_blackTypes.IsBlackMethod (calleeMethod.DeclaringType.FullName, calleeMethod.Name.Name))
       {
-        foreach (Expression expression in mtc.Operands)
+        foreach (Expression expression in methodCall.Operands)
         {
           if (IsNotSafe (expression))
           {
-            return false;
+            parameterSafe = false;
           }
         }
       }
 
-      for(int i = 0; i < calleeMtd.Parameters.Count; i++)
+      for (int i = 0; i < calleeMethod.Parameters.Count; i++)
       {
-        if(Contains<SqlFragment>(calleeMtd.Parameters[i].Attributes)
-          && IsNotSafe(mtc.Operands[i]))
+        bool isFragmentParameter = Contains<SqlFragmentAttribute> (calleeMethod.Parameters[i].Attributes);
+        if (isFragmentParameter && IsNotSafe (methodCall.Operands[i]))
         {
-          return false;
+          parameterSafe = false;
         }
       }
-      return true;
+
+      return parameterSafe;
     }
 
-    private void AddProblem()
+    private void AddProblem ()
     {
       Resolution resolution = GetResolution();
       Problem problem = new Problem (resolution, CheckId);
       Problems.Add (problem);
     }
 
-    private Method ExtractMethod(MethodCall mtc)
+    private Method ExtractMethod (MethodCall methodCall)
     {
-      MemberBinding mbCallee = mtc.Callee as MemberBinding;
-      if (mbCallee == null || !(mbCallee.BoundMember is Method))
+      MemberBinding callee = methodCall.Callee as MemberBinding;
+      if (callee == null || !(callee.BoundMember is Method))
         throw new InjectionCopException ("Cannot extract Method from Methodcall");
-      
-      Method calleeMtd = (Method)mbCallee.BoundMember;
-      return calleeMtd;
+
+      Method boundMember = (Method) callee.BoundMember;
+      return boundMember;
     }
 
     private bool Is<F> (Expression expression)
-      where F: Fragment
+        where F : FragmentAttribute
     {
+      bool isFragment = false;
+
       Parameter parameter = expression as Parameter;
-      if(parameter == null)
-        return false;
+      if (parameter != null)
+      {
+        isFragment = Contains<F> (parameter.Attributes);
+      }
 
-      return Contains<F> (parameter.Attributes);
+      return isFragment;
     }
 
-    private bool Returns<F>(Expression expression)
-      where F: Fragment
+    private bool Returns<F> (Expression expression)
+        where F : FragmentAttribute
     {
-      MethodCall mtc = expression as MethodCall;
-      if (mtc == null)
-        return false;
+      bool returnsFragment = false;
 
-      Method calleeMtd = ExtractMethod (mtc);
-      return Contains<F> (calleeMtd.ReturnAttributes);
+      MethodCall methodCall = expression as MethodCall;
+      if (methodCall != null)
+      {
+        Method calleeMethod = ExtractMethod (methodCall);
+        returnsFragment = Contains<F> (calleeMethod.ReturnAttributes);
+      }
+
+      return returnsFragment;
     }
 
-    private bool Contains<F>(AttributeNodeCollection attributes)
-      where F: Fragment
+    private bool Contains<F> (AttributeNodeCollection attributes)
+        where F : FragmentAttribute
     {
+      bool containsFragment;
+
       try
       {
         TypeNode fragmentTypeNode = Helper.TypeNodeFactory<F>();
-        return attributes.Any (attribute => 
-          attribute.Type.FullName == fragmentTypeNode.FullName
-        );
+        containsFragment = attributes.Any (
+            attribute =>
+            attribute.Type.FullName == fragmentTypeNode.FullName
+            );
       }
       catch (ArgumentNullException)
       {
-        return false;
+        containsFragment = false;
       }
-    }
 
+      return containsFragment;
+    }
   }
 }

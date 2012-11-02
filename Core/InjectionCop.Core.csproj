@@ -46,8 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\Fragment.cs" />
-    <Compile Include="Attributes\SqlFragment.cs" />
+    <Compile Include="Attributes\FragmentAttribute.cs" />
+    <Compile Include="Attributes\SqlFragmentAttribute.cs" />
     <Compile Include="Attributes\TrustedSqlGeneration.cs" />
     <Compile Include="Config\BlackMethod.cs" />
     <Compile Include="Config\BlackParameter.cs" />
@@ -67,6 +67,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="RuleMetadata.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Core.licenseheader" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

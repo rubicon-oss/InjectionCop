@@ -64,23 +64,23 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Parser\AssignmentPropagation\AssignmentPropagationSample.cs" />
-    <Compile Include="Parser\AttributePropagation\AttributePropagationSample.cs" />
-    <Compile Include="Parser\BlackMethod\BlackMethodSample.cs" />
+    <Compile Include="Parser\TypeParserTests\AssignmentPropagation\AssignmentPropagationSample.cs" />
+    <Compile Include="Parser\TypeParserTests\AttributePropagation\AttributePropagationSample.cs" />
+    <Compile Include="Parser\TypeParserTests\BlackMethod\BlackMethodSample.cs" />
     <Compile Include="Parser\IDbCommandBlackTypesStub.cs" />
-    <Compile Include="Parser\If\IfSample.cs" />
-    <Compile Include="Parser\If\TypeParserTest_If.cs" />
-    <Compile Include="Parser\Parameter\ParameterSample.cs" />
-    <Compile Include="Parser\Parameter\TypeParserTest_Parameter.cs" />
-    <Compile Include="Parser\Property\PropertySample.cs" />
-    <Compile Include="Parser\Property\TypeParserTest_Property.cs" />
+    <Compile Include="Parser\TypeParserTests\If\IfSample.cs" />
+    <Compile Include="Parser\TypeParserTests\If\If_TypeParserTest.cs" />
+    <Compile Include="Parser\TypeParserTests\Parameter\ParameterSample.cs" />
+    <Compile Include="Parser\TypeParserTests\Parameter\Parameter_TypeParserTest.cs" />
+    <Compile Include="Parser\TypeParserTests\Property\PropertySample.cs" />
+    <Compile Include="Parser\TypeParserTests\Property\Property_TypeParserTest.cs" />
     <Compile Include="Parser\TestHelper.cs" />
-    <Compile Include="Parser\AssignmentPropagation\TypeParserTest_AssignmentPropagation.cs" />
-    <Compile Include="Parser\AttributePropagation\TypeParserTest_AttributePropagation.cs" />
-    <Compile Include="Parser\BlackMethod\TypeParserTest_BlackMethod.cs" />
+    <Compile Include="Parser\TypeParserTests\AssignmentPropagation\AssignmentPropagation_TypeParserTest.cs" />
+    <Compile Include="Parser\TypeParserTests\AttributePropagation\AttributePropagation_TypeParserTest.cs" />
+    <Compile Include="Parser\TypeParserTests\BlackMethod\BlackMethod_TypeParserTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Parser\TypeParserSample.cs" />
-    <Compile Include="Parser\TypeParserTest.cs" />
+    <Compile Include="Parser\TypeParserTests\TypeParserSampleBase.cs" />
+    <Compile Include="Parser\TypeParserTests\TypeParserTestBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\InjectionCop.Core.csproj">

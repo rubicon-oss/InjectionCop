@@ -24,12 +24,9 @@ namespace InjectionCop.Parser
       Type targetType = typeof (T);
       string targetLocation = targetType.Assembly.Location;
       AssemblyNode targetAssembly = AssemblyNode.GetAssembly(targetLocation);
-
-      TypeNode targetNodeType = targetAssembly.GetType(
-          Identifier.For(targetType.Namespace),
-          Identifier.For(targetType.Name));
-            
-      return targetNodeType;
+      Identifier targetNamespace = Identifier.For (targetType.Namespace);
+      Identifier targetName = Identifier.For (targetType.Name);
+      return targetAssembly.GetType(targetNamespace, targetName);
     }
 
     public static Method MethodFactory<T>(Identifier methodName, params TypeNode[] methodParameters)
