@@ -54,9 +54,12 @@
     <Compile Include="Config\BlackType.cs" />
     <Compile Include="Config\BlackTypes.cs" />
     <Compile Include="Config\IBlackTypes.cs" />
+    <Compile Include="Parser\FragmentTools.cs" />
     <Compile Include="InjectionCopException.cs" />
     <Compile Include="Parser\BaseFxCopRule.cs" />
     <Compile Include="Parser\Helper.cs" />
+    <Compile Include="Parser\IntrospectionTools.cs" />
+    <Compile Include="Parser\SafenessManager.cs" />
     <Compile Include="Parser\TypeParser.cs" />
     <Compile Include="PrettyPrint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

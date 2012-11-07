@@ -22,7 +22,7 @@ namespace InjectionCop.UnitTests.Attributes
   public class FragmentAttributeTest
   {
     [Test]
-    public void Eq_SameObject_True ()
+    public void ReferenceEquals_SameObject_True ()
     {
       FragmentAttribute a = new FragmentAttribute("fragment");
       FragmentAttribute b = a;
@@ -30,27 +30,77 @@ namespace InjectionCop.UnitTests.Attributes
     }
 
     [Test]
-    public void Eq_OneNull_False ()
+    public void ReferenceEquals_OneNull_False ()
     {
       FragmentAttribute a = new FragmentAttribute("fragment");
       FragmentAttribute b = null;
+// ReSharper disable ConditionIsAlwaysTrueOrFalse
       Assert.That (a == b, Is.False);
+// ReSharper restore ConditionIsAlwaysTrueOrFalse
     }
 
     [Test]
-    public void Eq_BothNull_False ()
+    public void ReferenceEquals_BothNull_False ()
     {
       FragmentAttribute a = null;
       FragmentAttribute b = null;
+// ReSharper disable ConditionIsAlwaysTrueOrFalse
       Assert.That (a == b, Is.True);
+// ReSharper restore ConditionIsAlwaysTrueOrFalse
     }
 
     [Test]
-    public void Eq_SameFragmentType_True ()
+    public void ReferenceEquals_SameFragmentType_True ()
     {
       FragmentAttribute a = new FragmentAttribute("fragment");
       FragmentAttribute b = new FragmentAttribute("fragment");
       Assert.That (a == b, Is.True);
+    }
+
+    [Test]
+    public void Equals_EqualFragment_True()
+    {
+      FragmentAttribute a = new FragmentAttribute ("fragmenttype");
+      FragmentAttribute b = new FragmentAttribute ("fragmenttype");
+      Assert.That (a.Equals (b));
+    }
+
+    [Test]
+    public void Equals_UnequalFragment_False()
+    {
+      FragmentAttribute a = new FragmentAttribute("a");
+      FragmentAttribute b = new FragmentAttribute("b");
+      Assert.That (a.Equals (b), Is.False);
+    }
+
+    [Test]
+    public void Equals_EqualObject_True()
+    {
+      FragmentAttribute a = new FragmentAttribute("fragmenttype");
+      object b = new FragmentAttribute("fragmenttype");
+      Assert.That (a.Equals (b), Is.True);
+    }
+
+    [Test]
+    public void Equals_UnequalObject_False()
+    {
+      FragmentAttribute a = new FragmentAttribute("a");
+      Object b = new FragmentAttribute("b");
+      Assert.That (a.Equals (b), Is.False);
+    }
+
+    [Test]
+    public void OfType_EqualFragments_True()
+    {
+      FragmentAttribute fragmentAttribute = new FragmentAttribute ("fragmentType");
+      Assert.That(FragmentAttribute.OfType ("fragmentType").Equals (fragmentAttribute), Is.True);
+    }
+
+    [Test]
+    public void OfType_UnequalFragments_False()
+    {
+      FragmentAttribute fragmentAttribute = new FragmentAttribute ("fragmentType");
+      Assert.That(FragmentAttribute.OfType ("otherType").Equals (fragmentAttribute), Is.False);
     }
   }
 }

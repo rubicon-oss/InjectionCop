@@ -13,29 +13,20 @@
 // limitations under the License.
 
 using System;
+using Microsoft.FxCop.Sdk;
 
-namespace InjectionCop.IntegrationTests.Parser.Property
+namespace InjectionCop.Parser
 {
-  class PropertySample: TypeParserSample
+  class IntrospectionTools
   {
-    public void CallWithUnsafeProperty()
+    public static Method ExtractMethod (MethodCall methodCall)
     {
-      RequiresSqlFragment (UnsafeProp);
-    }
+      MemberBinding callee = methodCall.Callee as MemberBinding;
+      if (callee == null || !(callee.BoundMember is Method))
+        throw new InjectionCopException ("Cannot extract Method from Methodcall");
 
-    public void CallWithSafeProperty()
-    {
-      RequiresSqlFragment (SafeProp);
-    }
-
-    public void SetPropSafe()
-    {
-      SafeProp = "safe";
-    }
-
-    public void SetPropUnsafe()
-    {
-      SafeProp = UnsafeSource();
+      Method boundMember = (Method) callee.BoundMember;
+      return boundMember;
     }
   }
 }

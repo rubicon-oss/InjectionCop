@@ -16,9 +16,10 @@ using System;
 using Microsoft.FxCop.Sdk;
 using NUnit.Framework;
 
-namespace InjectionCop.IntegrationTests.Parser.AttributePropagation
+namespace InjectionCop.IntegrationTests.Parser.TypeParserTests.AttributePropagation
 {
-  class TypeParserTest_AttributePropagation: TypeParserTest
+  [TestFixture]
+  public class AttributePropagation_TypeParserTest: TypeParserTestBase
   {
     [Test]
     [Category("AttributePropagation")]

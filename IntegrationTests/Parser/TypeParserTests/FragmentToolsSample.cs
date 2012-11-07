@@ -13,29 +13,18 @@
 // limitations under the License.
 
 using System;
+using InjectionCop.Attributes;
 
-namespace InjectionCop.IntegrationTests.Parser.AttributePropagation
+namespace InjectionCop.IntegrationTests.Parser.TypeParserTests
 {
-  class AttributePropagationSample: TypeParserSample
+  class FragmentToolsSample
   {
-    public void SafeCallOfSqlFragmentCallee()
+    public void ContainsFragmentParameter([Fragment("FragmentType")] string parameter)
     {
-      RequiresSqlFragment (SafeSource());
     }
 
-    public string UnsafeCallOfSqlFragmentCallee()
+    public void NoFragmentParameter(string parameter)
     {
-      return RequiresSqlFragment (UnsafeSource());
-    }
-
-    public string SafeCallOfMixedCallee()
-    {
-      return RequiresSqlFragment ("literal", UnsafeSource(), SafeSource());
-    }
-
-    public void UnsafeCallOfMixedCallee()
-    {
-      RequiresSqlFragment ("literal", SafeSource(), UnsafeSource());
     }
   }
 }

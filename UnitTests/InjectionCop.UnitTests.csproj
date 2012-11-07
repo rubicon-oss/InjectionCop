@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Config\" />
+    <Folder Include="Parser\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="UnitTests.licenseheader" />

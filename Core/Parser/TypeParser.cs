@@ -13,8 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using InjectionCop.Attributes;
 using InjectionCop.Config;
 using Microsoft.FxCop.Sdk;
@@ -23,14 +21,12 @@ namespace InjectionCop.Parser
 {
   public class TypeParser : BaseFxCopRule
   {
-    private readonly IBlackTypes _blackTypes;
-    private readonly Dictionary<Identifier, bool> _safeSymbols;
+    private SafenessManager _safenessManager;
 
-    public TypeParser (IBlackTypes _blackTypes)
+    public TypeParser (IBlackTypes blackTypes)
         : base ("TypeParser")
     {
-      this._blackTypes = _blackTypes;
-      _safeSymbols = new Dictionary<Identifier, bool>();
+      _safenessManager = new SafenessManager (blackTypes);
     }
 
     public override ProblemCollection Check (Member member)
@@ -41,13 +37,13 @@ namespace InjectionCop.Parser
       {
         foreach (Parameter parameter in method.Parameters)
         {
-          if (Is<SqlFragmentAttribute> (parameter))
+          if (FragmentTools.Is<SqlFragmentAttribute> (parameter))
           {
-            _safeSymbols[parameter.Name] = true;
+            _safenessManager.SetSafeness(parameter.Name, true);
           }
           else
           {
-            _safeSymbols[parameter.Name] = false;
+            _safenessManager.SetSafeness(parameter.Name, false);
           }
         }
 
@@ -78,7 +74,7 @@ namespace InjectionCop.Parser
           case NodeType.AssignmentStatement:
             AssignmentStatement asgn = (AssignmentStatement) stmt;
             Identifier symbol = GetVariableIdentifier (asgn.Target);
-            _safeSymbols[symbol] = IsSafe (asgn.Source);
+            _safenessManager.SetSafeness(symbol, asgn.Source);
             Inspect (asgn.Source);
             break;
 
@@ -135,7 +131,7 @@ namespace InjectionCop.Parser
       if (expression is MethodCall)
       {
         MethodCall methodCall = (MethodCall) expression;
-        if (!ParametersSafe (methodCall))
+        if (!_safenessManager.ParametersSafe (methodCall))
         {
           AddProblem();
         }
@@ -150,7 +146,7 @@ namespace InjectionCop.Parser
 
     private void UpdateSafeOutParameters (MethodCall methodCall)
     {
-      Method method = ExtractMethod (methodCall);
+      Method method = IntrospectionTools.ExtractMethod(methodCall);
 
       for (int i = 0; i < methodCall.Operands.Count; i++)
       {
@@ -160,74 +156,11 @@ namespace InjectionCop.Parser
           if (method.Parameters[i].IsOut || isRef)
           {
             Identifier symbol = GetVariableIdentifier (methodCall.Operands[i]);
-            bool safeness = Contains<SqlFragmentAttribute> (method.Parameters[i].Attributes);
-            _safeSymbols[symbol] = safeness;
+            bool safeness = FragmentTools.Contains<SqlFragmentAttribute> (method.Parameters[i].Attributes);
+            _safenessManager.SetSafeness(symbol, safeness);
           }
         }
       }
-    }
-
-    private bool IsSafe (Expression expression)
-    {
-      bool literalOrFragment = expression is Literal || Returns<SqlFragmentAttribute> (expression);
-      bool safeVariable = false;
-      bool safeUnaryExpression = false;
-
-      if (expression is Parameter)
-      {
-        Parameter parameter = (Parameter) expression;
-        if (_safeSymbols.ContainsKey (parameter.Name))
-        {
-          safeVariable = _safeSymbols[parameter.Name];
-        }
-      }
-      else if (expression is Local)
-      {
-        Local local = (Local) expression;
-        if (_safeSymbols.ContainsKey (local.Name))
-        {
-          safeVariable = _safeSymbols[local.Name];
-        }
-      }
-      else if (expression is UnaryExpression)
-      {
-        safeUnaryExpression = IsSafe (((UnaryExpression) expression).Operand);
-      }
-
-      return literalOrFragment || safeVariable || safeUnaryExpression;
-    }
-
-    private bool IsNotSafe (Expression expression)
-    {
-      return !IsSafe (expression);
-    }
-
-    private bool ParametersSafe (MethodCall methodCall)
-    {
-      bool parameterSafe = true;
-      Method calleeMethod = ExtractMethod (methodCall);
-
-      if (_blackTypes.IsBlackMethod (calleeMethod.DeclaringType.FullName, calleeMethod.Name.Name))
-      {
-        foreach (Expression expression in methodCall.Operands)
-        {
-          if (IsNotSafe (expression))
-          {
-            parameterSafe = false;
-          }
-        }
-      }
-
-      for (int i = 0; i < calleeMethod.Parameters.Count; i++)
-      {
-        bool isFragmentParameter = Contains<SqlFragmentAttribute> (calleeMethod.Parameters[i].Attributes);
-        if (isFragmentParameter && IsNotSafe (methodCall.Operands[i]))
-        {
-          parameterSafe = false;
-        }
-      }
-
-      return parameterSafe;
     }
 
     private void AddProblem ()
@@ -235,66 +168,6 @@ namespace InjectionCop.Parser
       Resolution resolution = GetResolution();
       Problem problem = new Problem (resolution, CheckId);
       Problems.Add (problem);
-    }
-
-    private Method ExtractMethod (MethodCall methodCall)
-    {
-      MemberBinding callee = methodCall.Callee as MemberBinding;
-      if (callee == null || !(callee.BoundMember is Method))
-        throw new InjectionCopException ("Cannot extract Method from Methodcall");
-
-      Method boundMember = (Method) callee.BoundMember;
-      return boundMember;
-    }
-
-    private bool Is<F> (Expression expression)
-        where F : FragmentAttribute
-    {
-      bool isFragment = false;
-
-      Parameter parameter = expression as Parameter;
-      if (parameter != null)
-      {
-        isFragment = Contains<F> (parameter.Attributes);
-      }
-
-      return isFragment;
-    }
-
-    private bool Returns<F> (Expression expression)
-        where F : FragmentAttribute
-    {
-      bool returnsFragment = false;
-
-      MethodCall methodCall = expression as MethodCall;
-      if (methodCall != null)
-      {
-        Method calleeMethod = ExtractMethod (methodCall);
-        returnsFragment = Contains<F> (calleeMethod.ReturnAttributes);
-      }
-
-      return returnsFragment;
-    }
-
-    private bool Contains<F> (AttributeNodeCollection attributes)
-        where F : FragmentAttribute
-    {
-      bool containsFragment;
-
-      try
-      {
-        TypeNode fragmentTypeNode = Helper.TypeNodeFactory<F>();
-        containsFragment = attributes.Any (
-            attribute =>
-            attribute.Type.FullName == fragmentTypeNode.FullName
-            );
-      }
-      catch (ArgumentNullException)
-      {
-        containsFragment = false;
-      }
-
-      return containsFragment;
     }
   }
 }

@@ -17,9 +17,9 @@ using System.Data;
 using System.Data.SqlClient;
 using InjectionCop.Attributes;
 
-namespace InjectionCop.IntegrationTests.Parser.AssignmentPropagation
+namespace InjectionCop.IntegrationTests.Parser.TypeParserTests.AssignmentPropagation
 {
-  class AssignmentPropagationSample: TypeParserSample
+  class AssignmentPropagationSample: TypeParserSampleBase
   {
     public void ValidSafenessPropagation()
     {
@@ -31,6 +31,14 @@ namespace InjectionCop.IntegrationTests.Parser.AssignmentPropagation
     public void InvalidSafenessPropagationParameter([SqlFragment] string temp)
     {
       temp = UnsafeSource(temp);
+      IDbCommand command = new SqlCommand();
+      command.CommandText = temp;
+    }
+
+    public void ValidSafenessPropagationParameter(string temp)
+    {
+      DummyMethod (temp);
+      temp = SafeSource();
       IDbCommand command = new SqlCommand();
       command.CommandText = temp;
     }

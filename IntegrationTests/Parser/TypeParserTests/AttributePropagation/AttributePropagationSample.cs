@@ -14,13 +14,28 @@
 
 using System;
 
-namespace InjectionCop.Attributes
+namespace InjectionCop.IntegrationTests.Parser.TypeParserTests.AttributePropagation
 {
-  public class SqlFragment : Fragment
+  class AttributePropagationSample: TypeParserSampleBase
   {
-    public override string FragmentType
+    public void SafeCallOfSqlFragmentCallee()
     {
-      get { return "SqlFragment"; }
+      RequiresSqlFragment (SafeSource());
+    }
+
+    public string UnsafeCallOfSqlFragmentCallee()
+    {
+      return RequiresSqlFragment (UnsafeSource());
+    }
+
+    public string SafeCallOfMixedCallee()
+    {
+      return RequiresSqlFragment ("literal", UnsafeSource(), SafeSource());
+    }
+
+    public void UnsafeCallOfMixedCallee()
+    {
+      RequiresSqlFragment ("literal", SafeSource(), UnsafeSource());
     }
   }
 }

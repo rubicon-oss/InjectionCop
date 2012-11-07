@@ -55,7 +55,40 @@ namespace InjectionCop.Attributes
     public static bool operator != (FragmentAttribute a, FragmentAttribute b)
     {
       return !(a == b);
+    }
 
+    public bool Equals (FragmentAttribute otherAttribute)
+    {
+      return _fragmentType == otherAttribute._fragmentType;
+    }
+
+    public override bool Equals (object objectparameter)
+    {
+      if (objectparameter == null)
+      {
+        return false;
+      }
+
+      FragmentAttribute fragmentAttribute = objectparameter as FragmentAttribute;
+      if (fragmentAttribute == null)
+      {
+        return false;
+      }
+
+      return _fragmentType == fragmentAttribute._fragmentType;
+    }
+
+    public override int GetHashCode ()
+    {
+      unchecked
+      {
+        return (base.GetHashCode() * 397) ^ (_fragmentType != null ? _fragmentType.GetHashCode() : 0);
+      }
+    }
+
+    public static FragmentAttribute OfType (string fragmentattribute)
+    {
+      return new FragmentAttribute (fragmentattribute);
     }
   }
 }

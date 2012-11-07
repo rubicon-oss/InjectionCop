@@ -17,9 +17,10 @@ using InjectionCop.Parser;
 using Microsoft.FxCop.Sdk;
 using NUnit.Framework;
 
-namespace InjectionCop.IntegrationTests.Parser.AssignmentPropagation
+namespace InjectionCop.IntegrationTests.Parser.TypeParserTests.AssignmentPropagation
 {
-  class TypeParserTest_AssignmentPropagation: TypeParserTest
+  [TestFixture]
+  public class AssignmentPropagation_TypeParserTest: TypeParserTestBase
   {
     [Test]
     [Category("AssignmentPropagation")]
@@ -44,6 +45,17 @@ namespace InjectionCop.IntegrationTests.Parser.AssignmentPropagation
 
     [Test]
     [Category("AssignmentPropagation")]
+    public void Check_ValidSafenessPropagationParameter_NoProblem()
+    {
+      TypeNode stringTypeNode = Helper.TypeNodeFactory<string>();
+      Method sample = TestHelper.GetSample<AssignmentPropagationSample>("ValidSafenessPropagationParameter", stringTypeNode);
+      ProblemCollection result = parser.Check (sample);
+
+      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
+    }
+
+    [Test]
+    [Category("AssignmentPropagation")]
     public void Check_InvalidSafenessPropagationVariable_ReturnsProblem()
     {
       Method sample = TestHelper.GetSample<AssignmentPropagationSample>("InvalidSafenessPropagationVariable");
@@ -54,7 +66,7 @@ namespace InjectionCop.IntegrationTests.Parser.AssignmentPropagation
 
     [Test]
     [Category("AssignmentPropagation")]
-    public void Check_ValidSafenessPropagationVariable_ReturnsProblem()
+    public void Check_ValidSafenessPropagationVariable_NoProblem()
     {
       Method sample = TestHelper.GetSample<AssignmentPropagationSample>("ValidSafenessPropagationVariable");
       ProblemCollection result = parser.Check (sample);
