@@ -18,36 +18,17 @@ using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser
 {
-  public class TypeParser : BaseFxCopRule
+  public class BasicBlock
   {
+    private Block _block;
     private IBlackTypes _blackTypes;
+    private TypeParser _typeParser;
 
-    public TypeParser (IBlackTypes blackTypes)
-        : base ("TypeParser")
+    public BasicBlock (Block block, IBlackTypes blackTypes, TypeParser typeParser)
     {
+      _block = block;
       _blackTypes = blackTypes;
+      _typeParser = typeParser;
     }
-
-    public override ProblemCollection Check (TypeNode type)
-    {
-      foreach (Member member in type.Members)
-      {
-        if(member is Method)
-        {
-          Method method = (Method) member;
-          MethodParser methodParser = new MethodParser (method, _blackTypes, this);
-          methodParser.parse();
-        }
-      }
-      return Problems;
-    }
-
-    private void AddProblem ()
-    {
-      Resolution resolution = GetResolution();
-      Problem problem = new Problem (resolution, CheckId);
-      Problems.Add (problem);
-    }
-
   }
 }

@@ -13,26 +13,23 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using Microsoft.FxCop.Sdk;
 
-namespace InjectionCop.Attributes
+namespace InjectionCop.IntegrationTests.Parser
 {
   [AttributeUsage (AttributeTargets.Parameter
                    | AttributeTargets.ReturnValue)]
-  public class FragmentAttribute : Attribute
+  public class NonFragmentAttribute : Attribute
   {
-    //protected static List<string> _usedTypes = new List<string>();
     private readonly string _fragmentType;
 
-    public FragmentAttribute () : this("Fragment")
+    public NonFragmentAttribute ()
     {
+      _fragmentType = "Fragment";
     }
 
-    public FragmentAttribute (string fragmentType)
+    public NonFragmentAttribute (string fragmentType)
     {
       _fragmentType = fragmentType;
-      //RegisterType (this.GetType().FullName);
     }
 
     public string FragmentType
@@ -40,7 +37,7 @@ namespace InjectionCop.Attributes
       get { return _fragmentType; }
     }
 
-    public static bool operator == (FragmentAttribute a, FragmentAttribute b)
+    public static bool operator == (NonFragmentAttribute a, NonFragmentAttribute b)
     {
       if (System.Object.ReferenceEquals (a, b))
       {
@@ -55,12 +52,12 @@ namespace InjectionCop.Attributes
       return a._fragmentType == b._fragmentType;
     }
 
-    public static bool operator != (FragmentAttribute a, FragmentAttribute b)
+    public static bool operator != (NonFragmentAttribute a, NonFragmentAttribute b)
     {
       return !(a == b);
     }
 
-    public bool Equals (FragmentAttribute otherAttribute)
+    public bool Equals (NonFragmentAttribute otherAttribute)
     {
       return _fragmentType == otherAttribute._fragmentType;
     }
@@ -72,13 +69,13 @@ namespace InjectionCop.Attributes
         return false;
       }
 
-      FragmentAttribute fragmentAttribute = objectparameter as FragmentAttribute;
-      if (fragmentAttribute == null)
+      NonFragmentAttribute nonFragmentAttribute = objectparameter as NonFragmentAttribute;
+      if (nonFragmentAttribute == null)
       {
         return false;
       }
 
-      return _fragmentType == fragmentAttribute._fragmentType;
+      return _fragmentType == nonFragmentAttribute._fragmentType;
     }
 
     public override int GetHashCode ()
@@ -89,14 +86,9 @@ namespace InjectionCop.Attributes
       }
     }
 
-    public static FragmentAttribute OfType (string fragmentattribute)
+    public static NonFragmentAttribute OfType (string fragmentattribute)
     {
-      return new FragmentAttribute (fragmentattribute);
-    }
-
-    public static bool IsFragment (AttributeNode attribute)
-    {
-      return attribute.Type.FullName == typeof (FragmentAttribute).FullName;
+      return new NonFragmentAttribute (fragmentattribute);
     }
   }
 }

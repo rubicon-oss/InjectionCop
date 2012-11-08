@@ -64,25 +64,27 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Parser\TypeParserTests\AssignmentPropagation\AssignmentPropagationSample.cs" />
-    <Compile Include="Parser\TypeParserTests\AttributePropagation\AttributePropagationSample.cs" />
-    <Compile Include="Parser\TypeParserTests\BlackMethod\BlackMethodSample.cs" />
+    <Compile Include="Parser\NonFragmentAttribute.cs" />
+    <Compile Include="Parser\BlockParserTests\AssignmentPropagation\AssignmentPropagationSample.cs" />
+    <Compile Include="Parser\BlockParserTests\AttributePropagation\AttributePropagationSample.cs" />
+    <Compile Include="Parser\BlockParserTests\BlackMethod\BlackMethodSample.cs" />
     <Compile Include="Parser\IDbCommandBlackTypesStub.cs" />
-    <Compile Include="Parser\TypeParserTests\FragmentToolsSample.cs" />
-    <Compile Include="Parser\TypeParserTests\FragmentToolsTest.cs" />
-    <Compile Include="Parser\TypeParserTests\If\IfSample.cs" />
-    <Compile Include="Parser\TypeParserTests\If\If_TypeParserTest.cs" />
-    <Compile Include="Parser\TypeParserTests\Parameter\ParameterSample.cs" />
-    <Compile Include="Parser\TypeParserTests\Parameter\Parameter_TypeParserTest.cs" />
-    <Compile Include="Parser\TypeParserTests\Property\PropertySample.cs" />
-    <Compile Include="Parser\TypeParserTests\Property\Property_TypeParserTest.cs" />
+    <Compile Include="Parser\FragmentToolsSample.cs" />
+    <Compile Include="Parser\FragmentToolsTest.cs" />
+    <Compile Include="Parser\BlockParserTests\If\IfSample.cs" />
+    <Compile Include="Parser\BlockParserTests\If\If_TypeParserTest.cs" />
+    <Compile Include="Parser\BlockParserTests\Parameter\ParameterSample.cs" />
+    <Compile Include="Parser\BlockParserTests\Parameter\Parameter_BlockParserTest.cs" />
+    <Compile Include="Parser\BlockParserTests\Property\PropertySample.cs" />
+    <Compile Include="Parser\BlockParserTests\Property\Property_BlockParserTest.cs" />
     <Compile Include="Parser\TestHelper.cs" />
-    <Compile Include="Parser\TypeParserTests\AssignmentPropagation\AssignmentPropagation_TypeParserTest.cs" />
-    <Compile Include="Parser\TypeParserTests\AttributePropagation\AttributePropagation_TypeParserTest.cs" />
-    <Compile Include="Parser\TypeParserTests\BlackMethod\BlackMethod_TypeParserTest.cs" />
+    <Compile Include="Parser\BlockParserTests\AssignmentPropagation\AssignmentPropagation_BlockParserTest.cs" />
+    <Compile Include="Parser\BlockParserTests\AttributePropagation\AttributePropagation_BlockParserTest.cs" />
+    <Compile Include="Parser\BlockParserTests\BlackMethod\BlackMethod_BlockParserTest.cs" />
+    <Compile Include="Parser\BlockParserTests\while_loop\WhileLoopSample.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Parser\TypeParserTests\TypeParserSampleBase.cs" />
-    <Compile Include="Parser\TypeParserTests\TypeParserTestBase.cs" />
+    <Compile Include="Parser\BlockParserTests\BlockParserSampleBase.cs" />
+    <Compile Include="Parser\BlockParserTests\BlockParserTestBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\InjectionCop.Core.csproj">

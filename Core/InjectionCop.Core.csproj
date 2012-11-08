@@ -47,19 +47,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\FragmentAttribute.cs" />
-    <Compile Include="Attributes\SqlFragmentAttribute.cs" />
     <Compile Include="Attributes\TrustedSqlGeneration.cs" />
     <Compile Include="Config\BlackMethod.cs" />
     <Compile Include="Config\BlackParameter.cs" />
     <Compile Include="Config\BlackType.cs" />
     <Compile Include="Config\BlackTypes.cs" />
     <Compile Include="Config\IBlackTypes.cs" />
+    <Compile Include="Parser\BasicBlock.cs" />
     <Compile Include="Parser\FragmentTools.cs" />
     <Compile Include="InjectionCopException.cs" />
     <Compile Include="Parser\BaseFxCopRule.cs" />
     <Compile Include="Parser\Helper.cs" />
     <Compile Include="Parser\IntrospectionTools.cs" />
-    <Compile Include="Parser\SafenessManager.cs" />
+    <Compile Include="Parser\MethodParser.cs" />
+    <Compile Include="Parser\SymbolTable.cs" />
+    <Compile Include="Parser\BlockParser.cs" />
     <Compile Include="Parser\TypeParser.cs" />
     <Compile Include="PrettyPrint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

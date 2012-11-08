@@ -21,22 +21,20 @@ namespace InjectionCop.Parser
 {
   public class FragmentTools
   {
-    public static bool Is<F> (Expression expression)
-        where F : FragmentAttribute
+    public static bool Is(FragmentAttribute fragmentAttribute, Expression expression)
     {
       bool isFragment = false;
 
       Parameter parameter = expression as Parameter;
       if (parameter != null)
       {
-        isFragment = Contains<F> (parameter.Attributes);
+        isFragment = Contains(fragmentAttribute, parameter.Attributes);
       }
 
       return isFragment;
     }
 
-    public static bool Returns<F> (Expression expression)
-        where F : FragmentAttribute
+    public static bool Returns(FragmentAttribute fragmentAttribute, Expression expression)
     {
       bool returnsFragment = false;
 
@@ -44,66 +42,37 @@ namespace InjectionCop.Parser
       if (methodCall != null)
       {
         Method calleeMethod = IntrospectionTools.ExtractMethod (methodCall);
-        returnsFragment = Contains<F> (calleeMethod.ReturnAttributes);
+        returnsFragment = Contains(fragmentAttribute, calleeMethod.ReturnAttributes);
       }
 
       return returnsFragment;
     }
 
-    public static bool Contains<F> (AttributeNodeCollection attributes)
-        where F : FragmentAttribute
+    public static bool Contains (FragmentAttribute fragmentAttribute, AttributeNodeCollection attributes)
     {
-      bool containsFragment;
-
-      try
+      bool contains = false;
+      if(attributes != null)
       {
-        TypeNode fragmentTypeNode = Helper.TypeNodeFactory<F>();
-        containsFragment = attributes.Any (
-            attribute =>
-            attribute.Type.FullName == fragmentTypeNode.FullName
-            );
+        contains = attributes.Any (attribute => Is (fragmentAttribute, attribute));
       }
-      catch (ArgumentNullException)
-      {
-        containsFragment = false;
-      }
-
-      return containsFragment;
+      return contains;
     }
 
-    public static bool Contains (FragmentAttribute fragmentType, AttributeNodeCollection attributes)
+    public static bool Is (FragmentAttribute fragmentAttribute, AttributeNode attribute)
     {
-      bool containsFragment = false;
-
-      try
+      bool isFragment = false;
+      if (FragmentAttribute.IsFragment(attribute))
       {
-        //Identifier fieldName = Identifier.For("_fragmentType");
-        foreach(AttributeNode attribute in attributes)
+        foreach (Literal literal in attribute.Expressions)
         {
-          if(attribute.Type.FullName == "InjectionCop.Attributes.FragmentAttribute")
+          string value = literal.Value as string;
+          if (FragmentAttribute.OfType (value) == fragmentAttribute)
           {
-            foreach (Literal literal in attribute.Expressions)
-            {
-              string value = literal.Value as string;
-              if (FragmentAttribute.OfType(value) == fragmentType)
-              {
-                containsFragment = true;
-              }
-
-            }
+            isFragment = true;
           }
         }
-        /*containsFragment = attributes.Any (
-            attribute =>
-            attribute.
-            );*/
       }
-      catch (ArgumentNullException)
-      {
-        containsFragment = false;
-      }
-
-      return containsFragment;
+      return isFragment;
     }
   }
 }
