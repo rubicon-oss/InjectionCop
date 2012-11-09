@@ -86,6 +86,7 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParserTests.Parameter
 
     [Test]
     [Category ("Parameter")]
+    [Ignore]
     public void Check_FragmentRefParameterSafe_NoProblem ()
     {
       Method sample = TestHelper.GetSample<ParameterSample> ("FragmentRefParameterSafe");
@@ -96,6 +97,7 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParserTests.Parameter
 
     [Test]
     [Category ("Parameter")]
+    [Ignore]
     public void Check_FragmentRefParameterUnsafe_ReturnsProblem ()
     {
       Method sample = TestHelper.GetSample<ParameterSample> ("FragmentRefParameterUnsafe");
@@ -106,6 +108,7 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParserTests.Parameter
 
     [Test]
     [Category ("Parameter")]
+    [Ignore]
     public void Check_RefParameterUnsafeOperand_ReturnsProblem ()
     {
       Method sample = TestHelper.GetSample<ParameterSample> ("RefParameterUnsafeOperand");
@@ -116,6 +119,7 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParserTests.Parameter
 
     [Test]
     [Category ("Parameter")]
+    [Ignore]
     public void Check_RefParameterSafeOperand_ReturnsProblem ()
     {
       Method sample = TestHelper.GetSample<ParameterSample> ("RefParameterSafeOperand");

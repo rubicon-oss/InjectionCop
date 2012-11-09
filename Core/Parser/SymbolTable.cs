@@ -20,16 +20,16 @@ using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser
 {
-  public class SymbolTable
+  public class SymbolTable : ICloneable
   {
     private readonly IBlackTypes _blackTypes;
-    private readonly Dictionary<Identifier, bool> _safeSymbols;
-    private FragmentAttribute sqlFragment = new FragmentAttribute ("SqlFragment");
+    private Dictionary<string, bool> _safenessMap;
+    private readonly FragmentAttribute sqlFragment = new FragmentAttribute ("SqlFragment");
 
     public SymbolTable(IBlackTypes blackTypes)
     {
       _blackTypes = blackTypes;
-      _safeSymbols = new Dictionary<Identifier, bool>();
+      _safenessMap = new Dictionary<string, bool>();
     }
 
     public bool IsSafe (Expression expression)
@@ -41,17 +41,17 @@ namespace InjectionCop.Parser
       if (expression is Parameter)
       {
         Parameter parameter = (Parameter) expression;
-        if (_safeSymbols.ContainsKey (parameter.Name))
+        if (_safenessMap.ContainsKey (parameter.Name.Name))
         {
-          safeVariable = _safeSymbols[parameter.Name];
+          safeVariable = _safenessMap[parameter.Name.Name];
         }
       }
       else if (expression is Local)
       {
         Local local = (Local) expression;
-        if (_safeSymbols.ContainsKey (local.Name))
+        if (_safenessMap.ContainsKey (local.Name.Name))
         {
-          safeVariable = _safeSymbols[local.Name];
+          safeVariable = _safenessMap[local.Name.Name];
         }
       }
       else if (expression is UnaryExpression)
@@ -67,9 +67,10 @@ namespace InjectionCop.Parser
       return !IsSafe (expression);
     }
 
-    public bool ParametersSafe (MethodCall methodCall)
+    public bool ParametersSafe (MethodCall methodCall, out List<string> requireSafenessParameters)
     {
       bool parameterSafe = true;
+      requireSafenessParameters = new List<string>();
       Method calleeMethod = IntrospectionTools.ExtractMethod (methodCall);
 
       if (_blackTypes.IsBlackMethod (calleeMethod.DeclaringType.FullName, calleeMethod.Name.Name))
@@ -79,30 +80,92 @@ namespace InjectionCop.Parser
           if (IsNotSafe (expression))
           {
             parameterSafe = false;
+            if(IsVariable(expression))
+            {
+              requireSafenessParameters.Add (VariableName (expression));
+            }
           }
         }
       }
 
       for (int i = 0; i < calleeMethod.Parameters.Count; i++)
       {
-        bool isFragmentParameter = FragmentTools.Contains(sqlFragment, calleeMethod.Parameters[i].Attributes);
-        if (isFragmentParameter && IsNotSafe (methodCall.Operands[i]))
+        bool isFragmentParameter = FragmentTools.Contains (sqlFragment, calleeMethod.Parameters[i].Attributes);
+        Expression expression = methodCall.Operands[i];
+        if (isFragmentParameter && IsNotSafe (expression))
         {
           parameterSafe = false;
+          if (IsVariable (expression))
+          {
+            requireSafenessParameters.Add (VariableName (expression));
+          }
         }
       }
 
       return parameterSafe;
     }
 
+    private bool IsVariable(Expression expression)
+    {
+      return expression is Parameter || expression is Local;
+    }
+
+    private string VariableName (Expression expression)
+    {
+      string variableName = "";
+      if (expression is Parameter)
+      {
+        Parameter operand = (Parameter) expression;
+        variableName = operand.Name.Name;
+      }
+      else if (expression is Local)
+      {
+        Local operand = (Local) expression;
+        variableName = operand.Name.Name;
+      }
+      return variableName;
+    }
+
     public void SetSafeness(Identifier key, bool value)
     {
-      _safeSymbols[key] = value;
+      _safenessMap[key.Name] = value;
     }
 
     public void SetSafeness(Identifier key, Expression expression)
     {
       SetSafeness (key, IsSafe (expression));
+    }
+
+    public SymbolTable Clone()
+    {
+      SymbolTable clone = new SymbolTable (_blackTypes);
+      clone._safenessMap = new Dictionary<string, bool> (_safenessMap);
+      return clone;
+    }
+
+    object ICloneable.Clone()
+    {
+      return Clone();
+    }
+
+    public void SetSafeness (string key, bool safeness)
+    {
+      _safenessMap[key] = safeness;
+    }
+
+    public bool IsSafe (string symbolName)
+    {
+      bool isSafe = false;
+      if(_safenessMap.ContainsKey(symbolName))
+      {
+        isSafe = _safenessMap[symbolName];
+      }
+      return isSafe;
+    }
+
+    public bool IsNotSafe (string symbolName)
+    {
+      return !IsSafe (symbolName);
     }
   }
 }

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using InjectionCop.Attributes;
 using InjectionCop.Config;
 using Microsoft.FxCop.Sdk;
@@ -21,13 +22,17 @@ namespace InjectionCop.Parser
 {
   public class BlockParser : BaseFxCopRule
   {
-    private SymbolTable _safenessManager;
-    private FragmentAttribute sqlFragment = new FragmentAttribute("SqlFragment");
+    private readonly SymbolTable _symbolTable;
+    private List<string> _preConditionSafeSymbols;
+    private List<int> _successors;
+    private readonly FragmentAttribute sqlFragment = new FragmentAttribute("SqlFragment");
 
     public BlockParser (IBlackTypes blackTypes)
         : base ("TypeParser")
     {
-      _safenessManager = new SymbolTable (blackTypes);
+      _symbolTable = new SymbolTable (blackTypes);
+      _preConditionSafeSymbols = new List<string>();
+      _successors = new List<int>();
     }
 
     public override ProblemCollection Check (Member member)
@@ -40,11 +45,11 @@ namespace InjectionCop.Parser
         {
           if (FragmentTools.Is(sqlFragment, parameter))
           {
-            _safenessManager.SetSafeness(parameter.Name, true);
+            _symbolTable.SetSafeness(parameter.Name, true);
           }
           else
           {
-            _safenessManager.SetSafeness(parameter.Name, false);
+            _symbolTable.SetSafeness(parameter.Name, false);
           }
         }
 
@@ -75,7 +80,7 @@ namespace InjectionCop.Parser
           case NodeType.AssignmentStatement:
             AssignmentStatement asgn = (AssignmentStatement) stmt;
             Identifier symbol = GetVariableIdentifier (asgn.Target);
-            _safenessManager.SetSafeness(symbol, asgn.Source);
+            _symbolTable.SetSafeness(symbol, asgn.Source);
             Inspect (asgn.Source);
             break;
 
@@ -86,6 +91,7 @@ namespace InjectionCop.Parser
 
           case NodeType.Branch:
             Branch branch = (Branch) stmt;
+            _successors.Add (branch.Target.UniqueKey);
             Inspect (branch.Target);
             break;
         }
@@ -132,8 +138,10 @@ namespace InjectionCop.Parser
       if (expression is MethodCall)
       {
         MethodCall methodCall = (MethodCall) expression;
-        if (!_safenessManager.ParametersSafe (methodCall))
+        List<string> additionalPreConditions;
+        if (!_symbolTable.ParametersSafe (methodCall, out additionalPreConditions))
         {
+          _preConditionSafeSymbols.AddRange (additionalPreConditions);
           AddProblem();
         }
         UpdateSafeOutParameters (methodCall);
@@ -153,13 +161,12 @@ namespace InjectionCop.Parser
       {
         if (IsVariable (methodCall.Operands[i]))
         {
-          bool isRef = !method.Parameters[i].IsOut && !method.Parameters[i].IsIn;
-          if (method.Parameters[i].IsOut || isRef)
+          if (method.Parameters[i].IsOut)
           {
             Identifier symbol = GetVariableIdentifier (methodCall.Operands[i]);
             //bool safeness = FragmentTools.Contains<SqlFragmentAttribute> (method.Parameters[i].Attributes);
             bool safeness = FragmentTools.Contains(sqlFragment, method.Parameters[i].Attributes);
-            _safenessManager.SetSafeness(symbol, safeness);
+            _symbolTable.SetSafeness(symbol, safeness);
           }
         }
       }
@@ -170,6 +177,15 @@ namespace InjectionCop.Parser
       Resolution resolution = GetResolution();
       Problem problem = new Problem (resolution, CheckId);
       Problems.Add (problem);
+    }
+
+    public BasicBlock Parse (Block block, int directSuccessorKey = 0)
+    {
+      _successors.Add (directSuccessorKey);
+      Inspect (block);
+      BasicBlock basicBlock = new BasicBlock (_preConditionSafeSymbols.ToArray(), _symbolTable, _successors.ToArray());
+
+      return basicBlock;
     }
   }
 }

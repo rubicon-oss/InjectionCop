@@ -13,22 +13,42 @@
 // limitations under the License.
 
 using System;
-using InjectionCop.Config;
-using Microsoft.FxCop.Sdk;
+using System.Collections.Generic;
 
 namespace InjectionCop.Parser
 {
   public class BasicBlock
   {
-    private Block _block;
-    private IBlackTypes _blackTypes;
-    private TypeParser _typeParser;
-
-    public BasicBlock (Block block, IBlackTypes blackTypes, TypeParser typeParser)
+    private readonly string[] _preConditionSafeSymbols;
+    private readonly SymbolTable _postConditionSymbolTable;
+    private readonly int[] _successorKeys;
+    
+    public BasicBlock(string[] preConditionSafeSymbols, SymbolTable postConditionSymbolTable, int[] successorKeys)
     {
-      _block = block;
-      _blackTypes = blackTypes;
-      _typeParser = typeParser;
+      _preConditionSafeSymbols = preConditionSafeSymbols;
+      _postConditionSymbolTable = postConditionSymbolTable;
+      _successorKeys = successorKeys;
+    }
+
+    /// <summary>
+    /// symbols that must be set to a safe value upon entering the basic block
+    /// </summary>
+    public List<string> PreConditionSafeSymbols
+    {
+      get { return new List<string> (_preConditionSafeSymbols); }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public SymbolTable PostConditionSymbolTable
+    {
+      get { return _postConditionSymbolTable; }
+    }
+
+    public int[] SuccessorKeys
+    {
+      get { return _successorKeys; }
     }
   }
 }

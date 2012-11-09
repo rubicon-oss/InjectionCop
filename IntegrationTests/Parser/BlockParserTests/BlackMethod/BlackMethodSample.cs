@@ -18,7 +18,7 @@ using System.Data.SqlClient;
 
 namespace InjectionCop.IntegrationTests.Parser.BlockParserTests.BlackMethod
 {
-  class BlackMethodSample: BlockParserSampleBase
+  class BlackMethodSample: ParserSampleBase
   {
     public void BlackMethodCallLiteral()
     {

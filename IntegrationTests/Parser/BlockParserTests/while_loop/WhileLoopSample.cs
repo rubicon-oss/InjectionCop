@@ -16,7 +16,7 @@ using System;
 
 namespace InjectionCop.IntegrationTests.Parser.BlockParserTests.while_loop
 {
-  internal class WhileLoopSample : BlockParserSampleBase
+  internal class WhileLoopSample : ParserSampleBase
   {
     public void ValidCallInsideWhile ()
     {

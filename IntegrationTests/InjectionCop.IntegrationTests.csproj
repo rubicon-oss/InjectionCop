@@ -64,6 +64,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Parser\BlockParserSample.cs" />
     <Compile Include="Parser\NonFragmentAttribute.cs" />
     <Compile Include="Parser\BlockParserTests\AssignmentPropagation\AssignmentPropagationSample.cs" />
     <Compile Include="Parser\BlockParserTests\AttributePropagation\AttributePropagationSample.cs" />
@@ -82,8 +83,9 @@
     <Compile Include="Parser\BlockParserTests\AttributePropagation\AttributePropagation_BlockParserTest.cs" />
     <Compile Include="Parser\BlockParserTests\BlackMethod\BlackMethod_BlockParserTest.cs" />
     <Compile Include="Parser\BlockParserTests\while_loop\WhileLoopSample.cs" />
+    <Compile Include="Parser\BlockParserTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Parser\BlockParserTests\BlockParserSampleBase.cs" />
+    <Compile Include="Parser\ParserSampleBase.cs" />
     <Compile Include="Parser\BlockParserTests\BlockParserTestBase.cs" />
   </ItemGroup>
   <ItemGroup>

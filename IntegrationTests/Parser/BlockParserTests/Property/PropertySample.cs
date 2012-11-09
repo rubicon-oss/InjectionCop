@@ -16,7 +16,7 @@ using System;
 
 namespace InjectionCop.IntegrationTests.Parser.BlockParserTests.Property
 {
-  class PropertySample: BlockParserSampleBase
+  class PropertySample: ParserSampleBase
   {
     public void CallWithUnsafeProperty()
     {

@@ -16,7 +16,7 @@ using System;
 
 namespace InjectionCop.IntegrationTests.Parser.BlockParserTests.AttributePropagation
 {
-  class AttributePropagationSample: BlockParserSampleBase
+  class AttributePropagationSample: ParserSampleBase
   {
     public void SafeCallOfSqlFragmentCallee()
     {

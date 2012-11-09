@@ -13,29 +13,27 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
+using InjectionCop.Parser;
+using Microsoft.FxCop.Sdk;
+using NUnit.Framework;
+using InjectionCop.IntegrationTests.Parser;
 
-namespace InjectionCop.IntegrationTests.Parser.TypeParserTests.AttributePropagation
+namespace InjectionCop.UnitTests.Parser
 {
-  class AttributePropagationSample: TypeParserSampleBase
+  [TestFixture]
+  public class SymbolTableTest
   {
-    public void SafeCallOfSqlFragmentCallee()
+    [Test]
+    public void Clone_ReturnsDeepCopy_True ()
     {
-      RequiresSqlFragment (SafeSource());
-    }
-
-    public string UnsafeCallOfSqlFragmentCallee()
-    {
-      return RequiresSqlFragment (UnsafeSource());
-    }
-
-    public string SafeCallOfMixedCallee()
-    {
-      return RequiresSqlFragment ("literal", UnsafeSource(), SafeSource());
-    }
-
-    public void UnsafeCallOfMixedCallee()
-    {
-      RequiresSqlFragment ("literal", SafeSource(), UnsafeSource());
+      SymbolTable symbolTable = new SymbolTable(new IDbCommandBlackTypesStub());
+      symbolTable.SetSafeness (Identifier.For ("key"), true);
+      SymbolTable clone = symbolTable.Clone();
+      clone.SetSafeness("key", false);
+      SymbolTable result = symbolTable.Clone();
+      
+      Assert.That (result.IsSafe("key"), Is.True);
     }
   }
 }

@@ -121,6 +121,7 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParserTests.If
 
     [Test]
     [Category("If")]
+    [Ignore]
     public void Check_UnsafeAssignmentInsideIfNestedElse_ReturnsProblem()
     {
       TypeNode intTypeNode = Helper.TypeNodeFactory<int>();

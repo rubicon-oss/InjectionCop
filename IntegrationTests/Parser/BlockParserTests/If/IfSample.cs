@@ -16,7 +16,7 @@ using System;
 
 namespace InjectionCop.IntegrationTests.Parser.BlockParserTests.If
 {
-  internal class IfSample : BlockParserSampleBase
+  internal class IfSample : ParserSampleBase
   {
     public void ValidExampleInsideIf (int x, int y)
     {

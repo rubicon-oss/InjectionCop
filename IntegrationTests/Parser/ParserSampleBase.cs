@@ -15,9 +15,9 @@
 using System;
 using InjectionCop.Attributes;
 
-namespace InjectionCop.IntegrationTests.Parser.TypeParserTests
+namespace InjectionCop.IntegrationTests.Parser
 {
-  internal class TypeParserSampleBase
+  internal class ParserSampleBase
   {
     protected string UnsafeSource ()
     {
@@ -29,7 +29,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParserTests
       return param + "unsafe";
     }
 
-    [return: SqlFragment]
+    [return: Fragment("SqlFragment")]
     protected string SafeSource ()
     {
       return "safe command";
@@ -39,18 +39,18 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParserTests
     {
     }
 
-    protected string RequiresSqlFragment ([SqlFragment] string param)
+    protected string RequiresSqlFragment ([Fragment("SqlFragment")] string param)
     {
       return param;
     }
 
-    protected string RequiresSqlFragment ([SqlFragment] string a, string b, [SqlFragment] string c)
+    protected string RequiresSqlFragment ([Fragment("SqlFragment")] string a, string b, [Fragment("SqlFragment")] string c)
     {
       return a + b + c;
     }
 
-    public string SafeProperty { [return: SqlFragment]
-    get; [param: SqlFragment]
+    public string SafeProperty { [return: Fragment("SqlFragment")]
+    get; [param: Fragment("SqlFragment")]
     set; }
 
     public string UnsafeProp { get; set; }

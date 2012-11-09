@@ -14,7 +14,6 @@
 
 using System;
 using InjectionCop.Attributes;
-using Microsoft.FxCop.Sdk;
 using NUnit.Framework;
 
 namespace InjectionCop.UnitTests.Attributes

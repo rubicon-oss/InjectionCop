@@ -19,7 +19,7 @@ using InjectionCop.Attributes;
 
 namespace InjectionCop.IntegrationTests.Parser.BlockParserTests.AssignmentPropagation
 {
-  class AssignmentPropagationSample: BlockParserSampleBase
+  class AssignmentPropagationSample: ParserSampleBase
   {
     public void ValidSafenessPropagation()
     {

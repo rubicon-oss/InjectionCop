@@ -17,7 +17,7 @@ using InjectionCop.Attributes;
 
 namespace InjectionCop.IntegrationTests.Parser.BlockParserTests.Parameter
 {
-  class ParameterSample: BlockParserSampleBase
+  class ParameterSample: ParserSampleBase
   {
     public void UnsafeMethodParameter(string unsafeParam)
     {

@@ -17,7 +17,7 @@ using InjectionCop.Config;
 
 namespace InjectionCop.IntegrationTests.Parser
 {
-  class IDbCommandBlackTypesStub: IBlackTypes
+  public class IDbCommandBlackTypesStub: IBlackTypes
   {
     public bool IsBlackType(string fullName)
     {

@@ -35,6 +35,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Cci, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\Microsoft.Cci.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\..\..\NUnit-2.6.2\bin\framework\nunit.framework.dll</HintPath>
     </Reference>
@@ -54,6 +58,8 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Attributes\FragmentAttributeTest.cs" />
+    <Compile Include="Parser\BasicBlockTest.cs" />
+    <Compile Include="Parser\SymbolTableTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -61,10 +67,13 @@
       <Project>{c5a8dd38-1385-4b39-985c-02e5255c3dd3}</Project>
       <Name>InjectionCop.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\IntegrationTests\InjectionCop.IntegrationTests.csproj">
+      <Project>{ab7b04c2-9e21-496d-8554-5ad8f6ecbbcf}</Project>
+      <Name>InjectionCop.IntegrationTests</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Config\" />
-    <Folder Include="Parser\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="UnitTests.licenseheader" />
