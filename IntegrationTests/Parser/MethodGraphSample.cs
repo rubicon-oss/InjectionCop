@@ -11,19 +11,35 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
 using System;
 
-namespace InjectionCop
+namespace InjectionCop.IntegrationTests.Parser
 {
-  [Serializable]
-  public class InjectionCopException: Exception
+  public class MethodGraphSample
   {
-    public InjectionCopException() { }
-    public InjectionCopException(string message) : base(message) { }
-    public InjectionCopException(string message, System.Exception inner) : base(message, inner) { }
+    public int DeclarationWithReturn()
+    {
+      int i = 3;
+      return i;
+    }
 
-    protected InjectionCopException(System.Runtime.Serialization.SerializationInfo info,
-        System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+    public string IfStatementTrueBlockOnly(string param)
+    {
+      if (param == "dummy")
+      {
+        param = "changed";
+      }
+      return param;
+    }
+
+    public int ForLoop()
+    {
+      int result = 0;
+      for(int i = 10; i > 0; i--)
+      {
+        result += i;
+      }
+      return result;
+    }
   }
 }

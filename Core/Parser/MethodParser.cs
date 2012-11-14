@@ -23,14 +23,14 @@ namespace InjectionCop.Parser
   {
     private IBlackTypes _blackTypes;
     private TypeParser _typeParser;
-
+    
     public MethodParser (IBlackTypes blackTypes, TypeParser typeParser)
     {
       _blackTypes = blackTypes;
       _typeParser = typeParser;
     }
 
-    public void parse (Method method)
+    public ProblemCollection Parse (Method method)
     {
       SymbolTable parameterSafeness = new SymbolTable (_blackTypes);
       FragmentAttribute sqlFragment = new FragmentAttribute ("SqlFragment");
@@ -47,16 +47,13 @@ namespace InjectionCop.Parser
         }
       }
 
-      foreach (Statement statement in method.Body.Statements)
-      {
-        Block methodBodyBlock = statement as Block;
-        if (methodBodyBlock != null)
-        {
-          //BasicBlock basicBlock = new BasicBlock (methodBodyBlock, _blackTypes, _typeParser);
-          // use basic block generator to build array of blocks möglicherweise mit stream
+      MethodGraph methodGraph = new MethodGraph(method.Body, _blackTypes);
+      return Parse (methodGraph, parameterSafeness);
+    }
 
-        }
-      }
+    public ProblemCollection Parse(IMethodGraph methodGraph, SymbolTable preConditions)
+    {
+      return _typeParser.Problems;
     }
   }
 }

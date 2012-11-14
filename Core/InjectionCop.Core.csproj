@@ -53,6 +53,8 @@
     <Compile Include="Config\BlackType.cs" />
     <Compile Include="Config\BlackTypes.cs" />
     <Compile Include="Config\IBlackTypes.cs" />
+    <Compile Include="Parser\IMethodGraph.cs" />
+    <Compile Include="Parser\MethodGraph.cs" />
     <Compile Include="Parser\BasicBlock.cs" />
     <Compile Include="Parser\FragmentTools.cs" />
     <Compile Include="InjectionCopException.cs" />

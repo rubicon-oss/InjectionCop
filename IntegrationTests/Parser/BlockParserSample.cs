@@ -49,6 +49,13 @@ namespace InjectionCop.IntegrationTests.Parser
       RequiresSqlFragment (unSafe2);
     }
 
+    public void BlockInternalSafenessCondition (string x)
+    {
+      String y = "Safe";
+      RequiresSqlFragment (x);
+      RequiresSqlFragment (y);
+    }
+
     public string SetSuccessor(string param)
     {
       param += "dummy";

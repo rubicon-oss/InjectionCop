@@ -14,16 +14,11 @@
 
 using System;
 
-namespace InjectionCop
+namespace InjectionCop.Parser
 {
-  [Serializable]
-  public class InjectionCopException: Exception
+  public interface IMethodGraph
   {
-    public InjectionCopException() { }
-    public InjectionCopException(string message) : base(message) { }
-    public InjectionCopException(string message, System.Exception inner) : base(message, inner) { }
-
-    protected InjectionCopException(System.Runtime.Serialization.SerializationInfo info,
-        System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+    int InitialBlockId { get; }
+    BasicBlock GetBasicBlockById(int id);
   }
 }

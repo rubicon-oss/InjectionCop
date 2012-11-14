@@ -23,16 +23,22 @@ namespace InjectionCop.Parser
   public class BlockParser : BaseFxCopRule
   {
     private readonly SymbolTable _symbolTable;
+    private SymbolTable _symbolTableParser;
     private List<string> _preConditionSafeSymbols;
     private List<int> _successors;
     private readonly FragmentAttribute sqlFragment = new FragmentAttribute("SqlFragment");
+    private readonly IBlackTypes _blackTypes;
+    private bool _parserMode;
 
     public BlockParser (IBlackTypes blackTypes)
         : base ("TypeParser")
     {
       _symbolTable = new SymbolTable (blackTypes);
+      _symbolTableParser = new SymbolTable (blackTypes);
       _preConditionSafeSymbols = new List<string>();
       _successors = new List<int>();
+      _blackTypes = blackTypes;
+      _parserMode = false;
     }
 
     public override ProblemCollection Check (Member member)
@@ -46,10 +52,12 @@ namespace InjectionCop.Parser
           if (FragmentTools.Is(sqlFragment, parameter))
           {
             _symbolTable.SetSafeness(parameter.Name, true);
+            _symbolTableParser.SetSafeness(parameter.Name, true);
           }
           else
           {
             _symbolTable.SetSafeness(parameter.Name, false);
+            _symbolTableParser.SetSafeness(parameter.Name, false);
           }
         }
 
@@ -81,6 +89,7 @@ namespace InjectionCop.Parser
             AssignmentStatement asgn = (AssignmentStatement) stmt;
             Identifier symbol = GetVariableIdentifier (asgn.Target);
             _symbolTable.SetSafeness(symbol, asgn.Source);
+            _symbolTableParser.SetSafeness(symbol, asgn.Source);
             Inspect (asgn.Source);
             break;
 
@@ -91,8 +100,14 @@ namespace InjectionCop.Parser
 
           case NodeType.Branch:
             Branch branch = (Branch) stmt;
-            _successors.Add (branch.Target.UniqueKey);
-            Inspect (branch.Target);
+            if(_parserMode == true)
+            {
+              _successors.Add (branch.Target.UniqueKey);
+            }
+            else
+            {
+              Inspect (branch.Target);  
+            }
             break;
         }
       }
@@ -139,7 +154,8 @@ namespace InjectionCop.Parser
       {
         MethodCall methodCall = (MethodCall) expression;
         List<string> additionalPreConditions;
-        if (!_symbolTable.ParametersSafe (methodCall, out additionalPreConditions))
+        if (!_symbolTable.ParametersSafe (methodCall, out additionalPreConditions)
+          || !_symbolTableParser.ParametersSafe (methodCall, out additionalPreConditions))
         {
           _preConditionSafeSymbols.AddRange (additionalPreConditions);
           AddProblem();
@@ -167,6 +183,7 @@ namespace InjectionCop.Parser
             //bool safeness = FragmentTools.Contains<SqlFragmentAttribute> (method.Parameters[i].Attributes);
             bool safeness = FragmentTools.Contains(sqlFragment, method.Parameters[i].Attributes);
             _symbolTable.SetSafeness(symbol, safeness);
+            _symbolTableParser.SetSafeness(symbol, safeness);
           }
         }
       }
@@ -179,13 +196,29 @@ namespace InjectionCop.Parser
       Problems.Add (problem);
     }
 
-    public BasicBlock Parse (Block block, int directSuccessorKey = 0)
+    public BasicBlock Parse (Block block)
     {
+      Reset();
+      Inspect (block);
+      BasicBlock basicBlock = new BasicBlock (block.UniqueKey, _preConditionSafeSymbols.ToArray(), _symbolTableParser, _successors.ToArray());
+      return basicBlock;
+    }
+
+    public BasicBlock Parse (Block block, int directSuccessorKey)
+    {
+      Reset();
       _successors.Add (directSuccessorKey);
       Inspect (block);
-      BasicBlock basicBlock = new BasicBlock (_preConditionSafeSymbols.ToArray(), _symbolTable, _successors.ToArray());
-
+      BasicBlock basicBlock = new BasicBlock (block.UniqueKey, _preConditionSafeSymbols.ToArray(), _symbolTableParser, _successors.ToArray());
       return basicBlock;
+    }
+
+    private void Reset()
+    {
+      _parserMode = true;
+      _symbolTableParser = new SymbolTable (_blackTypes);
+      _preConditionSafeSymbols = new List<string>();
+      _successors = new List<int>();
     }
   }
 }

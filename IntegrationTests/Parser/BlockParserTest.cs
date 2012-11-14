@@ -92,13 +92,26 @@ namespace InjectionCop.IntegrationTests.Parser
     }
 
     [Test]
+    public void Parse_BlockInternalSafenessCondition_InternalSafenessSymbolNotInPreCondition ()
+    {
+      TypeNode stringTypeNode = Helper.TypeNodeFactory<string>();
+      Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("BlockInternalSafenessCondition", stringTypeNode);
+      Block sample = sampleMethod.Body.Statements[0] as Block;
+      BasicBlock basicBlock = _blockParser.Parse (sample);
+      bool correctPreCondition = basicBlock.PreConditionSafeSymbols.Contains ("x")
+                                 && basicBlock.PreConditionSafeSymbols.Count == 1;
+
+      Assert.That (correctPreCondition, Is.True);
+    }
+
+    [Test]
     public void Parse_SetSuccessor ()
     {
       TypeNode stringTypeNode = Helper.TypeNodeFactory<string>();
       Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("SetSuccessor", stringTypeNode);
       Block sample = sampleMethod.Body.Statements[0] as Block;
       BasicBlock basicBlock = _blockParser.Parse (sample);
-      bool correctPreCondition = (basicBlock.SuccessorKeys.Length == 2);
+      bool correctPreCondition = (basicBlock.SuccessorKeys.Length == 1);
 
       Assert.That (correctPreCondition, Is.True);
     }

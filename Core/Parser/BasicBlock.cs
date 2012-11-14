@@ -19,15 +19,17 @@ namespace InjectionCop.Parser
 {
   public class BasicBlock
   {
+    private readonly int _id;
     private readonly string[] _preConditionSafeSymbols;
     private readonly SymbolTable _postConditionSymbolTable;
     private readonly int[] _successorKeys;
     
-    public BasicBlock(string[] preConditionSafeSymbols, SymbolTable postConditionSymbolTable, int[] successorKeys)
+    public BasicBlock(int id, string[] preConditionSafeSymbols, SymbolTable postConditionSymbolTable, int[] successorKeys)
     {
       _preConditionSafeSymbols = preConditionSafeSymbols;
       _postConditionSymbolTable = postConditionSymbolTable;
       _successorKeys = successorKeys;
+      _id = id;
     }
 
     /// <summary>
@@ -49,6 +51,11 @@ namespace InjectionCop.Parser
     public int[] SuccessorKeys
     {
       get { return _successorKeys; }
+    }
+
+    public int Id
+    {
+      get { return _id; }
     }
   }
 }

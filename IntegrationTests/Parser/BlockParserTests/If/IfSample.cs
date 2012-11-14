@@ -167,7 +167,9 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParserTests.If
         // ReSharper restore RedundantAssignment
         if (x == y)
         {
+// ReSharper disable RedundantAssignment
           temp = UnsafeSource();
+// ReSharper restore RedundantAssignment
         }
         temp = "safe again";
       }
