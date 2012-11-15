@@ -24,52 +24,52 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParserTests.AssignmentPropaga
   {
     [Test]
     [Category("AssignmentPropagation")]
-    public void Check_ValidSafenessPropagation_NoProblem()
+    public void Parse_ValidSafenessPropagation_NoProblem()
     {
       Method sample = TestHelper.GetSample<AssignmentPropagationSample>("ValidSafenessPropagation");
-      ProblemCollection result = _parser.Check (sample);
+      ProblemCollection result = _typeParser.Parse (sample);
 
       Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
     }
 
     [Test]
     [Category("AssignmentPropagation")]
-    public void Check_InvalidSafenessPropagationParameter_ReturnsProblem()
+    public void Parse_InvalidSafenessPropagationParameter_ReturnsProblem()
     {
       TypeNode stringTypeNode = Helper.TypeNodeFactory<string>();
       Method sample = TestHelper.GetSample<AssignmentPropagationSample>("InvalidSafenessPropagationParameter", stringTypeNode);
-      ProblemCollection result = _parser.Check (sample);
+      ProblemCollection result = _typeParser.Parse (sample);
 
       Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
     }
 
     [Test]
     [Category("AssignmentPropagation")]
-    public void Check_ValidSafenessPropagationParameter_NoProblem()
+    public void Parse_ValidSafenessPropagationParameter_NoProblem()
     {
       TypeNode stringTypeNode = Helper.TypeNodeFactory<string>();
       Method sample = TestHelper.GetSample<AssignmentPropagationSample>("ValidSafenessPropagationParameter", stringTypeNode);
-      ProblemCollection result = _parser.Check (sample);
+      ProblemCollection result = _typeParser.Parse (sample);
 
       Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
     }
 
     [Test]
     [Category("AssignmentPropagation")]
-    public void Check_InvalidSafenessPropagationVariable_ReturnsProblem()
+    public void Parse_InvalidSafenessPropagationVariable_ReturnsProblem()
     {
       Method sample = TestHelper.GetSample<AssignmentPropagationSample>("InvalidSafenessPropagationVariable");
-      ProblemCollection result = _parser.Check (sample);
+      ProblemCollection result = _typeParser.Parse (sample);
 
       Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
     }
 
     [Test]
     [Category("AssignmentPropagation")]
-    public void Check_ValidSafenessPropagationVariable_NoProblem()
+    public void Parse_ValidSafenessPropagationVariable_NoProblem()
     {
       Method sample = TestHelper.GetSample<AssignmentPropagationSample>("ValidSafenessPropagationVariable");
-      ProblemCollection result = _parser.Check (sample);
+      ProblemCollection result = _typeParser.Parse (sample);
 
       Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
     }

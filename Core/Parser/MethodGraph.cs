@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using InjectionCop.Config;
 using Microsoft.FxCop.Sdk;
 
@@ -29,26 +30,44 @@ namespace InjectionCop.Parser
       BlockParser parser = new BlockParser(blackTypes, typeParser);
       _graph = new Dictionary<int, BasicBlock>();
 
-      List<Block> blockList = new List<Block>();
-      foreach (Statement statement in methodBody.Statements)
-      {
-        Block block = statement as Block;
-        if(block != null)
-        {
-          blockList.Add (block);
-        }
-      }
+      List<Block> blockList = new List<Block>(methodBody.Statements.OfType<Block>());
 
-      Block[] blocks = blockList.ToArray();
-      if (blocks.Length >= 1)
+      //using (var blocksEnumerator = blockList.GetEnumerator())
+      //{
+      //  if (!blocksEnumerator.MoveNext())
+      //    return;
+      //  var currentBlock = blocksEnumerator.Current;
+      //  _initialBlockId = currentBlock.UniqueKey;
+      //  BasicBlock currentBasicBlock;
+      //  while (blocksEnumerator.MoveNext())
+      //  {
+      //    var nextBlock = blocksEnumerator.Current;
+
+      //    if (ContainsUnconditionalBranch (currentBlock))
+      //    {
+      //      currentBasicBlock = parser.Parse (currentBlock);
+      //    }
+      //    else
+      //    {
+      //      currentBasicBlock = parser.Parse (currentBlock, nextBlock.UniqueKey);
+      //    }
+      //    _graph.Add (currentBasicBlock.Id, currentBasicBlock);
+
+      //    currentBlock = nextBlock;
+      //  }
+      //  currentBasicBlock = parser.Parse (currentBlock);
+      //  _graph.Add (currentBasicBlock.Id, currentBasicBlock);
+      //}
+
+      if (blockList.Count >= 1)
       {
-        Block currentBlock = blocks[0];
+        Block currentBlock = blockList[0];
         _initialBlockId = currentBlock.UniqueKey;
         BasicBlock currentBasicBlock;
 
-        for (int i = 1; i < blocks.Length; i++)
+        for (int i = 1; i < blockList.Count; i++)
         {
-          Block nextBlock = blocks[i];
+          Block nextBlock = blockList[i];
           if(ContainsUnconditionalBranch(currentBlock))
           {
             currentBasicBlock = parser.Parse (currentBlock);

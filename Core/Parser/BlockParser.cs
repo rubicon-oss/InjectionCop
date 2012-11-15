@@ -22,58 +22,21 @@ namespace InjectionCop.Parser
 {
   public class BlockParser : BaseFxCopRule
   {
-    private readonly SymbolTable _symbolTable;
     private SymbolTable _symbolTableParser;
     private List<string> _preConditionSafeSymbols;
     private List<int> _successors;
     private readonly FragmentAttribute sqlFragment = new FragmentAttribute("SqlFragment");
     private readonly IBlackTypes _blackTypes;
-    private bool _parserMode;
     private TypeParser _typeParser;
 
     public BlockParser (IBlackTypes blackTypes, TypeParser typeParser)
         : base ("TypeParser")
     {
-      _symbolTable = new SymbolTable (blackTypes);
       _symbolTableParser = new SymbolTable (blackTypes);
       _preConditionSafeSymbols = new List<string>();
       _successors = new List<int>();
       _blackTypes = blackTypes;
-      _parserMode = false;
       _typeParser = typeParser;
-    }
-
-    public override ProblemCollection Check (Member member)
-    {
-      Method method = member as Method;
-
-      if (method != null)
-      {
-        foreach (Parameter parameter in method.Parameters)
-        {
-          if (FragmentTools.Is(sqlFragment, parameter))
-          {
-            _symbolTable.SetSafeness(parameter.Name, true);
-            _symbolTableParser.SetSafeness(parameter.Name, true);
-          }
-          else
-          {
-            _symbolTable.SetSafeness(parameter.Name, false);
-            _symbolTableParser.SetSafeness(parameter.Name, false);
-          }
-        }
-
-        foreach (Statement topLevelStatement in method.Body.Statements)
-        {
-          Block methodBodyBlock = topLevelStatement as Block;
-          if (methodBodyBlock != null)
-          {
-            Inspect (methodBodyBlock);
-          }
-        }
-      }
-
-      return Problems;
     }
 
     private void Inspect (Block methodBodyBlock)
@@ -90,7 +53,6 @@ namespace InjectionCop.Parser
           case NodeType.AssignmentStatement:
             AssignmentStatement asgn = (AssignmentStatement) stmt;
             Identifier symbol = GetVariableIdentifier (asgn.Target);
-            _symbolTable.SetSafeness(symbol, asgn.Source);
             _symbolTableParser.SetSafeness(symbol, asgn.Source);
             Inspect (asgn.Source);
             break;
@@ -102,14 +64,7 @@ namespace InjectionCop.Parser
 
           case NodeType.Branch:
             Branch branch = (Branch) stmt;
-            if(_parserMode == true)
-            {
-              _successors.Add (branch.Target.UniqueKey);
-            }
-            else
-            {
-              Inspect (branch.Target);  
-            }
+            _successors.Add (branch.Target.UniqueKey);
             break;
         }
       }
@@ -156,11 +111,8 @@ namespace InjectionCop.Parser
       {
         MethodCall methodCall = (MethodCall) expression;
         List<string> additionalPreConditions;
-        if (!_symbolTable.ParametersSafe (methodCall, out additionalPreConditions)
-          || !_symbolTableParser.ParametersSafe (methodCall, out additionalPreConditions))
+        if (!_symbolTableParser.ParametersSafe (methodCall, out additionalPreConditions))
         {
-          
-          AddProblem();
           _typeParser.AddProblem();
         }
         _preConditionSafeSymbols.AddRange (additionalPreConditions);
@@ -184,20 +136,11 @@ namespace InjectionCop.Parser
           if (method.Parameters[i].IsOut)
           {
             Identifier symbol = GetVariableIdentifier (methodCall.Operands[i]);
-            //bool safeness = FragmentTools.Contains<SqlFragmentAttribute> (method.Parameters[i].Attributes);
             bool safeness = FragmentTools.Contains(sqlFragment, method.Parameters[i].Attributes);
-            _symbolTable.SetSafeness(symbol, safeness);
             _symbolTableParser.SetSafeness(symbol, safeness);
           }
         }
       }
-    }
-
-    private void AddProblem ()
-    {
-      Resolution resolution = GetResolution();
-      Problem problem = new Problem (resolution, CheckId);
-      Problems.Add (problem);
     }
 
     public BasicBlock Parse (Block block)
@@ -219,7 +162,6 @@ namespace InjectionCop.Parser
 
     private void Reset()
     {
-      _parserMode = true;
       _symbolTableParser = new SymbolTable (_blackTypes);
       _preConditionSafeSymbols = new List<string>();
       _successors = new List<int>();

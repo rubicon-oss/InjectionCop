@@ -14,7 +14,7 @@
 
 using System;
 
-namespace InjectionCop.IntegrationTests.Parser.BlockParserTests.AttributePropagation
+namespace InjectionCop.IntegrationTests.Parser.TypeParserTests.AttributePropagation
 {
   class AttributePropagationSample: ParserSampleBase
   {

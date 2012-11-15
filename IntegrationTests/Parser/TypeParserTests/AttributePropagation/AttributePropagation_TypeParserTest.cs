@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using InjectionCop.IntegrationTests.Parser.BlockParserTests.AttributePropagation;
 using Microsoft.FxCop.Sdk;
 using NUnit.Framework;
 
@@ -25,50 +24,50 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParserTests.AttributePropagat
     [Test]
     [Category("AttributePropagation")]
     [Ignore("Feature 'Checking if return value is safe' temporarily removed")]
-    public void Check_SafeSource_NoProblem()
+    public void Parse_SafeSource_NoProblem()
     {
       Method sample = TestHelper.GetSample<AttributePropagationSample>("SafeSource");
-      ProblemCollection result = _parser.Check (sample);
+      ProblemCollection result = _typeParser.Parse (sample);
 
       Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
     }
 
     [Test]
     [Category("AttributePropagation")]
-    public void Check_SafeCallOfSqlFragmentCallee_NoProblem()
+    public void Parse_SafeCallOfSqlFragmentCallee_NoProblem()
     {
       Method sample = TestHelper.GetSample<AttributePropagationSample>("SafeCallOfSqlFragmentCallee");
-      ProblemCollection result = _parser.Check (sample);
+      ProblemCollection result = _typeParser.Parse (sample);
 
       Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
     }
 
     [Test]
     [Category("AttributePropagation")]
-    public void Check_UnsafeCallOfSqlFragmentCallee_ReturnsProblem()
+    public void Parse_UnsafeCallOfSqlFragmentCallee_ReturnsProblem()
     {
       Method sample = TestHelper.GetSample<AttributePropagationSample>("UnsafeCallOfSqlFragmentCallee");
-      ProblemCollection result = _parser.Check (sample);
+      ProblemCollection result = _typeParser.Parse (sample);
 
       Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
     }
 
     [Test]
     [Category("AttributePropagation")]
-    public void Check_SafeCallOfMixedCallee_NoProblem()
+    public void Parse_SafeCallOfMixedCallee_NoProblem()
     {
       Method sample = TestHelper.GetSample<AttributePropagationSample>("SafeCallOfMixedCallee");
-      ProblemCollection result = _parser.Check (sample);
+      ProblemCollection result = _typeParser.Parse (sample);
 
       Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
     }
 
     [Test]
     [Category("AttributePropagation")]
-    public void Check_UnsafeCallOfMixedCallee_ReturnsProblem()
+    public void Parse_UnsafeCallOfMixedCallee_ReturnsProblem()
     {
       Method sample = TestHelper.GetSample<AttributePropagationSample>("UnsafeCallOfMixedCallee");
-      ProblemCollection result = _parser.Check (sample);
+      ProblemCollection result = _typeParser.Parse (sample);
 
       Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
     }

@@ -33,6 +33,13 @@ namespace InjectionCop.Parser
 
     public ProblemCollection Parse (Method method)
     {
+      SymbolTable parameterSafeness = ExtractSafeParameters (method);
+      MethodGraph methodGraph = new MethodGraph(method.Body, _blackTypes, _typeParser);
+      return Parse (methodGraph, parameterSafeness);
+    }
+
+    private SymbolTable ExtractSafeParameters (Method method)
+    {
       SymbolTable parameterSafeness = new SymbolTable (_blackTypes);
       FragmentAttribute sqlFragment = new FragmentAttribute ("SqlFragment");
 
@@ -47,9 +54,7 @@ namespace InjectionCop.Parser
           parameterSafeness.SetSafeness (parameter.Name, false);
         }
       }
-
-      MethodGraph methodGraph = new MethodGraph(method.Body, _blackTypes, _typeParser);
-      return Parse (methodGraph, parameterSafeness);
+      return parameterSafeness;
     }
 
     public ProblemCollection Parse(IMethodGraph methodGraph, SymbolTable context)
@@ -66,31 +71,11 @@ namespace InjectionCop.Parser
 
     private void Parse (IMethodGraph methodGraph, SymbolTable context, BasicBlock currentBlock, Dictionary<int,int> visits)
     {
-      if (!visits.ContainsKey (currentBlock.Id))
-      {
-        visits[currentBlock.Id] = 0;
-      }
-      else
-      {
-        visits[currentBlock.Id] = visits[currentBlock.Id] + 1;
-      }
-
+      UpdateVisits (currentBlock.Id, visits);
       if (visits[currentBlock.Id] < 2)
       {
-        foreach (string precondition in currentBlock.PreConditionSafeSymbols)
-        {
-          if (!context.Contains (precondition) || !context.IsSafe (precondition))
-          {
-            _typeParser.AddProblem();
-          }
-        }
-
-        SymbolTable adjustedContext = context.Clone();
-        foreach (string symbol in currentBlock.PostConditionSymbolTable.Symbols)
-        {
-          bool safeness = currentBlock.PostConditionSymbolTable.IsSafe (symbol);
-          adjustedContext.SetSafeness (symbol, safeness);
-        }
+        CheckPreCoditions (currentBlock.PreConditionSafeSymbols, context);
+        SymbolTable adjustedContext = UpdateContext (context, currentBlock.PostConditionSymbolTable);
 
         foreach (int successorKey in currentBlock.SuccessorKeys)
         {
@@ -98,6 +83,40 @@ namespace InjectionCop.Parser
           BasicBlock successor = methodGraph.GetBasicBlockById (successorKey);
           Parse (methodGraph, adjustedContext, successor, branchVisits);
         }
+      }
+    }
+
+    private SymbolTable UpdateContext (SymbolTable context, SymbolTable postConditionSymbolTable)
+    {
+      SymbolTable adjustedContext = context.Clone();
+      foreach (string symbol in postConditionSymbolTable.Symbols)
+      {
+        bool safeness = postConditionSymbolTable.IsSafe (symbol);
+        adjustedContext.SetSafeness (symbol, safeness);
+      }
+      return adjustedContext;
+    }
+
+    private void CheckPreCoditions (List<string> preconditions, SymbolTable context)
+    {
+      foreach (string precondition in preconditions)
+      {
+        if (!context.Contains (precondition) || !context.IsSafe (precondition))
+        {
+          _typeParser.AddProblem();
+        }
+      }
+    }
+
+    private void UpdateVisits (int id, Dictionary<int, int> visits)
+    {
+      if (!visits.ContainsKey (id))
+      {
+        visits[id] = 0;
+      }
+      else
+      {
+        visits[id] = visits[id] + 1;
       }
     }
   }
