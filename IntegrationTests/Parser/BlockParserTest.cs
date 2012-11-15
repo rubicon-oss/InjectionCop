@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using InjectionCop.Config;
 using InjectionCop.Parser;
 using Microsoft.FxCop.Sdk;
 using NUnit.Framework;
@@ -27,7 +28,8 @@ namespace InjectionCop.IntegrationTests.Parser
     [SetUp]
     public void SetUp()
     {
-      _blockParser = new BlockParser (new IDbCommandBlackTypesStub());
+      IBlackTypes blackList = new IDbCommandBlackTypesStub();
+      _blockParser = new BlockParser (blackList, new TypeParser(blackList));
     }
 
     [Test]

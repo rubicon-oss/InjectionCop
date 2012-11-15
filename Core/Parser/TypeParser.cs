@@ -36,18 +36,23 @@ namespace InjectionCop.Parser
         {
           Method method = (Method) member;
           MethodParser methodParser = new MethodParser (_blackTypes, this);
-          methodParser.Parse(method);
+          Parse(method);
         }
       }
       return Problems;
     }
 
-    private void AddProblem ()
+    public void AddProblem ()
     {
       Resolution resolution = GetResolution();
       Problem problem = new Problem (resolution, CheckId);
       Problems.Add (problem);
     }
 
+    public ProblemCollection Parse (Method method)
+    {
+      MethodParser methodParser = new MethodParser (_blackTypes, this);
+      return methodParser.Parse (method);
+    }
   }
 }

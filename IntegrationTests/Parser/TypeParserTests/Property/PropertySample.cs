@@ -13,16 +13,29 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using Microsoft.FxCop.Sdk;
 
-namespace InjectionCop.Parser
+namespace InjectionCop.IntegrationTests.Parser.TypeParserTests.Property
 {
-  public interface IMethodGraph
+  class PropertySample: ParserSampleBase
   {
-    int InitialBlockId { get; }
-    BasicBlock InitialBlock { get; }
-    BasicBlock GetBasicBlockById(int id);
-    bool IsEmpty ();
+    public void CallWithUnsafeProperty()
+    {
+      RequiresSqlFragment (UnsafeProp);
+    }
+
+    public void CallWithSafeProperty()
+    {
+      RequiresSqlFragment (SafeProperty);
+    }
+
+    public void SetPropertySafe()
+    {
+      SafeProperty = "safe";
+    }
+
+    public void SetPropertyUnsafe()
+    {
+      SafeProperty = UnsafeSource();
+    }
   }
 }

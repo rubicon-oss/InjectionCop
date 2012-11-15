@@ -29,8 +29,9 @@ namespace InjectionCop.Parser
     private readonly FragmentAttribute sqlFragment = new FragmentAttribute("SqlFragment");
     private readonly IBlackTypes _blackTypes;
     private bool _parserMode;
+    private TypeParser _typeParser;
 
-    public BlockParser (IBlackTypes blackTypes)
+    public BlockParser (IBlackTypes blackTypes, TypeParser typeParser)
         : base ("TypeParser")
     {
       _symbolTable = new SymbolTable (blackTypes);
@@ -39,6 +40,7 @@ namespace InjectionCop.Parser
       _successors = new List<int>();
       _blackTypes = blackTypes;
       _parserMode = false;
+      _typeParser = typeParser;
     }
 
     public override ProblemCollection Check (Member member)
@@ -157,9 +159,11 @@ namespace InjectionCop.Parser
         if (!_symbolTable.ParametersSafe (methodCall, out additionalPreConditions)
           || !_symbolTableParser.ParametersSafe (methodCall, out additionalPreConditions))
         {
-          _preConditionSafeSymbols.AddRange (additionalPreConditions);
+          
           AddProblem();
+          _typeParser.AddProblem();
         }
+        _preConditionSafeSymbols.AddRange (additionalPreConditions);
         UpdateSafeOutParameters (methodCall);
       }
       else if (expression is UnaryExpression)

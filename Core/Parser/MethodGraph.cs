@@ -24,9 +24,9 @@ namespace InjectionCop.Parser
     private readonly int _initialBlockId;
     private readonly Dictionary<int, BasicBlock> _graph;
 
-    public MethodGraph (Block methodBody, IBlackTypes blackTypes)
+    public MethodGraph (Block methodBody, IBlackTypes blackTypes, TypeParser typeParser)
     {
-      BlockParser parser = new BlockParser(blackTypes);
+      BlockParser parser = new BlockParser(blackTypes, typeParser);
       _graph = new Dictionary<int, BasicBlock>();
 
       List<Block> blockList = new List<Block>();
@@ -109,6 +109,11 @@ namespace InjectionCop.Parser
     public bool IsEmpty()
     {
       return _graph.Keys.Count == 0;
+    }
+
+    public BasicBlock InitialBlock
+    {
+      get { return GetBasicBlockById (_initialBlockId); }
     }
   }
 }

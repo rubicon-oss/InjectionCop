@@ -13,16 +13,19 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using Microsoft.FxCop.Sdk;
 
-namespace InjectionCop.Parser
+namespace InjectionCop.IntegrationTests.Parser.TypeParserTests.while_loop
 {
-  public interface IMethodGraph
+  internal class WhileLoopSample : ParserSampleBase
   {
-    int InitialBlockId { get; }
-    BasicBlock InitialBlock { get; }
-    BasicBlock GetBasicBlockById(int id);
-    bool IsEmpty ();
+    public void ValidCallInsideWhile ()
+    {
+      int i = 10;
+      while (i > 0)
+      {
+        RequiresSqlFragment ("safe");
+        i--;
+      }
+    }
   }
 }

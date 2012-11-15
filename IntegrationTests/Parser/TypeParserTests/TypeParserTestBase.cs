@@ -13,16 +13,24 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using Microsoft.FxCop.Sdk;
+using InjectionCop.Config;
+using InjectionCop.Parser;
+using NUnit.Framework;
 
-namespace InjectionCop.Parser
+namespace InjectionCop.IntegrationTests.Parser.TypeParserTests
 {
-  public interface IMethodGraph
+  public class TypeParserTestBase
   {
-    int InitialBlockId { get; }
-    BasicBlock InitialBlock { get; }
-    BasicBlock GetBasicBlockById(int id);
-    bool IsEmpty ();
+    protected IBlackTypes _blacklist;
+    protected BlockParser _parser;
+    protected TypeParser _typeParser;
+
+    [SetUp]
+    public void SetUp()
+    {
+      _blacklist = new IDbCommandBlackTypesStub();
+      _typeParser = new TypeParser (_blacklist);
+      _parser = new BlockParser(_blacklist, _typeParser);
+    }
   }
 }

@@ -32,6 +32,11 @@ namespace InjectionCop.Parser
       _safenessMap = new Dictionary<string, bool>();
     }
 
+    public IEnumerable<string> Symbols
+    {
+      get { return new List<string> (_safenessMap.Keys).ToArray(); }
+    }
+
     public bool IsSafe (Expression expression)
     {
       bool literalOrFragment = expression is Literal || FragmentTools.Returns(sqlFragment, expression);
@@ -92,14 +97,40 @@ namespace InjectionCop.Parser
       {
         bool isFragmentParameter = FragmentTools.Contains (sqlFragment, calleeMethod.Parameters[i].Attributes);
         Expression expression = methodCall.Operands[i];
-        if (isFragmentParameter && IsNotSafe (expression))
+        
+        /*if (isFragmentParameter)
         {
-          parameterSafe = false;
           if (IsVariable (expression))
           {
             requireSafenessParameters.Add (VariableName (expression));
           }
+          if (IsNotSafe (expression))
+          {
+            parameterSafe = false;
+          }
+
+        }*/
+
+        if (isFragmentParameter && IsNotSafe (expression))
+        {
+          if (IsVariable (expression))
+              /*&& _safenessMap[VariableName(expression)] == false*/
+          {
+            if (!_safenessMap.ContainsKey (VariableName (expression)))
+            {
+              requireSafenessParameters.Add (VariableName (expression));
+            }
+            else
+            {
+              parameterSafe = false;
+            }
+          }
+          else
+          {
+            parameterSafe = false;
+          }
         }
+        
       }
 
       return parameterSafe;
@@ -107,7 +138,16 @@ namespace InjectionCop.Parser
 
     private bool IsVariable(Expression expression)
     {
-      return expression is Parameter || expression is Local;
+      bool isVariableReference = false;
+      if (expression.NodeType == NodeType.AddressOf)
+      {
+        Local operand = ((UnaryExpression) expression).Operand as Local;
+        if (operand != null)
+        {
+          isVariableReference = IsVariable (operand);
+        }
+      }
+      return expression is Parameter || expression is Local || isVariableReference;
     }
 
     private string VariableName (Expression expression)
@@ -122,6 +162,14 @@ namespace InjectionCop.Parser
       {
         Local operand = (Local) expression;
         variableName = operand.Name.Name;
+      }
+      else if (expression.NodeType == NodeType.AddressOf)
+      {
+        Local operand = ((UnaryExpression) expression).Operand as Local;
+        if (operand != null)
+        {
+          variableName = operand.Name.Name;
+        }
       }
       return variableName;
     }
@@ -166,6 +214,11 @@ namespace InjectionCop.Parser
     public bool IsNotSafe (string symbolName)
     {
       return !IsSafe (symbolName);
+    }
+
+    public bool Contains (string symbolName)
+    {
+      return _safenessMap.ContainsKey (symbolName);
     }
   }
 }
