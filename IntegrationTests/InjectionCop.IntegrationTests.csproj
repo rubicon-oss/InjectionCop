@@ -83,7 +83,10 @@
     <Compile Include="Parser\TypeParserTests\AssignmentPropagation\AssignmentPropagation_TypeParserTest.cs" />
     <Compile Include="Parser\TypeParserTests\AttributePropagation\AttributePropagation_TypeParserTest.cs" />
     <Compile Include="Parser\TypeParserTests\BlackMethod\BlackMethod_TypeParserTest.cs" />
-    <Compile Include="Parser\TypeParserTests\while_loop\WhileLoopSample.cs" />
+    <Compile Include="Parser\TypeParserTests\Switch\SwitchSample.cs" />
+    <Compile Include="Parser\TypeParserTests\Switch\Switch_TypeParserTest.cs" />
+    <Compile Include="Parser\TypeParserTests\While_loop\WhileLoop_TypeParserTest.cs" />
+    <Compile Include="Parser\TypeParserTests\While_loop\WhileLoopSample.cs" />
     <Compile Include="Parser\BlockParserTest.cs" />
     <Compile Include="Parser\MethodGraphTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

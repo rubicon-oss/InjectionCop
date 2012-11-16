@@ -14,7 +14,7 @@
 
 using System;
 
-namespace InjectionCop.IntegrationTests.Parser.TypeParserTests.while_loop
+namespace InjectionCop.IntegrationTests.Parser.TypeParserTests.While_loop
 {
   internal class WhileLoopSample : ParserSampleBase
   {
@@ -24,6 +24,78 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParserTests.while_loop
       while (i > 0)
       {
         RequiresSqlFragment ("safe");
+        i--;
+      }
+    }
+
+    public void InValidCallInsideWhile ()
+    {
+      int i = 10;
+      while (i > 0)
+      {
+        RequiresSqlFragment (UnsafeSource());
+        i--;
+      }
+    }
+
+    public void InValidCallInsideWhileReprocessingRequired ()
+    {
+      int i = 10;
+      string parameter = SafeSource();
+      while (i > 0)
+      {
+        RequiresSqlFragment (parameter);
+        parameter = UnsafeSource();
+        i--;
+      }
+    }
+
+    public void InvalidCallInsideNestedWhile ()
+    {
+      int i = 10;
+      while (i > 0)
+      {
+        while (i > 5)
+        {
+          RequiresSqlFragment (UnsafeSource());
+          i--;
+        }
+        i--;
+      }
+    }
+
+    public void InValidCallInsideNestedWhileReprocessingRequired ()
+    {
+      int i = 10;
+      string parameter = SafeSource();
+      while (i > 0)
+      {
+        while (i > 5)
+        {
+          RequiresSqlFragment (parameter);
+          i--;
+        }
+        parameter = UnsafeSource();
+        i--;
+      }
+    }
+
+    public void InValidCallInsideDeeperNestedWhileReprocessingRequired ()
+    {
+      int i = 10;
+      string parameter = SafeSource();
+      while (i > 0)
+      {
+        while (i > 5)
+        {
+          while (i > 7)
+          {
+            RequiresSqlFragment (parameter);
+            i--;
+          }
+          i--;
+        }
+        parameter = UnsafeSource();
         i--;
       }
     }

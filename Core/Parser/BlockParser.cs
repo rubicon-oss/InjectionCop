@@ -66,6 +66,14 @@ namespace InjectionCop.Parser
             Branch branch = (Branch) stmt;
             _successors.Add (branch.Target.UniqueKey);
             break;
+
+          case NodeType.SwitchInstruction:
+            SwitchInstruction switchInstruction = (SwitchInstruction) stmt;
+            foreach (Block caseBlock in switchInstruction.Targets)
+            {
+              _successors.Add (caseBlock.UniqueKey);
+            }
+            break;
         }
       }
     }

@@ -22,7 +22,6 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParserTests
   public class TypeParserTestBase
   {
     protected IBlackTypes _blacklist;
-    protected BlockParser _parser;
     protected TypeParser _typeParser;
 
     [SetUp]
@@ -30,7 +29,6 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParserTests
     {
       _blacklist = new IDbCommandBlackTypesStub();
       _typeParser = new TypeParser (_blacklist);
-      _parser = new BlockParser(_blacklist, _typeParser);
     }
   }
 }
