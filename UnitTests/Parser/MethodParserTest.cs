@@ -35,8 +35,8 @@ namespace InjectionCop.UnitTests.Parser
     {
       _blackTypes = new IDbCommandBlackTypesStub();
       _methodPreConditions = new SymbolTable (_blackTypes);
-      _methodPreConditions.SetSafeness ("x", true);
-      _methodPreConditions.SetSafeness ("y", false);
+      _methodPreConditions.SetSafeness ("x", "SqlFragment", true);
+      _methodPreConditions.SetSafeness("y", "SqlFragment", false);
       TypeParser typeParser = new TypeParser (_blackTypes);
       _methodParser = new MethodParser (_blackTypes, typeParser);
     }
@@ -217,7 +217,7 @@ namespace InjectionCop.UnitTests.Parser
 
       List<string> preConditions = new List<string> { "x" };
       SymbolTable postConditions = new SymbolTable (_blackTypes);
-      postConditions.SetSafeness ("x", false);
+      postConditions.SetSafeness("x", "SqlFragment", false);
       List<int> successors = new List<int> { 1 };
       BasicBlock initialNode = new BasicBlock (0, preConditions.ToArray(), postConditions, successors.ToArray());
 
@@ -249,7 +249,7 @@ namespace InjectionCop.UnitTests.Parser
 
       List<string> preConditions = new List<string> { "x" };
       SymbolTable postConditions = new SymbolTable (_blackTypes);
-      postConditions.SetSafeness ("x", false);
+      postConditions.SetSafeness ("x", "SqlFragment", false);
       List<int> successors = new List<int> { 1 };
       BasicBlock initialNode = new BasicBlock (0, preConditions.ToArray(), postConditions, successors.ToArray());
 
@@ -359,7 +359,7 @@ namespace InjectionCop.UnitTests.Parser
 
       List<string> preConditions = new List<string> { "x" };
       SymbolTable postConditions = new SymbolTable (_blackTypes);
-      postConditions.SetSafeness ("x", false);
+      postConditions.SetSafeness("x", "SqlFragment", false);
       List<int> successors = new List<int> { 1, 2 };
       BasicBlock initialNode = new BasicBlock (0, preConditions.ToArray(), postConditions, successors.ToArray());
 
@@ -503,7 +503,7 @@ namespace InjectionCop.UnitTests.Parser
 
       preConditions = new List<string> { "x" };
       postConditions = new SymbolTable (_blackTypes);
-      postConditions.SetSafeness ("x", false);
+      postConditions.SetSafeness("x", "SqlFragment", false);
       successors = new List<int> { 3 };
       BasicBlock secondBranch = new BasicBlock (2, preConditions.ToArray(), postConditions, successors.ToArray());
 
@@ -546,7 +546,7 @@ namespace InjectionCop.UnitTests.Parser
 
       preConditions = new List<string> { "x" };
       postConditions = new SymbolTable (_blackTypes);
-      postConditions.SetSafeness ("x", false);
+      postConditions.SetSafeness ("x", "SqlFragment", false);
       successors = new List<int> { 3 };
       BasicBlock firstBranch = new BasicBlock (1, preConditions.ToArray(), postConditions, successors.ToArray());
 
@@ -594,13 +594,13 @@ namespace InjectionCop.UnitTests.Parser
 
       preConditions = new List<string> { "x" };
       postConditions = new SymbolTable (_blackTypes);
-      postConditions.SetSafeness ("x", false);
+      postConditions.SetSafeness("x", "SqlFragment", false);
       successors = new List<int> { 3 };
       BasicBlock firstBranch = new BasicBlock (1, preConditions.ToArray(), postConditions, successors.ToArray());
 
       preConditions = new List<string> { "x" };
       postConditions = new SymbolTable (_blackTypes);
-      postConditions.SetSafeness ("x", false);
+      postConditions.SetSafeness("x", "SqlFragment", false);
       successors = new List<int> { 3 };
       BasicBlock secondBranch = new BasicBlock (2, preConditions.ToArray(), postConditions, successors.ToArray());
 
@@ -677,7 +677,7 @@ namespace InjectionCop.UnitTests.Parser
 
       preConditions = new List<string> { "x" };
       postConditions = new SymbolTable (_blackTypes);
-      postConditions.SetSafeness ("x", false);
+      postConditions.SetSafeness("x", "SqlFragment", false);
       successors = new List<int> { 0 };
       BasicBlock firstNode = new BasicBlock (1, preConditions.ToArray(), postConditions, successors.ToArray());
 
@@ -704,7 +704,7 @@ namespace InjectionCop.UnitTests.Parser
     {
       MockRepository mocks = new MockRepository();
       IMethodGraph methodGraph = mocks.Stub<IMethodGraph>();
-      _methodPreConditions.SetSafeness ("z", true);
+      _methodPreConditions.SetSafeness("z", "SqlFragment", true);
 
       List<string> preConditions = new List<string> { "x", "z" };
       SymbolTable postConditions = new SymbolTable (_blackTypes);
@@ -718,7 +718,7 @@ namespace InjectionCop.UnitTests.Parser
 
       preConditions = new List<string> { "x" };
       postConditions = new SymbolTable (_blackTypes);
-      postConditions.SetSafeness ("z", false);
+      postConditions.SetSafeness("z", "SqlFragment", false);
       successors = new List<int> { 0 };
       BasicBlock secondBranch = new BasicBlock (2, preConditions.ToArray(), postConditions, successors.ToArray());
       

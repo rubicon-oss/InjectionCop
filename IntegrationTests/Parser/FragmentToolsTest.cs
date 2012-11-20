@@ -31,8 +31,7 @@ namespace InjectionCop.IntegrationTests.Parser
       bool containsResult = FragmentTools.Contains (new FragmentAttribute("FragmentType"), sample.Parameters[0].Attributes);
       Assert.That (containsResult, Is.True);
     }
-
-    
+   
     [Test]
     public void Contains_NoFragment_False()
     {
@@ -112,6 +111,60 @@ namespace InjectionCop.IntegrationTests.Parser
         Method sample = TestHelper.GetSample<FragmentToolsSample>("ContainsStronglyTypedSqlFragmentParameter", stringTypeNode);
         bool isResult = FragmentTools.IsFragment(sample.Parameters[0].Attributes[0]);
         Assert.That(isResult, Is.True);
+    }
+
+    [Test]
+    public void ContainsFragment_ContainsFragmentParameter_True()
+    {
+      TypeNode stringTypeNode = Helper.TypeNodeFactory<string>();
+      Method sample = TestHelper.GetSample<FragmentToolsSample>("ContainsFragmentParameter", stringTypeNode);
+      bool isResult = FragmentTools.ContainsFragment(sample.Parameters[0].Attributes);
+      Assert.That(isResult, Is.True);
+    }
+
+    [Test]
+    public void ContainsFragment_ContainsNonFragmentParameter_False()
+    {
+      TypeNode stringTypeNode = Helper.TypeNodeFactory<string>();
+      Method sample = TestHelper.GetSample<FragmentToolsSample>("ContainsNonFragmentParameter", stringTypeNode);
+      bool isResult = FragmentTools.ContainsFragment(sample.Parameters[0].Attributes);
+      Assert.That(isResult, Is.False);
+    }
+
+    [Test]
+    public void ContainsFragment_ContainsStronglyTypedSqlFragmentParameter_True()
+    {
+      TypeNode stringTypeNode = Helper.TypeNodeFactory<string>();
+      Method sample = TestHelper.GetSample<FragmentToolsSample>("ContainsStronglyTypedSqlFragmentParameter", stringTypeNode);
+      bool isResult = FragmentTools.ContainsFragment(sample.Parameters[0].Attributes);
+      Assert.That(isResult, Is.True);
+    }
+
+    [Test]
+    public void GetFragmentType_ContainsFragmentParameter_ReturnsType()
+    {
+      TypeNode stringTypeNode = Helper.TypeNodeFactory<string>();
+      Method sample = TestHelper.GetSample<FragmentToolsSample>("ContainsFragmentParameter", stringTypeNode);
+      string fragmentType = FragmentTools.GetFragmentType(sample.Parameters[0].Attributes);
+      Assert.That(fragmentType, Is.EqualTo("FragmentType"));
+    }
+
+    [Test]
+    public void GetFragmentType_ContainsStronglyTypedSqlFragmentParameter_True()
+    {
+      TypeNode stringTypeNode = Helper.TypeNodeFactory<string>();
+      Method sample = TestHelper.GetSample<FragmentToolsSample>("ContainsStronglyTypedSqlFragmentParameter", stringTypeNode);
+      string fragmentType = FragmentTools.GetFragmentType(sample.Parameters[0].Attributes);
+      Assert.That(fragmentType, Is.EqualTo("SqlFragment"));
+    }
+
+    [Test]
+    [ExpectedException(typeof(InjectionCopException), ExpectedMessage = "Given Attributes do not contain any Fragment")]
+    public void GetFragmentType_ContainsNonFragmentParameter_ThrowsException()
+    {
+      TypeNode stringTypeNode = Helper.TypeNodeFactory<string>();
+      Method sample = TestHelper.GetSample<FragmentToolsSample>("ContainsNonFragmentParameter", stringTypeNode);
+      string isResult = FragmentTools.GetFragmentType(sample.Parameters[0].Attributes);
     }
   }
 }

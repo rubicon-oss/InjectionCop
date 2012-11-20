@@ -53,7 +53,7 @@ namespace InjectionCop.Parser
           case NodeType.AssignmentStatement:
             AssignmentStatement asgn = (AssignmentStatement) stmt;
             Identifier symbol = GetVariableIdentifier (asgn.Target);
-            _symbolTableParser.SetSafeness(symbol, asgn.Source);
+            _symbolTableParser.SetSafeness(symbol, sqlFragment.FragmentType, asgn.Source);
             Inspect (asgn.Source);
             break;
 
@@ -145,7 +145,7 @@ namespace InjectionCop.Parser
           {
             Identifier symbol = GetVariableIdentifier (methodCall.Operands[i]);
             bool safeness = FragmentTools.Contains(sqlFragment, method.Parameters[i].Attributes);
-            _symbolTableParser.SetSafeness(symbol, safeness);
+            _symbolTableParser.SetSafeness(symbol, sqlFragment.FragmentType, safeness);
           }
         }
       }

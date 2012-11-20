@@ -79,5 +79,46 @@ namespace InjectionCop.Parser
         bool isFragmentChild = attribute.Type.BaseType.FullName == fragmentFullName;
         return isFragment || isFragmentChild;
     }
+
+    public static bool ContainsFragment(AttributeNodeCollection attributeNodeCollection)
+    {
+      return attributeNodeCollection.Any(attributeNode => IsFragment(attributeNode));
+    }
+
+    public static string GetFragmentType(AttributeNodeCollection attributeNodeCollection)
+    {
+      if (!ContainsFragment(attributeNodeCollection))
+      {
+        throw new InjectionCopException("Given Attributes do not contain any Fragment");
+      }
+
+      string fragmentType = "";
+      string fragmentFullName = typeof(FragmentAttribute).FullName;
+
+      foreach (AttributeNode attributeNode in attributeNodeCollection)
+      {
+        if (IsFragment(attributeNode))
+        {
+          if (attributeNode.Type.FullName == fragmentFullName)
+          {
+            foreach (Literal literal in attributeNode.Expressions)
+            {
+              string value = literal.Value as string;
+              if (value != null)
+              {
+                fragmentType = value;
+              }
+            }
+          }
+          else
+          {
+            fragmentType = attributeNode.Type.Name.Name.Replace("Attribute", "");
+          }
+        }
+      }
+
+      return fragmentType;
+    }
+
   }
 }

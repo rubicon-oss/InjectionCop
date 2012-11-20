@@ -28,12 +28,12 @@ namespace InjectionCop.UnitTests.Parser
     public void Clone_ReturnsDeepCopy_True ()
     {
       SymbolTable symbolTable = new SymbolTable(new IDbCommandBlackTypesStub());
-      symbolTable.SetSafeness (Identifier.For ("key"), true);
+      symbolTable.SetSafeness (Identifier.For ("key"), "FragmentType", true);
       SymbolTable clone = symbolTable.Clone();
-      clone.SetSafeness("key", false);
+      clone.SetSafeness("key", "FragmentType", false);
       SymbolTable result = symbolTable.Clone();
       
-      Assert.That (result.IsSafe("key"), Is.True);
+      Assert.That (result.IsSafe("key", "FragmentType"), Is.True);
     }
   }
 }

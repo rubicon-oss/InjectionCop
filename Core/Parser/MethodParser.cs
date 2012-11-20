@@ -47,11 +47,11 @@ namespace InjectionCop.Parser
       {
         if (FragmentTools.Is (sqlFragment, parameter))
         {
-          parameterSafeness.SetSafeness (parameter.Name, true);
+          parameterSafeness.SetSafeness (parameter.Name, sqlFragment.FragmentType, true);
         }
         else
         {
-          parameterSafeness.SetSafeness (parameter.Name, false);
+          parameterSafeness.SetSafeness (parameter.Name, sqlFragment.FragmentType, false);
         }
       }
       return parameterSafeness;
@@ -91,8 +91,8 @@ namespace InjectionCop.Parser
       SymbolTable adjustedContext = context.Clone();
       foreach (string symbol in postConditionSymbolTable.Symbols)
       {
-        bool safeness = postConditionSymbolTable.IsSafe (symbol);
-        adjustedContext.SetSafeness (symbol, safeness);
+        bool safeness = postConditionSymbolTable.IsSafe (symbol, "SqlFragment");
+        adjustedContext.SetSafeness (symbol, "SqlFragment", safeness);
       }
       return adjustedContext;
     }
@@ -101,7 +101,7 @@ namespace InjectionCop.Parser
     {
       foreach (string precondition in preconditions)
       {
-        if (!context.Contains (precondition) || !context.IsSafe (precondition))
+        if (!context.Contains (precondition) || !context.IsSafe (precondition, "SqlFragment"))
         {
           _typeParser.AddProblem();
         }
