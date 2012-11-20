@@ -99,5 +99,13 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParserTests.While_loop
         i--;
       }
     }
+
+    public void InValidCallInsideWhileCondition()
+    {
+        while ("dummy" == RequiresSqlFragment(UnsafeSource()))
+        {
+            RequiresSqlFragment("safe");
+        }
+    }
   }
 }

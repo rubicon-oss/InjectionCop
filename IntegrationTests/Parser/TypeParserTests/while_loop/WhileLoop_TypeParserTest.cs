@@ -74,5 +74,15 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParserTests.While_loop
 
       Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
     }
+
+    [Test]
+    [Ignore]
+    public void Parse_InValidCallInsideWhileCondition_ReturnsProblem()
+    {
+        Method sample = TestHelper.GetSample<WhileLoopSample>("InValidCallInsideWhileCondition");
+      ProblemCollection result = _typeParser.Parse (sample);
+
+      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+    }
   }
 }
