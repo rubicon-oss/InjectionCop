@@ -34,5 +34,9 @@ namespace InjectionCop.IntegrationTests.Parser
     public void ContainsSqlFragmentParameter([Fragment("SqlFragment")] string parameter)
     {
     }
+
+    public void ContainsStronglyTypedSqlFragmentParameter([SqlFragment] string parameter)
+    {
+    }
   }
 }

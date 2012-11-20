@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\FragmentAttribute.cs" />
+    <Compile Include="Attributes\SqlFragmentAttribute.cs" />
     <Compile Include="Attributes\TrustedSqlGeneration.cs" />
     <Compile Include="Config\BlackMethod.cs" />
     <Compile Include="Config\BlackParameter.cs" />

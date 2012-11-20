@@ -21,17 +21,10 @@ namespace InjectionCop.Parser
 {
   public class FragmentTools
   {
-    public static bool Is(FragmentAttribute fragmentAttribute, Expression expression)
+    
+    public static bool Is(FragmentAttribute fragmentAttribute, Parameter parameter)
     {
-      bool isFragment = false;
-
-      Parameter parameter = expression as Parameter;
-      if (parameter != null)
-      {
-        isFragment = Contains(fragmentAttribute, parameter.Attributes);
-      }
-
-      return isFragment;
+      return Contains(fragmentAttribute, parameter.Attributes);
     }
 
     public static bool Returns(FragmentAttribute fragmentAttribute, Expression expression)
@@ -71,13 +64,20 @@ namespace InjectionCop.Parser
             isFragment = true;
           }
         }
+        if (attribute.Type.Name.Name == fragmentAttribute.FragmentType + "Attribute")
+        {
+            isFragment = true;
+        }
       }
       return isFragment;
     }
 
-    private static bool IsFragment(AttributeNode attribute)
+    public static bool IsFragment(AttributeNode attribute)
     {
-        return attribute.Type.FullName == typeof(FragmentAttribute).FullName;
+        string fragmentFullName = typeof(FragmentAttribute).FullName;
+        bool isFragment = attribute.Type.FullName == fragmentFullName;
+        bool isFragmentChild = attribute.Type.BaseType.FullName == fragmentFullName;
+        return isFragment || isFragmentChild;
     }
   }
 }

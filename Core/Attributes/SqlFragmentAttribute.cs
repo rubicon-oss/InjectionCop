@@ -14,24 +14,16 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.FxCop.Sdk;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace InjectionCop.Attributes
 {
-  [AttributeUsage (AttributeTargets.Parameter
-                   | AttributeTargets.ReturnValue)]
-  public class FragmentAttribute : Attribute
-  {
-    private readonly string _fragmentType;
-
-    public FragmentAttribute (string fragmentType)
+    public class SqlFragmentAttribute : FragmentAttribute
     {
-      _fragmentType = fragmentType;
+        public SqlFragmentAttribute() : base("SqlFragment")
+        {
+        }
     }
-
-    public string FragmentType
-    {
-      get { return _fragmentType; }
-    }
-  }
 }
