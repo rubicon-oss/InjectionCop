@@ -61,18 +61,23 @@ namespace InjectionCop.Parser
     public static bool Is (FragmentAttribute fragmentAttribute, AttributeNode attribute)
     {
       bool isFragment = false;
-      if (FragmentAttribute.IsFragment(attribute))
+      if (IsFragment(attribute))
       {
         foreach (Literal literal in attribute.Expressions)
         {
           string value = literal.Value as string;
-          if (FragmentAttribute.OfType (value) == fragmentAttribute)
+          if(fragmentAttribute.FragmentType == value)
           {
             isFragment = true;
           }
         }
       }
       return isFragment;
+    }
+
+    private static bool IsFragment(AttributeNode attribute)
+    {
+        return attribute.Type.FullName == typeof(FragmentAttribute).FullName;
     }
   }
 }

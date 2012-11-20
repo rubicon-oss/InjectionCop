@@ -22,17 +22,11 @@ namespace InjectionCop.Attributes
                    | AttributeTargets.ReturnValue)]
   public class FragmentAttribute : Attribute
   {
-    //protected static List<string> _usedTypes = new List<string>();
     private readonly string _fragmentType;
-
-    public FragmentAttribute () : this("Fragment")
-    {
-    }
 
     public FragmentAttribute (string fragmentType)
     {
       _fragmentType = fragmentType;
-      //RegisterType (this.GetType().FullName);
     }
 
     public string FragmentType
@@ -40,63 +34,9 @@ namespace InjectionCop.Attributes
       get { return _fragmentType; }
     }
 
-    public static bool operator == (FragmentAttribute a, FragmentAttribute b)
+    public static FragmentAttribute OfType (string fragmentAttribute)
     {
-      if (System.Object.ReferenceEquals (a, b))
-      {
-        return true;
-      }
-
-      if (((object) a == null) || ((object) b == null))
-      {
-        return false;
-      }
-
-      return a._fragmentType == b._fragmentType;
-    }
-
-    public static bool operator != (FragmentAttribute a, FragmentAttribute b)
-    {
-      return !(a == b);
-    }
-
-    public bool Equals (FragmentAttribute otherAttribute)
-    {
-      return _fragmentType == otherAttribute._fragmentType;
-    }
-
-    public override bool Equals (object objectparameter)
-    {
-      if (objectparameter == null)
-      {
-        return false;
-      }
-
-      FragmentAttribute fragmentAttribute = objectparameter as FragmentAttribute;
-      if (fragmentAttribute == null)
-      {
-        return false;
-      }
-
-      return _fragmentType == fragmentAttribute._fragmentType;
-    }
-
-    public override int GetHashCode ()
-    {
-      unchecked
-      {
-        return (base.GetHashCode() * 397) ^ (_fragmentType != null ? _fragmentType.GetHashCode() : 0);
-      }
-    }
-
-    public static FragmentAttribute OfType (string fragmentattribute)
-    {
-      return new FragmentAttribute (fragmentattribute);
-    }
-
-    public static bool IsFragment (AttributeNode attribute)
-    {
-      return attribute.Type.FullName == typeof (FragmentAttribute).FullName;
+      return new FragmentAttribute (fragmentAttribute);
     }
   }
 }
