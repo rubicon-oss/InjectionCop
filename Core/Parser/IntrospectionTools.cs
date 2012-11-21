@@ -28,5 +28,43 @@ namespace InjectionCop.Parser
       Method boundMember = (Method) callee.BoundMember;
       return boundMember;
     }
+
+    public static bool IsVariable(Expression expression)
+    {
+      bool isVariableReference = false;
+      if (expression.NodeType == NodeType.AddressOf)
+      {
+        Local operand = ((UnaryExpression) expression).Operand as Local;
+        if (operand != null)
+        {
+          isVariableReference = IsVariable (operand);
+        }
+      }
+      return expression is Parameter || expression is Local || isVariableReference;
+    }
+
+    public static string GetVariableName (Expression expression)
+    {
+      string variableName = "";
+      if (expression is Parameter)
+      {
+        Parameter operand = (Parameter) expression;
+        variableName = operand.Name.Name;
+      }
+      else if (expression is Local)
+      {
+        Local operand = (Local) expression;
+        variableName = operand.Name.Name;
+      }
+      else if (expression.NodeType == NodeType.AddressOf)
+      {
+        Local operand = ((UnaryExpression) expression).Operand as Local;
+        if (operand != null)
+        {
+          variableName = operand.Name.Name;
+        }
+      }
+      return variableName;
+    }
   }
 }

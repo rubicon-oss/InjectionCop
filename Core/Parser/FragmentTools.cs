@@ -21,57 +21,6 @@ namespace InjectionCop.Parser
 {
   public class FragmentTools
   {
-    
-    public static bool Is(FragmentAttribute fragmentAttribute, Parameter parameter)
-    {
-      return Contains(fragmentAttribute, parameter.Attributes);
-    }
-
-    public static bool Returns(FragmentAttribute fragmentAttribute, Expression expression)
-    {
-      bool returnsFragment = false;
-
-      MethodCall methodCall = expression as MethodCall;
-      if (methodCall != null)
-      {
-        Method calleeMethod = IntrospectionTools.ExtractMethod (methodCall);
-        returnsFragment = Contains(fragmentAttribute, calleeMethod.ReturnAttributes);
-      }
-
-      return returnsFragment;
-    }
-
-    public static bool Contains (FragmentAttribute fragmentAttribute, AttributeNodeCollection attributes)
-    {
-      bool contains = false;
-      if(attributes != null)
-      {
-        contains = attributes.Any (attribute => Is (fragmentAttribute, attribute));
-      }
-      return contains;
-    }
-
-    public static bool Is (FragmentAttribute fragmentAttribute, AttributeNode attribute)
-    {
-      bool isFragment = false;
-      if (IsFragment(attribute))
-      {
-        foreach (Literal literal in attribute.Expressions)
-        {
-          string value = literal.Value as string;
-          if(fragmentAttribute.FragmentType == value)
-          {
-            isFragment = true;
-          }
-        }
-        if (attribute.Type.Name.Name == fragmentAttribute.FragmentType + "Attribute")
-        {
-            isFragment = true;
-        }
-      }
-      return isFragment;
-    }
-
     public static bool IsFragment(AttributeNode attribute)
     {
         string fragmentFullName = typeof(FragmentAttribute).FullName;

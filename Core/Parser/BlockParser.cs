@@ -76,6 +76,7 @@ namespace InjectionCop.Parser
       }
     }
 
+    
     private Identifier GetVariableIdentifier (Expression target)
     {
       Identifier identifier;
@@ -100,6 +101,7 @@ namespace InjectionCop.Parser
       return identifier;
     }
 
+    /*
     private bool IsVariable (Expression target)
     {
       if (target is UnaryExpression)
@@ -109,7 +111,7 @@ namespace InjectionCop.Parser
       }
 
       return target is Local || target is Parameter;
-    }
+    }*/
 
     private void Inspect (Expression expression)
     {
@@ -137,7 +139,7 @@ namespace InjectionCop.Parser
 
       for (int i = 0; i < methodCall.Operands.Count; i++)
       {
-        if (IsVariable (methodCall.Operands[i]))
+        if (IntrospectionTools.IsVariable (methodCall.Operands[i]))
         {
           if (method.Parameters[i].IsOut)
           {

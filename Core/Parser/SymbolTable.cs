@@ -15,7 +15,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using InjectionCop.Attributes;
 using InjectionCop.Config;
 using Microsoft.FxCop.Sdk;
 
@@ -25,8 +24,7 @@ namespace InjectionCop.Parser
   {
     private readonly IBlackTypes _blackTypes;
     private Dictionary<string, Dictionary<string,bool>> _safenessMap;
-    //private readonly FragmentAttribute sqlFragment = new FragmentAttribute ("SqlFragment");
-
+    
     public SymbolTable(IBlackTypes blackTypes)
     {
       _blackTypes = blackTypes;
@@ -38,47 +36,10 @@ namespace InjectionCop.Parser
       get { return new List<string> (_safenessMap.Keys).ToArray(); }
     }
 
-    public bool IsSafe (Expression expression, string fragmentType)
-    {
-      bool isLiteral = expression is Literal;
-        
-      bool isFragment = FragmentTools.Returns(new FragmentAttribute(fragmentType), expression);
-      bool isSafeVariable = false;
-      bool isSafeUnaryExpression = false;
-
-      if (expression is Parameter)
-      {
-        Parameter parameter = (Parameter) expression;
-        if (_safenessMap.ContainsKey (parameter.Name.Name) && _safenessMap[parameter.Name.Name].ContainsKey(fragmentType))
-        {
-          isSafeVariable = _safenessMap[parameter.Name.Name][fragmentType];
-        }
-      }
-      else if (expression is Local)
-      {
-        Local local = (Local) expression;
-        if (_safenessMap.ContainsKey(local.Name.Name) && _safenessMap[local.Name.Name].ContainsKey(fragmentType))
-        {
-          isSafeVariable = _safenessMap[local.Name.Name][fragmentType];
-        }
-      }
-      else if (expression is UnaryExpression)
-      {
-        isSafeUnaryExpression = IsSafe (((UnaryExpression) expression).Operand, fragmentType);
-      }
-
-      return isLiteral || isFragment || isSafeVariable || isSafeUnaryExpression;
-    }
-
-    public bool IsNotSafe (Expression expression, string fragmentType)
-    {
-      return !IsSafe (expression, fragmentType);
-    }
-
     public bool ReturnsFragment (Expression expression, out string fragmentType)
     {
       bool returnsFragment = false;
-      fragmentType = "";
+      fragmentType = string.Empty;
       if (expression is Literal)
       {
         fragmentType = "Literal";
@@ -102,10 +63,11 @@ namespace InjectionCop.Parser
           returnsFragment = FragmentTools.ContainsFragment (calleeMethod.ReturnAttributes);
           fragmentType = FragmentTools.GetFragmentType (calleeMethod.ReturnAttributes);
         }
-        else
-        {
-          fragmentType = string.Empty;
-        }
+      }
+      else if (expression is UnaryExpression)
+      {
+        UnaryExpression unaryExpression = (UnaryExpression) expression;
+        returnsFragment = ReturnsFragment (unaryExpression.Operand, out fragmentType);
       }
 
       return returnsFragment;
@@ -119,7 +81,7 @@ namespace InjectionCop.Parser
       {
         foreach (string context in _safenessMap[name].Keys)
         {
-          if (_safenessMap[name][context] == true)
+          if (_safenessMap[name][context])
           {
             returnsFragment = true;
             fragmentType = context;
@@ -140,12 +102,17 @@ namespace InjectionCop.Parser
       {
         foreach (Expression expression in methodCall.Operands)
         {
-          if (IsNotSafe (expression,"SqlFragment") && IsNotSafe(expression, "Literal"))
+          string fragmentType;
+          bool isExpressionSafe = ReturnsFragment(expression, out fragmentType);
+          //if (IsNotSafe (expression,"SqlFragment") && IsNotSafe(expression, "Literal"))
+          if(!isExpressionSafe
+            || (fragmentType != "SqlFragment" && fragmentType != "Literal"))
           {
             parameterSafe = false;
-            if(IsVariable(expression))
+            if(IntrospectionTools.IsVariable(expression))
             {
-              requireSafenessParameters.Add (new PreCondition(VariableName (expression), "SqlFragment"));
+              string variableName = IntrospectionTools.GetVariableName (expression);
+              requireSafenessParameters.Add (new PreCondition(variableName, "SqlFragment"));
             }
           }
         }
@@ -153,22 +120,23 @@ namespace InjectionCop.Parser
 
       for (int i = 0; i < calleeMethod.Parameters.Count; i++)
       {
-        //bool isFragmentParameter = FragmentTools.Contains (sqlFragment, calleeMethod.Parameters[i].Attributes);
-        bool isFragmentParameter = FragmentTools.ContainsFragment(calleeMethod.Parameters[i].Attributes);
-        
         Expression expression = methodCall.Operands[i];
-        
-        if (isFragmentParameter)
+
+        bool requiresFragmentParameter = FragmentTools.ContainsFragment(calleeMethod.Parameters[i].Attributes);
+        if (requiresFragmentParameter)
         {
-          string fragmentType = FragmentTools.GetFragmentType(calleeMethod.Parameters[i].Attributes);
-          if (IsNotSafe(expression, fragmentType))
+          string fragmentParameterType = FragmentTools.GetFragmentType(calleeMethod.Parameters[i].Attributes);
+          string operandParameterType;
+          bool isFragmentOperand = ReturnsFragment (expression, out operandParameterType);
+          if(!isFragmentOperand 
+            || (fragmentParameterType != operandParameterType && operandParameterType != "Literal"))
           {
-            if (IsVariable(expression))
-            /*&& _safenessMap[VariableName(expression)] == false*/
+            if (IntrospectionTools.IsVariable(expression))
             {
-              if (!_safenessMap.ContainsKey(VariableName(expression)))
+              string variableName = IntrospectionTools.GetVariableName (expression);
+              if (!_safenessMap.ContainsKey(variableName))
               {
-                requireSafenessParameters.Add(new PreCondition(VariableName(expression), fragmentType));
+                requireSafenessParameters.Add(new PreCondition(variableName, fragmentParameterType));
               }
               else
               {
@@ -186,45 +154,7 @@ namespace InjectionCop.Parser
 
       return parameterSafe;
     }
-
-    private bool IsVariable(Expression expression)
-    {
-      bool isVariableReference = false;
-      if (expression.NodeType == NodeType.AddressOf)
-      {
-        Local operand = ((UnaryExpression) expression).Operand as Local;
-        if (operand != null)
-        {
-          isVariableReference = IsVariable (operand);
-        }
-      }
-      return expression is Parameter || expression is Local || isVariableReference;
-    }
-
-    private string VariableName (Expression expression)
-    {
-      string variableName = "";
-      if (expression is Parameter)
-      {
-        Parameter operand = (Parameter) expression;
-        variableName = operand.Name.Name;
-      }
-      else if (expression is Local)
-      {
-        Local operand = (Local) expression;
-        variableName = operand.Name.Name;
-      }
-      else if (expression.NodeType == NodeType.AddressOf)
-      {
-        Local operand = ((UnaryExpression) expression).Operand as Local;
-        if (operand != null)
-        {
-          variableName = operand.Name.Name;
-        }
-      }
-      return variableName;
-    }
-
+ 
     public void MakeUnsafe (Identifier symbolName)
     {
       MakeUnsafe(symbolName.Name);
@@ -241,33 +171,8 @@ namespace InjectionCop.Parser
       }
     }
 
-    public SymbolTable Clone()
-    {
-      SymbolTable clone = new SymbolTable (_blackTypes);
-      clone._safenessMap = new Dictionary<string, Dictionary<string,bool>>();
-      foreach (string symbol in _safenessMap.Keys)
-      {
-        clone._safenessMap[symbol] = new Dictionary<string, bool>(_safenessMap[symbol]);
-      }
-      return clone;
-    }
-
-    object ICloneable.Clone()
-    {
-      return Clone();
-    }
-
-    public void SetSafeness(Identifier symbolName, string fragmentType, bool value)
-    {
-      SetSafeness(symbolName.Name, fragmentType, value);
-    }
-
     public void InferSafeness(Identifier symbolName, Expression expression)
     {
-      // FragmentTools.ReturnsFragment(expression) check if expression returns fragment
-      // -> issafe mit entsprechendem fragmenttype
-      // bei literal -> any context
-      // bei parameter und local in tabelle nachsehen
       if (!_safenessMap.ContainsKey (symbolName.Name))
       {
         _safenessMap[symbolName.Name] = new Dictionary<string, bool>();
@@ -283,12 +188,17 @@ namespace InjectionCop.Parser
         MakeUnsafe (symbolName);
       }
     }
+    
+    public void SetSafeness (Identifier symbolName, string fragmentType, bool value)
+    {
+      SetSafeness (symbolName.Name, fragmentType, value);
+    }
 
     public void SetSafeness (string symbolName, string fragmentType, bool safeness)
     {
-      if (_safenessMap.ContainsKey(symbolName))
+      if (_safenessMap.ContainsKey (symbolName))
       {
-        if (safeness == true)
+        if (safeness)
         {
           MakeUnsafe (symbolName);
         }
@@ -313,6 +223,11 @@ namespace InjectionCop.Parser
       }
     }
 
+    public void SetContextMap (string symbol, Dictionary<string, bool> safenessMap)
+    {
+      _safenessMap[symbol] = safenessMap;
+    }
+
     public bool IsSafe (string symbolName, string fragmentType)
     {
       bool isFragment = false;
@@ -330,7 +245,7 @@ namespace InjectionCop.Parser
       }
       return isFragment || isLiteral;
     }
-
+    
     public bool IsNotSafe (string symbolName, string fragmentType)
     {
       return !IsSafe (symbolName, fragmentType);
@@ -341,9 +256,20 @@ namespace InjectionCop.Parser
       return _safenessMap.ContainsKey (symbolName);
     }
 
-    public void SetContextMap (string symbol, Dictionary<string, bool> safenessMap)
+    public SymbolTable Clone()
     {
-      _safenessMap[symbol] = safenessMap;
+      SymbolTable clone = new SymbolTable (_blackTypes);
+      clone._safenessMap = new Dictionary<string, Dictionary<string,bool>>();
+      foreach (string symbol in _safenessMap.Keys)
+      {
+        clone._safenessMap[symbol] = new Dictionary<string, bool>(_safenessMap[symbol]);
+      }
+      return clone;
+    }
+
+    object ICloneable.Clone()
+    {
+      return Clone();
     }
   }
 }

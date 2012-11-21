@@ -35,7 +35,6 @@ namespace InjectionCop.Parser
         if(member is Method)
         {
           Method method = (Method) member;
-          MethodParser methodParser = new MethodParser (_blackTypes, this);
           Parse(method);
         }
       }
