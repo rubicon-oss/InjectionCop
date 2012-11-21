@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using InjectionCop.Attributes;
 using InjectionCop.Config;
 using Microsoft.FxCop.Sdk;
 
@@ -25,7 +24,6 @@ namespace InjectionCop.Parser
     private SymbolTable _symbolTableParser;
     private List<string> _preConditionSafeSymbols;
     private List<int> _successors;
-    private readonly FragmentAttribute sqlFragment = new FragmentAttribute("SqlFragment");
     private readonly IBlackTypes _blackTypes;
     private TypeParser _typeParser;
 
@@ -53,7 +51,7 @@ namespace InjectionCop.Parser
           case NodeType.AssignmentStatement:
             AssignmentStatement asgn = (AssignmentStatement) stmt;
             Identifier symbol = GetVariableIdentifier (asgn.Target);
-            _symbolTableParser.SetSafeness(symbol, sqlFragment.FragmentType, asgn.Source);
+            _symbolTableParser.InferSafeness(symbol, asgn.Source);
             Inspect (asgn.Source);
             break;
 
@@ -144,8 +142,15 @@ namespace InjectionCop.Parser
           if (method.Parameters[i].IsOut)
           {
             Identifier symbol = GetVariableIdentifier (methodCall.Operands[i]);
-            bool safeness = FragmentTools.Contains(sqlFragment, method.Parameters[i].Attributes);
-            _symbolTableParser.SetSafeness(symbol, sqlFragment.FragmentType, safeness);
+            if (FragmentTools.ContainsFragment (method.Parameters[i].Attributes))
+            {
+              string fragmentType = FragmentTools.GetFragmentType (method.Parameters[i].Attributes);
+              _symbolTableParser.SetSafeness (symbol, fragmentType, true);
+            }
+            else
+            {
+              _symbolTableParser.MakeUnsafe (symbol);
+            }
           }
         }
       }

@@ -164,7 +164,7 @@ namespace InjectionCop.IntegrationTests.Parser
     {
       TypeNode stringTypeNode = Helper.TypeNodeFactory<string>();
       Method sample = TestHelper.GetSample<FragmentToolsSample>("ContainsNonFragmentParameter", stringTypeNode);
-      string isResult = FragmentTools.GetFragmentType(sample.Parameters[0].Attributes);
+      FragmentTools.GetFragmentType(sample.Parameters[0].Attributes);
     }
   }
 }

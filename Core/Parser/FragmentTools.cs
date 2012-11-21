@@ -119,6 +119,5 @@ namespace InjectionCop.Parser
 
       return fragmentType;
     }
-
   }
 }

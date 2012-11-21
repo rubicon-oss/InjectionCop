@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using InjectionCop.Attributes;
 using InjectionCop.Config;
 using Microsoft.FxCop.Sdk;
@@ -39,16 +40,18 @@ namespace InjectionCop.Parser
 
     public bool IsSafe (Expression expression, string fragmentType)
     {
-      bool literalOrFragment = expression is Literal || FragmentTools.Returns(new FragmentAttribute(fragmentType), expression);
-      bool safeVariable = false;
-      bool safeUnaryExpression = false;
+      bool isLiteral = expression is Literal;
+        
+      bool isFragment = FragmentTools.Returns(new FragmentAttribute(fragmentType), expression);
+      bool isSafeVariable = false;
+      bool isSafeUnaryExpression = false;
 
       if (expression is Parameter)
       {
         Parameter parameter = (Parameter) expression;
         if (_safenessMap.ContainsKey (parameter.Name.Name) && _safenessMap[parameter.Name.Name].ContainsKey(fragmentType))
         {
-          safeVariable = _safenessMap[parameter.Name.Name][fragmentType];
+          isSafeVariable = _safenessMap[parameter.Name.Name][fragmentType];
         }
       }
       else if (expression is Local)
@@ -56,20 +59,74 @@ namespace InjectionCop.Parser
         Local local = (Local) expression;
         if (_safenessMap.ContainsKey(local.Name.Name) && _safenessMap[local.Name.Name].ContainsKey(fragmentType))
         {
-          safeVariable = _safenessMap[local.Name.Name][fragmentType];
+          isSafeVariable = _safenessMap[local.Name.Name][fragmentType];
         }
       }
       else if (expression is UnaryExpression)
       {
-        safeUnaryExpression = IsSafe (((UnaryExpression) expression).Operand, fragmentType);
+        isSafeUnaryExpression = IsSafe (((UnaryExpression) expression).Operand, fragmentType);
       }
 
-      return literalOrFragment || safeVariable || safeUnaryExpression;
+      return isLiteral || isFragment || isSafeVariable || isSafeUnaryExpression;
     }
 
     public bool IsNotSafe (Expression expression, string fragmentType)
     {
       return !IsSafe (expression, fragmentType);
+    }
+
+    public bool ReturnsFragment (Expression expression, out string fragmentType)
+    {
+      bool returnsFragment = false;
+      fragmentType = "";
+      if (expression is Literal)
+      {
+        fragmentType = "Literal";
+        returnsFragment = true;
+      }
+      else if (expression is Local)
+      {
+        Local local = (Local) expression;
+        returnsFragment = Lookup (local.Name.Name, out fragmentType);   
+      }
+      else if (expression is Parameter)
+      {
+        Parameter parameter = (Parameter) expression;
+        returnsFragment = Lookup (parameter.Name.Name, out fragmentType);
+      }
+      else if (expression is MethodCall)
+      {
+        Method calleeMethod = IntrospectionTools.ExtractMethod((MethodCall) expression);
+        if (calleeMethod.ReturnAttributes != null)
+        {
+          returnsFragment = FragmentTools.ContainsFragment (calleeMethod.ReturnAttributes);
+          fragmentType = FragmentTools.GetFragmentType (calleeMethod.ReturnAttributes);
+        }
+        else
+        {
+          fragmentType = string.Empty;
+        }
+      }
+
+      return returnsFragment;
+    }
+
+    private bool Lookup (string name, out string fragmentType)
+    {
+      bool returnsFragment = false;
+      fragmentType = string.Empty;
+      if (_safenessMap.ContainsKey (name))
+      {
+        foreach (string context in _safenessMap[name].Keys)
+        {
+          if (_safenessMap[name][context] == true)
+          {
+            returnsFragment = true;
+            fragmentType = context;
+          }
+        }
+      }
+      return returnsFragment;
     }
 
     public bool ParametersSafe (MethodCall methodCall, out List<string> requireSafenessParameters)
@@ -83,7 +140,7 @@ namespace InjectionCop.Parser
       {
         foreach (Expression expression in methodCall.Operands)
         {
-          if (IsNotSafe (expression,"SqlFragment"))
+          if (IsNotSafe (expression,"SqlFragment") && IsNotSafe(expression, "Literal"))
           {
             parameterSafe = false;
             if(IsVariable(expression))
@@ -101,19 +158,6 @@ namespace InjectionCop.Parser
         
         Expression expression = methodCall.Operands[i];
         
-        /*if (isFragmentParameter)
-        {
-          if (IsVariable (expression))
-          {
-            requireSafenessParameters.Add (VariableName (expression));
-          }
-          if (IsNotSafe (expression))
-          {
-            parameterSafe = false;
-          }
-
-        }*/
-
         if (isFragmentParameter)
         {
           string fragmentType = FragmentTools.GetFragmentType(calleeMethod.Parameters[i].Attributes);
@@ -181,14 +225,17 @@ namespace InjectionCop.Parser
       return variableName;
     }
 
-    public void SetSafeness(Identifier symbolName, string fragmentType, bool value)
+    public void MakeUnsafe (Identifier symbolName)
     {
-      SetSafeness(symbolName.Name, fragmentType, value);
+      MakeUnsafe(symbolName.Name);
     }
 
-    public void SetSafeness(Identifier symbolName, string fragmentType, Expression expression)
+    public void MakeUnsafe (string symbolName)
     {
-      SetSafeness (symbolName, fragmentType, IsSafe (expression, fragmentType));
+      foreach (string context in _safenessMap[symbolName].Keys.ToList())
+      {
+        _safenessMap[symbolName][context] = false;
+      }
     }
 
     public SymbolTable Clone()
@@ -207,10 +254,41 @@ namespace InjectionCop.Parser
       return Clone();
     }
 
+    public void SetSafeness(Identifier symbolName, string fragmentType, bool value)
+    {
+      SetSafeness(symbolName.Name, fragmentType, value);
+    }
+
+    public void InferSafeness(Identifier symbolName, Expression expression)
+    {
+      // FragmentTools.ReturnsFragment(expression) check if expression returns fragment
+      // -> issafe mit entsprechendem fragmenttype
+      // bei literal -> any context
+      // bei parameter und local in tabelle nachsehen
+      if (!_safenessMap.ContainsKey (symbolName.Name))
+      {
+        _safenessMap[symbolName.Name] = new Dictionary<string, bool>();
+      }
+      string fragmentType;
+      if (ReturnsFragment (expression, out fragmentType))
+      {
+        MakeUnsafe (symbolName);  
+        _safenessMap[symbolName.Name][fragmentType] = true;
+      }
+      else
+      {
+        MakeUnsafe (symbolName);
+      }
+    }
+
     public void SetSafeness (string symbolName, string fragmentType, bool safeness)
     {
       if (_safenessMap.ContainsKey(symbolName))
       {
+        if (safeness == true)
+        {
+          MakeUnsafe (symbolName);
+        }
         _safenessMap[symbolName][fragmentType] = safeness;
       }
       else
@@ -222,12 +300,20 @@ namespace InjectionCop.Parser
 
     public bool IsSafe (string symbolName, string fragmentType)
     {
-      bool isSafe = false;
-      if(_safenessMap.ContainsKey(symbolName) && _safenessMap[symbolName].ContainsKey(fragmentType))
+      bool isFragment = false;
+      bool isLiteral = false;
+      if(_safenessMap.ContainsKey(symbolName))
       {
-        isSafe = _safenessMap[symbolName][fragmentType];
+        if(_safenessMap[symbolName].ContainsKey(fragmentType))
+        {
+          isFragment = _safenessMap[symbolName][fragmentType];
+        }
+        if(_safenessMap[symbolName].ContainsKey("Literal"))
+        {
+          isLiteral = _safenessMap[symbolName]["Literal"];
+        }
       }
-      return isSafe;
+      return isFragment || isLiteral;
     }
 
     public bool IsNotSafe (string symbolName, string fragmentType)
