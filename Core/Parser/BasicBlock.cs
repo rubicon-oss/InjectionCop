@@ -20,13 +20,13 @@ namespace InjectionCop.Parser
   public class BasicBlock
   {
     private readonly int _id;
-    private readonly string[] _preConditionSafeSymbols;
+    private readonly PreCondition[] _preConditions;
     private readonly SymbolTable _postConditionSymbolTable;
     private readonly int[] _successorKeys;
     
-    public BasicBlock(int id, string[] preConditionSafeSymbols, SymbolTable postConditionSymbolTable, int[] successorKeys)
+    public BasicBlock(int id, PreCondition[] preConditions, SymbolTable postConditionSymbolTable, int[] successorKeys)
     {
-      _preConditionSafeSymbols = preConditionSafeSymbols;
+      _preConditions = preConditions;
       _postConditionSymbolTable = postConditionSymbolTable;
       _successorKeys = successorKeys;
       _id = id;
@@ -35,9 +35,9 @@ namespace InjectionCop.Parser
     /// <summary>
     /// symbols that must be set to a safe value upon entering the basic block
     /// </summary>
-    public List<string> PreConditionSafeSymbols
+    public PreCondition[] PreConditions
     {
-      get { return new List<string> (_preConditionSafeSymbols); }
+      get { return _preConditions; }
     }
 
     /// <summary>

@@ -129,10 +129,10 @@ namespace InjectionCop.Parser
       return returnsFragment;
     }
 
-    public bool ParametersSafe (MethodCall methodCall, out List<string> requireSafenessParameters)
+    public bool ParametersSafe (MethodCall methodCall, out List<PreCondition> requireSafenessParameters)
     {
       bool parameterSafe = true;
-      requireSafenessParameters = new List<string>();
+      requireSafenessParameters = new List<PreCondition>();
       Method calleeMethod = IntrospectionTools.ExtractMethod (methodCall);
 
       
@@ -145,7 +145,7 @@ namespace InjectionCop.Parser
             parameterSafe = false;
             if(IsVariable(expression))
             {
-              requireSafenessParameters.Add (VariableName (expression));
+              requireSafenessParameters.Add (new PreCondition(VariableName (expression), "SqlFragment"));
             }
           }
         }
@@ -168,7 +168,7 @@ namespace InjectionCop.Parser
             {
               if (!_safenessMap.ContainsKey(VariableName(expression)))
               {
-                requireSafenessParameters.Add(VariableName(expression));
+                requireSafenessParameters.Add(new PreCondition(VariableName(expression), fragmentType));
               }
               else
               {
@@ -232,9 +232,12 @@ namespace InjectionCop.Parser
 
     public void MakeUnsafe (string symbolName)
     {
-      foreach (string context in _safenessMap[symbolName].Keys.ToList())
+      if (_safenessMap.ContainsKey (symbolName))
       {
-        _safenessMap[symbolName][context] = false;
+        foreach (string context in _safenessMap[symbolName].Keys.ToList())
+        {
+          _safenessMap[symbolName][context] = false;
+        }
       }
     }
 
@@ -298,6 +301,18 @@ namespace InjectionCop.Parser
       }
     }
 
+    public Dictionary<string, bool> GetContextMap (string symbolName)
+    {
+      if (_safenessMap.ContainsKey (symbolName))
+      {
+        return new Dictionary<string, bool>(_safenessMap[symbolName]);
+      }
+      else
+      {
+        throw new InjectionCopException("Given Symbolname not found in Symboltable");
+      }
+    }
+
     public bool IsSafe (string symbolName, string fragmentType)
     {
       bool isFragment = false;
@@ -324,6 +339,11 @@ namespace InjectionCop.Parser
     public bool Contains (string symbolName)
     {
       return _safenessMap.ContainsKey (symbolName);
+    }
+
+    public void SetContextMap (string symbol, Dictionary<string, bool> safenessMap)
+    {
+      _safenessMap[symbol] = safenessMap;
     }
   }
 }

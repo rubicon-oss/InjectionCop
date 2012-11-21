@@ -22,7 +22,7 @@ namespace InjectionCop.Parser
   public class BlockParser : BaseFxCopRule
   {
     private SymbolTable _symbolTableParser;
-    private List<string> _preConditionSafeSymbols;
+    private List<PreCondition> _preConditions;
     private List<int> _successors;
     private readonly IBlackTypes _blackTypes;
     private TypeParser _typeParser;
@@ -31,7 +31,7 @@ namespace InjectionCop.Parser
         : base ("TypeParser")
     {
       _symbolTableParser = new SymbolTable (blackTypes);
-      _preConditionSafeSymbols = new List<string>();
+      _preConditions = new List<PreCondition>();
       _successors = new List<int>();
       _blackTypes = blackTypes;
       _typeParser = typeParser;
@@ -116,12 +116,12 @@ namespace InjectionCop.Parser
       if (expression is MethodCall)
       {
         MethodCall methodCall = (MethodCall) expression;
-        List<string> additionalPreConditions;
+        List<PreCondition> additionalPreConditions;
         if (!_symbolTableParser.ParametersSafe (methodCall, out additionalPreConditions))
         {
           _typeParser.AddProblem();
         }
-        _preConditionSafeSymbols.AddRange (additionalPreConditions);
+        _preConditions.AddRange (additionalPreConditions);
         UpdateSafeOutParameters (methodCall);
       }
       else if (expression is UnaryExpression)
@@ -160,7 +160,7 @@ namespace InjectionCop.Parser
     {
       Reset();
       Inspect (block);
-      BasicBlock basicBlock = new BasicBlock (block.UniqueKey, _preConditionSafeSymbols.ToArray(), _symbolTableParser, _successors.ToArray());
+      BasicBlock basicBlock = new BasicBlock (block.UniqueKey, _preConditions.ToArray(), _symbolTableParser, _successors.ToArray());
       return basicBlock;
     }
 
@@ -169,14 +169,14 @@ namespace InjectionCop.Parser
       Reset();
       _successors.Add (directSuccessorKey);
       Inspect (block);
-      BasicBlock basicBlock = new BasicBlock (block.UniqueKey, _preConditionSafeSymbols.ToArray(), _symbolTableParser, _successors.ToArray());
+      BasicBlock basicBlock = new BasicBlock (block.UniqueKey, _preConditions.ToArray(), _symbolTableParser, _successors.ToArray());
       return basicBlock;
     }
 
     private void Reset()
     {
       _symbolTableParser = new SymbolTable (_blackTypes);
-      _preConditionSafeSymbols = new List<string>();
+      _preConditions = new List<PreCondition>();
       _successors = new List<int>();
     }
   }

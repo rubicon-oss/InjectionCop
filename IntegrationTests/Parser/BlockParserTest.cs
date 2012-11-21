@@ -55,7 +55,7 @@ namespace InjectionCop.IntegrationTests.Parser
 
       Assert.That (correctPostCondition, Is.True);
     }
-
+    
     [Test]
     public void Parse_UnsafePreCondition()
     {
@@ -63,7 +63,8 @@ namespace InjectionCop.IntegrationTests.Parser
       Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("UnsafePreCondition", stringTypeNode);
       Block sample = sampleMethod.Body.Statements[0] as Block;
       BasicBlock basicBlock = _blockParser.Parse(sample);
-      bool correctPreCondition = basicBlock.PreConditionSafeSymbols.Contains ("unSafe");
+      bool correctPreCondition = basicBlock.PreConditions[0].Symbol == "unSafe"
+                                 && basicBlock.PreConditions[0].FragmentType == "SqlFragment";
 
       Assert.That (correctPreCondition, Is.True);
     }
@@ -75,10 +76,11 @@ namespace InjectionCop.IntegrationTests.Parser
       Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("SafePreCondition", stringTypeNode);
       Block sample = sampleMethod.Body.Statements[0] as Block;
       BasicBlock basicBlock = _blockParser.Parse (sample);
-      bool correctPreCondition = basicBlock.PreConditionSafeSymbols.Count == 0;
+      bool correctPreCondition = basicBlock.PreConditions.Length == 0;
 
       Assert.That (correctPreCondition, Is.True);
     }
+    
     
     [Test]
     public void Parse_MultipleUnsafePreCondition ()
@@ -87,12 +89,17 @@ namespace InjectionCop.IntegrationTests.Parser
       Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("MultipleUnsafePreCondition", stringTypeNode, stringTypeNode);
       Block sample = sampleMethod.Body.Statements[0] as Block;
       BasicBlock basicBlock = _blockParser.Parse (sample);
-      bool correctPreCondition = basicBlock.PreConditionSafeSymbols.Contains ("unSafe1")
-                                 && basicBlock.PreConditionSafeSymbols.Contains ("unSafe2");
+      
+      bool correctPreCondition0 = basicBlock.PreConditions[0].Symbol == "unSafe1"
+                                 && basicBlock.PreConditions[0].FragmentType == "SqlFragment";
 
-      Assert.That (correctPreCondition, Is.True);
+      bool correctPreCondition1 = basicBlock.PreConditions[1].Symbol == "unSafe2"
+                                 && basicBlock.PreConditions[1].FragmentType == "SqlFragment";
+
+      Assert.That (correctPreCondition0 && correctPreCondition1, Is.True);
     }
 
+    
     [Test]
     public void Parse_BlockInternalSafenessCondition_InternalSafenessSymbolNotInPreCondition ()
     {
@@ -100,8 +107,9 @@ namespace InjectionCop.IntegrationTests.Parser
       Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("BlockInternalSafenessCondition", stringTypeNode);
       Block sample = sampleMethod.Body.Statements[0] as Block;
       BasicBlock basicBlock = _blockParser.Parse (sample);
-      bool correctPreCondition = basicBlock.PreConditionSafeSymbols.Contains ("x")
-                                 && basicBlock.PreConditionSafeSymbols.Count == 1;
+      
+      bool correctPreCondition = basicBlock.PreConditions[0].Symbol == "x"
+                                 && basicBlock.PreConditions[0].FragmentType == "SqlFragment";
 
       Assert.That (correctPreCondition, Is.True);
     }

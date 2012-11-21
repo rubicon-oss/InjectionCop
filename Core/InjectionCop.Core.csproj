@@ -64,6 +64,7 @@
     <Compile Include="Parser\Helper.cs" />
     <Compile Include="Parser\IntrospectionTools.cs" />
     <Compile Include="Parser\MethodParser.cs" />
+    <Compile Include="Parser\PreCondition.cs" />
     <Compile Include="Parser\SymbolTable.cs" />
     <Compile Include="Parser\BlockParser.cs" />
     <Compile Include="Parser\TypeParser.cs" />

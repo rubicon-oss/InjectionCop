@@ -24,16 +24,39 @@ namespace InjectionCop.UnitTests.Parser
   [TestFixture]
   public class SymbolTableTest
   {
+    private SymbolTable _symbolTable;
+
+    [SetUp]
+    public void SetUp ()
+    {
+      _symbolTable = new SymbolTable(new IDbCommandBlackTypesStub());
+    }
+
     [Test]
     public void Clone_ReturnsDeepCopy_True ()
     {
-      SymbolTable symbolTable = new SymbolTable(new IDbCommandBlackTypesStub());
-      symbolTable.SetSafeness (Identifier.For ("key"), "FragmentType", true);
-      SymbolTable clone = symbolTable.Clone();
+      _symbolTable.SetSafeness (Identifier.For ("key"), "FragmentType", true);
+      SymbolTable clone = _symbolTable.Clone();
       clone.SetSafeness("key", "FragmentType", false);
-      SymbolTable result = symbolTable.Clone();
+      SymbolTable result = _symbolTable.Clone();
       
       Assert.That (result.IsSafe("key", "FragmentType"), Is.True);
+    }
+
+    [Test]
+    public void GetSafenessMap_ExistingEntry_ReturnsEntry ()
+    {
+      _symbolTable.SetSafeness (Identifier.For ("key"), "FragmentType", true);
+      bool safeness =_symbolTable.GetContextMap ("key")["FragmentType"];
+
+      Assert.That (safeness, Is.True);
+    }
+
+    [Test]
+    [ExpectedException(typeof(InjectionCopException), ExpectedMessage = "Given Symbolname not found in Symboltable")]
+    public void GetSafenessMap_NonExistingEntry_ThrowsException ()
+    {
+      _symbolTable.GetContextMap ("key");
     }
   }
 }

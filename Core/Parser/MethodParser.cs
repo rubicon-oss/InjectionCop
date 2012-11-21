@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using InjectionCop.Attributes;
 using InjectionCop.Config;
 using Microsoft.FxCop.Sdk;
 
@@ -41,17 +40,17 @@ namespace InjectionCop.Parser
     private SymbolTable ExtractSafeParameters (Method method)
     {
       SymbolTable parameterSafeness = new SymbolTable (_blackTypes);
-      FragmentAttribute sqlFragment = new FragmentAttribute ("SqlFragment");
-
+      
       foreach (Parameter parameter in method.Parameters)
       {
-        if (FragmentTools.Is (sqlFragment, parameter))
+        if (FragmentTools.ContainsFragment (parameter.Attributes))
         {
-          parameterSafeness.SetSafeness (parameter.Name, sqlFragment.FragmentType, true);
+          string fragmentType = FragmentTools.GetFragmentType (parameter.Attributes);
+          parameterSafeness.SetSafeness (parameter.Name, fragmentType, true);
         }
         else
         {
-          parameterSafeness.SetSafeness (parameter.Name, sqlFragment.FragmentType, false);
+          parameterSafeness.MakeUnsafe (parameter.Name);
         }
       }
       return parameterSafeness;
@@ -74,7 +73,7 @@ namespace InjectionCop.Parser
       UpdateVisits (currentBlock.Id, visits);
       if (visits[currentBlock.Id] < 2)
       {
-        CheckPreCoditions (currentBlock.PreConditionSafeSymbols, context);
+        CheckPreCoditions (currentBlock.PreConditions, context);
         SymbolTable adjustedContext = UpdateContext (context, currentBlock.PostConditionSymbolTable);
 
         foreach (int successorKey in currentBlock.SuccessorKeys)
@@ -91,17 +90,16 @@ namespace InjectionCop.Parser
       SymbolTable adjustedContext = context.Clone();
       foreach (string symbol in postConditionSymbolTable.Symbols)
       {
-        bool safeness = postConditionSymbolTable.IsSafe (symbol, "SqlFragment");
-        adjustedContext.SetSafeness (symbol, "SqlFragment", safeness);
+        adjustedContext.SetContextMap (symbol, postConditionSymbolTable.GetContextMap (symbol));
       }
       return adjustedContext;
     }
 
-    private void CheckPreCoditions (List<string> preconditions, SymbolTable context)
+    private void CheckPreCoditions (PreCondition[] preconditions, SymbolTable context)
     {
-      foreach (string precondition in preconditions)
+      foreach (PreCondition precondition in preconditions)
       {
-        if (!context.Contains (precondition) || !context.IsSafe (precondition, "SqlFragment"))
+        if (!context.Contains (precondition.Symbol) || !context.IsSafe (precondition.Symbol, precondition.FragmentType))
         {
           _typeParser.AddProblem();
         }
