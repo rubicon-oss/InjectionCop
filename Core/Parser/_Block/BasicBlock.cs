@@ -16,6 +16,9 @@ using System;
 
 namespace InjectionCop.Parser._Block
 {
+  /// <summary>
+  /// Represents a node in a method graph
+  /// </summary>
   public class BasicBlock
   {
     private readonly int _id;

@@ -20,6 +20,9 @@ using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser._Block
 {
+  /// <summary>
+  /// Takes a block (from a method body) and creates the corresponding BasicBlock
+  /// </summary>
   public class BlockParser
   {
     private SymbolTable _symbolTableParser;

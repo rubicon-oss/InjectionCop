@@ -21,6 +21,9 @@ using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser
 {
+  /// <summary>
+  /// Keeps state (safe/unsafe) of a set of symbols and defines methods to infer state.
+  /// </summary>
   public class SymbolTable : ICloneable
   {
     private readonly IBlackTypes _blackTypes;

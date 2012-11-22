@@ -17,6 +17,9 @@ using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser._Type
 {
+  /// <summary>
+  /// Base class of Type Parser, defines Rulemetadata.xml
+  /// </summary>
   public abstract class BaseFxCopRule : BaseIntrospectionRule
   {
     protected BaseFxCopRule (string ruleName)

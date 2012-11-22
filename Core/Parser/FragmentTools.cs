@@ -19,6 +19,9 @@ using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser
 {
+  /// <summary>
+  /// Helper methods for handling fragments
+  /// </summary>
   public class FragmentTools
   {
     public static bool IsFragment(AttributeNode attribute)

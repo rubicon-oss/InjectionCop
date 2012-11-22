@@ -16,6 +16,10 @@ using System;
 
 namespace InjectionCop.Attributes
 {
+
+  /// <summary>
+  /// Declares parameter or returnvalue of a method as fragment
+  /// </summary>
   [AttributeUsage (AttributeTargets.Parameter
                    | AttributeTargets.ReturnValue)]
   public class FragmentAttribute : Attribute

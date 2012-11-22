@@ -16,6 +16,9 @@ using System;
 
 namespace InjectionCop.Parser._Block
 {
+  /// <summary>
+  /// Holds a symbol and the associated fragment type that needs to safe when entering a BasicBlock
+  /// </summary>
   public class PreCondition
   {
     private readonly string _symbol;

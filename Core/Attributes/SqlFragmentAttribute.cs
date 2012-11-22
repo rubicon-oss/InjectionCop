@@ -13,13 +13,12 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InjectionCop.Attributes
 {
+    /// <summary>
+    /// Declares parameter or returnvalue of a method as fragment 
+    /// </summary>
     public class SqlFragmentAttribute : FragmentAttribute
     {
         public SqlFragmentAttribute() : base("SqlFragment")

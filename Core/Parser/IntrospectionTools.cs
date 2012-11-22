@@ -17,6 +17,9 @@ using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser
 {
+  /// <summary>
+  /// Helper methods for dealing with FxCop
+  /// </summary>
   public class IntrospectionTools
   {
     public static Method ExtractMethod (MethodCall methodCall)

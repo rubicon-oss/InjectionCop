@@ -19,6 +19,9 @@ using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser._Type
 {
+  /// <summary>
+  /// Checks all members of a given type for safeness violations
+  /// </summary>
   public class TypeParser : BaseFxCopRule
   {
     private IBlackTypes _blackTypes;
