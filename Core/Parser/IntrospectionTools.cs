@@ -17,7 +17,7 @@ using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser
 {
-  class IntrospectionTools
+  public class IntrospectionTools
   {
     public static Method ExtractMethod (MethodCall methodCall)
     {
@@ -67,6 +67,20 @@ namespace InjectionCop.Parser
       return variableName;
     }
 
-    
+    public static TypeNode TypeNodeFactory<T>()
+    {
+      Type targetType = typeof (T);
+      string targetLocation = targetType.Assembly.Location;
+      AssemblyNode targetAssembly = AssemblyNode.GetAssembly(targetLocation);
+      Identifier targetNamespace = Identifier.For (targetType.Namespace);
+      Identifier targetName = Identifier.For (targetType.Name);
+      return targetAssembly.GetType(targetNamespace, targetName);
+    }
+
+    public static Method MethodFactory<T>(Identifier methodName, params TypeNode[] methodParameters)
+    {
+      TypeNode ct = TypeNodeFactory<T>();
+      return ct.GetMethod (methodName, methodParameters);
+    }
   }
 }

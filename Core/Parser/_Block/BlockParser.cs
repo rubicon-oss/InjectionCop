@@ -50,7 +50,7 @@ namespace InjectionCop.Parser._Block
 
           case NodeType.AssignmentStatement:
             AssignmentStatement asgn = (AssignmentStatement) stmt;
-            Identifier symbol = GetIdentifier (asgn.Target);
+            string symbol = IntrospectionTools.GetVariableName (asgn.Target);
             _symbolTableParser.InferSafeness(symbol, asgn.Source);
             Inspect (asgn.Source);
             break;
@@ -76,46 +76,6 @@ namespace InjectionCop.Parser._Block
       }
     }
    
-    private Identifier GetIdentifier (Expression target)
-    {
-      Identifier identifier;
-
-      if (target is Local)
-      {
-        identifier = ((Local) target).Name;
-      }
-      else if (target is Parameter)
-      {
-        identifier = ((Parameter) target).Name;
-      }
-      else if (target is MemberBinding)
-      {
-        identifier = ((MemberBinding) target).BoundMember.Name;
-      }
-      else if (target is UnaryExpression)
-      {
-        identifier = GetIdentifier (((UnaryExpression) target).Operand);
-      }
-      else
-      {
-        throw new InjectionCopException ("Failed to extract Identifier");
-      }
-
-      return identifier;
-    }
-
-    /*
-    private bool IsVariable (Expression target)
-    {
-      if (target is UnaryExpression)
-      {
-        Expression operand = ((UnaryExpression) target).Operand;
-        return IsVariable (operand);
-      }
-
-      return target is Local || target is Parameter;
-    }*/
-
     private void Inspect (Expression expression)
     {
       if (expression is MethodCall)
@@ -146,7 +106,7 @@ namespace InjectionCop.Parser._Block
         {
           if (method.Parameters[i].IsOut)
           {
-            Identifier symbol = GetIdentifier (methodCall.Operands[i]);
+            string symbol = IntrospectionTools.GetVariableName (methodCall.Operands[i]);
             if (FragmentTools.ContainsFragment (method.Parameters[i].Attributes))
             {
               string fragmentType = FragmentTools.GetFragmentType (method.Parameters[i].Attributes);

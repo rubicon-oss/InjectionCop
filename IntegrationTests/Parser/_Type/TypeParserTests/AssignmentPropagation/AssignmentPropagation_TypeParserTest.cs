@@ -36,7 +36,7 @@ namespace InjectionCop.IntegrationTests.Parser._Type.TypeParserTests.AssignmentP
     [Category("AssignmentPropagation")]
     public void Parse_InvalidSafenessPropagationParameter_ReturnsProblem()
     {
-      TypeNode stringTypeNode = Helper.TypeNodeFactory<string>();
+      TypeNode stringTypeNode = IntrospectionTools.TypeNodeFactory<string>();
       Method sample = TestHelper.GetSample<AssignmentPropagationSample>("InvalidSafenessPropagationParameter", stringTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
@@ -47,7 +47,7 @@ namespace InjectionCop.IntegrationTests.Parser._Type.TypeParserTests.AssignmentP
     [Category("AssignmentPropagation")]
     public void Parse_ValidSafenessPropagationParameter_NoProblem()
     {
-      TypeNode stringTypeNode = Helper.TypeNodeFactory<string>();
+      TypeNode stringTypeNode = IntrospectionTools.TypeNodeFactory<string>();
       Method sample = TestHelper.GetSample<AssignmentPropagationSample>("ValidSafenessPropagationParameter", stringTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 

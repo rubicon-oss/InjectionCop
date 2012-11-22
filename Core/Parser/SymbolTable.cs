@@ -156,11 +156,6 @@ namespace InjectionCop.Parser
       return parameterSafe;
     }
  
-    public void MakeUnsafe (Identifier symbolName)
-    {
-      MakeUnsafe(symbolName.Name);
-    }
-
     public void MakeUnsafe (string symbolName)
     {
       if (_safenessMap.ContainsKey (symbolName))
@@ -172,17 +167,17 @@ namespace InjectionCop.Parser
       }
     }
 
-    public void InferSafeness(Identifier symbolName, Expression expression)
+    public void InferSafeness(string symbolName, Expression expression)
     {
-      if (!_safenessMap.ContainsKey (symbolName.Name))
+      if (!_safenessMap.ContainsKey (symbolName))
       {
-        _safenessMap[symbolName.Name] = new Dictionary<string, bool>();
+        _safenessMap[symbolName] = new Dictionary<string, bool>();
       }
       string fragmentType;
       if (ReturnsFragment (expression, out fragmentType))
       {
         MakeUnsafe (symbolName);  
-        _safenessMap[symbolName.Name][fragmentType] = true;
+        _safenessMap[symbolName][fragmentType] = true;
       }
       else
       {
@@ -190,11 +185,6 @@ namespace InjectionCop.Parser
       }
     }
     
-    public void SetSafeness (Identifier symbolName, string fragmentType, bool value)
-    {
-      SetSafeness (symbolName.Name, fragmentType, value);
-    }
-
     public void SetSafeness (string symbolName, string fragmentType, bool safeness)
     {
       if (_safenessMap.ContainsKey (symbolName))

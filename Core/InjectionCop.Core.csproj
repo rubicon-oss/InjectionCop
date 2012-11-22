@@ -65,7 +65,6 @@
     <Compile Include="Parser\FragmentTools.cs" />
     <Compile Include="InjectionCopException.cs" />
     <Compile Include="Parser\_Type\BaseFxCopRule.cs" />
-    <Compile Include="Parser\Helper.cs" />
     <Compile Include="Parser\IntrospectionTools.cs" />
     <Compile Include="Parser\_Method\MethodGraphBuilder.cs" />
     <Compile Include="Parser\_Method\MethodParser.cs" />

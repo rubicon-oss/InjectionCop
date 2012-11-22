@@ -149,7 +149,7 @@ namespace InjectionCop.IntegrationTests.Parser._Method
     [Test]
     public void MethodGraph_IfStatementTrueBlockOnly_ReturnsCorrectConditionSuccessors ()
     {
-      TypeNode stringTypeNode = Helper.TypeNodeFactory<string>();
+      TypeNode stringTypeNode = IntrospectionTools.TypeNodeFactory<string>();
       Method sampleMethod = TestHelper.GetSample<MethodGraphSample> ("IfStatementTrueBlockOnly", stringTypeNode);
       Block sample = sampleMethod.Body;
       Block conditionBlock = sampleMethod.Body.Statements[0] as Block;
@@ -174,7 +174,7 @@ namespace InjectionCop.IntegrationTests.Parser._Method
     [Test]
     public void MethodGraph_IfStatementTrueBlockOnly_ReturnsCorrectTrueBlockSuccessors ()
     {
-      TypeNode stringTypeNode = Helper.TypeNodeFactory<string>();
+      TypeNode stringTypeNode = IntrospectionTools.TypeNodeFactory<string>();
       Method sampleMethod = TestHelper.GetSample<MethodGraphSample> ("IfStatementTrueBlockOnly", stringTypeNode);
       Block sample = sampleMethod.Body;
       Block trueBlock = sampleMethod.Body.Statements[1] as Block;
@@ -196,7 +196,7 @@ namespace InjectionCop.IntegrationTests.Parser._Method
     [Test]
     public void MethodGraph_IfStatementTrueBlockOnly_ReturnsCorrectPreReturnSuccessors ()
     {
-      TypeNode stringTypeNode = Helper.TypeNodeFactory<string>();
+      TypeNode stringTypeNode = IntrospectionTools.TypeNodeFactory<string>();
       Method sampleMethod = TestHelper.GetSample<MethodGraphSample> ("IfStatementTrueBlockOnly", stringTypeNode);
       Block sample = sampleMethod.Body;
       Block preReturnBlock = sampleMethod.Body.Statements[2] as Block;
@@ -218,7 +218,7 @@ namespace InjectionCop.IntegrationTests.Parser._Method
     [Test]
     public void MethodGraph_IfStatementTrueBlockOnly_ReturnsCorrectReturnSuccessors ()
     {
-      TypeNode stringTypeNode = Helper.TypeNodeFactory<string>();
+      TypeNode stringTypeNode = IntrospectionTools.TypeNodeFactory<string>();
       Method sampleMethod = TestHelper.GetSample<MethodGraphSample> ("IfStatementTrueBlockOnly", stringTypeNode);
       Block sample = sampleMethod.Body;
       Block returnBlock = sampleMethod.Body.Statements[3] as Block;

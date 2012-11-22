@@ -25,7 +25,7 @@ namespace InjectionCop.IntegrationTests.Parser._Type.TypeParserTests.Switch
     [Test]
     public void Parse_ValidSwitch_NoProblem ()
     {
-      TypeNode intTypeNode = Helper.TypeNodeFactory<int>();
+      TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<SwitchSample> ("ValidSwitch", intTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
@@ -35,7 +35,7 @@ namespace InjectionCop.IntegrationTests.Parser._Type.TypeParserTests.Switch
     [Test]
     public void Parse_UnsafeCallInsideSwitch_ReturnsProblem ()
     {
-      TypeNode intTypeNode = Helper.TypeNodeFactory<int>();
+      TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<SwitchSample> ("UnsafeCallInsideSwitch", intTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
@@ -46,7 +46,7 @@ namespace InjectionCop.IntegrationTests.Parser._Type.TypeParserTests.Switch
     [Test]
     public void Parse_UnsafeCallAfterSwitch_ReturnsProblem ()
     {
-      TypeNode intTypeNode = Helper.TypeNodeFactory<int>();
+      TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<SwitchSample> ("UnsafeCallAfterSwitch", intTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
@@ -56,7 +56,7 @@ namespace InjectionCop.IntegrationTests.Parser._Type.TypeParserTests.Switch
     [Test]
     public void Parse_UnsafeCallAfterNestedSwitch_ReturnsProblem ()
     {
-      TypeNode intTypeNode = Helper.TypeNodeFactory<int>();
+      TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<SwitchSample> ("UnsafeCallAfterNestedSwitch", intTypeNode, intTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
@@ -66,7 +66,7 @@ namespace InjectionCop.IntegrationTests.Parser._Type.TypeParserTests.Switch
     [Test]
     public void Parse_SafeCallAfterNestedSwitch_NoProblem ()
     {
-      TypeNode intTypeNode = Helper.TypeNodeFactory<int>();
+      TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<SwitchSample> ("SafeCallAfterNestedSwitch", intTypeNode, intTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
@@ -76,7 +76,7 @@ namespace InjectionCop.IntegrationTests.Parser._Type.TypeParserTests.Switch
     [Test]
     public void Parse_UnsafeCallInsideNestedSwitch_ReturnsProblem ()
     {
-      TypeNode intTypeNode = Helper.TypeNodeFactory<int>();
+      TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<SwitchSample> ("UnsafeCallInsideNestedSwitch", intTypeNode, intTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 

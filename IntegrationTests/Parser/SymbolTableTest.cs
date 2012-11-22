@@ -136,7 +136,7 @@ namespace InjectionCop.IntegrationTests.Parser
     public void ReturnsFragment_AssignmentWithParameterFragmentSetToTrue_ReturnsTrue ()
     {
       _symbolTable.SetSafeness ("parameter", "DummyType", true);
-      TypeNode intTypeNode = Helper.TypeNodeFactory<int>();
+      TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithParameter", intTypeNode);
       string fragmentType;
       Block assignmentBlock = (Block)sample.Body.Statements[0];
@@ -149,7 +149,7 @@ namespace InjectionCop.IntegrationTests.Parser
     [Test]
     public void ReturnsFragment_AssignmentWithParameterNonFragment_ReturnsFalse ()
     {
-      TypeNode intTypeNode = Helper.TypeNodeFactory<int>();
+      TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithParameter", intTypeNode);
       string fragmentType;
       Block assignmentBlock = (Block)sample.Body.Statements[0];
@@ -163,7 +163,7 @@ namespace InjectionCop.IntegrationTests.Parser
     public void ReturnsFragment_AssignmentWithParameterFragmentSetToFalse_ReturnsFalse ()
     {
       _symbolTable.SetSafeness ("parameter", "DummyType", false);
-      TypeNode intTypeNode = Helper.TypeNodeFactory<int>();
+      TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithParameter", intTypeNode);
       string fragmentType;
       Block assignmentBlock = (Block)sample.Body.Statements[0];
@@ -177,7 +177,7 @@ namespace InjectionCop.IntegrationTests.Parser
     public void ReturnsFragment_AssignmentWithParameterFragmentSetToTrue_ReturnsFragmentType ()
     {
       _symbolTable.SetSafeness ("parameter", "DummyType", true);
-      TypeNode intTypeNode = Helper.TypeNodeFactory<int>();
+      TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithParameter", intTypeNode);
       string fragmentType;
       Block assignmentBlock = (Block)sample.Body.Statements[0];
@@ -191,7 +191,7 @@ namespace InjectionCop.IntegrationTests.Parser
     [Test]
     public void ReturnsFragment_AssignmentWithParameterNonFragment_ReturnsNoFragmentType ()
     {
-      TypeNode intTypeNode = Helper.TypeNodeFactory<int>();
+      TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithParameter", intTypeNode);
       string fragmentType;
       Block assignmentBlock = (Block)sample.Body.Statements[0];
@@ -205,7 +205,7 @@ namespace InjectionCop.IntegrationTests.Parser
     public void ReturnsFragment_AssignmentWithParameterFragmentSetToFalse_ReturnsNoFragmentType ()
     {
       _symbolTable.SetSafeness ("parameter", "DummyType", false);
-      TypeNode intTypeNode = Helper.TypeNodeFactory<int>();
+      TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithParameter", intTypeNode);
       string fragmentType;
       Block assignmentBlock = (Block)sample.Body.Statements[0];

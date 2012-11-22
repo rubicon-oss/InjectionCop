@@ -35,7 +35,7 @@ namespace InjectionCop.IntegrationTests.Parser._Type.TypeParserTests.Attribute
     [Category ("Attribute")]
     public void Parse_ParameterSampleType_NoProblem ()
     {
-      TypeNode sample = Helper.TypeNodeFactory<SampleAttribute>();
+      TypeNode sample = IntrospectionTools.TypeNodeFactory<SampleAttribute>();
       ProblemCollection result = _typeParser.Check (sample);
 
       Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);

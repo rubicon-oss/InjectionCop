@@ -38,11 +38,11 @@ namespace InjectionCop.Parser._Method
         if (FragmentTools.ContainsFragment (parameter.Attributes))
         {
           string fragmentType = FragmentTools.GetFragmentType (parameter.Attributes);
-          parameterSafeness.SetSafeness (parameter.Name, fragmentType, true);
+          parameterSafeness.SetSafeness (parameter.Name.Name, fragmentType, true);
         }
         else
         {
-          parameterSafeness.MakeUnsafe (parameter.Name);
+          parameterSafeness.MakeUnsafe (parameter.Name.Name);
         }
       }
       _result = parameterSafeness;

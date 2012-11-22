@@ -26,7 +26,7 @@ namespace InjectionCop.IntegrationTests.Parser._Type.TypeParserTests.Parameter
     [Category ("Parameter")]
     public void Parse_UnsafeMethodParameter_ReturnsProblem ()
     {
-      TypeNode stringTypeNode = Helper.TypeNodeFactory<string>();
+      TypeNode stringTypeNode = IntrospectionTools.TypeNodeFactory<string>();
       Method sample = TestHelper.GetSample<ParameterSample> ("UnsafeMethodParameter", stringTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
@@ -37,7 +37,7 @@ namespace InjectionCop.IntegrationTests.Parser._Type.TypeParserTests.Parameter
     [Category ("Parameter")]
     public void Parse_SafeMethodParameter_NoProblem ()
     {
-      TypeNode stringTypeNode = Helper.TypeNodeFactory<string>();
+      TypeNode stringTypeNode = IntrospectionTools.TypeNodeFactory<string>();
       Method sample = TestHelper.GetSample<ParameterSample> ("SafeMethodParameter", stringTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
@@ -132,7 +132,7 @@ namespace InjectionCop.IntegrationTests.Parser._Type.TypeParserTests.Parameter
     [Category ("Parameter")]
     public void Parse_ParameterOnly_NoProblem ()
     {
-      TypeNode intTypeNode = Helper.TypeNodeFactory<int>();
+      TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<ParameterSample> ("ParameterOnly", intTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
@@ -143,7 +143,7 @@ namespace InjectionCop.IntegrationTests.Parser._Type.TypeParserTests.Parameter
     [Category ("Parameter")]
     public void Parse_ParameterSampleType_NoProblem ()
     {
-      TypeNode sample = Helper.TypeNodeFactory<ParameterSampleType>();
+      TypeNode sample = IntrospectionTools.TypeNodeFactory<ParameterSampleType>();
       ProblemCollection result = _typeParser.Check (sample);
       
       Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
