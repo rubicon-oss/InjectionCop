@@ -59,7 +59,7 @@ namespace InjectionCop.IntegrationTests.Parser
     [Test]
     public void ReturnsFragment_AssignmentWithLocalFragmentSetToTrue_ReturnsTrue ()
     {
-      _symbolTable.SetSafeness ("local$0", "DummyType", true);
+      _symbolTable.MakeSafe ("local$0", "DummyType");
       Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithLocal");
       string fragmentType;
       Block assignmentBlock = (Block)sample.Body.Statements[0];
@@ -84,7 +84,7 @@ namespace InjectionCop.IntegrationTests.Parser
     [Test]
     public void ReturnsFragment_AssignmentWithLocalFragmentSetToFalse_ReturnsFalse ()
     {
-      _symbolTable.SetSafeness ("local$0", "DummyType", false);
+      _symbolTable.MakeUnsafe ("local$0");
       Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithLocal");
       string fragmentType;
       Block assignmentBlock = (Block)sample.Body.Statements[0];
@@ -97,7 +97,7 @@ namespace InjectionCop.IntegrationTests.Parser
     [Test]
     public void ReturnsFragment_AssignmentWithLocalFragmentSetToTrue_ReturnsFragmentType ()
     {
-      _symbolTable.SetSafeness ("local$0", "DummyType", true);
+      _symbolTable.MakeSafe ("local$0", "DummyType");
       Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithLocal");
       string fragmentType;
       Block assignmentBlock = (Block)sample.Body.Statements[0];
@@ -122,7 +122,7 @@ namespace InjectionCop.IntegrationTests.Parser
     [Test]
     public void ReturnsFragment_AssignmentWithLocalFragmentSetToFalse_ReturnsNoFragmentType ()
     {
-      _symbolTable.SetSafeness ("local$0", "DummyType", false);
+      _symbolTable.MakeUnsafe ("local$0");
       Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithLocal");
       string fragmentType;
       Block assignmentBlock = (Block)sample.Body.Statements[0];
@@ -135,7 +135,7 @@ namespace InjectionCop.IntegrationTests.Parser
     [Test]
     public void ReturnsFragment_AssignmentWithParameterFragmentSetToTrue_ReturnsTrue ()
     {
-      _symbolTable.SetSafeness ("parameter", "DummyType", true);
+      _symbolTable.MakeSafe ("parameter", "DummyType");
       TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithParameter", intTypeNode);
       string fragmentType;
@@ -162,7 +162,7 @@ namespace InjectionCop.IntegrationTests.Parser
     [Test]
     public void ReturnsFragment_AssignmentWithParameterFragmentSetToFalse_ReturnsFalse ()
     {
-      _symbolTable.SetSafeness ("parameter", "DummyType", false);
+      _symbolTable.MakeUnsafe ("parameter");
       TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithParameter", intTypeNode);
       string fragmentType;
@@ -176,7 +176,7 @@ namespace InjectionCop.IntegrationTests.Parser
     [Test]
     public void ReturnsFragment_AssignmentWithParameterFragmentSetToTrue_ReturnsFragmentType ()
     {
-      _symbolTable.SetSafeness ("parameter", "DummyType", true);
+      _symbolTable.MakeSafe ("parameter", "DummyType");
       TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithParameter", intTypeNode);
       string fragmentType;
@@ -204,7 +204,7 @@ namespace InjectionCop.IntegrationTests.Parser
     [Test]
     public void ReturnsFragment_AssignmentWithParameterFragmentSetToFalse_ReturnsNoFragmentType ()
     {
-      _symbolTable.SetSafeness ("parameter", "DummyType", false);
+      _symbolTable.MakeUnsafe ("parameter");
       TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithParameter", intTypeNode);
       string fragmentType;

@@ -38,7 +38,7 @@ namespace InjectionCop.Parser._Method
         if (FragmentTools.ContainsFragment (parameter.Attributes))
         {
           string fragmentType = FragmentTools.GetFragmentType (parameter.Attributes);
-          parameterSafeness.SetSafeness (parameter.Name.Name, fragmentType, true);
+          parameterSafeness.MakeSafe (parameter.Name.Name, fragmentType);
         }
         else
         {

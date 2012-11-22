@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using InjectionCop.Attributes;
 using InjectionCop.Parser;
 using Microsoft.FxCop.Sdk;
 using NUnit.Framework;

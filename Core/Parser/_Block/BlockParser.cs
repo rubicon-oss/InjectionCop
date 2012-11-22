@@ -110,7 +110,7 @@ namespace InjectionCop.Parser._Block
             if (FragmentTools.ContainsFragment (method.Parameters[i].Attributes))
             {
               string fragmentType = FragmentTools.GetFragmentType (method.Parameters[i].Attributes);
-              _symbolTableParser.SetSafeness (symbol, fragmentType, true);
+              _symbolTableParser.MakeSafe (symbol, fragmentType);
             }
             else
             {

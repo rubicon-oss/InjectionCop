@@ -35,9 +35,9 @@ namespace InjectionCop.UnitTests.Parser
     [Test]
     public void Clone_ReturnsDeepCopy_True ()
     {
-      _symbolTable.SetSafeness ("key", "FragmentType", true);
+      _symbolTable.MakeSafe ("key", "FragmentType");
       SymbolTable clone = _symbolTable.Clone();
-      clone.SetSafeness("key", "FragmentType", false);
+      clone.MakeUnsafe ("key");
       SymbolTable result = _symbolTable.Clone();
       
       Assert.That (result.IsSafe("key", "FragmentType"), Is.True);
@@ -46,7 +46,7 @@ namespace InjectionCop.UnitTests.Parser
     [Test]
     public void GetSafenessMap_ExistingEntry_ReturnsEntry ()
     {
-      _symbolTable.SetSafeness ("key", "FragmentType", true);
+      _symbolTable.MakeSafe ("key", "FragmentType");
       bool safeness =_symbolTable.GetContextMap ("key")["FragmentType"];
 
       Assert.That (safeness, Is.True);

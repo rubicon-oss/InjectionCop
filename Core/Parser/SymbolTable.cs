@@ -156,17 +156,6 @@ namespace InjectionCop.Parser
       return parameterSafe;
     }
  
-    public void MakeUnsafe (string symbolName)
-    {
-      if (_safenessMap.ContainsKey (symbolName))
-      {
-        foreach (string context in _safenessMap[symbolName].Keys.ToList())
-        {
-          _safenessMap[symbolName][context] = false;
-        }
-      }
-    }
-
     public void InferSafeness(string symbolName, Expression expression)
     {
       if (!_safenessMap.ContainsKey (symbolName))
@@ -184,24 +173,30 @@ namespace InjectionCop.Parser
         MakeUnsafe (symbolName);
       }
     }
-    
-    public void SetSafeness (string symbolName, string fragmentType, bool safeness)
+
+    public void MakeUnsafe (string symbolName)
     {
-      if (_safenessMap.ContainsKey (symbolName))
+      InitializeOnce (symbolName);
+      foreach (string context in _safenessMap[symbolName].Keys.ToList())
       {
-        if (safeness)
-        {
-          MakeUnsafe (symbolName);
-        }
-        _safenessMap[symbolName][fragmentType] = safeness;
-      }
-      else
-      {
-        _safenessMap[symbolName] = new Dictionary<string, bool>();
-        _safenessMap[symbolName][fragmentType] = safeness;
+        _safenessMap[symbolName][context] = false;
       }
     }
 
+    public void MakeSafe (string symbolName, string fragmentType)
+    {
+      MakeUnsafe (symbolName);
+      _safenessMap[symbolName][fragmentType] = true;
+    }
+
+    private void InitializeOnce (string symbolName)
+    {
+      if (!_safenessMap.ContainsKey (symbolName))
+      {
+        _safenessMap[symbolName] = new Dictionary<string, bool>();
+      }
+    }
+    
     public Dictionary<string, bool> GetContextMap (string symbolName)
     {
       if (_safenessMap.ContainsKey (symbolName))
@@ -236,12 +231,7 @@ namespace InjectionCop.Parser
       }
       return isFragment || isLiteral;
     }
-    
-    public bool IsNotSafe (string symbolName, string fragmentType)
-    {
-      return !IsSafe (symbolName, fragmentType);
-    }
-
+   
     public bool Contains (string symbolName)
     {
       return _safenessMap.ContainsKey (symbolName);

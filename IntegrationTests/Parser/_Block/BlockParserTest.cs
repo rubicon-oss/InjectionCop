@@ -53,7 +53,7 @@ namespace InjectionCop.IntegrationTests.Parser._Block
       Block sample = sampleMethod.Body.Statements[0] as Block;
       BasicBlock basicBlock = _blockParser.Parse(sample);
       bool correctPostCondition = basicBlock.PostConditionSymbolTable.IsSafe ("local$0", "SqlFragment")
-                                  && basicBlock.PostConditionSymbolTable.IsNotSafe ("local$1", "SqlFragment");
+                                  && !basicBlock.PostConditionSymbolTable.IsSafe ("local$1", "SqlFragment");
 
       Assert.That (correctPostCondition, Is.True);
     }
