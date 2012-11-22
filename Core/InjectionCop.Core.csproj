@@ -55,21 +55,26 @@
     <Compile Include="Config\BlackType.cs" />
     <Compile Include="Config\BlackTypes.cs" />
     <Compile Include="Config\IBlackTypes.cs" />
-    <Compile Include="Parser\IMethodGraph.cs" />
-    <Compile Include="Parser\IMethodGraphBuilder.cs" />
-    <Compile Include="Parser\MethodGraph.cs" />
-    <Compile Include="Parser\BasicBlock.cs" />
+    <Compile Include="Parser\_Method\IMethodGraph.cs" />
+    <Compile Include="Parser\_Method\IMethodGraphBuilder.cs" />
+    <Compile Include="Parser\_Method\IMethodParser.cs" />
+    <Compile Include="Parser\_Method\IMethodParserDirector.cs" />
+    <Compile Include="Parser\_Method\IParameterSymbolTableBuilder.cs" />
+    <Compile Include="Parser\_Method\MethodGraph.cs" />
+    <Compile Include="Parser\_Block\BasicBlock.cs" />
     <Compile Include="Parser\FragmentTools.cs" />
     <Compile Include="InjectionCopException.cs" />
-    <Compile Include="Parser\BaseFxCopRule.cs" />
+    <Compile Include="Parser\_Type\BaseFxCopRule.cs" />
     <Compile Include="Parser\Helper.cs" />
     <Compile Include="Parser\IntrospectionTools.cs" />
-    <Compile Include="Parser\MethodGraphBuilder.cs" />
-    <Compile Include="Parser\MethodParser.cs" />
-    <Compile Include="Parser\PreCondition.cs" />
+    <Compile Include="Parser\_Method\MethodGraphBuilder.cs" />
+    <Compile Include="Parser\_Method\MethodParser.cs" />
+    <Compile Include="Parser\_Method\MethodParserDirector.cs" />
+    <Compile Include="Parser\_Method\ParameterSymbolTableBuilder.cs" />
+    <Compile Include="Parser\_Block\PreCondition.cs" />
     <Compile Include="Parser\SymbolTable.cs" />
-    <Compile Include="Parser\BlockParser.cs" />
-    <Compile Include="Parser\TypeParser.cs" />
+    <Compile Include="Parser\_Block\BlockParser.cs" />
+    <Compile Include="Parser\_Type\TypeParser.cs" />
     <Compile Include="PrettyPrint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -78,7 +83,7 @@
     <Folder Include="Rules\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Parser\RuleMetadata.xml">
+    <EmbeddedResource Include="Parser\_Type\RuleMetadata.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>

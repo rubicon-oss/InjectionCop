@@ -13,26 +13,32 @@
 // limitations under the License.
 
 using System;
+using InjectionCop.Parser;
+using InjectionCop.Parser._Type;
 using Microsoft.FxCop.Sdk;
+using NUnit.Framework;
 
-namespace InjectionCop.Parser
+namespace InjectionCop.IntegrationTests.Parser._Type.TypeParserTests.Attribute
 {
-  public class Helper
+  [TestFixture]
+  public class Attribute_TypeParserTest
   {
-   public static TypeNode TypeNodeFactory<T>()
+    private TypeParser _typeParser;
+
+    [SetUp]
+    public void SetUp ()
     {
-      Type targetType = typeof (T);
-      string targetLocation = targetType.Assembly.Location;
-      AssemblyNode targetAssembly = AssemblyNode.GetAssembly(targetLocation);
-      Identifier targetNamespace = Identifier.For (targetType.Namespace);
-      Identifier targetName = Identifier.For (targetType.Name);
-      return targetAssembly.GetType(targetNamespace, targetName);
+      _typeParser = new TypeParser();
     }
 
-    public static Method MethodFactory<T>(Identifier methodName, params TypeNode[] methodParameters)
+    [Test]
+    [Category ("Attribute")]
+    public void Parse_ParameterSampleType_NoProblem ()
     {
-      TypeNode ct = TypeNodeFactory<T>();
-      return ct.GetMethod (methodName, methodParameters);
-    } 
+      TypeNode sample = Helper.TypeNodeFactory<SampleAttribute>();
+      ProblemCollection result = _typeParser.Check (sample);
+
+      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
+    }
   }
 }

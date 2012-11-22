@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using InjectionCop.Config;
+using InjectionCop.Parser._Block;
 using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser

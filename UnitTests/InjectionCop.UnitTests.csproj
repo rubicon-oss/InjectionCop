@@ -64,9 +64,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Parser\BasicBlockTest.cs" />
     <Compile Include="Parser\SymbolTableTest.cs" />
-    <Compile Include="Parser\MethodParserTest.cs" />
+    <Compile Include="Parser\_Method\MethodParserTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

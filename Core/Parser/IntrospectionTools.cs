@@ -66,5 +66,7 @@ namespace InjectionCop.Parser
       }
       return variableName;
     }
+
+    
   }
 }
