@@ -13,23 +13,31 @@
 // limitations under the License.
 
 using System;
+using InjectionCop.Parser;
+using Microsoft.FxCop.Sdk;
+using NUnit.Framework;
 
-namespace InjectionCop.Attributes
+namespace InjectionCop.IntegrationTests.Parser.TypeParserTests.Attribute
 {
-  [AttributeUsage (AttributeTargets.Parameter
-                   | AttributeTargets.ReturnValue)]
-  public class FragmentAttribute : Attribute
+  [TestFixture]
+  public class Attribute_TypeParserTest
   {
-    private readonly string _fragmentType;
+    private TypeParser _typeParser;
 
-    public FragmentAttribute (string fragmentType)
+    [SetUp]
+    public void SetUp ()
     {
-      _fragmentType = fragmentType;
+      _typeParser = new TypeParser();
     }
 
-    public string FragmentType
+    [Test]
+    [Category ("Attribute")]
+    public void Parse_ParameterSampleType_NoProblem ()
     {
-      get { return _fragmentType; }
+      TypeNode sample = Helper.TypeNodeFactory<SampleAttribute>();
+      ProblemCollection result = _typeParser.Check (sample);
+
+      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
     }
   }
 }

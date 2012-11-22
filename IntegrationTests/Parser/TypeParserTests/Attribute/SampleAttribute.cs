@@ -14,12 +14,22 @@
 
 using System;
 
-namespace InjectionCop.Parser
+namespace InjectionCop.IntegrationTests.Parser.TypeParserTests.Attribute
 {
-  public interface IMethodGraph
+  [AttributeUsage (AttributeTargets.Parameter
+                   | AttributeTargets.ReturnValue)]
+  public class SampleAttribute : System.Attribute
   {
-    BasicBlock InitialBlock { get; }
-    BasicBlock GetBasicBlockById(int id);
-    bool IsEmpty ();
+    private readonly string _fragmentType;
+
+    public SampleAttribute (string fragmentType)
+    {
+      _fragmentType = fragmentType;
+    }
+
+    public string FragmentType
+    {
+      get { return _fragmentType; }
+    }
   }
 }

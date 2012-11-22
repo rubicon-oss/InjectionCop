@@ -16,10 +16,9 @@ using System;
 
 namespace InjectionCop.Parser
 {
-  public interface IMethodGraph
+  public interface IMethodGraphBuilder
   {
-    BasicBlock InitialBlock { get; }
-    BasicBlock GetBasicBlockById(int id);
-    bool IsEmpty ();
+    void Build ();
+    IMethodGraph GetResult ();
   }
 }

@@ -56,6 +56,7 @@
     <Compile Include="Config\BlackTypes.cs" />
     <Compile Include="Config\IBlackTypes.cs" />
     <Compile Include="Parser\IMethodGraph.cs" />
+    <Compile Include="Parser\IMethodGraphBuilder.cs" />
     <Compile Include="Parser\MethodGraph.cs" />
     <Compile Include="Parser\BasicBlock.cs" />
     <Compile Include="Parser\FragmentTools.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="Parser\BaseFxCopRule.cs" />
     <Compile Include="Parser\Helper.cs" />
     <Compile Include="Parser\IntrospectionTools.cs" />
+    <Compile Include="Parser\MethodGraphBuilder.cs" />
     <Compile Include="Parser\MethodParser.cs" />
     <Compile Include="Parser\PreCondition.cs" />
     <Compile Include="Parser\SymbolTable.cs" />
@@ -76,7 +78,9 @@
     <Folder Include="Rules\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="RuleMetadata.xml" />
+    <EmbeddedResource Include="Parser\RuleMetadata.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="Core.licenseheader" />

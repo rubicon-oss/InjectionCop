@@ -14,105 +14,22 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using InjectionCop.Config;
-using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser
 {
   public class MethodGraph: IMethodGraph
   {
+    private static MethodGraph _emptyGraph = new MethodGraph (-1, new Dictionary<int, BasicBlock>());
+    
     private readonly int _initialBlockId;
     private readonly Dictionary<int, BasicBlock> _graph;
 
-    public MethodGraph (Block methodBody, IBlackTypes blackTypes, TypeParser typeParser)
+    public MethodGraph (int initialBlockId, Dictionary<int, BasicBlock> graph)
     {
-      BlockParser parser = new BlockParser(blackTypes, typeParser);
-      _graph = new Dictionary<int, BasicBlock>();
-
-      List<Block> blockList = new List<Block>(methodBody.Statements.OfType<Block>());
-
-      //using (var blocksEnumerator = blockList.GetEnumerator())
-      //{
-      //  if (!blocksEnumerator.MoveNext())
-      //    return;
-      //  var currentBlock = blocksEnumerator.Current;
-      //  _initialBlockId = currentBlock.UniqueKey;
-      //  BasicBlock currentBasicBlock;
-      //  while (blocksEnumerator.MoveNext())
-      //  {
-      //    var nextBlock = blocksEnumerator.Current;
-
-      //    if (ContainsUnconditionalBranch (currentBlock))
-      //    {
-      //      currentBasicBlock = parser.Parse (currentBlock);
-      //    }
-      //    else
-      //    {
-      //      currentBasicBlock = parser.Parse (currentBlock, nextBlock.UniqueKey);
-      //    }
-      //    _graph.Add (currentBasicBlock.Id, currentBasicBlock);
-
-      //    currentBlock = nextBlock;
-      //  }
-      //  currentBasicBlock = parser.Parse (currentBlock);
-      //  _graph.Add (currentBasicBlock.Id, currentBasicBlock);
-      //}
-
-      if (blockList.Count >= 1)
-      {
-        Block currentBlock = blockList[0];
-        _initialBlockId = currentBlock.UniqueKey;
-        BasicBlock currentBasicBlock;
-
-        for (int i = 1; i < blockList.Count; i++)
-        {
-          Block nextBlock = blockList[i];
-          if(ContainsUnconditionalBranch(currentBlock))
-          {
-            currentBasicBlock = parser.Parse (currentBlock);
-          }
-          else
-          {
-            currentBasicBlock = parser.Parse (currentBlock, nextBlock.UniqueKey);
-          }
-          _graph.Add (currentBasicBlock.Id, currentBasicBlock);
-          currentBlock = nextBlock;
-        }
-
-        currentBasicBlock = parser.Parse (currentBlock);
-        _graph.Add (currentBasicBlock.Id, currentBasicBlock);
-      }
+      _initialBlockId = initialBlockId;
+      _graph = graph;
     }
-
-    private bool ContainsUnconditionalBranch (Block currentBlock)
-    {
-      bool containsUnconditionalBranch = false;
-      foreach (Statement statement in currentBlock.Statements)
-      {
-        if(statement is Branch && ((Branch)statement).Condition == null)
-        {
-          containsUnconditionalBranch = true;
-        }
-      }
-      return containsUnconditionalBranch;
-    }
-
-    public int InitialBlockId
-    {
-      get
-      {
-        if (!IsEmpty())
-        {
-          return _initialBlockId;
-        }
-        else
-        {
-          throw new InjectionCopException ("Graph is empty");
-        }
-      }
-    }
-
+    
     public BasicBlock GetBasicBlockById (int uniqueKey)
     {
       try
@@ -132,7 +49,22 @@ namespace InjectionCop.Parser
 
     public BasicBlock InitialBlock
     {
-      get { return GetBasicBlockById (_initialBlockId); }
+      get
+      {
+        if (!IsEmpty())
+        {
+          return GetBasicBlockById (_initialBlockId);
+        }
+        else
+        {
+          throw new InjectionCopException ("Graph is empty");
+        }
+      }
+    }
+
+    public static MethodGraph Empty
+    {
+      get { return _emptyGraph; }
     }
   }
 }

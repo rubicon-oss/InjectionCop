@@ -33,7 +33,9 @@ namespace InjectionCop.Parser
     public ProblemCollection Parse (Method method)
     {
       SymbolTable parameterSafeness = ExtractSafeParameters (method);
-      MethodGraph methodGraph = new MethodGraph(method.Body, _blackTypes, _typeParser);
+      IMethodGraphBuilder methodGraphBuilder = new MethodGraphBuilder (method.Body, _blackTypes, _typeParser);
+      methodGraphBuilder.Build();
+      IMethodGraph methodGraph = methodGraphBuilder.GetResult();
       return Parse (methodGraph, parameterSafeness);
     }
 

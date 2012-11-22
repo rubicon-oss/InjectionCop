@@ -19,7 +19,7 @@ using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser
 {
-  public class BlockParser : BaseFxCopRule
+  public class BlockParser //: BaseFxCopRule
   {
     private SymbolTable _symbolTableParser;
     private List<PreCondition> _preConditions;
@@ -28,7 +28,7 @@ namespace InjectionCop.Parser
     private TypeParser _typeParser;
 
     public BlockParser (IBlackTypes blackTypes, TypeParser typeParser)
-        : base ("TypeParser")
+        //: base ("TypeParser")
     {
       _symbolTableParser = new SymbolTable (blackTypes);
       _preConditions = new List<PreCondition>();
@@ -50,7 +50,7 @@ namespace InjectionCop.Parser
 
           case NodeType.AssignmentStatement:
             AssignmentStatement asgn = (AssignmentStatement) stmt;
-            Identifier symbol = GetVariableIdentifier (asgn.Target);
+            Identifier symbol = GetIdentifier (asgn.Target);
             _symbolTableParser.InferSafeness(symbol, asgn.Source);
             Inspect (asgn.Source);
             break;
@@ -77,7 +77,7 @@ namespace InjectionCop.Parser
     }
 
     
-    private Identifier GetVariableIdentifier (Expression target)
+    private Identifier GetIdentifier (Expression target)
     {
       Identifier identifier;
 
@@ -89,9 +89,13 @@ namespace InjectionCop.Parser
       {
         identifier = ((Parameter) target).Name;
       }
+      else if (target is MemberBinding)
+      {
+        identifier = ((MemberBinding) target).BoundMember.Name;
+      }
       else if (target is UnaryExpression)
       {
-        identifier = GetVariableIdentifier (((UnaryExpression) target).Operand);
+        identifier = GetIdentifier (((UnaryExpression) target).Operand);
       }
       else
       {
@@ -143,7 +147,7 @@ namespace InjectionCop.Parser
         {
           if (method.Parameters[i].IsOut)
           {
-            Identifier symbol = GetVariableIdentifier (methodCall.Operands[i]);
+            Identifier symbol = GetIdentifier (methodCall.Operands[i]);
             if (FragmentTools.ContainsFragment (method.Parameters[i].Attributes))
             {
               string fragmentType = FragmentTools.GetFragmentType (method.Parameters[i].Attributes);

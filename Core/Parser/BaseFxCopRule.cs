@@ -21,7 +21,7 @@ namespace InjectionCop.Parser
   {
     protected BaseFxCopRule (string ruleName)
       :base(  ruleName,
-              "InjectionCop.RuleMetadata",
+              "InjectionCop.Parser.RuleMetadata",
               typeof (BaseFxCopRule).Assembly)
     {
     }

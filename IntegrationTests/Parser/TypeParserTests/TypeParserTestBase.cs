@@ -28,7 +28,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParserTests
     public void SetUp()
     {
       _blacklist = new IDbCommandBlackTypesStub();
-      _typeParser = new TypeParser (_blacklist);
+      _typeParser = new TypeParser ();
     }
   }
 }

@@ -22,10 +22,10 @@ namespace InjectionCop.Parser
   {
     private IBlackTypes _blackTypes;
 
-    public TypeParser (IBlackTypes blackTypes)
+    public TypeParser ()
         : base ("TypeParser")
     {
-      _blackTypes = blackTypes;
+      _blackTypes = new BlackTypesStub();
     }
 
     public override ProblemCollection Check (TypeNode type)
@@ -52,6 +52,19 @@ namespace InjectionCop.Parser
     {
       MethodParser methodParser = new MethodParser (_blackTypes, this);
       return methodParser.Parse (method);
+    }
+  }
+
+  public class BlackTypesStub : IBlackTypes
+  {
+    public bool IsBlackType(string fullName)
+    {
+      return fullName == "System.Data.IDbCommand";
+    }
+
+    public bool IsBlackMethod (string typeFullName, string methodName)
+    {
+      return IsBlackType (typeFullName) && methodName == "set_CommandText";
     }
   }
 }

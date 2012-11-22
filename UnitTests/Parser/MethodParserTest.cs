@@ -37,7 +37,7 @@ namespace InjectionCop.UnitTests.Parser
       _methodPreConditions = new SymbolTable (_blackTypes);
       _methodPreConditions.SetSafeness ("x", "SqlFragment", true);
       _methodPreConditions.SetSafeness("y", "SqlFragment", false);
-      TypeParser typeParser = new TypeParser (_blackTypes);
+      TypeParser typeParser = new TypeParser ();
       _methodParser = new MethodParser (_blackTypes, typeParser);
     }
 

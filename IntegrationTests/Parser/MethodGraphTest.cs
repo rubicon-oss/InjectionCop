@@ -32,17 +32,24 @@ namespace InjectionCop.IntegrationTests.Parser
       _blackTypes = new IDbCommandBlackTypesStub();
     }
 
+    private IMethodGraph BuildMethodGraph (Block body)
+    {
+      IMethodGraphBuilder methodGraphBuilder = new MethodGraphBuilder (body, _blackTypes, new TypeParser());
+      methodGraphBuilder.Build();
+      IMethodGraph methodGraph = methodGraphBuilder.GetResult();
+      return methodGraph;
+    }
+
     [Test]
     public void GetInitialBlockId_DeclarationWithReturn_ReturnsIdOfInitialBlock ()
     {
       Method sampleMethod = TestHelper.GetSample<MethodGraphSample> ("DeclarationWithReturn");
       Block sample = sampleMethod.Body;
       Block initialBlock = sampleMethod.Body.Statements[0] as Block;
-      if(initialBlock != null)
+      if (initialBlock != null)
       {
-        MethodGraph methodGraph = new MethodGraph (sample, _blackTypes, new TypeParser(_blackTypes));
-        
-        Assert.That (methodGraph.InitialBlockId, Is.EqualTo (initialBlock.UniqueKey));
+        IMethodGraph methodGraph = BuildMethodGraph(sample);
+        Assert.That (methodGraph.InitialBlock.Id, Is.EqualTo (initialBlock.UniqueKey));
       }
     }
 
@@ -54,7 +61,7 @@ namespace InjectionCop.IntegrationTests.Parser
       Block initialBlock = sampleMethod.Body.Statements[0] as Block;
       if(initialBlock != null)
       {
-        MethodGraph methodGraph = new MethodGraph (sample, _blackTypes, new TypeParser(_blackTypes));
+        IMethodGraph methodGraph = BuildMethodGraph(sample);
         BasicBlock initialBasicBlock = methodGraph.GetBasicBlockById (initialBlock.UniqueKey);
         
         Assert.That (initialBasicBlock.Id, Is.EqualTo(initialBlock.UniqueKey));
@@ -74,8 +81,7 @@ namespace InjectionCop.IntegrationTests.Parser
       Block returnBlock = sampleMethod.Body.Statements[1] as Block;
       if(initialBlock != null && returnBlock != null)
       {
-        MethodGraph methodGraph = new MethodGraph (sample, _blackTypes, new TypeParser(_blackTypes));
-        //BasicBlock initialBasicBlock = methodGraph.GetBasicBlockById (initialBlock.UniqueKey);
+        IMethodGraph methodGraph = BuildMethodGraph(sample);
         int returnBlockId = returnBlock.UniqueKey;
         BasicBlock returnBasicBlock = methodGraph.GetBasicBlockById (returnBlockId);
         
@@ -93,7 +99,7 @@ namespace InjectionCop.IntegrationTests.Parser
     {
       Method sampleMethod = TestHelper.GetSample<MethodGraphSample> ("DeclarationWithReturn");
       Block sample = sampleMethod.Body;
-      MethodGraph methodGraph = new MethodGraph (sample, _blackTypes, new TypeParser(_blackTypes));
+      IMethodGraph methodGraph = BuildMethodGraph(sample);
       methodGraph.GetBasicBlockById (-1);
     }
 
@@ -106,7 +112,7 @@ namespace InjectionCop.IntegrationTests.Parser
       Block returnBlock = sampleMethod.Body.Statements[1] as Block;
       if(initialBlock != null && returnBlock != null)
       {
-        MethodGraph methodGraph = new MethodGraph (sample, _blackTypes, new TypeParser(_blackTypes));
+        IMethodGraph methodGraph = BuildMethodGraph(sample);
         BasicBlock initialBasicBlock = methodGraph.GetBasicBlockById (initialBlock.UniqueKey);
         bool initialBasicBlockConnectedWithReturn = initialBasicBlock.SuccessorKeys.Any (key => key == returnBlock.UniqueKey);
 
@@ -126,7 +132,7 @@ namespace InjectionCop.IntegrationTests.Parser
       Block returnBlock = sampleMethod.Body.Statements[1] as Block;
       if(returnBlock != null)
       {
-        MethodGraph methodGraph = new MethodGraph (sample, _blackTypes, new TypeParser(_blackTypes));
+        IMethodGraph methodGraph = BuildMethodGraph(sample);
         BasicBlock returnBasicBlock = methodGraph.GetBasicBlockById (returnBlock.UniqueKey);
         
         Assert.That (returnBasicBlock.SuccessorKeys.Length, Is.EqualTo(0));
@@ -148,7 +154,7 @@ namespace InjectionCop.IntegrationTests.Parser
       Block preReturnBlock = sampleMethod.Body.Statements[2] as Block;
       if(conditionBlock != null /*&& returnBlock != null*/ && preReturnBlock != null && trueBlock != null)
       {
-        MethodGraph methodGraph = new MethodGraph (sample, _blackTypes, new TypeParser(_blackTypes));
+        IMethodGraph methodGraph = BuildMethodGraph(sample);
         BasicBlock conditionBasicBlock = methodGraph.GetBasicBlockById (conditionBlock.UniqueKey);
         
         bool conditionBasicBlockSuccessorsOk = conditionBasicBlock.SuccessorKeys.Any (key => key == trueBlock.UniqueKey)
@@ -172,7 +178,7 @@ namespace InjectionCop.IntegrationTests.Parser
       Block preReturnBlock = sampleMethod.Body.Statements[2] as Block;
       if(preReturnBlock != null && trueBlock != null)
       {
-        MethodGraph methodGraph = new MethodGraph (sample, _blackTypes, new TypeParser(_blackTypes));
+        IMethodGraph methodGraph = BuildMethodGraph(sample);
         BasicBlock trueBasicBlock = methodGraph.GetBasicBlockById (trueBlock.UniqueKey);
         bool trueBasicBlockSuccessorsOk = trueBasicBlock.SuccessorKeys.Any (key => key == preReturnBlock.UniqueKey);
 
@@ -194,7 +200,7 @@ namespace InjectionCop.IntegrationTests.Parser
       Block returnBlock = sampleMethod.Body.Statements[3] as Block;
       if(returnBlock != null && preReturnBlock != null)
       {
-        MethodGraph methodGraph = new MethodGraph (sample, _blackTypes, new TypeParser(_blackTypes));
+        IMethodGraph methodGraph = BuildMethodGraph(sample);
         BasicBlock preReturnBasicBlock = methodGraph.GetBasicBlockById (preReturnBlock.UniqueKey);
         bool preReturnBasicBlockSuccessorsOk = preReturnBasicBlock.SuccessorKeys.Any (key => key == returnBlock.UniqueKey);
 
@@ -215,7 +221,7 @@ namespace InjectionCop.IntegrationTests.Parser
       Block returnBlock = sampleMethod.Body.Statements[3] as Block;
       if(returnBlock != null)
       {
-        MethodGraph methodGraph = new MethodGraph (sample, _blackTypes, new TypeParser(_blackTypes));
+        IMethodGraph methodGraph = BuildMethodGraph(sample);
         BasicBlock preReturnBasicBlock = methodGraph.GetBasicBlockById (returnBlock.UniqueKey);
         
         Assert.That (preReturnBasicBlock.SuccessorKeys.Length, Is.EqualTo(0));
@@ -235,7 +241,7 @@ namespace InjectionCop.IntegrationTests.Parser
       Block conditionBlock = sampleMethod.Body.Statements[2] as Block;
       if(preForBlock != null && conditionBlock != null)
       {
-        MethodGraph methodGraph = new MethodGraph (sample, _blackTypes, new TypeParser(_blackTypes));
+        IMethodGraph methodGraph = BuildMethodGraph(sample);
         BasicBlock preForBasicBlock = methodGraph.GetBasicBlockById (preForBlock.UniqueKey);
         bool preForBasicBlockSuccessorsCorrect = preForBasicBlock.SuccessorKeys.Length == 1
                                                  && preForBasicBlock.SuccessorKeys[0] == conditionBlock.UniqueKey;
@@ -257,7 +263,7 @@ namespace InjectionCop.IntegrationTests.Parser
       Block conditionBlock = sampleMethod.Body.Statements[2] as Block;
       if (innerForBlock != null && conditionBlock != null)
       {
-        MethodGraph methodGraph = new MethodGraph (sample, _blackTypes, new TypeParser(_blackTypes));
+        IMethodGraph methodGraph = BuildMethodGraph(sample);
         BasicBlock innerForBasicBlock = methodGraph.GetBasicBlockById (innerForBlock.UniqueKey);
         bool innerForBasicBlockSuccessorsCorrect = innerForBasicBlock.SuccessorKeys.Length == 1
                                                    && innerForBasicBlock.SuccessorKeys[0] == conditionBlock.UniqueKey;
@@ -280,7 +286,7 @@ namespace InjectionCop.IntegrationTests.Parser
       Block preReturnBlock = sampleMethod.Body.Statements[3] as Block;
       if(innerForBlock != null && conditionBlock != null && preReturnBlock != null)
       {
-        MethodGraph methodGraph = new MethodGraph (sample, _blackTypes, new TypeParser(_blackTypes));
+        IMethodGraph methodGraph = BuildMethodGraph(sample);
         BasicBlock conditionBasicBlock = methodGraph.GetBasicBlockById (conditionBlock.UniqueKey);
         bool conditionBasicBlockSuccessorsCorrect =
             conditionBasicBlock.SuccessorKeys.Length == 2
@@ -304,7 +310,7 @@ namespace InjectionCop.IntegrationTests.Parser
       Block returnBlock = sampleMethod.Body.Statements[4] as Block;
       if (preReturnBlock != null && returnBlock != null)
       {
-        MethodGraph methodGraph = new MethodGraph (sample, _blackTypes, new TypeParser(_blackTypes));
+        IMethodGraph methodGraph = BuildMethodGraph(sample);
         BasicBlock preReturnBasicBlock = methodGraph.GetBasicBlockById (preReturnBlock.UniqueKey);
         bool preReturnBasicBlockSuccessorsCorrect = preReturnBasicBlock.SuccessorKeys.Length == 1
                                                    && preReturnBasicBlock.SuccessorKeys[0] == returnBlock.UniqueKey;
@@ -325,7 +331,7 @@ namespace InjectionCop.IntegrationTests.Parser
       Block returnBlock = sampleMethod.Body.Statements[4] as Block;
       if (returnBlock != null)
       {
-        MethodGraph methodGraph = new MethodGraph (sample, _blackTypes, new TypeParser(_blackTypes));
+        IMethodGraph methodGraph = BuildMethodGraph(sample);
         BasicBlock returnBasicBlock = methodGraph.GetBasicBlockById (returnBlock.UniqueKey);
         
         Assert.That (returnBasicBlock.SuccessorKeys.Length, Is.EqualTo(0));

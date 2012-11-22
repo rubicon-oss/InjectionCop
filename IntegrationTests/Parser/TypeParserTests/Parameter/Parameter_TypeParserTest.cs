@@ -127,5 +127,26 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParserTests.Parameter
 
       Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
     }
+
+    [Test]
+    [Category ("Parameter")]
+    public void Parse_ParameterOnly_NoProblem ()
+    {
+      TypeNode intTypeNode = Helper.TypeNodeFactory<int>();
+      Method sample = TestHelper.GetSample<ParameterSample> ("ParameterOnly", intTypeNode);
+      ProblemCollection result = _typeParser.Parse (sample);
+
+      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
+    }
+
+    [Test]
+    [Category ("Parameter")]
+    public void Parse_ParameterSampleType_NoProblem ()
+    {
+      TypeNode sample = Helper.TypeNodeFactory<ParameterSampleType>();
+      ProblemCollection result = _typeParser.Check (sample);
+      
+      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
+    }
   }
 }

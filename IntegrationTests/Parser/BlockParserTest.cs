@@ -29,7 +29,7 @@ namespace InjectionCop.IntegrationTests.Parser
     public void SetUp()
     {
       IBlackTypes blackList = new IDbCommandBlackTypesStub();
-      _blockParser = new BlockParser (blackList, new TypeParser(blackList));
+      _blockParser = new BlockParser (blackList, new TypeParser());
     }
 
     [Test]

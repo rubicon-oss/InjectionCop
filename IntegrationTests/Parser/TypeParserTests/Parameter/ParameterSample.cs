@@ -111,5 +111,16 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParserTests.Parameter
     {
       unSafe = unSafe + dummy;
     }
+
+    public void ParameterOnly ([Fragment ("FragmentType")] int i)
+    {
+    }
+  }
+
+  public class ParameterSampleType
+  {
+    public void ParameterOnly (int i)
+    {
+    }
   }
 }

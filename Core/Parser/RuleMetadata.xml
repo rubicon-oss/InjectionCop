@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Rules FriendlyName="InjectionCop">
   <Rule TypeName="TypeParser" Category="InjectionCop.SQLi" CheckId="IC_SQLi">
-    <Name>All type names defined in this project should start with XYZ - That is Client Name</Name>
+    <Name>Check for Fragment Violations</Name>
     <Description>Methods that are vulnerable to SQL injection must be called with safe Parameters</Description>
-    <Url>http://example.com</Url>
+    <Url>injectioncop.codeplex.com</Url>
     <Resolution>
-      Make parameter $PARAMETERNAME safe
+      Make parameter safe
     </Resolution>
     <MessageLevel Certainty="95">Warning</MessageLevel>
     <FixCategories>NonBreaking</FixCategories>
