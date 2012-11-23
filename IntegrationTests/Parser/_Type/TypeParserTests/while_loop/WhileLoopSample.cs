@@ -99,13 +99,112 @@ namespace InjectionCop.IntegrationTests.Parser._Type.TypeParserTests.While_loop
         i--;
       }
     }
-
-    public void InValidCallInsideWhileCondition()
+    
+    public void ValidCallInsideWhileWithContinue ()
     {
-        while ("dummy" == RequiresSqlFragment(UnsafeSource()))
+      int i = 10;
+      string x = "safe";
+      while (i > 0)
+      {
+        RequiresSqlFragment (x);
+        if (i != 3)
         {
-            RequiresSqlFragment("safe");
+          i--;
+          continue;
         }
+        i--;
+      }
+    }
+
+    public void InvalidCallInsideWhileWithContinue ()
+    {
+      int i = 10;
+      string x = "safe";
+      while (i > 0)
+      {
+        RequiresSqlFragment (x);
+        if (i != 3)
+        {
+          i--;
+          continue;
+        }
+        x = UnsafeSource();
+        i--;
+      }
+    }
+
+    public void InvalidCallInsideIfWithContinue ()
+    {
+      int i = 10;
+      string x = "safe";
+      while (i > 0)
+      {
+        RequiresSqlFragment (x);
+        if (i != 3)
+        {
+          x = UnsafeSource();
+          i--;
+          continue;
+        }
+        x = SafeSource();
+        i--;
+      }
+    }
+
+    public void ValidCallInsideWhileWithBreak ()
+    {
+      int i = 10;
+      string x = "safe";
+      while (i > 0)
+      {
+        if (i != 3)
+        {
+          break;
+        }
+        i--;
+      }
+      RequiresSqlFragment (x);
+    }
+
+    public void InvalidCallInsideWhileWithBreak ()
+    {
+      int i = 10;
+      string x = "safe";
+      while (i > 0)
+      {
+        if (i != 3)
+        {
+          break;
+        }
+        x = UnsafeSource();
+        i--;
+      }
+      RequiresSqlFragment (x);
+    }
+
+    public void InvalidCallInsideIfWithBreak ()
+    {
+      int i = 10;
+      string x = "safe";
+      while (i > 0)
+      {
+        if (i != 3)
+        {
+          x = UnsafeSource();
+          break;
+        }
+        x = SafeSource();
+        i--;
+      }
+      RequiresSqlFragment (x);
+    }
+
+    public void InValidCallInsideWhileCondition ()
+    {
+      while (RequiresSqlFragmentReturnsBool (UnsafeSource()))
+      {
+        RequiresSqlFragment ("safe");
+      }
     }
   }
 }

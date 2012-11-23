@@ -16,6 +16,9 @@ using System;
 
 namespace InjectionCop.Parser._Method
 {
+  /// <summary>
+  /// Encapsultes building of method graph and parameter symbol table of a method
+  /// </summary>
   public interface IMethodParserDirector
   {
     SymbolTable GetParameterSafeness ();

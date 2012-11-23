@@ -91,11 +91,21 @@ namespace InjectionCop.Parser._Block
         }
         _preConditions.AddRange (additionalPreConditions);
         UpdateSafeOutParameters (methodCall);
+        foreach (Expression operand in methodCall.Operands)
+        {
+          Inspect (operand);
+        }
       }
       else if (expression is UnaryExpression)
       {
-        UnaryExpression unaryExpression = (UnaryExpression) expression;
+        var unaryExpression = (UnaryExpression) expression;
         Inspect (unaryExpression.Operand);
+      }
+      else if (expression is BinaryExpression)
+      {
+        var binaryExpression = (BinaryExpression) expression;
+        Inspect (binaryExpression.Operand1);
+        Inspect (binaryExpression.Operand2);
       }
     }
 

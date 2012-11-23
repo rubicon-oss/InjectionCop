@@ -35,6 +35,12 @@ namespace InjectionCop.IntegrationTests.Parser
       return "safe command";
     }
 
+    [return: Fragment("SqlFragment")]
+    protected string SafeSourceRequiresSqlFragment ([SqlFragment] string param)
+    {
+      return "safe command";
+    }
+
     protected void DummyMethod (string parameter)
     {
     }
@@ -47,6 +53,11 @@ namespace InjectionCop.IntegrationTests.Parser
     protected string RequiresSqlFragment ([Fragment("SqlFragment")] string a, string b, [Fragment("SqlFragment")] string c)
     {
       return a + b + c;
+    }
+    
+    protected bool RequiresSqlFragmentReturnsBool ([SqlFragment] string param)
+    {
+      return true;
     }
 
     public string SafeProperty { [return: Fragment("SqlFragment")]

@@ -129,5 +129,15 @@ namespace InjectionCop.IntegrationTests.Parser._Type.TypeParserTests.If
 
       Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
     }
+
+    [Test]
+    [Category ("If")]
+    public void Parse_InvalidCallInsideIfCondition_ReturnsProblem ()
+    {
+      Method sample = TestHelper.GetSample<IfSample> ("InvalidCallInsideIfCondition");
+      ProblemCollection result = _typeParser.Parse (sample);
+
+      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+    }
   }
 }

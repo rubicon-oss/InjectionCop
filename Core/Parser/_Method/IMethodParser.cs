@@ -17,6 +17,9 @@ using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser._Method
 {
+  /// <summary>
+  /// Parses and analyzes a pair of methodgraph/preconditions
+  /// </summary>
   interface IMethodParser
   {
     ProblemCollection Parse (IMethodParserDirector director);

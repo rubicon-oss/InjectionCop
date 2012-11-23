@@ -152,6 +152,11 @@ namespace InjectionCop.Parser
               parameterSafe = false;
             }
           }
+          else
+          {
+            parameterSafe = fragmentParameterType == operandParameterType
+              || operandParameterType == "Literal";
+          }
         }
         
       }

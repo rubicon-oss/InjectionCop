@@ -187,5 +187,13 @@ namespace InjectionCop.IntegrationTests.Parser._Type.TypeParserTests.If
 
       RequiresSqlFragment (temp);
     }
+
+    public void InvalidCallInsideIfCondition() 
+    {
+      if (RequiresSqlFragmentReturnsBool (UnsafeSource()))
+      {
+        RequiresSqlFragment ("Safe");
+      }
+    }
   }
 }

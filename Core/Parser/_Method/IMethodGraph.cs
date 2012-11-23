@@ -17,6 +17,9 @@ using InjectionCop.Parser._Block;
 
 namespace InjectionCop.Parser._Method
 {
+  /// <summary>
+  /// Graph representation of a method
+  /// </summary>
   public interface IMethodGraph
   {
     BasicBlock InitialBlock { get; }

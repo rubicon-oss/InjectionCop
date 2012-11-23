@@ -16,6 +16,9 @@ using System;
 
 namespace InjectionCop.Parser._Method
 {
+  /// <summary>
+  /// Builds parameter symboltable of a method
+  /// </summary>
   public interface IParameterSymbolTableBuilder
   {
     void Build ();

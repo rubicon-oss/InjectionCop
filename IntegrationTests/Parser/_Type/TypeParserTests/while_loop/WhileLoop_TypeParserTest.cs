@@ -74,12 +74,65 @@ namespace InjectionCop.IntegrationTests.Parser._Type.TypeParserTests.While_loop
 
       Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
     }
+    
+    [Test]
+    public void Parse_ValidCallInsideWhileWithContinue_NoProblem ()
+    {
+      Method sample = TestHelper.GetSample<WhileLoopSample> ("ValidCallInsideWhileWithContinue");
+      ProblemCollection result = _typeParser.Parse (sample);
+
+      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
+    }
 
     [Test]
-    [Ignore]
-    public void Parse_InValidCallInsideWhileCondition_ReturnsProblem()
+    public void Parse_InvalidCallInsideWhileWithContinue_ReturnsProblem ()
     {
-        Method sample = TestHelper.GetSample<WhileLoopSample>("InValidCallInsideWhileCondition");
+      Method sample = TestHelper.GetSample<WhileLoopSample> ("InvalidCallInsideWhileWithContinue");
+      ProblemCollection result = _typeParser.Parse (sample);
+
+      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+    }
+
+    [Test]
+    public void Parse_InvalidCallInsideIfWithContinue_ReturnsProblem ()
+    {
+      Method sample = TestHelper.GetSample<WhileLoopSample> ("InvalidCallInsideIfWithContinue");
+      ProblemCollection result = _typeParser.Parse (sample);
+
+      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+    }
+
+    [Test]
+    public void Parse_ValidCallInsideWhileWithBreak_NoProblem ()
+    {
+      Method sample = TestHelper.GetSample<WhileLoopSample> ("ValidCallInsideWhileWithBreak");
+      ProblemCollection result = _typeParser.Parse (sample);
+
+      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
+    }
+
+    [Test]
+    public void Parse_InvalidCallInsideWhileWithBreak_ReturnsProblem ()
+    {
+      Method sample = TestHelper.GetSample<WhileLoopSample> ("InvalidCallInsideWhileWithBreak");
+      ProblemCollection result = _typeParser.Parse (sample);
+
+      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+    }
+
+    [Test]
+    public void Parse_InvalidCallInsideIfWithBreak_ReturnsProblem ()
+    {
+      Method sample = TestHelper.GetSample<WhileLoopSample> ("InvalidCallInsideIfWithBreak");
+      ProblemCollection result = _typeParser.Parse (sample);
+
+      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+    }
+
+    [Test]
+    public void Parse_InValidCallInsideWhileCondition_ReturnsProblem ()
+    {
+      Method sample = TestHelper.GetSample<WhileLoopSample> ("InValidCallInsideWhileCondition");
       ProblemCollection result = _typeParser.Parse (sample);
 
       Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);

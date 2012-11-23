@@ -74,8 +74,12 @@
     <Compile Include="Parser\IDbCommandBlackTypesStub.cs" />
     <Compile Include="Parser\FragmentToolsSample.cs" />
     <Compile Include="Parser\FragmentToolsTest.cs" />
+    <Compile Include="Parser\_Type\TypeParserTests\Goto\GotoSample.cs" />
+    <Compile Include="Parser\_Type\TypeParserTests\Goto\Goto_TypeParserTest.cs" />
     <Compile Include="Parser\_Type\TypeParserTests\If\IfSample.cs" />
     <Compile Include="Parser\_Type\TypeParserTests\If\If_TypeParserTest.cs" />
+    <Compile Include="Parser\_Type\TypeParserTests\NestedCall\NestedCallSample.cs" />
+    <Compile Include="Parser\_Type\TypeParserTests\NestedCall\NestedCall_TypeParserTest.cs" />
     <Compile Include="Parser\_Type\TypeParserTests\Parameter\ParameterSample.cs" />
     <Compile Include="Parser\_Type\TypeParserTests\Parameter\Parameter_TypeParserTest.cs" />
     <Compile Include="Parser\_Type\TypeParserTests\Property\PropertySample.cs" />

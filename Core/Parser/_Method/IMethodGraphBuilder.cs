@@ -16,6 +16,9 @@ using System;
 
 namespace InjectionCop.Parser._Method
 {
+  /// <summary>
+  /// Builds Graph from a given method
+  /// </summary>
   public interface IMethodGraphBuilder
   {
     void Build ();
