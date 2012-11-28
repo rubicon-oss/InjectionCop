@@ -25,7 +25,7 @@ namespace InjectionCop.Parser._Block
   /// </summary>
   public class BlockParser
   {
-    private SymbolTable _symbolTableParser;
+    private ISymbolTable _symbolTableParser;
     private List<PreCondition> _preConditions;
     private List<int> _successors;
     private readonly IBlackTypes _blackTypes;

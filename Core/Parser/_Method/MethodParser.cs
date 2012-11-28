@@ -31,7 +31,7 @@ namespace InjectionCop.Parser._Method
 
     public ProblemCollection Parse (IMethodParserDirector director)
     {
-      SymbolTable parameterSafeness = director.GetParameterSafeness();
+      ISymbolTable parameterSafeness = director.GetParameterSafeness();
       IMethodGraph methodGraph = director.GetMethodGraph();
       
       if (!methodGraph.IsEmpty())
@@ -42,7 +42,7 @@ namespace InjectionCop.Parser._Method
       return _typeParser.Problems;
     }
     
-    public ProblemCollection Parse(IMethodGraph methodGraph, SymbolTable context)
+    public ProblemCollection Parse(IMethodGraph methodGraph, ISymbolTable context)
     {
       ProblemCollection problems = _typeParser.Problems;
       
@@ -54,13 +54,13 @@ namespace InjectionCop.Parser._Method
       return problems;
     }
 
-    private void Parse (IMethodGraph methodGraph, SymbolTable context, BasicBlock currentBlock, Dictionary<int,int> visits)
+    private void Parse (IMethodGraph methodGraph, ISymbolTable context, BasicBlock currentBlock, Dictionary<int,int> visits)
     {
       UpdateVisits (currentBlock.Id, visits);
       if (visits[currentBlock.Id] < 2)
       {
         CheckPreCoditions (currentBlock.PreConditions, context);
-        SymbolTable adjustedContext = UpdateContext (context, currentBlock.PostConditionSymbolTable);
+        ISymbolTable adjustedContext = UpdateContext (context, currentBlock.PostConditionSymbolTable);
         ParseSuccessors (currentBlock.SuccessorKeys, visits, methodGraph, adjustedContext);   
       }
     }
@@ -77,28 +77,28 @@ namespace InjectionCop.Parser._Method
       }
     }
 
-    private void CheckPreCoditions (PreCondition[] preconditions, SymbolTable context)
+    private void CheckPreCoditions (PreCondition[] preconditions, ISymbolTable context)
     {
       foreach (PreCondition precondition in preconditions)
       {
-        if (!context.Contains (precondition.Symbol) || !context.IsSafe (precondition.Symbol, precondition.FragmentType))
+        if (!context.Contains (precondition.Symbol) || !context.IsFragment (precondition.Symbol, precondition.FragmentType))
         {
           _typeParser.AddProblem();
         }
       }
     }
 
-    private SymbolTable UpdateContext (SymbolTable context, SymbolTable postConditionSymbolTable)
+    private ISymbolTable UpdateContext (ISymbolTable context, ISymbolTable postConditionSymbolTable)
     {
-      SymbolTable adjustedContext = context.Clone();
+      ISymbolTable adjustedContext = context.Copy();
       foreach (string symbol in postConditionSymbolTable.Symbols)
       {
-        adjustedContext.SetContextMap (symbol, postConditionSymbolTable.GetContextMap (symbol));
+        adjustedContext.MakeSafe (symbol, postConditionSymbolTable.GetFragmentType (symbol));
       }
       return adjustedContext;
     }
 
-    private void ParseSuccessors (int[] successorKeys, Dictionary<int, int> visits, IMethodGraph methodGraph, SymbolTable adjustedContext)
+    private void ParseSuccessors (int[] successorKeys, Dictionary<int, int> visits, IMethodGraph methodGraph, ISymbolTable adjustedContext)
     {
       foreach (int successorKey in successorKeys)
         {

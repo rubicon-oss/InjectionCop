@@ -55,6 +55,7 @@
     <Compile Include="Config\BlackType.cs" />
     <Compile Include="Config\BlackTypes.cs" />
     <Compile Include="Config\IBlackTypes.cs" />
+    <Compile Include="Parser\ISymbolTable.cs" />
     <Compile Include="Parser\_Method\IMethodGraph.cs" />
     <Compile Include="Parser\_Method\IMethodGraphBuilder.cs" />
     <Compile Include="Parser\_Method\IMethodParser.cs" />

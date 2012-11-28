@@ -32,7 +32,7 @@ namespace InjectionCop.Parser._Method
       _method = method;
     }
 
-    public SymbolTable GetParameterSafeness ()
+    public ISymbolTable GetParameterSafeness ()
     {
       IParameterSymbolTableBuilder parameterSymbolTableBuilder = new ParameterSymbolTableBuilder (_method, _blackTypes);
       parameterSymbolTableBuilder.Build();

@@ -23,10 +23,10 @@ namespace InjectionCop.Parser._Block
   {
     private readonly int _id;
     private readonly PreCondition[] _preConditions;
-    private readonly SymbolTable _postConditionSymbolTable;
+    private readonly ISymbolTable _postConditionSymbolTable;
     private readonly int[] _successorKeys;
     
-    public BasicBlock(int id, PreCondition[] preConditions, SymbolTable postConditionSymbolTable, int[] successorKeys)
+    public BasicBlock(int id, PreCondition[] preConditions, ISymbolTable postConditionSymbolTable, int[] successorKeys)
     {
       _preConditions = preConditions;
       _postConditionSymbolTable = postConditionSymbolTable;
@@ -39,7 +39,7 @@ namespace InjectionCop.Parser._Block
       get { return _preConditions; }
     }
 
-    public SymbolTable PostConditionSymbolTable
+    public ISymbolTable PostConditionSymbolTable
     {
       get { return _postConditionSymbolTable; }
     }

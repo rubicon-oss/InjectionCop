@@ -20,7 +20,7 @@ namespace InjectionCop.Parser._Method
 {
   public class ParameterSymbolTableBuilder : IParameterSymbolTableBuilder
   {
-    private SymbolTable _result;
+    private ISymbolTable _result;
     private Method _method;
     private IBlackTypes _blackTypes;
 
@@ -32,7 +32,7 @@ namespace InjectionCop.Parser._Method
 
     public void Build ()
     {
-      SymbolTable parameterSafeness = new SymbolTable (_blackTypes);
+      ISymbolTable parameterSafeness = new SymbolTable (_blackTypes);
       foreach (Parameter parameter in _method.Parameters)
       {
         if (FragmentTools.ContainsFragment (parameter.Attributes))
@@ -48,7 +48,7 @@ namespace InjectionCop.Parser._Method
       _result = parameterSafeness;
     }
 
-    public SymbolTable GetResult ()
+    public ISymbolTable GetResult ()
     {
       return _result;
     }

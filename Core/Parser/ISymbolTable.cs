@@ -13,15 +13,22 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
+using InjectionCop.Parser._Block;
+using Microsoft.FxCop.Sdk;
 
-namespace InjectionCop.Parser._Method
+namespace InjectionCop.Parser
 {
-  /// <summary>
-  /// Builds parameter symboltable of a method
-  /// </summary>
-  public interface IParameterSymbolTableBuilder
+  public interface ISymbolTable
   {
-    void Build ();
-    ISymbolTable GetResult ();
+    IEnumerable<string> Symbols { get; }
+    bool ParametersSafe (MethodCall methodCall, out List<PreCondition> requireSafenessParameters);
+    void InferSafeness (string symbolName, Expression expression);
+    void MakeSafe (string symbolName, string fragmentType);
+    void MakeUnsafe (string symbolName);
+    string GetFragmentType (string symbolName);
+    bool IsFragment (string symbolName, string fragmentType);
+    bool Contains (string symbolName);
+    ISymbolTable Copy ();
   }
 }

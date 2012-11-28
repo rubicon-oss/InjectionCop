@@ -21,7 +21,7 @@ namespace InjectionCop.Parser._Method
   /// </summary>
   public interface IMethodParserDirector
   {
-    SymbolTable GetParameterSafeness ();
+    ISymbolTable GetParameterSafeness ();
     IMethodGraph GetMethodGraph ();
   }
 }
