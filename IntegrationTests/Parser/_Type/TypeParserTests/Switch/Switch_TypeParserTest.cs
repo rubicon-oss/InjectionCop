@@ -82,5 +82,45 @@ namespace InjectionCop.IntegrationTests.Parser._Type.TypeParserTests.Switch
 
       Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
     }
+
+    [Test]
+    public void Parse_ValidFallThrough_NoProblem ()
+    {
+      TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
+      Method sample = TestHelper.GetSample<SwitchSample> ("ValidFallThrough", intTypeNode);
+      ProblemCollection result = _typeParser.Parse (sample);
+
+      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
+    }
+
+    [Test]
+    public void Parse_ValidFallThroughGoto_NoProblem ()
+    {
+      TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
+      Method sample = TestHelper.GetSample<SwitchSample> ("ValidFallThroughGoto", intTypeNode);
+      ProblemCollection result = _typeParser.Parse (sample);
+
+      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
+    }
+
+    [Test]
+    public void Parse_InvalidFallThrough_ReturnsProblem ()
+    {
+      TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
+      Method sample = TestHelper.GetSample<SwitchSample> ("InvalidFallThrough", intTypeNode);
+      ProblemCollection result = _typeParser.Parse (sample);
+
+      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+    }
+
+    [Test]
+    public void Parse_InvalidFallThroughGoto_ReturnsProblem ()
+    {
+      TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
+      Method sample = TestHelper.GetSample<SwitchSample> ("InvalidFallThroughGoto", intTypeNode);
+      ProblemCollection result = _typeParser.Parse (sample);
+
+      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+    }
   }
 }

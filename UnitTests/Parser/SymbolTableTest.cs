@@ -13,9 +13,7 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
 using InjectionCop.Parser;
-using Microsoft.FxCop.Sdk;
 using NUnit.Framework;
 using InjectionCop.IntegrationTests.Parser;
 
@@ -25,6 +23,7 @@ namespace InjectionCop.UnitTests.Parser
   public class SymbolTableTest
   {
     private SymbolTable _symbolTable;
+
 
     [SetUp]
     public void SetUp ()
@@ -36,27 +35,26 @@ namespace InjectionCop.UnitTests.Parser
     public void Clone_ReturnsDeepCopy_True ()
     {
       _symbolTable.MakeSafe ("key", "FragmentType");
-      SymbolTable clone = _symbolTable.Clone();
+      ISymbolTable clone = _symbolTable.Copy();
       clone.MakeUnsafe ("key");
-      SymbolTable result = _symbolTable.Clone();
+      ISymbolTable result = _symbolTable.Copy();
       
-      Assert.That (result.IsSafe("key", "FragmentType"), Is.True);
+      Assert.That (result.IsFragment("key", "FragmentType"), Is.True);
     }
 
     [Test]
     public void GetSafenessMap_ExistingEntry_ReturnsEntry ()
     {
       _symbolTable.MakeSafe ("key", "FragmentType");
-      bool safeness =_symbolTable.GetContextMap ("key")["FragmentType"];
+      string fragmentType = _symbolTable.GetFragmentType ("key");
 
-      Assert.That (safeness, Is.True);
+      Assert.That (fragmentType, Is.EqualTo("FragmentType"));
     }
 
     [Test]
-    [ExpectedException(typeof(InjectionCopException), ExpectedMessage = "Given Symbolname not found in Symboltable")]
-    public void GetSafenessMap_NonExistingEntry_ThrowsException ()
+    public void GetSafenessMap_NonExistingEntry_ReturnsEmptyString ()
     {
-      _symbolTable.GetContextMap ("key");
+      Assert.That(_symbolTable.GetFragmentType ("key"), Is.EqualTo("__EmptyFragment__"));
     }
   }
 }

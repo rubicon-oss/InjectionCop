@@ -24,6 +24,18 @@ namespace InjectionCop.IntegrationTests.Parser
   public class SymbolTableTest
   {
     private SymbolTable _symbolTable;
+    private static readonly string _emptyFragment = "__EmptyFragment__";
+    private static readonly string _literal = "__Literal__";
+
+    public static string EmptyFragment
+    {
+      get { return _emptyFragment; }
+    }
+
+    public static string Literal
+    {
+      get { return _literal; }
+    }
 
     [SetUp]
     public void SetUp ()
@@ -36,12 +48,11 @@ namespace InjectionCop.IntegrationTests.Parser
     public void ReturnsFragment_AssignmentWithLiteral_ReturnsTrue ()
     {
       Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithLiteral");
-      string fragmentType;
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[1];
       Expression sampleExpression = assignment.Source;
-      bool returnsFragment = _symbolTable.ReturnsFragment(sampleExpression, out fragmentType);
-      Assert.That(returnsFragment, Is.True);
+      string fragmentType = _symbolTable.InferFragmentType(sampleExpression);
+      Assert.That(fragmentType, Is.Not.EqualTo(EmptyFragment));
     }
 
     [Test]
@@ -52,8 +63,8 @@ namespace InjectionCop.IntegrationTests.Parser
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[1];
       Expression sampleExpression = assignment.Source;
-      _symbolTable.ReturnsFragment(sampleExpression, out fragmentType);
-      Assert.That(fragmentType, Is.EqualTo("Literal"));
+      fragmentType = _symbolTable.InferFragmentType(sampleExpression);
+      Assert.That(fragmentType, Is.EqualTo(Literal));
     }
 
     [Test]
@@ -61,24 +72,22 @@ namespace InjectionCop.IntegrationTests.Parser
     {
       _symbolTable.MakeSafe ("local$0", "DummyType");
       Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithLocal");
-      string fragmentType;
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[4];
       Expression sampleExpression = assignment.Source;
-      bool returnsFragment = _symbolTable.ReturnsFragment(sampleExpression, out fragmentType);
-      Assert.That(returnsFragment, Is.True);
+      string fragmentType = _symbolTable.InferFragmentType(sampleExpression);
+      Assert.That(fragmentType, Is.Not.EqualTo(EmptyFragment));
     }
 
     [Test]
     public void ReturnsFragment_AssignmentWithLocalNonFragment_ReturnsFalse ()
     {
       Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithLocal");
-      string fragmentType;
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[4];
       Expression sampleExpression = assignment.Source;
-      bool returnsFragment = _symbolTable.ReturnsFragment(sampleExpression, out fragmentType);
-      Assert.That(returnsFragment, Is.False);
+      string fragmentType = _symbolTable.InferFragmentType(sampleExpression);
+      Assert.That(fragmentType, Is.EqualTo(EmptyFragment));
     }
 
     [Test]
@@ -86,12 +95,11 @@ namespace InjectionCop.IntegrationTests.Parser
     {
       _symbolTable.MakeUnsafe ("local$0");
       Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithLocal");
-      string fragmentType;
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[4];
       Expression sampleExpression = assignment.Source;
-      bool returnsFragment = _symbolTable.ReturnsFragment(sampleExpression, out fragmentType);
-      Assert.That(returnsFragment, Is.False);
+      string fragmentType = _symbolTable.InferFragmentType(sampleExpression);
+      Assert.That(fragmentType, Is.EqualTo(EmptyFragment));
     }
 
     [Test]
@@ -99,11 +107,10 @@ namespace InjectionCop.IntegrationTests.Parser
     {
       _symbolTable.MakeSafe ("local$0", "DummyType");
       Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithLocal");
-      string fragmentType;
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[4];
       Expression sampleExpression = assignment.Source;
-      _symbolTable.ReturnsFragment(sampleExpression, out fragmentType);
+      string fragmentType = _symbolTable.InferFragmentType(sampleExpression);
       Assert.That(fragmentType, Is.EqualTo("DummyType"));
     }
 
@@ -111,12 +118,11 @@ namespace InjectionCop.IntegrationTests.Parser
     public void ReturnsFragment_AssignmentWithLocalNonFragment_ReturnsNoFragmentType ()
     {
       Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithLocal");
-      string fragmentType;
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[4];
       Expression sampleExpression = assignment.Source;
-      _symbolTable.ReturnsFragment(sampleExpression, out fragmentType);
-      Assert.That(fragmentType, Is.EqualTo(string.Empty));
+      string fragmentType = _symbolTable.InferFragmentType(sampleExpression);
+      Assert.That(fragmentType, Is.EqualTo(EmptyFragment));
     }
 
     [Test]
@@ -124,12 +130,11 @@ namespace InjectionCop.IntegrationTests.Parser
     {
       _symbolTable.MakeUnsafe ("local$0");
       Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithLocal");
-      string fragmentType;
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[4];
       Expression sampleExpression = assignment.Source;
-      _symbolTable.ReturnsFragment(sampleExpression, out fragmentType);
-      Assert.That(fragmentType, Is.EqualTo(string.Empty));
+      string fragmentType = _symbolTable.InferFragmentType(sampleExpression);
+      Assert.That(fragmentType, Is.EqualTo(EmptyFragment));
     }
 
     [Test]
@@ -138,12 +143,11 @@ namespace InjectionCop.IntegrationTests.Parser
       _symbolTable.MakeSafe ("parameter", "DummyType");
       TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithParameter", intTypeNode);
-      string fragmentType;
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[1];
       Expression sampleExpression = assignment.Source;
-      bool returnsFragment = _symbolTable.ReturnsFragment(sampleExpression, out fragmentType);
-      Assert.That(returnsFragment, Is.True);
+      string fragmentType = _symbolTable.InferFragmentType(sampleExpression);
+      Assert.That(fragmentType, Is.Not.EqualTo(EmptyFragment));
     }
 
     [Test]
@@ -151,12 +155,11 @@ namespace InjectionCop.IntegrationTests.Parser
     {
       TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithParameter", intTypeNode);
-      string fragmentType;
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[1];
       Expression sampleExpression = assignment.Source;
-      bool returnsFragment = _symbolTable.ReturnsFragment(sampleExpression, out fragmentType);
-      Assert.That(returnsFragment, Is.False);
+      string fragmentType = _symbolTable.InferFragmentType(sampleExpression);
+      Assert.That(fragmentType, Is.EqualTo(EmptyFragment));
     }
 
     [Test]
@@ -165,12 +168,11 @@ namespace InjectionCop.IntegrationTests.Parser
       _symbolTable.MakeUnsafe ("parameter");
       TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithParameter", intTypeNode);
-      string fragmentType;
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[1];
       Expression sampleExpression = assignment.Source;
-      bool returnsFragment = _symbolTable.ReturnsFragment(sampleExpression, out fragmentType);
-      Assert.That(returnsFragment, Is.False);
+      string fragmentType = _symbolTable.InferFragmentType(sampleExpression);
+      Assert.That(fragmentType, Is.EqualTo(EmptyFragment));
     }
 
     [Test]
@@ -179,11 +181,10 @@ namespace InjectionCop.IntegrationTests.Parser
       _symbolTable.MakeSafe ("parameter", "DummyType");
       TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithParameter", intTypeNode);
-      string fragmentType;
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[1];
       Expression sampleExpression = assignment.Source;
-      _symbolTable.ReturnsFragment(sampleExpression, out fragmentType);
+      string fragmentType = _symbolTable.InferFragmentType(sampleExpression);
       Assert.That(fragmentType, Is.EqualTo("DummyType"));
     }
 
@@ -193,12 +194,11 @@ namespace InjectionCop.IntegrationTests.Parser
     {
       TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithParameter", intTypeNode);
-      string fragmentType;
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[1];
       Expression sampleExpression = assignment.Source;
-      _symbolTable.ReturnsFragment(sampleExpression, out fragmentType);
-      Assert.That(fragmentType, Is.EqualTo(string.Empty));
+      string fragmentType = _symbolTable.InferFragmentType(sampleExpression);
+      Assert.That(fragmentType, Is.EqualTo(EmptyFragment));
     }
 
     [Test]
@@ -207,24 +207,22 @@ namespace InjectionCop.IntegrationTests.Parser
       _symbolTable.MakeUnsafe ("parameter");
       TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithParameter", intTypeNode);
-      string fragmentType;
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[1];
       Expression sampleExpression = assignment.Source;
-      _symbolTable.ReturnsFragment(sampleExpression, out fragmentType);
-      Assert.That(fragmentType, Is.EqualTo(string.Empty));
+      string fragmentType = _symbolTable.InferFragmentType(sampleExpression);
+      Assert.That(fragmentType, Is.EqualTo(EmptyFragment));
     }
 
     [Test]
     public void ReturnsFragment_AssignmentWithSafeMethodCall_ReturnsTrue ()
     {
       Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithSafeMethodCall");
-      string fragmentType;
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[1];
       Expression sampleExpression = assignment.Source;
-      bool returnsFragment = _symbolTable.ReturnsFragment(sampleExpression, out fragmentType);
-      Assert.That(returnsFragment, Is.True);
+      string fragmentType = _symbolTable.InferFragmentType(sampleExpression);
+      Assert.That(fragmentType, Is.Not.EqualTo(EmptyFragment));
     }
 
     
@@ -232,23 +230,21 @@ namespace InjectionCop.IntegrationTests.Parser
     public void ReturnsFragment_AssignmentWithUnsafeMethodCall_ReturnsFalse ()
     {
       Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithUnsafeMethodCall");
-      string fragmentType;
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[1];
       Expression sampleExpression = assignment.Source;
-      bool returnsFragment = _symbolTable.ReturnsFragment(sampleExpression, out fragmentType);
-      Assert.That(returnsFragment, Is.False);
+      string fragmentType = _symbolTable.InferFragmentType(sampleExpression);
+      Assert.That(fragmentType, Is.EqualTo(EmptyFragment));
     }
 
     [Test]
     public void ReturnsFragment_AssignmentWithSafeMethodCall_ReturnsFragmentType ()
     {
       Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithSafeMethodCall");
-      string fragmentType;
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[1];
       Expression sampleExpression = assignment.Source;
-      _symbolTable.ReturnsFragment(sampleExpression, out fragmentType);
+      string fragmentType = _symbolTable.InferFragmentType(sampleExpression);
       Assert.That(fragmentType, Is.EqualTo("SqlFragment"));
     }
 
@@ -256,12 +252,11 @@ namespace InjectionCop.IntegrationTests.Parser
     public void ReturnsFragment_AssignmentWithUnsafeMethodCall_ReturnsEmptyFragmentType ()
     {
       Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithUnsafeMethodCall");
-      string fragmentType;
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[1];
       Expression sampleExpression = assignment.Source;
-      _symbolTable.ReturnsFragment(sampleExpression, out fragmentType);
-      Assert.That(fragmentType, Is.EqualTo(string.Empty));
+      string fragmentType = _symbolTable.InferFragmentType(sampleExpression);
+      Assert.That(fragmentType, Is.EqualTo(EmptyFragment));
     }
   }
 }

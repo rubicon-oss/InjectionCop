@@ -40,8 +40,8 @@ namespace InjectionCop.IntegrationTests.Parser._Block
       Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("PostConditionOnlySafeSymbols");
       Block sample = sampleMethod.Body.Statements[0] as Block;
       BasicBlock basicBlock = _blockParser.Parse(sample);
-      bool correctPostCondition = basicBlock.PostConditionSymbolTable.IsSafe ("local$0", "SqlFragment")
-                                  && basicBlock.PostConditionSymbolTable.IsSafe ("local$1", "SqlFragment");
+      bool correctPostCondition = basicBlock.PostConditionSymbolTable.IsFragment ("local$0", "SqlFragment")
+                                  && basicBlock.PostConditionSymbolTable.IsFragment ("local$1", "SqlFragment");
 
       Assert.That (correctPostCondition, Is.True);
     }
@@ -52,8 +52,8 @@ namespace InjectionCop.IntegrationTests.Parser._Block
       Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("PostConditionSafeAndUnsafeSymbols");
       Block sample = sampleMethod.Body.Statements[0] as Block;
       BasicBlock basicBlock = _blockParser.Parse(sample);
-      bool correctPostCondition = basicBlock.PostConditionSymbolTable.IsSafe ("local$0", "SqlFragment")
-                                  && !basicBlock.PostConditionSymbolTable.IsSafe ("local$1", "SqlFragment");
+      bool correctPostCondition = basicBlock.PostConditionSymbolTable.IsFragment ("local$0", "SqlFragment")
+                                  && !basicBlock.PostConditionSymbolTable.IsFragment ("local$1", "SqlFragment");
 
       Assert.That (correctPostCondition, Is.True);
     }

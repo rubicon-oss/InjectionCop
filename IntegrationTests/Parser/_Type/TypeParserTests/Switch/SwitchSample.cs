@@ -148,5 +148,65 @@ namespace InjectionCop.IntegrationTests.Parser._Type.TypeParserTests.Switch
       }
       DummyMethod (param);
     }
+
+    public void ValidFallThrough (int i)
+    {
+      switch (i)
+      {
+        case 1:
+        case 2:
+          RequiresSqlFragment (SafeSource());
+          break;
+        default:
+          RequiresSqlFragment ("safe");
+          break;
+      }
+    }
+
+    public void ValidFallThroughGoto (int i)
+    {
+      switch (i)
+      {
+        case 1:
+          RequiresSqlFragment ("safe");
+          goto case 2;
+        case 2:
+          RequiresSqlFragment (SafeSource());
+          break;
+        default:
+          RequiresSqlFragment ("safe");
+          break;
+      }
+    }
+
+    public void InvalidFallThrough (int i)
+    {
+      switch (i)
+      {
+        case 1:
+        case 2:
+          RequiresSqlFragment (UnsafeSource());
+          break;
+        default:
+          RequiresSqlFragment ("safe");
+          break;
+      }
+    }
+
+    public void InvalidFallThroughGoto (int i)
+    {
+      switch (i)
+      {
+        case 1:
+          RequiresSqlFragment ("safe");
+          goto case 2;
+        case 2:
+          RequiresSqlFragment (UnsafeSource());
+          break;
+        default:
+          RequiresSqlFragment ("safe");
+          break;
+      }
+    }
   }
 }
