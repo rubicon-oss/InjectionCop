@@ -50,6 +50,7 @@
     <Compile Include="Attributes\FragmentAttribute.cs" />
     <Compile Include="Attributes\SqlFragmentAttribute.cs" />
     <Compile Include="Attributes\TrustedSqlGeneration.cs" />
+    <Compile Include="Config\BlacklistManager.cs" />
     <Compile Include="Config\BlackMethod.cs" />
     <Compile Include="Config\BlackParameter.cs" />
     <Compile Include="Config\BlackType.cs" />

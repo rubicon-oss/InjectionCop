@@ -103,7 +103,6 @@ namespace InjectionCop.Parser
       requireSafenessParameters = new List<PreCondition>();
       Method calleeMethod = IntrospectionTools.ExtractMethod (methodCall);
 
-
       if (_blackTypes.IsBlackMethod (calleeMethod.DeclaringType.FullName, calleeMethod.Name.Name))
       {
         foreach (Expression expression in methodCall.Operands)
