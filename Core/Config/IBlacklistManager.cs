@@ -17,6 +17,9 @@ using System.Collections.Generic;
 
 namespace InjectionCop.Config
 {
+  /// <summary>
+  /// Checks if methods are blacklisted, returns corresponding fragment types
+  /// </summary>
   public interface IBlacklistManager
   {
     bool IsListed (string qualifiedTypeName, string methodName, List<string> qualifiedParameterTypes);

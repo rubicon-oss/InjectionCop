@@ -19,6 +19,11 @@ using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser
 {
+  /// <summary>
+  /// Keeps state (safe/unsafe) of a set of symbols.
+  /// Defines method to infer state of a given expression.
+  /// Defines method to check safeness of a method call
+  /// </summary>
   public interface ISymbolTable
   {
     IEnumerable<string> Symbols { get; }

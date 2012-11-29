@@ -13,24 +13,28 @@
 // limitations under the License.
 
 using System;
+using System.Xml.Linq;
 
-namespace InjectionCop.IntegrationTests.Parser._Type.SymbolTableTests.ParameterSafe
+namespace InjectionCop.Config
 {
-  class ParameterSafeSample : ParserSampleBase
+  /// <summary>
+  /// Rudimentary Class to load blacklist from xml file
+  /// </summary>
+  class ConfigLoader
   {
-    public bool DeliverFragmentWhenNotExpected ()
+    public static IBlacklistManager LoadBlacklist ()
     {
-      return "dummy" == doSomething (SafeSource());
-    }
-
-    public void CallWithoutFragments ()
-    {
-      doSomething(UnsafeSource());
-    }
-
-    private string doSomething (string parameter)
-    {
-      return parameter;
+      IBlacklistManager blacklistManager;
+      try
+      {
+        XDocument document = XDocument.Load("Blacklist.xml");
+        blacklistManager = new BlacklistManager(document.Root);
+      }
+      catch (Exception)
+      {
+        blacklistManager = new IDbCommandBlacklistManagerStub();
+      }
+      return blacklistManager;
     }
   }
 }

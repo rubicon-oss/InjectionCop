@@ -20,6 +20,9 @@ using InjectionCop.Parser;
 
 namespace InjectionCop.Config
 {
+  /// <summary>
+  /// Checks if methods are blacklisted, returns corresponding fragment types
+  /// </summary>
   public class BlacklistManager : IBlacklistManager
   {
     private static readonly XNamespace _ic = "eu.rubicon.injectioncop";

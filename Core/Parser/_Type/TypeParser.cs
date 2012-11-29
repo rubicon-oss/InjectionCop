@@ -29,7 +29,7 @@ namespace InjectionCop.Parser._Type
     public TypeParser ()
         : base ("TypeParser")
     {
-      _blacklistManager = new IDbCommandBlacklistManagerStub();
+      _blacklistManager = ConfigLoader.LoadBlacklist();
     }
 
     public override ProblemCollection Check (TypeNode type)

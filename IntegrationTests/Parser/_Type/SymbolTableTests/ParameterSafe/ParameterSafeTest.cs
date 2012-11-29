@@ -34,12 +34,26 @@ namespace InjectionCop.IntegrationTests.Parser._Type.SymbolTableTests.ParameterS
     }
 
     [Test]
-    public void Parse_SetSuccessor ()
+    public void Parse_DeliverFragmentWhenNotExpected_IsSafe ()
     {
       Method sampleMethod = TestHelper.GetSample<ParameterSafeSample> ("DeliverFragmentWhenNotExpected");
       Block codeBlock = (Block) sampleMethod.Body.Statements[0];
       AssignmentStatement assignmentStatement = (AssignmentStatement) codeBlock.Statements[1];
       MethodCall sample = (MethodCall) assignmentStatement.Source;
+      List<PreCondition> preconditions;
+      bool isSafeCall = _symbolTable.ParametersSafe (sample, out preconditions);
+
+      Assert.That (isSafeCall, Is.True);
+    }
+
+    [Test]
+    public void Parse_CallWithoutFragments_IsSafe ()
+    {
+      Method sampleMethod = TestHelper.GetSample<ParameterSafeSample> ("CallWithoutFragments");
+      Block codeBlock = (Block) sampleMethod.Body.Statements[0];
+      ExpressionStatement expressionStatement = (ExpressionStatement) codeBlock.Statements[1];
+      UnaryExpression unaryExpression = (UnaryExpression) expressionStatement.Expression;
+      MethodCall sample = (MethodCall) unaryExpression.Operand;
       List<PreCondition> preconditions;
       bool isSafeCall = _symbolTable.ParametersSafe (sample, out preconditions);
 

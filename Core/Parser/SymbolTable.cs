@@ -21,9 +21,6 @@ using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser
 {
-  /// <summary>
-  /// Keeps state (safe/unsafe) of a set of symbols and defines methods to infer state.
-  /// </summary>
   public class SymbolTable : ISymbolTable
   {
     private static readonly string LITERAL = "__Literal__";
@@ -37,14 +34,7 @@ namespace InjectionCop.Parser
     {
       get { return _emptyFragment; }
     }
-
-    /*
-    public SymbolTable (IBlackTypes blackTypes)
-    {
-      _blackTypes = blackTypes;
-      _safenessMap = new Dictionary<string, string>();
-    }*/
-
+    
     public SymbolTable (IBlacklistManager blacklistManager)
     {
       _blacklistManager = blacklistManager;
