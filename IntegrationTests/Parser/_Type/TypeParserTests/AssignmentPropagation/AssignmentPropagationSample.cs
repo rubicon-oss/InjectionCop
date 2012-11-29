@@ -24,31 +24,27 @@ namespace InjectionCop.IntegrationTests.Parser._Type.TypeParserTests.AssignmentP
     public void ValidSafenessPropagation()
     {
       string temp = "select * from users";
-      IDbCommand command = new SqlCommand();
-      command.CommandText = temp;
+      RequiresSqlFragment ("temp");
     }
 
     public void InvalidSafenessPropagationParameter([Fragment("SqlFragment")] string temp)
     {
       temp = UnsafeSource(temp);
-      IDbCommand command = new SqlCommand();
-      command.CommandText = temp;
+      RequiresSqlFragment (temp);
     }
 
     public void ValidSafenessPropagationParameter(string temp)
     {
       DummyMethod (temp);
       temp = SafeSource();
-      IDbCommand command = new SqlCommand();
-      command.CommandText = temp;
+      RequiresSqlFragment (temp);
     }
 
     public void InvalidSafenessPropagationVariable()
     {
       string temp = SafeSource();
       temp = UnsafeSource(temp);
-      IDbCommand command = new SqlCommand();
-      command.CommandText = temp;
+      RequiresSqlFragment (temp);
     }
 
     public void ValidSafenessPropagationVariable()
@@ -57,8 +53,7 @@ namespace InjectionCop.IntegrationTests.Parser._Type.TypeParserTests.AssignmentP
       string temp = UnsafeSource();
       // ReSharper restore RedundantAssignment
       temp = SafeSource();
-      IDbCommand command = new SqlCommand();
-      command.CommandText = temp;
+      RequiresSqlFragment (temp);
     }
   }
 }

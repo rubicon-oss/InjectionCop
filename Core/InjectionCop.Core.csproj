@@ -51,11 +51,8 @@
     <Compile Include="Attributes\SqlFragmentAttribute.cs" />
     <Compile Include="Attributes\TrustedSqlGeneration.cs" />
     <Compile Include="Config\BlacklistManager.cs" />
-    <Compile Include="Config\BlackMethod.cs" />
-    <Compile Include="Config\BlackParameter.cs" />
-    <Compile Include="Config\BlackType.cs" />
-    <Compile Include="Config\BlackTypes.cs" />
-    <Compile Include="Config\IBlackTypes.cs" />
+    <Compile Include="Config\IBlacklistManager.cs" />
+    <Compile Include="Config\IDbCommandBlacklistManagerStub.cs" />
     <Compile Include="Parser\ISymbolTable.cs" />
     <Compile Include="Parser\_Method\IMethodGraph.cs" />
     <Compile Include="Parser\_Method\IMethodGraphBuilder.cs" />

@@ -28,15 +28,15 @@ namespace InjectionCop.Parser._Block
     private ISymbolTable _symbolTableParser;
     private List<PreCondition> _preConditions;
     private List<int> _successors;
-    private readonly IBlackTypes _blackTypes;
-    private TypeParser _typeParser;
+    private readonly IBlacklistManager _blacklistManager;
+    private readonly TypeParser _typeParser;
 
-    public BlockParser (IBlackTypes blackTypes, TypeParser typeParser)
+    public BlockParser (IBlacklistManager blacklistManager, TypeParser typeParser)
     {
-      _symbolTableParser = new SymbolTable (blackTypes);
+      _symbolTableParser = new SymbolTable (blacklistManager);
       _preConditions = new List<PreCondition>();
       _successors = new List<int>();
-      _blackTypes = blackTypes;
+      _blacklistManager = blacklistManager;
       _typeParser = typeParser;
     }
 
@@ -153,7 +153,7 @@ namespace InjectionCop.Parser._Block
 
     private void Reset()
     {
-      _symbolTableParser = new SymbolTable (_blackTypes);
+      _symbolTableParser = new SymbolTable (_blacklistManager);
       _preConditions = new List<PreCondition>();
       _successors = new List<int>();
     }

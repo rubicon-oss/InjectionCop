@@ -24,12 +24,12 @@ namespace InjectionCop.Parser._Type
   /// </summary>
   public class TypeParser : BaseFxCopRule
   {
-    private IBlackTypes _blackTypes;
+    private IBlacklistManager _blacklistManager;
 
     public TypeParser ()
         : base ("TypeParser")
     {
-      _blackTypes = new BlackTypesStub();
+      _blacklistManager = new IDbCommandBlacklistManagerStub();
     }
 
     public override ProblemCollection Check (TypeNode type)
@@ -55,21 +55,8 @@ namespace InjectionCop.Parser._Type
     public ProblemCollection Parse (Method method)
     {
       IMethodParser methodParser = new MethodParser (this);
-      IMethodParserDirector director = new MethodParserDirector (method, _blackTypes, this);
+      IMethodParserDirector director = new MethodParserDirector (method, _blacklistManager, this);
       return methodParser.Parse (director);
-    }
-  }
-
-  public class BlackTypesStub : IBlackTypes
-  {
-    public bool IsBlackType(string fullName)
-    {
-      return fullName == "System.Data.IDbCommand";
-    }
-
-    public bool IsBlackMethod (string typeFullName, string methodName)
-    {
-      return IsBlackType (typeFullName) && methodName == "set_CommandText";
     }
   }
 }

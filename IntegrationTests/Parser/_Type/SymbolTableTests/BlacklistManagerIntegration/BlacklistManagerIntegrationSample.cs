@@ -13,35 +13,23 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 
-namespace InjectionCop.Config
+namespace InjectionCop.IntegrationTests.Parser._Type.SymbolTableTests.BlacklistManagerIntegration
 {
-  public class BlackMethod
+  public class BlacklistManagerIntegrationSample : ParserSampleBase
   {
-    private string name;
-    private readonly IList<BlackParameter> parameters;
-
-    public string Name
+    public void UnsafeBlacklistedCall ()
     {
-      get { return name; }
-      set { name = value; }
+      IDbCommand command = new SqlCommand();
+      command.CommandText = UnsafeSource ("");
     }
 
-    public IList<BlackParameter> Parameters
+    public void SafeBlacklistedCall ()
     {
-      get { return parameters; }
-    }
-
-    public BlackMethod()
-    {
-      parameters = new List<BlackParameter>();
-    }
-
-    public BlackMethod (string _name)
-      :this()
-    {
-      name = _name;
+      IDbCommand command = new SqlCommand();
+      command.CommandText = SafeSource();
     }
   }
 }

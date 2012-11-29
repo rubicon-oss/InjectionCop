@@ -26,20 +26,20 @@ namespace InjectionCop.Parser._Method
   {
     private IMethodGraph _result;
     private readonly Block _methodBody;
-    private readonly IBlackTypes _blackTypes;
+    private readonly IBlacklistManager _blacklistManager;
     private readonly TypeParser _typeParser;
 
-    public MethodGraphBuilder (Block methodBody, IBlackTypes blackTypes, TypeParser typeParser)
+    public MethodGraphBuilder (Block methodBody, IBlacklistManager blacklistManager, TypeParser typeParser)
     {
       _methodBody = methodBody;
-      _blackTypes = blackTypes;
+      _blacklistManager = blacklistManager;
       _typeParser = typeParser;
     }
 
     public void Build ()
     {
       _result = MethodGraph.Empty;
-      BlockParser parser = new BlockParser (_blackTypes, _typeParser);
+      BlockParser parser = new BlockParser (_blacklistManager, _typeParser);
       Dictionary<int, BasicBlock> graph = new Dictionary<int, BasicBlock>();
       int initialBlockId;
 

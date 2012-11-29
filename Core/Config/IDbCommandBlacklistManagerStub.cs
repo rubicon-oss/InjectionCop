@@ -13,20 +13,23 @@
 // limitations under the License.
 
 using System;
-using InjectionCop.Config;
+using System.Collections.Generic;
 
-namespace InjectionCop.IntegrationTests.Parser
+namespace InjectionCop.Config
 {
-  public class IDbCommandBlackTypesStub: IBlackTypes
+  public class IDbCommandBlacklistManagerStub : IBlacklistManager
   {
-    public bool IsBlackType(string fullName)
+    public bool IsListed (string qualifiedTypeName, string methodName, List<string> qualifiedParameterTypes)
     {
-      return fullName == "System.Data.IDbCommand";
+      return qualifiedTypeName == "System.Data.IDbCommand"
+             && methodName == "set_CommandText"
+             && qualifiedParameterTypes.Count == 1
+             && qualifiedParameterTypes[0] == "System.String";
     }
 
-    public bool IsBlackMethod (string typeFullName, string methodName)
+    public List<string> GetFragmentTypes (string qualifiedName, string methodName, List<string> qualifiedParameterTypes)
     {
-      return IsBlackType (typeFullName) && methodName == "set_CommandText";
+      return new List<string> { "SqlFragment" };
     }
   }
 }

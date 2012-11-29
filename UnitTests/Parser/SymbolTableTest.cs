@@ -13,9 +13,9 @@
 // limitations under the License.
 
 using System;
+using InjectionCop.Config;
 using InjectionCop.Parser;
 using NUnit.Framework;
-using InjectionCop.IntegrationTests.Parser;
 
 namespace InjectionCop.UnitTests.Parser
 {
@@ -28,7 +28,7 @@ namespace InjectionCop.UnitTests.Parser
     [SetUp]
     public void SetUp ()
     {
-      _symbolTable = new SymbolTable(new IDbCommandBlackTypesStub());
+      _symbolTable = new SymbolTable(new IDbCommandBlacklistManagerStub());
     }
 
     [Test]

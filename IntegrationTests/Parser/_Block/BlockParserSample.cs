@@ -55,7 +55,7 @@ namespace InjectionCop.IntegrationTests.Parser._Block
       RequiresSqlFragment (x);
       RequiresSqlFragment (y);
     }
-
+    
     public string SetSuccessor(string param)
     {
       param += "dummy";

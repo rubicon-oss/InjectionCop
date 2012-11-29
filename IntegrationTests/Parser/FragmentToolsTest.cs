@@ -95,12 +95,12 @@ namespace InjectionCop.IntegrationTests.Parser
     }
 
     [Test]
-    [ExpectedException(typeof(InjectionCopException), ExpectedMessage = "Given Attributes do not contain any Fragment")]
     public void GetFragmentType_ContainsNonFragmentParameter_ThrowsException()
     {
       TypeNode stringTypeNode = IntrospectionTools.TypeNodeFactory<string>();
       Method sample = TestHelper.GetSample<FragmentToolsSample>("ContainsNonFragmentParameter", stringTypeNode);
-      FragmentTools.GetFragmentType(sample.Parameters[0].Attributes);
+      string returnedFragment = FragmentTools.GetFragmentType(sample.Parameters[0].Attributes);
+      Assert.That (returnedFragment, Is.EqualTo (SymbolTable.EMPTY_FRAGMENT));
     }
   }
 }

@@ -21,27 +21,27 @@ namespace InjectionCop.Parser._Method
 {
   public class MethodParserDirector : IMethodParserDirector
   {
-    private IBlackTypes _blackTypes;
+    private IBlacklistManager _blacklistManager;
     private TypeParser _typeParser;
     private Method _method;
 
-    public MethodParserDirector (Method method, IBlackTypes blackTypes, TypeParser typeParser)
+    public MethodParserDirector (Method method, IBlacklistManager blacklistManager, TypeParser typeParser)
     {
-      _blackTypes = blackTypes;
+      _blacklistManager = blacklistManager;
       _typeParser = typeParser;
       _method = method;
     }
 
     public ISymbolTable GetParameterSafeness ()
     {
-      IParameterSymbolTableBuilder parameterSymbolTableBuilder = new ParameterSymbolTableBuilder (_method, _blackTypes);
+      IParameterSymbolTableBuilder parameterSymbolTableBuilder = new ParameterSymbolTableBuilder (_method, _blacklistManager);
       parameterSymbolTableBuilder.Build();
       return parameterSymbolTableBuilder.GetResult();
     }
 
     public IMethodGraph GetMethodGraph ()
     {
-      IMethodGraphBuilder methodGraphBuilder = new MethodGraphBuilder (_method.Body, _blackTypes, _typeParser);
+      IMethodGraphBuilder methodGraphBuilder = new MethodGraphBuilder (_method.Body, _blacklistManager, _typeParser);
       methodGraphBuilder.Build();
       return methodGraphBuilder.GetResult();
     }

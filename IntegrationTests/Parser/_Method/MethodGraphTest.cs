@@ -27,17 +27,17 @@ namespace InjectionCop.IntegrationTests.Parser._Method
   [TestFixture]
   public class MethodGraphTest
   {
-    private IBlackTypes _blackTypes;
+    private IBlacklistManager _blacklistManager;
 
     [SetUp]
     public void SetUp()
     {
-      _blackTypes = new IDbCommandBlackTypesStub();
+      _blacklistManager = new IDbCommandBlacklistManagerStub();
     }
 
     private IMethodGraph BuildMethodGraph (Block body)
     {
-      IMethodGraphBuilder methodGraphBuilder = new MethodGraphBuilder (body, _blackTypes, new TypeParser());
+      IMethodGraphBuilder methodGraphBuilder = new MethodGraphBuilder (body, _blacklistManager, new TypeParser());
       methodGraphBuilder.Build();
       IMethodGraph methodGraph = methodGraphBuilder.GetResult();
       return methodGraph;

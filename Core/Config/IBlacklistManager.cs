@@ -17,31 +17,9 @@ using System.Collections.Generic;
 
 namespace InjectionCop.Config
 {
-  public class BlackType
+  public interface IBlacklistManager
   {
-    private string fullName;
-    private readonly IList<BlackMethod> methods;
-
-    public string FullName
-    {
-      get { return fullName; }
-      set { fullName = value; }
-    }
-
-    public IList<BlackMethod> Methods
-    { 
-      get { return methods; }
-    }
-
-    public BlackType()
-    {
-      methods = new List<BlackMethod>();
-    }
-
-    public BlackType (string _fullName)
-      :this()
-    {
-      fullName = _fullName;
-    }
+    bool IsListed (string qualifiedTypeName, string methodName, List<string> qualifiedParameterTypes);
+    List<string> GetFragmentTypes (string qualifiedName, string methodName, List<string> qualifiedParameterTypes);
   }
 }

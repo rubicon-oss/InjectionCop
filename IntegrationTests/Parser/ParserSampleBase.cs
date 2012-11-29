@@ -17,7 +17,7 @@ using InjectionCop.Attributes;
 
 namespace InjectionCop.IntegrationTests.Parser
 {
-  internal class ParserSampleBase
+  public class ParserSampleBase
   {
     protected string UnsafeSource ()
     {

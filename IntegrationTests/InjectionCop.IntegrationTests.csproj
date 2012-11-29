@@ -65,13 +65,16 @@
     <Compile Include="Parser\_Block\BlockParserSample.cs" />
     <Compile Include="Parser\_Method\MethodGraphSample.cs" />
     <Compile Include="Parser\NonFragmentAttribute.cs" />
-    <Compile Include="Parser\SymbolTableSample.cs" />
+    <Compile Include="Parser\_Type\SymbolTableTests\BlacklistManagerIntegration\BlacklistManagerIntegrationSample.cs" />
+    <Compile Include="Parser\_Type\SymbolTableTests\InferFragment\InferFragmentSample.cs" />
+    <Compile Include="Parser\_Type\SymbolTableTests\BlacklistManagerIntegration\BlacklistManagerIntegrationTest.cs" />
+    <Compile Include="Parser\_Type\SymbolTableTests\ParameterSafe\ParameterSafeSample.cs" />
+    <Compile Include="Parser\_Type\SymbolTableTests\ParameterSafe\ParameterSafeTest.cs" />
     <Compile Include="Parser\_Type\TypeParserTests\AssignmentPropagation\AssignmentPropagationSample.cs" />
     <Compile Include="Parser\_Type\TypeParserTests\AttributePropagation\AttributePropagationSample.cs" />
     <Compile Include="Parser\_Type\TypeParserTests\Attribute\SampleAttribute.cs" />
     <Compile Include="Parser\_Type\TypeParserTests\Attribute\Attribute_TypeParserTest.cs" />
     <Compile Include="Parser\_Type\TypeParserTests\BlackMethod\BlackMethodSample.cs" />
-    <Compile Include="Parser\IDbCommandBlackTypesStub.cs" />
     <Compile Include="Parser\FragmentToolsSample.cs" />
     <Compile Include="Parser\FragmentToolsTest.cs" />
     <Compile Include="Parser\_Type\TypeParserTests\Goto\GotoSample.cs" />
@@ -94,7 +97,7 @@
     <Compile Include="Parser\_Type\TypeParserTests\While_loop\WhileLoopSample.cs" />
     <Compile Include="Parser\_Block\BlockParserTest.cs" />
     <Compile Include="Parser\_Method\MethodGraphTest.cs" />
-    <Compile Include="Parser\SymbolTableTest.cs" />
+    <Compile Include="Parser\_Type\SymbolTableTests\InferFragment\InferFragmentTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Parser\ParserSampleBase.cs" />
     <Compile Include="Parser\_Type\TypeParserTests\TypeParserTestBase.cs" />

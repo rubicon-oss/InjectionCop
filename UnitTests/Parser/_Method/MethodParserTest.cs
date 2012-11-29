@@ -31,13 +31,13 @@ namespace InjectionCop.UnitTests.Parser._Method
   {
     private SymbolTable _methodPreConditions;
     private MethodParser _methodParser;
-    private IBlackTypes _blackTypes;
+    private IBlacklistManager _blacklistManager;
     
     [SetUp]
     public void SetUp ()
     {
-      _blackTypes = new IDbCommandBlackTypesStub();
-      _methodPreConditions = new SymbolTable (_blackTypes);
+      _blacklistManager = new IDbCommandBlacklistManagerStub();
+      _methodPreConditions = new SymbolTable (_blacklistManager);
       _methodPreConditions.MakeSafe ("x", "SqlFragment");
       _methodPreConditions.MakeUnsafe ("y");
       TypeParser typeParser = new TypeParser ();
@@ -65,7 +65,7 @@ namespace InjectionCop.UnitTests.Parser._Method
       IMethodGraph methodGraph = mocks.Stub<IMethodGraph>();
       
       PreCondition[] preConditions = (new List<PreCondition>()).ToArray();
-      SymbolTable postConditions = new SymbolTable (_blackTypes);
+      SymbolTable postConditions = new SymbolTable (_blacklistManager);
       int[] successors = (new List<int>()).ToArray();
       BasicBlock node = new BasicBlock (0, preConditions, postConditions, successors);
       
@@ -88,7 +88,7 @@ namespace InjectionCop.UnitTests.Parser._Method
       IMethodGraph methodGraph = mocks.Stub<IMethodGraph>();
       
       PreCondition[] preConditions = { new PreCondition("y", "SqlFragment"),  };
-      SymbolTable postConditions = new SymbolTable (_blackTypes);
+      SymbolTable postConditions = new SymbolTable (_blacklistManager);
       int[] successors = (new List<int>()).ToArray();
       BasicBlock node = new BasicBlock (0, preConditions, postConditions, successors);
       
@@ -111,7 +111,7 @@ namespace InjectionCop.UnitTests.Parser._Method
       IMethodGraph methodGraph = mocks.Stub<IMethodGraph>();
 
       PreCondition[] preConditions = { new PreCondition("x", "SqlFragment") };
-      SymbolTable postConditions = new SymbolTable (_blackTypes);
+      SymbolTable postConditions = new SymbolTable (_blacklistManager);
       int[] successors = (new List<int>()).ToArray();
       BasicBlock node = new BasicBlock (0, preConditions, postConditions, successors);
 
@@ -134,7 +134,7 @@ namespace InjectionCop.UnitTests.Parser._Method
       IMethodGraph methodGraph = mocks.Stub<IMethodGraph>();
 
       PreCondition[] preConditions = { new PreCondition("z", "SqlFragment")  };
-      SymbolTable postConditions = new SymbolTable (_blackTypes);
+      SymbolTable postConditions = new SymbolTable (_blacklistManager);
       int[] successors = (new List<int>()).ToArray();
       BasicBlock node = new BasicBlock (0, preConditions, postConditions, successors);
 
@@ -157,12 +157,12 @@ namespace InjectionCop.UnitTests.Parser._Method
       IMethodGraph methodGraph = mocks.Stub<IMethodGraph>();
 
       List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
-      SymbolTable postConditions = new SymbolTable (_blackTypes);
+      SymbolTable postConditions = new SymbolTable (_blacklistManager);
       List<int> successors = new List<int> { 1 };
       BasicBlock initialNode = new BasicBlock (0, preConditions.ToArray(), postConditions, successors.ToArray());
 
       preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
-      postConditions = new SymbolTable (_blackTypes);
+      postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int>();
       BasicBlock terminatingNode = new BasicBlock (1, preConditions.ToArray(), postConditions, successors.ToArray());
 
@@ -188,12 +188,12 @@ namespace InjectionCop.UnitTests.Parser._Method
       IMethodGraph methodGraph = mocks.Stub<IMethodGraph>();
 
       List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragmen") };
-      SymbolTable postConditions = new SymbolTable (_blackTypes);
+      SymbolTable postConditions = new SymbolTable (_blacklistManager);
       List<int> successors = new List<int> { 1 };
       BasicBlock initialNode = new BasicBlock (0, preConditions.ToArray(), postConditions, successors.ToArray());
 
       preConditions = new List<PreCondition> { new PreCondition("y","SqlFragment") };
-      postConditions = new SymbolTable (_blackTypes);
+      postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int>();
       BasicBlock terminatingNode = new BasicBlock (1, preConditions.ToArray(), postConditions, successors.ToArray());
 
@@ -219,13 +219,13 @@ namespace InjectionCop.UnitTests.Parser._Method
       IMethodGraph methodGraph = mocks.Stub<IMethodGraph>();
 
       List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
-      SymbolTable postConditions = new SymbolTable (_blackTypes);
+      SymbolTable postConditions = new SymbolTable (_blacklistManager);
       postConditions.MakeUnsafe("x");
       List<int> successors = new List<int> { 1 };
       BasicBlock initialNode = new BasicBlock (0, preConditions.ToArray(), postConditions, successors.ToArray());
 
       preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
-      postConditions = new SymbolTable (_blackTypes);
+      postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int>();
       BasicBlock terminatingNode = new BasicBlock (1, preConditions.ToArray(), postConditions, successors.ToArray());
 
@@ -251,13 +251,13 @@ namespace InjectionCop.UnitTests.Parser._Method
       IMethodGraph methodGraph = mocks.Stub<IMethodGraph>();
 
       List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
-      SymbolTable postConditions = new SymbolTable (_blackTypes);
+      SymbolTable postConditions = new SymbolTable (_blacklistManager);
       postConditions.MakeUnsafe("x");
       List<int> successors = new List<int> { 1 };
       BasicBlock initialNode = new BasicBlock (0, preConditions.ToArray(), postConditions, successors.ToArray());
 
       preConditions = new List<PreCondition> { new PreCondition("z", "SqlFragment") };
-      postConditions = new SymbolTable (_blackTypes);
+      postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int>();
       BasicBlock terminatingNode = new BasicBlock (1, preConditions.ToArray(), postConditions, successors.ToArray());
 
@@ -283,17 +283,17 @@ namespace InjectionCop.UnitTests.Parser._Method
       IMethodGraph methodGraph = mocks.Stub<IMethodGraph>();
 
       List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
-      SymbolTable postConditions = new SymbolTable (_blackTypes);
+      SymbolTable postConditions = new SymbolTable (_blacklistManager);
       List<int> successors = new List<int> { 1, 2 };
       BasicBlock initialNode = new BasicBlock (0, preConditions.ToArray(), postConditions, successors.ToArray());
 
       preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
-      postConditions = new SymbolTable (_blackTypes);
+      postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int>();
       BasicBlock firstBranch = new BasicBlock (1, preConditions.ToArray(), postConditions, successors.ToArray());
 
       preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
-      postConditions = new SymbolTable (_blackTypes);
+      postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int>();
       BasicBlock secondBranch = new BasicBlock (2, preConditions.ToArray(), postConditions, successors.ToArray());
 
@@ -322,17 +322,17 @@ namespace InjectionCop.UnitTests.Parser._Method
       IMethodGraph methodGraph = mocks.Stub<IMethodGraph>();
 
       List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
-      SymbolTable postConditions = new SymbolTable (_blackTypes);
+      SymbolTable postConditions = new SymbolTable (_blacklistManager);
       List<int> successors = new List<int> { 1, 2 };
       BasicBlock initialNode = new BasicBlock (0, preConditions.ToArray(), postConditions, successors.ToArray());
 
       preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
-      postConditions = new SymbolTable (_blackTypes);
+      postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int>();
       BasicBlock firstBranch = new BasicBlock (1, preConditions.ToArray(), postConditions, successors.ToArray());
 
       preConditions = new List<PreCondition> { new PreCondition("y", "SqlFragment") };
-      postConditions = new SymbolTable (_blackTypes);
+      postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int>();
       BasicBlock secondBranch = new BasicBlock (2, preConditions.ToArray(), postConditions, successors.ToArray());
 
@@ -361,18 +361,18 @@ namespace InjectionCop.UnitTests.Parser._Method
       IMethodGraph methodGraph = mocks.Stub<IMethodGraph>();
 
       List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
-      SymbolTable postConditions = new SymbolTable (_blackTypes);
+      SymbolTable postConditions = new SymbolTable (_blacklistManager);
       postConditions.MakeUnsafe("x");
       List<int> successors = new List<int> { 1, 2 };
       BasicBlock initialNode = new BasicBlock (0, preConditions.ToArray(), postConditions, successors.ToArray());
 
       preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
-      postConditions = new SymbolTable (_blackTypes);
+      postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int>();
       BasicBlock firstBranch = new BasicBlock (1, preConditions.ToArray(), postConditions, successors.ToArray());
 
       preConditions = new List<PreCondition> { new PreCondition("y", "SqlFragment") };
-      postConditions = new SymbolTable (_blackTypes);
+      postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int>();
       BasicBlock secondBranch = new BasicBlock (2, preConditions.ToArray(), postConditions, successors.ToArray());
 
@@ -401,22 +401,22 @@ namespace InjectionCop.UnitTests.Parser._Method
       IMethodGraph methodGraph = mocks.Stub<IMethodGraph>();
 
       List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
-      SymbolTable postConditions = new SymbolTable (_blackTypes);
+      SymbolTable postConditions = new SymbolTable (_blacklistManager);
       List<int> successors = new List<int> { 1, 2 };
       BasicBlock initialNode = new BasicBlock (0, preConditions.ToArray(), postConditions, successors.ToArray());
 
       preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
-      postConditions = new SymbolTable (_blackTypes);
+      postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int> { 3 };
       BasicBlock firstBranch = new BasicBlock (1, preConditions.ToArray(), postConditions, successors.ToArray());
 
       preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
-      postConditions = new SymbolTable (_blackTypes);
+      postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int> { 3 };
       BasicBlock secondBranch = new BasicBlock (2, preConditions.ToArray(), postConditions, successors.ToArray());
 
       preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
-      postConditions = new SymbolTable (_blackTypes);
+      postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int>();
       BasicBlock sink = new BasicBlock (3, preConditions.ToArray(), postConditions, successors.ToArray());
 
@@ -448,22 +448,22 @@ namespace InjectionCop.UnitTests.Parser._Method
       IMethodGraph methodGraph = mocks.Stub<IMethodGraph>();
 
       List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
-      SymbolTable postConditions = new SymbolTable (_blackTypes);
+      SymbolTable postConditions = new SymbolTable (_blacklistManager);
       List<int> successors = new List<int> { 1, 2 };
       BasicBlock initialNode = new BasicBlock (0, preConditions.ToArray(), postConditions, successors.ToArray());
 
       preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
-      postConditions = new SymbolTable (_blackTypes);
+      postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int> { 3 };
       BasicBlock firstBranch = new BasicBlock (1, preConditions.ToArray(), postConditions, successors.ToArray());
 
       preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
-      postConditions = new SymbolTable (_blackTypes);
+      postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int> { 3 };
       BasicBlock secondBranch = new BasicBlock (2, preConditions.ToArray(), postConditions, successors.ToArray());
 
       preConditions = new List<PreCondition> { new PreCondition("y", "SqlFragment") };
-      postConditions = new SymbolTable (_blackTypes);
+      postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int>();
       BasicBlock sink = new BasicBlock (3, preConditions.ToArray(), postConditions, successors.ToArray());
 
@@ -495,23 +495,23 @@ namespace InjectionCop.UnitTests.Parser._Method
       IMethodGraph methodGraph = mocks.Stub<IMethodGraph>();
 
       List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
-      SymbolTable postConditions = new SymbolTable (_blackTypes);
+      SymbolTable postConditions = new SymbolTable (_blacklistManager);
       List<int> successors = new List<int> { 1, 2 };
       BasicBlock initialNode = new BasicBlock (0, preConditions.ToArray(), postConditions, successors.ToArray());
 
       preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
-      postConditions = new SymbolTable (_blackTypes);
+      postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int> { 3 };
       BasicBlock firstBranch = new BasicBlock (1, preConditions.ToArray(), postConditions, successors.ToArray());
 
       preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
-      postConditions = new SymbolTable (_blackTypes);
+      postConditions = new SymbolTable (_blacklistManager);
       postConditions.MakeUnsafe("x");
       successors = new List<int> { 3 };
       BasicBlock secondBranch = new BasicBlock (2, preConditions.ToArray(), postConditions, successors.ToArray());
 
       preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
-      postConditions = new SymbolTable (_blackTypes);
+      postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int>();
       BasicBlock sink = new BasicBlock (3, preConditions.ToArray(), postConditions, successors.ToArray());
 
@@ -543,23 +543,23 @@ namespace InjectionCop.UnitTests.Parser._Method
       IMethodGraph methodGraph = mocks.Stub<IMethodGraph>();
 
       List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
-      SymbolTable postConditions = new SymbolTable (_blackTypes);
+      SymbolTable postConditions = new SymbolTable (_blacklistManager);
       List<int> successors = new List<int> { 1, 2 };
       BasicBlock initialNode = new BasicBlock (0, preConditions.ToArray(), postConditions, successors.ToArray());
 
       preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
-      postConditions = new SymbolTable (_blackTypes);
+      postConditions = new SymbolTable (_blacklistManager);
       postConditions.MakeUnsafe("x");
       successors = new List<int> { 3 };
       BasicBlock firstBranch = new BasicBlock (1, preConditions.ToArray(), postConditions, successors.ToArray());
 
       preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
-      postConditions = new SymbolTable (_blackTypes);
+      postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int> { 3 };
       BasicBlock secondBranch = new BasicBlock (2, preConditions.ToArray(), postConditions, successors.ToArray());
 
       preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
-      postConditions = new SymbolTable (_blackTypes);
+      postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int>();
       BasicBlock sink = new BasicBlock (3, preConditions.ToArray(), postConditions, successors.ToArray());
 
@@ -591,24 +591,24 @@ namespace InjectionCop.UnitTests.Parser._Method
       IMethodGraph methodGraph = mocks.Stub<IMethodGraph>();
 
       List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
-      SymbolTable postConditions = new SymbolTable (_blackTypes);
+      SymbolTable postConditions = new SymbolTable (_blacklistManager);
       List<int> successors = new List<int> { 1, 2 };
       BasicBlock initialNode = new BasicBlock (0, preConditions.ToArray(), postConditions, successors.ToArray());
 
       preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
-      postConditions = new SymbolTable (_blackTypes);
+      postConditions = new SymbolTable (_blacklistManager);
       postConditions.MakeUnsafe("x");
       successors = new List<int> { 3 };
       BasicBlock firstBranch = new BasicBlock (1, preConditions.ToArray(), postConditions, successors.ToArray());
 
       preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
-      postConditions = new SymbolTable (_blackTypes);
+      postConditions = new SymbolTable (_blacklistManager);
       postConditions.MakeUnsafe("x");
       successors = new List<int> { 3 };
       BasicBlock secondBranch = new BasicBlock (2, preConditions.ToArray(), postConditions, successors.ToArray());
 
       preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
-      postConditions = new SymbolTable (_blackTypes);
+      postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int>();
       BasicBlock sink = new BasicBlock (3, preConditions.ToArray(), postConditions, successors.ToArray());
 
@@ -640,12 +640,12 @@ namespace InjectionCop.UnitTests.Parser._Method
       IMethodGraph methodGraph = mocks.Stub<IMethodGraph>();
 
       List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
-      SymbolTable postConditions = new SymbolTable (_blackTypes);
+      SymbolTable postConditions = new SymbolTable (_blacklistManager);
       List<int> successors = new List<int> { 1 };
       BasicBlock initialNode = new BasicBlock (0, preConditions.ToArray(), postConditions, successors.ToArray());
 
       preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
-      postConditions = new SymbolTable (_blackTypes);
+      postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int> { 0 };
       BasicBlock firstNode = new BasicBlock (1, preConditions.ToArray(), postConditions, successors.ToArray());
 
@@ -674,12 +674,12 @@ namespace InjectionCop.UnitTests.Parser._Method
       IMethodGraph methodGraph = mocks.Stub<IMethodGraph>();
 
       List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
-      SymbolTable postConditions = new SymbolTable (_blackTypes);
+      SymbolTable postConditions = new SymbolTable (_blacklistManager);
       List<int> successors = new List<int> { 1 };
       BasicBlock initialNode = new BasicBlock (0, preConditions.ToArray(), postConditions, successors.ToArray());
 
       preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
-      postConditions = new SymbolTable (_blackTypes);
+      postConditions = new SymbolTable (_blacklistManager);
       postConditions.MakeUnsafe("x");
       successors = new List<int> { 0 };
       BasicBlock firstNode = new BasicBlock (1, preConditions.ToArray(), postConditions, successors.ToArray());
@@ -710,17 +710,17 @@ namespace InjectionCop.UnitTests.Parser._Method
       _methodPreConditions.MakeSafe ("z", "SqlFragment");
 
       List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment"), new PreCondition("z", "SqlFragment") };
-      SymbolTable postConditions = new SymbolTable (_blackTypes);
+      SymbolTable postConditions = new SymbolTable (_blacklistManager);
       List<int> successors = new List<int> { 1, 2 };
       BasicBlock initialNode = new BasicBlock (0, preConditions.ToArray(), postConditions, successors.ToArray());
 
       preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
-      postConditions = new SymbolTable (_blackTypes);
+      postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int> { 0 };
       BasicBlock firstBranch = new BasicBlock (1, preConditions.ToArray(), postConditions, successors.ToArray());
 
       preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
-      postConditions = new SymbolTable (_blackTypes);
+      postConditions = new SymbolTable (_blacklistManager);
       postConditions.MakeUnsafe("z");
       successors = new List<int> { 0 };
       BasicBlock secondBranch = new BasicBlock (2, preConditions.ToArray(), postConditions, successors.ToArray());

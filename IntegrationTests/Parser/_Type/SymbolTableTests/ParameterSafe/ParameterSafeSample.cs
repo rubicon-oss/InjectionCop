@@ -14,40 +14,18 @@
 
 using System;
 
-namespace InjectionCop.IntegrationTests.Parser
+namespace InjectionCop.IntegrationTests.Parser._Type.SymbolTableTests.ParameterSafe
 {
-  class SymbolTableSample : ParserSampleBase
+  class ParameterSafeSample : ParserSampleBase
   {
-    public int AssignmentWithLiteral ()
+    public bool DeliverFragmentWhenNotExpected ()
     {
-      int x = 3;
-      return x;
+      return "dummy" == doSomething (SafeSource());
     }
 
-    public string AssignmentWithLocal ()
+    private string doSomething (string parameter)
     {
-      string x = "safe";
-      DummyMethod (x);
-      string y = x;
-      return y;
-    }
-
-    public int AssignmentWithParameter (int parameter)
-    {
-      int x = parameter;
-      return x;
-    }
-
-    public string AssignmentWithSafeMethodCall ()
-    {
-      string x = SafeSource();
-      return x;
-    }
-
-    public string AssignmentWithUnsafeMethodCall ()
-    {
-      string x = UnsafeSource();
-      return x;
+      return parameter;
     }
   }
 }

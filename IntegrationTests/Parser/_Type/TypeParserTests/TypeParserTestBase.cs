@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using InjectionCop.Config;
 using InjectionCop.Parser._Type;
 using NUnit.Framework;
 
@@ -21,13 +20,11 @@ namespace InjectionCop.IntegrationTests.Parser._Type.TypeParserTests
 {
   public class TypeParserTestBase
   {
-    protected IBlackTypes _blacklist;
     protected TypeParser _typeParser;
 
     [SetUp]
     public void SetUp()
     {
-      _blacklist = new IDbCommandBlackTypesStub();
       _typeParser = new TypeParser ();
     }
   }

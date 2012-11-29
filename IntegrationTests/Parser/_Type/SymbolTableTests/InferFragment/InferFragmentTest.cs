@@ -18,7 +18,7 @@ using InjectionCop.Parser;
 using Microsoft.FxCop.Sdk;
 using NUnit.Framework;
 
-namespace InjectionCop.IntegrationTests.Parser
+namespace InjectionCop.IntegrationTests.Parser._Type.SymbolTableTests.InferFragment
 {
   [TestFixture]
   public class SymbolTableTest
@@ -40,14 +40,14 @@ namespace InjectionCop.IntegrationTests.Parser
     [SetUp]
     public void SetUp ()
     {
-      IBlackTypes blackTypes = new IDbCommandBlackTypesStub();
-      _symbolTable = new SymbolTable (blackTypes);
+      IBlacklistManager blacklistManager = new IDbCommandBlacklistManagerStub();
+      _symbolTable = new SymbolTable (blacklistManager);
     }
 
     [Test]
-    public void ReturnsFragment_AssignmentWithLiteral_ReturnsTrue ()
+    public void InferFragmentType_AssignmentWithLiteral_ReturnsTrue ()
     {
-      Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithLiteral");
+      Method sample = TestHelper.GetSample<InferFragmentSample>("AssignmentWithLiteral");
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[1];
       Expression sampleExpression = assignment.Source;
@@ -56,9 +56,9 @@ namespace InjectionCop.IntegrationTests.Parser
     }
 
     [Test]
-    public void ReturnsFragment_AssignmentWithLiteral_ReturnsFragmentType ()
+    public void InferFragmentType_AssignmentWithLiteral_InfersFragmentType ()
     {
-      Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithLiteral");
+      Method sample = TestHelper.GetSample<InferFragmentSample>("AssignmentWithLiteral");
       string fragmentType;
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[1];
@@ -68,10 +68,10 @@ namespace InjectionCop.IntegrationTests.Parser
     }
 
     [Test]
-    public void ReturnsFragment_AssignmentWithLocalFragmentSetToTrue_ReturnsTrue ()
+    public void InferFragmentType_AssignmentWithLocalFragmentSetToTrue_ReturnsTrue ()
     {
       _symbolTable.MakeSafe ("local$0", "DummyType");
-      Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithLocal");
+      Method sample = TestHelper.GetSample<InferFragmentSample>("AssignmentWithLocal");
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[4];
       Expression sampleExpression = assignment.Source;
@@ -80,9 +80,9 @@ namespace InjectionCop.IntegrationTests.Parser
     }
 
     [Test]
-    public void ReturnsFragment_AssignmentWithLocalNonFragment_ReturnsFalse ()
+    public void InferFragmentType_AssignmentWithLocalNonFragment_ReturnsFalse ()
     {
-      Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithLocal");
+      Method sample = TestHelper.GetSample<InferFragmentSample>("AssignmentWithLocal");
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[4];
       Expression sampleExpression = assignment.Source;
@@ -91,10 +91,10 @@ namespace InjectionCop.IntegrationTests.Parser
     }
 
     [Test]
-    public void ReturnsFragment_AssignmentWithLocalFragmentSetToFalse_ReturnsFalse ()
+    public void InferFragmentType_AssignmentWithLocalFragmentSetToFalse_ReturnsFalse ()
     {
       _symbolTable.MakeUnsafe ("local$0");
-      Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithLocal");
+      Method sample = TestHelper.GetSample<InferFragmentSample>("AssignmentWithLocal");
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[4];
       Expression sampleExpression = assignment.Source;
@@ -103,10 +103,10 @@ namespace InjectionCop.IntegrationTests.Parser
     }
 
     [Test]
-    public void ReturnsFragment_AssignmentWithLocalFragmentSetToTrue_ReturnsFragmentType ()
+    public void InferFragmentType_AssignmentWithLocalFragmentSetToTrue_InfersFragmentType ()
     {
       _symbolTable.MakeSafe ("local$0", "DummyType");
-      Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithLocal");
+      Method sample = TestHelper.GetSample<InferFragmentSample>("AssignmentWithLocal");
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[4];
       Expression sampleExpression = assignment.Source;
@@ -115,9 +115,9 @@ namespace InjectionCop.IntegrationTests.Parser
     }
 
     [Test]
-    public void ReturnsFragment_AssignmentWithLocalNonFragment_ReturnsNoFragmentType ()
+    public void InferFragmentType_AssignmentWithLocalNonFragment_ReturnsNoFragmentType ()
     {
-      Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithLocal");
+      Method sample = TestHelper.GetSample<InferFragmentSample>("AssignmentWithLocal");
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[4];
       Expression sampleExpression = assignment.Source;
@@ -126,10 +126,10 @@ namespace InjectionCop.IntegrationTests.Parser
     }
 
     [Test]
-    public void ReturnsFragment_AssignmentWithLocalFragmentSetToFalse_ReturnsNoFragmentType ()
+    public void InferFragmentType_AssignmentWithLocalFragmentSetToFalse_ReturnsNoFragmentType ()
     {
       _symbolTable.MakeUnsafe ("local$0");
-      Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithLocal");
+      Method sample = TestHelper.GetSample<InferFragmentSample>("AssignmentWithLocal");
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[4];
       Expression sampleExpression = assignment.Source;
@@ -138,11 +138,11 @@ namespace InjectionCop.IntegrationTests.Parser
     }
 
     [Test]
-    public void ReturnsFragment_AssignmentWithParameterFragmentSetToTrue_ReturnsTrue ()
+    public void InferFragmentType_AssignmentWithParameterFragmentSetToTrue_ReturnsTrue ()
     {
       _symbolTable.MakeSafe ("parameter", "DummyType");
       TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
-      Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithParameter", intTypeNode);
+      Method sample = TestHelper.GetSample<InferFragmentSample>("AssignmentWithParameter", intTypeNode);
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[1];
       Expression sampleExpression = assignment.Source;
@@ -151,10 +151,10 @@ namespace InjectionCop.IntegrationTests.Parser
     }
 
     [Test]
-    public void ReturnsFragment_AssignmentWithParameterNonFragment_ReturnsFalse ()
+    public void InferFragmentType_AssignmentWithParameterNonFragment_ReturnsFalse ()
     {
       TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
-      Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithParameter", intTypeNode);
+      Method sample = TestHelper.GetSample<InferFragmentSample>("AssignmentWithParameter", intTypeNode);
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[1];
       Expression sampleExpression = assignment.Source;
@@ -163,11 +163,11 @@ namespace InjectionCop.IntegrationTests.Parser
     }
 
     [Test]
-    public void ReturnsFragment_AssignmentWithParameterFragmentSetToFalse_ReturnsFalse ()
+    public void InferFragmentType_AssignmentWithParameterFragmentSetToFalse_ReturnsFalse ()
     {
       _symbolTable.MakeUnsafe ("parameter");
       TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
-      Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithParameter", intTypeNode);
+      Method sample = TestHelper.GetSample<InferFragmentSample>("AssignmentWithParameter", intTypeNode);
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[1];
       Expression sampleExpression = assignment.Source;
@@ -176,11 +176,11 @@ namespace InjectionCop.IntegrationTests.Parser
     }
 
     [Test]
-    public void ReturnsFragment_AssignmentWithParameterFragmentSetToTrue_ReturnsFragmentType ()
+    public void InferFragmentType_AssignmentWithParameterFragmentSetToTrue_InfersFragmentType ()
     {
       _symbolTable.MakeSafe ("parameter", "DummyType");
       TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
-      Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithParameter", intTypeNode);
+      Method sample = TestHelper.GetSample<InferFragmentSample>("AssignmentWithParameter", intTypeNode);
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[1];
       Expression sampleExpression = assignment.Source;
@@ -190,10 +190,10 @@ namespace InjectionCop.IntegrationTests.Parser
 
     
     [Test]
-    public void ReturnsFragment_AssignmentWithParameterNonFragment_ReturnsNoFragmentType ()
+    public void InferFragmentType_AssignmentWithParameterNonFragment_ReturnsNoFragmentType ()
     {
       TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
-      Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithParameter", intTypeNode);
+      Method sample = TestHelper.GetSample<InferFragmentSample>("AssignmentWithParameter", intTypeNode);
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[1];
       Expression sampleExpression = assignment.Source;
@@ -202,11 +202,11 @@ namespace InjectionCop.IntegrationTests.Parser
     }
 
     [Test]
-    public void ReturnsFragment_AssignmentWithParameterFragmentSetToFalse_ReturnsNoFragmentType ()
+    public void InferFragmentType_AssignmentWithParameterFragmentSetToFalse_ReturnsNoFragmentType ()
     {
       _symbolTable.MakeUnsafe ("parameter");
       TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
-      Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithParameter", intTypeNode);
+      Method sample = TestHelper.GetSample<InferFragmentSample>("AssignmentWithParameter", intTypeNode);
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[1];
       Expression sampleExpression = assignment.Source;
@@ -215,9 +215,9 @@ namespace InjectionCop.IntegrationTests.Parser
     }
 
     [Test]
-    public void ReturnsFragment_AssignmentWithSafeMethodCall_ReturnsTrue ()
+    public void InferFragmentType_AssignmentWithSafeMethodCall_ReturnsTrue ()
     {
-      Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithSafeMethodCall");
+      Method sample = TestHelper.GetSample<InferFragmentSample>("AssignmentWithSafeMethodCall");
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[1];
       Expression sampleExpression = assignment.Source;
@@ -227,9 +227,9 @@ namespace InjectionCop.IntegrationTests.Parser
 
     
     [Test]
-    public void ReturnsFragment_AssignmentWithUnsafeMethodCall_ReturnsFalse ()
+    public void InferFragmentType_AssignmentWithUnsafeMethodCall_ReturnsFalse ()
     {
-      Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithUnsafeMethodCall");
+      Method sample = TestHelper.GetSample<InferFragmentSample>("AssignmentWithUnsafeMethodCall");
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[1];
       Expression sampleExpression = assignment.Source;
@@ -238,9 +238,9 @@ namespace InjectionCop.IntegrationTests.Parser
     }
 
     [Test]
-    public void ReturnsFragment_AssignmentWithSafeMethodCall_ReturnsFragmentType ()
+    public void InferFragmentType_AssignmentWithSafeMethodCall_InfersFragmentType ()
     {
-      Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithSafeMethodCall");
+      Method sample = TestHelper.GetSample<InferFragmentSample>("AssignmentWithSafeMethodCall");
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[1];
       Expression sampleExpression = assignment.Source;
@@ -249,9 +249,9 @@ namespace InjectionCop.IntegrationTests.Parser
     }
 
     [Test]
-    public void ReturnsFragment_AssignmentWithUnsafeMethodCall_ReturnsEmptyFragmentType ()
+    public void InferFragmentType_AssignmentWithUnsafeMethodCall_ReturnsEmptyFragmentType ()
     {
-      Method sample = TestHelper.GetSample<SymbolTableSample>("AssignmentWithUnsafeMethodCall");
+      Method sample = TestHelper.GetSample<InferFragmentSample>("AssignmentWithUnsafeMethodCall");
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[1];
       Expression sampleExpression = assignment.Source;

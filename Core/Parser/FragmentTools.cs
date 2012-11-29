@@ -39,36 +39,33 @@ namespace InjectionCop.Parser
 
     public static string GetFragmentType(AttributeNodeCollection attributeNodeCollection)
     {
-      if (!ContainsFragment(attributeNodeCollection))
+      string fragmentType = SymbolTable.EMPTY_FRAGMENT;
+      if (ContainsFragment (attributeNodeCollection))
       {
-        throw new InjectionCopException("Given Attributes do not contain any Fragment");
-      }
+        string fragmentFullName = typeof (FragmentAttribute).FullName;
 
-      string fragmentType = "";
-      string fragmentFullName = typeof(FragmentAttribute).FullName;
-
-      foreach (AttributeNode attributeNode in attributeNodeCollection)
-      {
-        if (IsFragment(attributeNode))
+        foreach (AttributeNode attributeNode in attributeNodeCollection)
         {
-          if (attributeNode.Type.FullName == fragmentFullName)
+          if (IsFragment (attributeNode))
           {
-            foreach (Literal literal in attributeNode.Expressions)
+            if (attributeNode.Type.FullName == fragmentFullName)
             {
-              string value = literal.Value as string;
-              if (value != null)
+              foreach (Literal literal in attributeNode.Expressions)
               {
-                fragmentType = value;
+                string value = literal.Value as string;
+                if (value != null)
+                {
+                  fragmentType = value;
+                }
               }
             }
-          }
-          else
-          {
-            fragmentType = attributeNode.Type.Name.Name.Replace("Attribute", "");
+            else
+            {
+              fragmentType = attributeNode.Type.Name.Name.Replace ("Attribute", "");
+            }
           }
         }
       }
-
       return fragmentType;
     }
   }

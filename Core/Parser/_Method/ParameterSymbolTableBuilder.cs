@@ -22,17 +22,17 @@ namespace InjectionCop.Parser._Method
   {
     private ISymbolTable _result;
     private Method _method;
-    private IBlackTypes _blackTypes;
+    private IBlacklistManager _blacklistManager;
 
-    public ParameterSymbolTableBuilder (Method method, IBlackTypes blackTypes)
+    public ParameterSymbolTableBuilder (Method method, IBlacklistManager blacklistManager)
     {
       _method = method;
-      _blackTypes = blackTypes;
+      _blacklistManager = blacklistManager;
     }
 
     public void Build ()
     {
-      ISymbolTable parameterSafeness = new SymbolTable (_blackTypes);
+      ISymbolTable parameterSafeness = new SymbolTable (_blacklistManager);
       foreach (Parameter parameter in _method.Parameters)
       {
         if (FragmentTools.ContainsFragment (parameter.Attributes))

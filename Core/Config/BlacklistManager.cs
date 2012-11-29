@@ -20,40 +20,49 @@ using InjectionCop.Parser;
 
 namespace InjectionCop.Config
 {
-  public class BlacklistManager
+  public class BlacklistManager : IBlacklistManager
   {
     private static readonly XNamespace _ic = "eu.rubicon.injectioncop";
-    private XElement _blacklist;
+    private static readonly XName BLACKLIST = _ic + "Blacklist";
+    private static readonly XName TYPE = _ic + "Type";
+    private static readonly XName METHOD = _ic + "Method";
+    private static readonly XName PARAMETER = _ic + "Parameter";
+    private static readonly XName NAME = "name";
+    private static readonly XName QUALIFIED_NAME = "qualifiedName";
+    private static readonly XName QUALIFIED_PARAMETERTYPENAME = "qualifiedParameterTypeName";
+    private static readonly XName FRAGMENT_TYPE = "fragmentType";
 
-    public static XNamespace IC
-    {
-      get { return _ic; }
-    }
+    private XElement _blacklist;
 
     public BlacklistManager (XElement blacklist)
     {
       _blacklist = blacklist;
     }
-    
-    public bool IsListed (string qualifiedName, string methodName, List<string> qualifiedParameterTypes)
+
+    public bool IsListed (string qualifiedTypeName, string methodName, List<string> qualifiedParameterTypes)
     {
-      IEnumerable<XElement> filteredMethods = FilterMethods (qualifiedName, methodName, qualifiedParameterTypes);
-      return filteredMethods.Any();
+      bool isListed = false;
+      if (_blacklist.Name == BLACKLIST)
+      {
+        IEnumerable<XElement> filteredMethods = FilterMethods (qualifiedTypeName, methodName, qualifiedParameterTypes);
+        isListed = filteredMethods.Any();
+      }
+      return isListed;
     }
 
-    private IEnumerable<XElement> FilterMethods (string filteredTypes, string methodName, List<string> qualifiedParameterTypes)
+    private IEnumerable<XElement> FilterMethods (string qualifiedTypeName, string methodName, List<string> qualifiedParameterTypes)
     {
-      return from type in FilterTypes(filteredTypes)
-             from method in type.Elements (IC + "Method")
-             where method.Attribute ("name").Value == methodName
-                   && ParametersMatch (method.Elements (IC + "Parameter"), qualifiedParameterTypes)
+      return from type in FilterTypes (qualifiedTypeName)
+             from method in type.Elements (METHOD)
+             where method.Attribute (NAME).Value == methodName
+                   && ParametersMatch (method.Elements (PARAMETER), qualifiedParameterTypes)
              select method;
     }
 
-    private IEnumerable<XElement> FilterTypes (string qualifiedName)
+    private IEnumerable<XElement> FilterTypes (string qualifiedTypeName)
     {
-      return from type in _blacklist.Elements (IC + "Type") 
-             where type.Attribute ("qualifiedName").Value == qualifiedName 
+      return from type in _blacklist.Elements (TYPE)
+             where type.Attribute (QUALIFIED_NAME).Value == qualifiedTypeName
              select type;
     }
 
@@ -68,11 +77,11 @@ namespace InjectionCop.Config
         {
           parametersMatch = false;
         }
-        
+
         var parameter = parametersEnumerator.Current;
         var type = typesEnumerator.Current;
 
-        if (parameter.Attribute ("qualifiedParameterTypeName").Value != type)
+        if (parameter.Attribute (QUALIFIED_PARAMETERTYPENAME).Value != type)
         {
           parametersMatch = false;
         }
@@ -80,9 +89,9 @@ namespace InjectionCop.Config
       return parametersMatch;
     }
 
-    public Dictionary<string, string> GetFragmentTypes (string qualifiedName, string methodName, List<string> qualifiedParameterTypes)
+    public List<string> GetFragmentTypes (string qualifiedName, string methodName, List<string> qualifiedParameterTypes)
     {
-      Dictionary<string, string> fragmentTypes = new Dictionary<string, string>();
+      List<string> fragmentTypes = new List<string>();
       if (IsListed (qualifiedName, methodName, qualifiedParameterTypes))
       {
         IEnumerable<XElement> filteredMethods = FilterMethods (qualifiedName, methodName, qualifiedParameterTypes);
@@ -90,7 +99,7 @@ namespace InjectionCop.Config
         if (methodEnumerator.MoveNext())
         {
           XElement method = methodEnumerator.Current;
-          method.Elements (IC + "Parameter").ToList().ForEach (parameter => fragmentTypes[parameter.Value] = GetFragmentType (parameter));
+          method.Elements (PARAMETER).ToList().ForEach (parameter => fragmentTypes.Add(GetFragmentType (parameter)));
         }
       }
       return fragmentTypes;
@@ -98,10 +107,10 @@ namespace InjectionCop.Config
 
     private string GetFragmentType (XElement parameter)
     {
-      string fragmentType = SymbolTable.EmptyFragment;
-      if (parameter.Attribute ("fragmentType") != null)
+      string fragmentType = SymbolTable.EMPTY_FRAGMENT;
+      if (parameter.Attribute (FRAGMENT_TYPE) != null)
       {
-        fragmentType = parameter.Attribute ("fragmentType").Value;
+        fragmentType = parameter.Attribute (FRAGMENT_TYPE).Value;
       }
       return fragmentType;
     }

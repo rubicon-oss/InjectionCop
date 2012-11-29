@@ -13,27 +13,41 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
 
-namespace InjectionCop.Config
+namespace InjectionCop.IntegrationTests.Parser._Type.SymbolTableTests.InferFragment
 {
-  public class BlackTypes: IBlackTypes
+  class InferFragmentSample : ParserSampleBase
   {
-    private readonly IDictionary<string, BlackType> mapByFullName;
-
-    public  BlackTypes()
+    public int AssignmentWithLiteral ()
     {
-      mapByFullName = new Dictionary<string, BlackType>();
+      int x = 3;
+      return x;
     }
 
-    public bool IsBlackType (string fullName)
+    public string AssignmentWithLocal ()
     {
-      throw new NotImplementedException();
+      string x = "safe";
+      DummyMethod (x);
+      string y = x;
+      return y;
     }
 
-    public bool IsBlackMethod (string typeFullName, string methodName)
+    public int AssignmentWithParameter (int parameter)
     {
-      throw new NotImplementedException();
+      int x = parameter;
+      return x;
+    }
+
+    public string AssignmentWithSafeMethodCall ()
+    {
+      string x = SafeSource();
+      return x;
+    }
+
+    public string AssignmentWithUnsafeMethodCall ()
+    {
+      string x = UnsafeSource();
+      return x;
     }
   }
 }

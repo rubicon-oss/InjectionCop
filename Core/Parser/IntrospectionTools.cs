@@ -70,6 +70,12 @@ namespace InjectionCop.Parser
       return variableName;
     }
 
+    public static bool IsVariable (Expression expression, out string variableName)
+    {
+      variableName = GetVariableName (expression);
+      return IsVariable (expression);
+    }
+
     public static TypeNode TypeNodeFactory<T>()
     {
       Type targetType = typeof (T);
