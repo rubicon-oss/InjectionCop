@@ -55,25 +55,25 @@
     <Compile Include="Config\IBlacklistManager.cs" />
     <Compile Include="Config\IDbCommandBlacklistManagerStub.cs" />
     <Compile Include="Parser\ISymbolTable.cs" />
-    <Compile Include="Parser\_Method\IMethodGraph.cs" />
-    <Compile Include="Parser\_Method\IMethodGraphBuilder.cs" />
-    <Compile Include="Parser\_Method\IMethodParser.cs" />
-    <Compile Include="Parser\_Method\IMethodParserDirector.cs" />
-    <Compile Include="Parser\_Method\IParameterSymbolTableBuilder.cs" />
-    <Compile Include="Parser\_Method\MethodGraph.cs" />
-    <Compile Include="Parser\_Block\BasicBlock.cs" />
+    <Compile Include="Parser\MethodParsing\IMethodGraph.cs" />
+    <Compile Include="Parser\MethodParsing\IMethodGraphBuilder.cs" />
+    <Compile Include="Parser\MethodParsing\IMethodParser.cs" />
+    <Compile Include="Parser\MethodParsing\IMethodParserDirector.cs" />
+    <Compile Include="Parser\MethodParsing\IParameterSymbolTableBuilder.cs" />
+    <Compile Include="Parser\MethodParsing\MethodGraph.cs" />
+    <Compile Include="Parser\BlockParsing\BasicBlock.cs" />
     <Compile Include="Parser\FragmentTools.cs" />
     <Compile Include="InjectionCopException.cs" />
-    <Compile Include="Parser\_Type\BaseFxCopRule.cs" />
+    <Compile Include="Parser\TypeParsing\BaseFxCopRule.cs" />
     <Compile Include="Parser\IntrospectionTools.cs" />
-    <Compile Include="Parser\_Method\MethodGraphBuilder.cs" />
-    <Compile Include="Parser\_Method\MethodParser.cs" />
-    <Compile Include="Parser\_Method\MethodParserDirector.cs" />
-    <Compile Include="Parser\_Method\ParameterSymbolTableBuilder.cs" />
-    <Compile Include="Parser\_Block\PreCondition.cs" />
+    <Compile Include="Parser\MethodParsing\MethodGraphBuilder.cs" />
+    <Compile Include="Parser\MethodParsing\MethodParser.cs" />
+    <Compile Include="Parser\MethodParsing\MethodParserDirector.cs" />
+    <Compile Include="Parser\MethodParsing\ParameterSymbolTableBuilder.cs" />
+    <Compile Include="Parser\BlockParsing\PreCondition.cs" />
     <Compile Include="Parser\SymbolTable.cs" />
-    <Compile Include="Parser\_Block\BlockParser.cs" />
-    <Compile Include="Parser\_Type\TypeParser.cs" />
+    <Compile Include="Parser\BlockParsing\BlockParser.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParser.cs" />
     <Compile Include="PrettyPrint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -82,7 +82,7 @@
     <Folder Include="Rules\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Parser\_Type\RuleMetadata.xml">
+    <EmbeddedResource Include="Parser\TypeParsing\RuleMetadata.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>

@@ -16,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using InjectionCop.Config;
-using InjectionCop.Parser._Block;
+using InjectionCop.Parser.BlockParsing;
 using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser
@@ -127,7 +127,7 @@ namespace InjectionCop.Parser
       List<string> parameterTypes = GetParameterTypes (calleeMethod);
       List<string> parameterFragmentTypes = new List<string>();
       
-      if (_blacklistManager != null && _blacklistManager.IsListed (calleeMethod.DeclaringType.FullName, calleeMethod.Name.Name, parameterTypes))
+      if (_blacklistManager.IsListed (calleeMethod.DeclaringType.FullName, calleeMethod.Name.Name, parameterTypes))
       {
         parameterFragmentTypes = _blacklistManager.GetFragmentTypes (calleeMethod.DeclaringType.FullName, calleeMethod.Name.Name, parameterTypes);
       }

@@ -14,7 +14,7 @@
 
 using System;
 using System.Collections.Generic;
-using InjectionCop.Parser._Block;
+using InjectionCop.Parser.BlockParsing;
 using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser
