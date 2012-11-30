@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using InjectionCop.Utilities;
 
 namespace InjectionCop.Parser.BlockParsing
 {
@@ -25,12 +26,12 @@ namespace InjectionCop.Parser.BlockParsing
     private readonly PreCondition[] _preConditions;
     private readonly ISymbolTable _postConditionSymbolTable;
     private readonly int[] _successorKeys;
-    
-    public BasicBlock(int id, PreCondition[] preConditions, ISymbolTable postConditionSymbolTable, int[] successorKeys)
+
+    public BasicBlock (int id, PreCondition[] preConditions, ISymbolTable postConditionSymbolTable, int[] successorKeys)
     {
-      _preConditions = preConditions;
-      _postConditionSymbolTable = postConditionSymbolTable;
-      _successorKeys = successorKeys;
+      _preConditions = ArgumentUtility.CheckNotNull ("preConditions", preConditions);
+      _postConditionSymbolTable = ArgumentUtility.CheckNotNull ("postConditionSymbolTable", postConditionSymbolTable);
+      _successorKeys = ArgumentUtility.CheckNotNull ("successorKeys", successorKeys);
       _id = id;
     }
 

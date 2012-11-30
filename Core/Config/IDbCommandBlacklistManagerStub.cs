@@ -27,7 +27,7 @@ namespace InjectionCop.Config
              && qualifiedParameterTypes[0] == "System.String";
     }
 
-    public List<string> GetFragmentTypes (string qualifiedName, string methodName, List<string> qualifiedParameterTypes)
+    public List<string> GetFragmentTypes (string qualifiedTypeName, string methodName, List<string> qualifiedParameterTypes)
     {
       return new List<string> { "SqlFragment" };
     }

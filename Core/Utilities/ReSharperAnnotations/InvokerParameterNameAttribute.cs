@@ -1,4 +1,4 @@
-﻿// Copyright 2012 rubicon informationstechnologie gmbh
+// Copyright 2012 rubicon informationstechnologie gmbh
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,20 +13,15 @@
 // limitations under the License.
 
 using System;
-using Microsoft.FxCop.Sdk;
 
-namespace InjectionCop.Parser.TypeParsing
+namespace InjectionCop.Utilities.ReSharperAnnotations
 {
   /// <summary>
-  /// Base class of Type Parser, defines Rulemetadata.xml
+  /// Indicates that the function argument should be string literal and match one  of the parameters of the caller function.
+  /// For example, <see cref="ArgumentNullException"/> has such parameter.
   /// </summary>
-  public abstract class BaseFxCopRule : BaseIntrospectionRule
+  [AttributeUsage (AttributeTargets.Parameter, AllowMultiple = false, Inherited = true)]
+  public sealed class InvokerParameterNameAttribute : Attribute
   {
-    protected BaseFxCopRule (string ruleName)
-        : base (ruleName,
-                "InjectionCop.Parser.TypeParsing.RuleMetadata",
-                typeof (BaseFxCopRule).Assembly)
-    {
-    }
   }
 }

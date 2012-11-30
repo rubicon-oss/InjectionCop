@@ -20,15 +20,15 @@ namespace InjectionCop.Config
   /// <summary>
   /// Rudimentary Class to load blacklist from xml file
   /// </summary>
-  class ConfigLoader
+  public class ConfigLoader
   {
     public static IBlacklistManager LoadBlacklist ()
     {
       IBlacklistManager blacklistManager;
       try
       {
-        XDocument document = XDocument.Load("Blacklist.xml");
-        blacklistManager = new BlacklistManager(document.Root);
+        XDocument document = XDocument.Load ("Blacklist.xml");
+        blacklistManager = new BlacklistManager (document.Root);
       }
       catch (Exception)
       {

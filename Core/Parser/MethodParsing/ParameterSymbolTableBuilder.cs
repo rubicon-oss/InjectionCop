@@ -14,6 +14,7 @@
 
 using System;
 using InjectionCop.Config;
+using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser.MethodParsing
@@ -26,9 +27,15 @@ namespace InjectionCop.Parser.MethodParsing
 
     public ParameterSymbolTableBuilder (Method method, IBlacklistManager blacklistManager)
     {
-      _method = method;
-      _blacklistManager = blacklistManager;
+      _method = ArgumentUtility.CheckNotNull ("method", method);
+      _blacklistManager = ArgumentUtility.CheckNotNull ("blacklistManager", blacklistManager);
       _result = null;
+    }
+
+    public ISymbolTable GetResult ()
+    {
+      Build();
+      return _result;
     }
 
     public void Build ()
@@ -50,12 +57,6 @@ namespace InjectionCop.Parser.MethodParsing
         }
         _result = parameterSafeness;
       }
-    }
-
-    public ISymbolTable GetResult ()
-    {
-      Build();
-      return _result;
     }
   }
 }

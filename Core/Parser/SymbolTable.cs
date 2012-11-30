@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using InjectionCop.Config;
 using InjectionCop.Parser.BlockParsing;
+using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser
@@ -37,7 +38,7 @@ namespace InjectionCop.Parser
     
     public SymbolTable (IBlacklistManager blacklistManager)
     {
-      _blacklistManager = blacklistManager;
+      _blacklistManager = ArgumentUtility.CheckNotNull("blacklistManager", blacklistManager);
       _safenessMap = new Dictionary<string, string>();
     }
 
@@ -46,8 +47,25 @@ namespace InjectionCop.Parser
       get { return new List<string> (_safenessMap.Keys).ToArray(); }
     }
 
+    public bool IsFragment (string symbolName, string fragmentType)
+    {
+      ArgumentUtility.CheckNotNull ("symbolName", symbolName);
+      ArgumentUtility.CheckNotNull ("fragmentType", fragmentType);
+
+      bool isFragment = false;
+      bool isLiteral = false;
+      if (_safenessMap.ContainsKey (symbolName))
+      {
+        isFragment = _safenessMap[symbolName] == fragmentType;
+        isLiteral = _safenessMap[symbolName] == LITERAL;
+      }
+      return isFragment || isLiteral;
+    }
+
     public string InferFragmentType (Expression expression)
     {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
       string fragmentType = EMPTY_FRAGMENT;
       if (expression is Literal)
       {
@@ -80,18 +98,10 @@ namespace InjectionCop.Parser
       return fragmentType;
     }
 
-    private string Lookup (string name)
-    {
-      string fragmentType = EMPTY_FRAGMENT;
-      if (_safenessMap.ContainsKey (name))
-      {
-        fragmentType = _safenessMap[name];
-      }
-      return fragmentType;
-    }
-
     public bool ParametersSafe (MethodCall methodCall, out List<PreCondition> requireSafenessParameters)
     {
+      ArgumentUtility.CheckNotNull ("methodCall", methodCall);
+      
       bool parameterSafe = true;
       requireSafenessParameters = new List<PreCondition>();
       Method calleeMethod = IntrospectionTools.ExtractMethod (methodCall);
@@ -122,6 +132,65 @@ namespace InjectionCop.Parser
       return parameterSafe;
     }
 
+    public void InferSafeness (string symbolName, Expression expression)
+    {
+      ArgumentUtility.CheckNotNull ("symbolName", symbolName);
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
+      string fragmentType = InferFragmentType (expression);
+      _safenessMap[symbolName] = fragmentType;
+    }
+
+    public string GetFragmentType (string symbolName)
+    {
+      ArgumentUtility.CheckNotNull ("symbolName", symbolName);
+
+      if (_safenessMap.ContainsKey (symbolName))
+      {
+        return _safenessMap[symbolName];
+      }
+      else
+      {
+        return EMPTY_FRAGMENT;
+      }
+    }
+
+    public void MakeUnsafe (string symbolName)
+    {
+      ArgumentUtility.CheckNotNull ("symbolName", symbolName);
+      _safenessMap[symbolName] = EMPTY_FRAGMENT;
+    }
+
+    public void MakeSafe (string symbolName, string fragmentType)
+    {
+      ArgumentUtility.CheckNotNull ("symbolName", symbolName);
+      ArgumentUtility.CheckNotNull ("fragmentType", fragmentType);
+      _safenessMap[symbolName] = fragmentType;
+    }
+    
+    public bool Contains (string symbolName)
+    {
+      ArgumentUtility.CheckNotNull ("symbolName", symbolName);
+      return _safenessMap.ContainsKey (symbolName);
+    }
+
+    public ISymbolTable Copy ()
+    {
+      SymbolTable clone = new SymbolTable (_blacklistManager);
+      clone._safenessMap = new Dictionary<string, string> (_safenessMap);
+      return clone;
+    }
+
+    private string Lookup (string name)
+    {
+      string fragmentType = EMPTY_FRAGMENT;
+      if (_safenessMap.ContainsKey (name))
+      {
+        fragmentType = _safenessMap[name];
+      }
+      return fragmentType;
+    }
+
     private List<string> GetParameterFragmentTypes (Method calleeMethod)
     {
       List<string> parameterTypes = GetParameterTypes (calleeMethod);
@@ -142,58 +211,6 @@ namespace InjectionCop.Parser
     private List<string> GetParameterTypes (Method method)
     {
       return method.Parameters.Select (parameter => parameter.Type.FullName).ToList();
-    }
-
-    public void InferSafeness (string symbolName, Expression expression)
-    {
-      string fragmentType = InferFragmentType (expression);
-      _safenessMap[symbolName] = fragmentType;
-    }
-
-    public void MakeUnsafe (string symbolName)
-    {
-      _safenessMap[symbolName] = EMPTY_FRAGMENT;
-    }
-
-    public void MakeSafe (string symbolName, string fragmentType)
-    {
-      _safenessMap[symbolName] = fragmentType;
-    }
-
-    public string GetFragmentType (string symbolName)
-    {
-      if (_safenessMap.ContainsKey (symbolName))
-      {
-        return _safenessMap[symbolName];
-      }
-      else
-      {
-        return EMPTY_FRAGMENT; //string.Empty;
-      }
-    }
-
-    public bool IsFragment (string symbolName, string fragmentType)
-    {
-      bool isFragment = false;
-      bool isLiteral = false;
-      if (_safenessMap.ContainsKey (symbolName))
-      {
-        isFragment = _safenessMap[symbolName] == fragmentType;
-        isLiteral = _safenessMap[symbolName] == LITERAL;
-      }
-      return isFragment || isLiteral;
-    }
-
-    public bool Contains (string symbolName)
-    {
-      return _safenessMap.ContainsKey (symbolName);
-    }
-
-    public ISymbolTable Copy ()
-    {
-      SymbolTable clone = new SymbolTable (_blacklistManager);
-      clone._safenessMap = new Dictionary<string, string> (_safenessMap);
-      return clone;
     }
   }
 }

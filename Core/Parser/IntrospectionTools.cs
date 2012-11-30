@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser
@@ -24,6 +25,8 @@ namespace InjectionCop.Parser
   {
     public static Method ExtractMethod (MethodCall methodCall)
     {
+      ArgumentUtility.CheckNotNull ("methodCall", methodCall);
+
       MemberBinding callee = methodCall.Callee as MemberBinding;
       if (callee == null || !(callee.BoundMember is Method))
         throw new InjectionCopException ("Cannot extract Method from Methodcall");
@@ -32,8 +35,10 @@ namespace InjectionCop.Parser
       return boundMember;
     }
 
-    public static bool IsVariable(Expression expression)
+    public static bool IsVariable (Expression expression)
     {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
       bool isVariableReference = false;
       if (expression.NodeType == NodeType.AddressOf)
       {
@@ -48,6 +53,8 @@ namespace InjectionCop.Parser
 
     public static string GetVariableName (Expression expression)
     {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
       string variableName = "";
       if (expression is Parameter)
       {
@@ -72,22 +79,27 @@ namespace InjectionCop.Parser
 
     public static bool IsVariable (Expression expression, out string variableName)
     {
+      ArgumentUtility.CheckNotNull ("expression", expression);
+
       variableName = GetVariableName (expression);
       return IsVariable (expression);
     }
 
-    public static TypeNode TypeNodeFactory<T>()
+    public static TypeNode TypeNodeFactory<T> ()
     {
       Type targetType = typeof (T);
       string targetLocation = targetType.Assembly.Location;
-      AssemblyNode targetAssembly = AssemblyNode.GetAssembly(targetLocation);
+      AssemblyNode targetAssembly = AssemblyNode.GetAssembly (targetLocation);
       Identifier targetNamespace = Identifier.For (targetType.Namespace);
       Identifier targetName = Identifier.For (targetType.Name);
-      return targetAssembly.GetType(targetNamespace, targetName);
+      return targetAssembly.GetType (targetNamespace, targetName);
     }
 
-    public static Method MethodFactory<T>(Identifier methodName, params TypeNode[] methodParameters)
+    public static Method MethodFactory<T> (Identifier methodName, params TypeNode[] methodParameters)
     {
+      ArgumentUtility.CheckNotNull ("methodName", methodName);
+      ArgumentUtility.CheckNotNull ("methodParameters", methodParameters);
+
       TypeNode ct = TypeNodeFactory<T>();
       return ct.GetMethod (methodName, methodParameters);
     }

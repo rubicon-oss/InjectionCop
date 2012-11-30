@@ -16,40 +16,44 @@ using System;
 using System.Collections.Generic;
 using InjectionCop.Parser.BlockParsing;
 using InjectionCop.Parser.TypeParsing;
+using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser.MethodParsing
 {
   public class MethodGraphAnalyzer : IMethodGraphAnalyzer
   {
-    private TypeParser _typeParser;
-    
+    private readonly TypeParser _typeParser;
+
     public MethodGraphAnalyzer (TypeParser typeParser)
     {
-      _typeParser = typeParser;
+      _typeParser = ArgumentUtility.CheckNotNull ("typeParser", typeParser);
     }
 
     public ProblemCollection Parse (IMethodGraphBuilder methodGraphBuilder, IParameterSymbolTableBuilder parameterSymbolTableBuilder)
     {
+      ArgumentUtility.CheckNotNull ("methodGraphBuilder", methodGraphBuilder);
+      ArgumentUtility.CheckNotNull ("parameterSymbolTableBuilder", parameterSymbolTableBuilder);
+
       IMethodGraph methodGraph = methodGraphBuilder.GetResult();
       ISymbolTable parameterSafeness = parameterSymbolTableBuilder.GetResult();
-      
-      if (!methodGraph.IsEmpty())
+
+      if (!methodGraph.IsEmpty() && parameterSafeness != null)
       {
         Parse (methodGraph, parameterSafeness, methodGraph.InitialBlock, new Dictionary<int, int>());
       }
-      
+
       return _typeParser.Problems;
     }
-    
-    private void Parse (IMethodGraph methodGraph, ISymbolTable context, BasicBlock currentBlock, Dictionary<int,int> visits)
+
+    private void Parse (IMethodGraph methodGraph, ISymbolTable context, BasicBlock currentBlock, Dictionary<int, int> visits)
     {
       UpdateVisits (currentBlock.Id, visits);
       if (visits[currentBlock.Id] < 2)
       {
         CheckPreCoditions (currentBlock.PreConditions, context);
         ISymbolTable adjustedContext = UpdateContext (context, currentBlock.PostConditionSymbolTable);
-        ParseSuccessors (currentBlock.SuccessorKeys, visits, methodGraph, adjustedContext);   
+        ParseSuccessors (currentBlock.SuccessorKeys, visits, methodGraph, adjustedContext);
       }
     }
 
@@ -89,11 +93,11 @@ namespace InjectionCop.Parser.MethodParsing
     private void ParseSuccessors (int[] successorKeys, Dictionary<int, int> visits, IMethodGraph methodGraph, ISymbolTable adjustedContext)
     {
       foreach (int successorKey in successorKeys)
-        {
-          Dictionary<int, int> branchVisits = new Dictionary<int, int> (visits);
-          BasicBlock successor = methodGraph.GetBasicBlockById (successorKey);
-          Parse (methodGraph, adjustedContext, successor, branchVisits);
-        }
+      {
+        Dictionary<int, int> branchVisits = new Dictionary<int, int> (visits);
+        BasicBlock successor = methodGraph.GetBasicBlockById (successorKey);
+        Parse (methodGraph, adjustedContext, successor, branchVisits);
+      }
     }
   }
 }

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using InjectionCop.Utilities;
 
 namespace InjectionCop.Parser.BlockParsing
 {
@@ -26,8 +27,8 @@ namespace InjectionCop.Parser.BlockParsing
 
     public PreCondition (string symbol, string fragmentType)
     {
-      _symbol = symbol;
-      _fragmentType = fragmentType;
+      _symbol = ArgumentUtility.CheckNotNullOrEmpty ("symbol", symbol);
+      _fragmentType = ArgumentUtility.CheckNotNullOrEmpty ("fragmentType", fragmentType);
     }
 
     public string Symbol
@@ -35,7 +36,7 @@ namespace InjectionCop.Parser.BlockParsing
       get { return _symbol; }
     }
 
-    public string FragmentType 
+    public string FragmentType
     {
       get { return _fragmentType; }
     }

@@ -74,6 +74,12 @@
     <Compile Include="Parser\TypeParsing\TypeParser.cs" />
     <Compile Include="PrettyPrint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\ArgumentEmptyException.cs" />
+    <Compile Include="Utilities\ArgumentUtility.cs" />
+    <Compile Include="Utilities\ReSharperAnnotations\AssertionConditionAttribute.cs" />
+    <Compile Include="Utilities\ReSharperAnnotations\AssertionConditionType.cs" />
+    <Compile Include="Utilities\ReSharperAnnotations\AssertionMethodAttribute.cs" />
+    <Compile Include="Utilities\ReSharperAnnotations\InvokerParameterNameAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Problems\" />

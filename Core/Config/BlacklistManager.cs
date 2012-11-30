@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 using System.Linq;
 using InjectionCop.Parser;
+using InjectionCop.Utilities;
 
 namespace InjectionCop.Config
 {
@@ -39,11 +40,15 @@ namespace InjectionCop.Config
 
     public BlacklistManager (XElement blacklist)
     {
-      _blacklist = blacklist;
+      _blacklist = ArgumentUtility.CheckNotNull ("blacklist", blacklist);
     }
 
     public bool IsListed (string qualifiedTypeName, string methodName, List<string> qualifiedParameterTypes)
     {
+      ArgumentUtility.CheckNotNullOrEmpty ("qualifiedTypeName", qualifiedTypeName);
+      ArgumentUtility.CheckNotNullOrEmpty ("methodName", methodName);
+      ArgumentUtility.CheckNotNull ("qualifiedParameterTypes", qualifiedParameterTypes);
+
       bool isListed = false;
       if (_blacklist.Name == BLACKLIST)
       {
@@ -51,6 +56,26 @@ namespace InjectionCop.Config
         isListed = filteredMethods.Any();
       }
       return isListed;
+    }
+
+    public List<string> GetFragmentTypes (string qualifiedTypeName, string methodName, List<string> qualifiedParameterTypes)
+    {
+      ArgumentUtility.CheckNotNullOrEmpty ("qualifiedTypeName", qualifiedTypeName);
+      ArgumentUtility.CheckNotNullOrEmpty ("methodName", methodName);
+      ArgumentUtility.CheckNotNull ("qualifiedParameterTypes", qualifiedParameterTypes);
+
+      List<string> fragmentTypes = new List<string>();
+      if (IsListed (qualifiedTypeName, methodName, qualifiedParameterTypes))
+      {
+        IEnumerable<XElement> filteredMethods = FilterMethods (qualifiedTypeName, methodName, qualifiedParameterTypes);
+        var methodEnumerator = filteredMethods.GetEnumerator();
+        if (methodEnumerator.MoveNext())
+        {
+          XElement method = methodEnumerator.Current;
+          method.Elements (PARAMETER).ToList().ForEach (parameter => fragmentTypes.Add (GetFragmentType (parameter)));
+        }
+      }
+      return fragmentTypes;
     }
 
     private IEnumerable<XElement> FilterMethods (string qualifiedTypeName, string methodName, List<string> qualifiedParameterTypes)
@@ -90,22 +115,6 @@ namespace InjectionCop.Config
         }
       }
       return parametersMatch;
-    }
-
-    public List<string> GetFragmentTypes (string qualifiedName, string methodName, List<string> qualifiedParameterTypes)
-    {
-      List<string> fragmentTypes = new List<string>();
-      if (IsListed (qualifiedName, methodName, qualifiedParameterTypes))
-      {
-        IEnumerable<XElement> filteredMethods = FilterMethods (qualifiedName, methodName, qualifiedParameterTypes);
-        var methodEnumerator = filteredMethods.GetEnumerator();
-        if (methodEnumerator.MoveNext())
-        {
-          XElement method = methodEnumerator.Current;
-          method.Elements (PARAMETER).ToList().ForEach (parameter => fragmentTypes.Add(GetFragmentType (parameter)));
-        }
-      }
-      return fragmentTypes;
     }
 
     private string GetFragmentType (XElement parameter)

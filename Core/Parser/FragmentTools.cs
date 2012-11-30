@@ -15,6 +15,7 @@
 using System;
 using System.Linq;
 using InjectionCop.Attributes;
+using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser
@@ -24,27 +25,30 @@ namespace InjectionCop.Parser
   /// </summary>
   public class FragmentTools
   {
-    public static bool IsFragment(AttributeNode attribute)
+    public static bool IsFragment (AttributeNode attribute)
     {
-        string fragmentFullName = typeof(FragmentAttribute).FullName;
-        bool isFragment = attribute.Type.FullName == fragmentFullName;
-        bool isFragmentChild = attribute.Type.BaseType.FullName == fragmentFullName;
-        return isFragment || isFragmentChild;
+      ArgumentUtility.CheckNotNull ("attribute", attribute);
+      string fragmentFullName = typeof (FragmentAttribute).FullName;
+      bool isFragment = attribute.Type.FullName == fragmentFullName;
+      bool isFragmentChild = attribute.Type.BaseType.FullName == fragmentFullName;
+      return isFragment || isFragmentChild;
     }
 
-    public static bool ContainsFragment(AttributeNodeCollection attributeNodeCollection)
+    public static bool ContainsFragment (AttributeNodeCollection attributes)
     {
-      return attributeNodeCollection.Any(attributeNode => IsFragment(attributeNode));
+      ArgumentUtility.CheckNotNull ("attributes", attributes);
+      return attributes.Any (IsFragment);
     }
 
-    public static string GetFragmentType(AttributeNodeCollection attributeNodeCollection)
+    public static string GetFragmentType (AttributeNodeCollection attributes)
     {
+      ArgumentUtility.CheckNotNull ("attributes", attributes);
       string fragmentType = SymbolTable.EMPTY_FRAGMENT;
-      if (ContainsFragment (attributeNodeCollection))
+      if (ContainsFragment (attributes))
       {
         string fragmentFullName = typeof (FragmentAttribute).FullName;
 
-        foreach (AttributeNode attributeNode in attributeNodeCollection)
+        foreach (AttributeNode attributeNode in attributes)
         {
           if (IsFragment (attributeNode))
           {

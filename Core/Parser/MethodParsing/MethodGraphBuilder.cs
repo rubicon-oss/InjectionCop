@@ -18,6 +18,7 @@ using System.Linq;
 using InjectionCop.Config;
 using InjectionCop.Parser.BlockParsing;
 using InjectionCop.Parser.TypeParsing;
+using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser.MethodParsing
@@ -31,10 +32,17 @@ namespace InjectionCop.Parser.MethodParsing
 
     public MethodGraphBuilder (Method method, IBlacklistManager blacklistManager, TypeParser typeParser)
     {
+      ArgumentUtility.CheckNotNull ("method", method);
       _methodBody = method.Body;
-      _blacklistManager = blacklistManager;
-      _typeParser = typeParser;
+      _blacklistManager = ArgumentUtility.CheckNotNull ("blacklistManager", blacklistManager);
+      _typeParser = ArgumentUtility.CheckNotNull ("typeParser", typeParser);
       _result = null;
+    }
+
+    public IMethodGraph GetResult ()
+    {
+      Build();
+      return _result;
     }
 
     public void Build ()
@@ -84,18 +92,12 @@ namespace InjectionCop.Parser.MethodParsing
       bool containsUnconditionalBranch = false;
       foreach (Statement statement in currentBlock.Statements)
       {
-        if(statement is Branch && ((Branch)statement).Condition == null)
+        if (statement is Branch && ((Branch) statement).Condition == null)
         {
           containsUnconditionalBranch = true;
         }
       }
       return containsUnconditionalBranch;
-    }
-
-    public IMethodGraph GetResult ()
-    {
-      Build();
-      return _result;
     }
   }
 }

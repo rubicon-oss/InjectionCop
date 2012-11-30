@@ -16,13 +16,14 @@ using System;
 
 namespace InjectionCop.Attributes
 {
-    /// <summary>
-    /// Declares parameter or returnvalue of a method as fragment 
-    /// </summary>
-    public class SqlFragmentAttribute : FragmentAttribute
+  /// <summary>
+  /// Declares parameter or returnvalue of a method as fragment 
+  /// </summary>
+  public class SqlFragmentAttribute : FragmentAttribute
+  {
+    public SqlFragmentAttribute ()
+        : base ("SqlFragment")
     {
-        public SqlFragmentAttribute() : base("SqlFragment")
-        {
-        }
     }
+  }
 }

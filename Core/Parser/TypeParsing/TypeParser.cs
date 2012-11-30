@@ -15,6 +15,7 @@
 using System;
 using InjectionCop.Config;
 using InjectionCop.Parser.MethodParsing;
+using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser.TypeParsing
@@ -24,7 +25,7 @@ namespace InjectionCop.Parser.TypeParsing
   /// </summary>
   public class TypeParser : BaseFxCopRule
   {
-    private IBlacklistManager _blacklistManager;
+    private readonly IBlacklistManager _blacklistManager;
 
     public TypeParser ()
         : base ("TypeParser")
@@ -34,12 +35,13 @@ namespace InjectionCop.Parser.TypeParsing
 
     public override ProblemCollection Check (TypeNode type)
     {
+      ArgumentUtility.CheckNotNull ("type", type);
       foreach (Member member in type.Members)
       {
-        if(member is Method)
+        if (member is Method)
         {
           Method method = (Method) member;
-          Parse(method);
+          Parse (method);
         }
       }
       return Problems;
@@ -54,6 +56,7 @@ namespace InjectionCop.Parser.TypeParsing
 
     public ProblemCollection Parse (Method method)
     {
+      ArgumentUtility.CheckNotNull ("method", method);
       IMethodGraphAnalyzer methodParser = new MethodGraphAnalyzer (this);
       IMethodGraphBuilder methodGraphBuilder = new MethodGraphBuilder (method, _blacklistManager, this);
       IParameterSymbolTableBuilder parameterSymbolTableBuilder = new ParameterSymbolTableBuilder (method, _blacklistManager);

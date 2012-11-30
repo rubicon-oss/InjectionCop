@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using InjectionCop.Config;
 using InjectionCop.Parser.TypeParsing;
+using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser.BlockParsing
@@ -33,11 +34,37 @@ namespace InjectionCop.Parser.BlockParsing
 
     public BlockParser (IBlacklistManager blacklistManager, TypeParser typeParser)
     {
+      _blacklistManager = ArgumentUtility.CheckNotNull ("blacklistManager", blacklistManager);
+      _typeParser = ArgumentUtility.CheckNotNull ("typeParser", typeParser);
       _symbolTableParser = new SymbolTable (blacklistManager);
       _preConditions = new List<PreCondition>();
       _successors = new List<int>();
-      _blacklistManager = blacklistManager;
-      _typeParser = typeParser;
+    }
+
+    public BasicBlock Parse (Block block)
+    {
+      ArgumentUtility.CheckNotNull ("block", block);
+      Reset();
+      Inspect (block);
+      BasicBlock basicBlock = new BasicBlock (block.UniqueKey, _preConditions.ToArray(), _symbolTableParser, _successors.ToArray());
+      return basicBlock;
+    }
+
+    public BasicBlock Parse (Block block, int directSuccessorKey)
+    {
+      ArgumentUtility.CheckNotNull ("block", block);
+      Reset();
+      _successors.Add (directSuccessorKey);
+      Inspect (block);
+      BasicBlock basicBlock = new BasicBlock (block.UniqueKey, _preConditions.ToArray(), _symbolTableParser, _successors.ToArray());
+      return basicBlock;
+    }
+
+    private void Reset ()
+    {
+      _symbolTableParser = new SymbolTable (_blacklistManager);
+      _preConditions = new List<PreCondition>();
+      _successors = new List<int>();
     }
 
     private void Inspect (Block methodBodyBlock)
@@ -54,7 +81,7 @@ namespace InjectionCop.Parser.BlockParsing
           case NodeType.AssignmentStatement:
             AssignmentStatement asgn = (AssignmentStatement) stmt;
             string symbol = IntrospectionTools.GetVariableName (asgn.Target);
-            _symbolTableParser.InferSafeness(symbol, asgn.Source);
+            _symbolTableParser.InferSafeness (symbol, asgn.Source);
             Inspect (asgn.Source);
             break;
 
@@ -78,7 +105,7 @@ namespace InjectionCop.Parser.BlockParsing
         }
       }
     }
-   
+
     private void Inspect (Expression expression)
     {
       if (expression is MethodCall)
@@ -111,7 +138,7 @@ namespace InjectionCop.Parser.BlockParsing
 
     private void UpdateSafeOutParameters (MethodCall methodCall)
     {
-      Method method = IntrospectionTools.ExtractMethod(methodCall);
+      Method method = IntrospectionTools.ExtractMethod (methodCall);
 
       for (int i = 0; i < methodCall.Operands.Count; i++)
       {
@@ -132,30 +159,6 @@ namespace InjectionCop.Parser.BlockParsing
           }
         }
       }
-    }
-
-    public BasicBlock Parse (Block block)
-    {
-      Reset();
-      Inspect (block);
-      BasicBlock basicBlock = new BasicBlock (block.UniqueKey, _preConditions.ToArray(), _symbolTableParser, _successors.ToArray());
-      return basicBlock;
-    }
-
-    public BasicBlock Parse (Block block, int directSuccessorKey)
-    {
-      Reset();
-      _successors.Add (directSuccessorKey);
-      Inspect (block);
-      BasicBlock basicBlock = new BasicBlock (block.UniqueKey, _preConditions.ToArray(), _symbolTableParser, _successors.ToArray());
-      return basicBlock;
-    }
-
-    private void Reset()
-    {
-      _symbolTableParser = new SymbolTable (_blacklistManager);
-      _preConditions = new List<PreCondition>();
-      _successors = new List<int>();
     }
   }
 }

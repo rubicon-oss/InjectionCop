@@ -15,22 +15,23 @@
 using System;
 using System.Collections.Generic;
 using InjectionCop.Parser.BlockParsing;
+using InjectionCop.Utilities;
 
 namespace InjectionCop.Parser.MethodParsing
 {
-  public class MethodGraph: IMethodGraph
+  public class MethodGraph : IMethodGraph
   {
     private static MethodGraph _emptyGraph = new MethodGraph (-1, new Dictionary<int, BasicBlock>());
-    
+
     private readonly int _initialBlockId;
     private readonly Dictionary<int, BasicBlock> _graph;
 
     public MethodGraph (int initialBlockId, Dictionary<int, BasicBlock> graph)
     {
       _initialBlockId = initialBlockId;
-      _graph = graph;
+      _graph = ArgumentUtility.CheckNotNull ("graph", graph);
     }
-    
+
     public BasicBlock GetBasicBlockById (int uniqueKey)
     {
       try
@@ -39,11 +40,11 @@ namespace InjectionCop.Parser.MethodParsing
       }
       catch (KeyNotFoundException ex)
       {
-        throw new InjectionCopException("The given key was not present in the MethodGraph", ex);
+        throw new InjectionCopException ("The given key was not present in the MethodGraph", ex);
       }
     }
 
-    public bool IsEmpty()
+    public bool IsEmpty ()
     {
       return _graph.Keys.Count == 0;
     }

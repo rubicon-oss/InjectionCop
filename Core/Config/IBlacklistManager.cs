@@ -23,6 +23,6 @@ namespace InjectionCop.Config
   public interface IBlacklistManager
   {
     bool IsListed (string qualifiedTypeName, string methodName, List<string> qualifiedParameterTypes);
-    List<string> GetFragmentTypes (string qualifiedName, string methodName, List<string> qualifiedParameterTypes);
+    List<string> GetFragmentTypes (string qualifiedTypeName, string methodName, List<string> qualifiedParameterTypes);
   }
 }
