@@ -14,7 +14,7 @@
 
 using System;
 
-namespace InjectionCop.Attributes
+namespace InjectionCop.Fragment
 {
   /// <summary>
   /// Declares parameter or returnvalue of a method as fragment 

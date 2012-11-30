@@ -14,10 +14,25 @@
 
 using System;
 
-namespace InjectionCop.Attributes
+namespace InjectionCop.Fragment
 {
-  [AttributeUsage (AttributeTargets.Method)]
-  public class TrustedSqlGeneration : Attribute
+  /// <summary>
+  /// Declares parameter or returnvalue of a method as fragment
+  /// </summary>
+  [AttributeUsage (AttributeTargets.Parameter
+                   | AttributeTargets.ReturnValue)]
+  public class FragmentAttribute : Attribute
   {
+    private readonly string _fragmentType;
+
+    public FragmentAttribute (string fragmentType)
+    {
+      _fragmentType = fragmentType;
+    }
+
+    public string FragmentType
+    {
+      get { return _fragmentType; }
+    }
   }
 }

@@ -82,9 +82,7 @@
       <Name>InjectionCop.IntegrationTests</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Attributes\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="UnitTests.licenseheader" />
   </ItemGroup>

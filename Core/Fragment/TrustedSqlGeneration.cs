@@ -13,30 +13,11 @@
 // limitations under the License.
 
 using System;
-using InjectionCop.Fragment;
 
-namespace InjectionCop.IntegrationTests.Parser
+namespace InjectionCop.Fragment
 {
-  class FragmentToolsSample
+  [AttributeUsage (AttributeTargets.Method)]
+  public class TrustedSqlGeneration : Attribute
   {
-    public void ContainsFragmentParameter([Fragment("FragmentType")] string parameter)
-    {
-    }
-
-    public void NoFragmentParameter(string parameter)
-    {
-    }
-
-    public void ContainsNonFragmentParameter([NonFragment("FragmentType")] string parameter)
-    {
-    }
-
-    public void ContainsSqlFragmentParameter([Fragment("SqlFragment")] string parameter)
-    {
-    }
-
-    public void ContainsStronglyTypedSqlFragmentParameter([SqlFragment] string parameter)
-    {
-    }
   }
 }

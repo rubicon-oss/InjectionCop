@@ -14,7 +14,7 @@
 
 using System;
 using System.Linq;
-using InjectionCop.Attributes;
+using InjectionCop.Fragment;
 using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
 

@@ -13,24 +13,39 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 
-namespace InjectionCop.Attributes
+namespace InjectionCop.Fragment
 {
-  /// <summary>
-  /// Declares parameter or returnvalue of a method as fragment
-  /// </summary>
-  [AttributeUsage (AttributeTargets.Parameter
-                   | AttributeTargets.ReturnValue)]
-  public class FragmentAttribute : Attribute
+  public struct Fragment
   {
+    private static readonly Dictionary<string, string> _fragmentTypeCache = new Dictionary<string, string>();
+
+    public enum Sort
+    {
+      Literal = 0,
+      NamedFragment = 1
+    }
+
+    private readonly Sort _sort;
     private readonly string _fragmentType;
 
-    public FragmentAttribute (string fragmentType)
+    public Fragment (Sort sort, string fragmentType)
     {
+      _sort = sort;
+      if (!_fragmentTypeCache.ContainsKey (fragmentType))
+      {
+        _fragmentTypeCache[fragmentType] = fragmentType;
+      }
       _fragmentType = fragmentType;
     }
 
-    public string FragmentType
+    public Sort FragmentSort 
+    {
+      get { return _sort; }
+    }
+
+    public string FragmentType 
     {
       get { return _fragmentType; }
     }
