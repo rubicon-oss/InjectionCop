@@ -42,18 +42,6 @@ namespace InjectionCop.Parser.MethodParsing
       return _typeParser.Problems;
     }
     
-    public ProblemCollection Parse(IMethodGraph methodGraph, ISymbolTable context)
-    {
-      ProblemCollection problems = _typeParser.Problems;
-      
-      if (!methodGraph.IsEmpty())
-      {
-        Parse (methodGraph, context, methodGraph.InitialBlock, new Dictionary<int, int>());
-      }
-
-      return problems;
-    }
-
     private void Parse (IMethodGraph methodGraph, ISymbolTable context, BasicBlock currentBlock, Dictionary<int,int> visits)
     {
       UpdateVisits (currentBlock.Id, visits);

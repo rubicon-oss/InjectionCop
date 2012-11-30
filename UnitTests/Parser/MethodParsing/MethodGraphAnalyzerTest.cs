@@ -30,8 +30,12 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
   public class MethodGraphAnalyzerTest
   {
     private SymbolTable _methodPreConditions;
-    private MethodGraphAnalyzer _methodParser;
+    private MethodGraphAnalyzer _methodGraphAnalyzer;
     private IBlacklistManager _blacklistManager;
+    private MockRepository _mocks;
+    private IMethodGraph _methodGraph;
+    private IMethodGraphBuilder _methodGraphBuilder;
+    private IParameterSymbolTableBuilder _parameterSymbolTableBuilder;
     
     [SetUp]
     public void SetUp ()
@@ -41,121 +45,141 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
       _methodPreConditions.MakeSafe ("x", "SqlFragment");
       _methodPreConditions.MakeUnsafe ("y");
       TypeParser typeParser = new TypeParser ();
-      _methodParser = new MethodGraphAnalyzer (typeParser);
+      _methodGraphAnalyzer = new MethodGraphAnalyzer (typeParser);
+      _mocks = new MockRepository();
+      _methodGraph = _mocks.Stub<IMethodGraph>();
+      _methodGraphBuilder = _mocks.Stub<IMethodGraphBuilder>();
+      _parameterSymbolTableBuilder = _mocks.Stub<IParameterSymbolTableBuilder>();
+      
+    }
+
+    private ProblemCollection ParseGraph ()
+    {
+      return _methodGraphAnalyzer.Parse (_methodGraphBuilder, _parameterSymbolTableBuilder);
     }
 
     [Test]
     public void Parse_EmptyGraph_NoProblems ()
     {
-      MockRepository mocks = new MockRepository();
-      IMethodGraph methodGraph = mocks.Stub<IMethodGraph>();
-      using(mocks.Record())
+      using(_mocks.Record())
       {
-        methodGraph.IsEmpty();
+        _methodGraph.IsEmpty();
         LastCall.Return (true);
+
+        _methodGraphBuilder.GetResult();
+        LastCall.Return (_methodGraph);
+        _parameterSymbolTableBuilder.GetResult();
+        LastCall.Return(_methodPreConditions);
       }
-      ProblemCollection result = _methodParser.Parse (methodGraph, _methodPreConditions);
+
+      ProblemCollection result = ParseGraph();
       Assert.That (result.Count, Is.EqualTo (0));
     }
 
+    
     [Test]
     public void Parse_SingleNodeNoPrecondition_NoProblems()
     {
-      MockRepository mocks = new MockRepository();
-      IMethodGraph methodGraph = mocks.Stub<IMethodGraph>();
-      
       PreCondition[] preConditions = (new List<PreCondition>()).ToArray();
       SymbolTable postConditions = new SymbolTable (_blacklistManager);
       int[] successors = (new List<int>()).ToArray();
       BasicBlock node = new BasicBlock (0, preConditions, postConditions, successors);
       
-      using(mocks.Record())
+      using(_mocks.Record())
       {
-        methodGraph.IsEmpty();
+        _methodGraph.IsEmpty();
         LastCall.Return (false);
 
-        SetupResult.For(methodGraph.InitialBlock)
+        SetupResult.For(_methodGraph.InitialBlock)
           .Return(node);
+
+        _methodGraphBuilder.GetResult();
+        LastCall.Return (_methodGraph);
+        _parameterSymbolTableBuilder.GetResult();
+        LastCall.Return(_methodPreConditions);
       }
-      ProblemCollection result = _methodParser.Parse (methodGraph, _methodPreConditions);
+      ProblemCollection result = ParseGraph();
       Assert.That (result.Count, Is.EqualTo (0));
     }
-
+  
     [Test]
     public void Parse_SingleNodePreconditionViolated_ReturnsProblem()
     {
-      MockRepository mocks = new MockRepository();
-      IMethodGraph methodGraph = mocks.Stub<IMethodGraph>();
-      
       PreCondition[] preConditions = { new PreCondition("y", "SqlFragment") };
       SymbolTable postConditions = new SymbolTable (_blacklistManager);
       int[] successors = (new List<int>()).ToArray();
       BasicBlock node = new BasicBlock (0, preConditions, postConditions, successors);
       
-      using(mocks.Record())
+      using(_mocks.Record())
       {
-        methodGraph.IsEmpty();
+        _methodGraph.IsEmpty();
         LastCall.Return (false);
 
-        SetupResult.For(methodGraph.InitialBlock)
+        SetupResult.For(_methodGraph.InitialBlock)
           .Return(node);
+
+        _methodGraphBuilder.GetResult();
+        LastCall.Return (_methodGraph);
+        _parameterSymbolTableBuilder.GetResult();
+        LastCall.Return(_methodPreConditions);
       }
-      ProblemCollection result = _methodParser.Parse (methodGraph, _methodPreConditions);
+      ProblemCollection result = ParseGraph();
       Assert.That (TestHelper.ContainsProblemID("IC_SQLi", result), Is.True);
     }
-
+    
     [Test]
     public void Parse_SingleNodePreconditionNotViolated_NoProblem ()
     {
-      MockRepository mocks = new MockRepository();
-      IMethodGraph methodGraph = mocks.Stub<IMethodGraph>();
-
       PreCondition[] preConditions = { new PreCondition("x", "SqlFragment") };
       SymbolTable postConditions = new SymbolTable (_blacklistManager);
       int[] successors = (new List<int>()).ToArray();
       BasicBlock node = new BasicBlock (0, preConditions, postConditions, successors);
 
-      using (mocks.Record())
+      using (_mocks.Record())
       {
-        methodGraph.IsEmpty();
+        _methodGraph.IsEmpty();
         LastCall.Return (false);
 
-        SetupResult.For (methodGraph.InitialBlock)
+        SetupResult.For (_methodGraph.InitialBlock)
                    .Return (node);
+
+        _methodGraphBuilder.GetResult();
+        LastCall.Return (_methodGraph);
+        _parameterSymbolTableBuilder.GetResult();
+        LastCall.Return(_methodPreConditions);
       }
-      ProblemCollection result = _methodParser.Parse (methodGraph, _methodPreConditions);
+      ProblemCollection result = ParseGraph();
       Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
     }
-
+    
     [Test]
     public void Parse_SingleNodeNewPrecondition_ReturnsProblem ()
     {
-      MockRepository mocks = new MockRepository();
-      IMethodGraph methodGraph = mocks.Stub<IMethodGraph>();
-
       PreCondition[] preConditions = { new PreCondition("z", "SqlFragment")  };
       SymbolTable postConditions = new SymbolTable (_blacklistManager);
       int[] successors = (new List<int>()).ToArray();
       BasicBlock node = new BasicBlock (0, preConditions, postConditions, successors);
 
-      using (mocks.Record())
+      using (_mocks.Record())
       {
-        methodGraph.IsEmpty();
+        _methodGraph.IsEmpty();
         LastCall.Return (false);
 
-        SetupResult.For (methodGraph.InitialBlock)
+        SetupResult.For (_methodGraph.InitialBlock)
                    .Return (node);
+
+        _methodGraphBuilder.GetResult();
+        LastCall.Return (_methodGraph);
+        _parameterSymbolTableBuilder.GetResult();
+        LastCall.Return(_methodPreConditions);
       }
-      ProblemCollection result = _methodParser.Parse (methodGraph, _methodPreConditions);
+      ProblemCollection result = ParseGraph();
       Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
     }
-
+    
     [Test]
     public void Parse_SequencePreconditionsNotViolated_NoProblem ()
     {
-      MockRepository mocks = new MockRepository();
-      IMethodGraph methodGraph = mocks.Stub<IMethodGraph>();
-
       List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
       SymbolTable postConditions = new SymbolTable (_blacklistManager);
       List<int> successors = new List<int> { 1 };
@@ -166,27 +190,29 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
       successors = new List<int>();
       BasicBlock terminatingNode = new BasicBlock (1, preConditions.ToArray(), postConditions, successors.ToArray());
 
-      using (mocks.Record())
+      using (_mocks.Record())
       {
-        methodGraph.IsEmpty();
+        _methodGraph.IsEmpty();
         LastCall.Return (false);
 
-        SetupResult.For (methodGraph.InitialBlock)
+        SetupResult.For (_methodGraph.InitialBlock)
                    .Return (initialNode);
 
-        methodGraph.GetBasicBlockById (1);
+        _methodGraph.GetBasicBlockById (1);
         LastCall.Return (terminatingNode);
+
+        _methodGraphBuilder.GetResult();
+        LastCall.Return (_methodGraph);
+        _parameterSymbolTableBuilder.GetResult();
+        LastCall.Return(_methodPreConditions);
       }
-      ProblemCollection result = _methodParser.Parse (methodGraph, _methodPreConditions);
+      ProblemCollection result = ParseGraph();
       Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
     }
-
+    
     [Test]
     public void Parse_SequencePreconditionsViolated_ReturnsProblem ()
     {
-      MockRepository mocks = new MockRepository();
-      IMethodGraph methodGraph = mocks.Stub<IMethodGraph>();
-
       List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragmen") };
       SymbolTable postConditions = new SymbolTable (_blacklistManager);
       List<int> successors = new List<int> { 1 };
@@ -197,27 +223,29 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
       successors = new List<int>();
       BasicBlock terminatingNode = new BasicBlock (1, preConditions.ToArray(), postConditions, successors.ToArray());
 
-      using (mocks.Record())
+      using (_mocks.Record())
       {
-        methodGraph.IsEmpty();
+        _methodGraph.IsEmpty();
         LastCall.Return (false);
 
-        SetupResult.For (methodGraph.InitialBlock)
+        SetupResult.For (_methodGraph.InitialBlock)
                    .Return (initialNode);
 
-        methodGraph.GetBasicBlockById (1);
+        _methodGraph.GetBasicBlockById (1);
         LastCall.Return (terminatingNode);
+
+        _methodGraphBuilder.GetResult();
+        LastCall.Return (_methodGraph);
+        _parameterSymbolTableBuilder.GetResult();
+        LastCall.Return(_methodPreConditions);
       }
-      ProblemCollection result = _methodParser.Parse (methodGraph, _methodPreConditions);
+      ProblemCollection result = ParseGraph();
       Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
     }
-
+    
     [Test]
     public void Parse_SequencePreconditionViolatedInPrecedingBlock_ReturnsProblem ()
     {
-      MockRepository mocks = new MockRepository();
-      IMethodGraph methodGraph = mocks.Stub<IMethodGraph>();
-
       List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
       SymbolTable postConditions = new SymbolTable (_blacklistManager);
       postConditions.MakeUnsafe("x");
@@ -229,27 +257,29 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
       successors = new List<int>();
       BasicBlock terminatingNode = new BasicBlock (1, preConditions.ToArray(), postConditions, successors.ToArray());
 
-      using (mocks.Record())
+      using (_mocks.Record())
       {
-        methodGraph.IsEmpty();
+        _methodGraph.IsEmpty();
         LastCall.Return (false);
 
-        SetupResult.For (methodGraph.InitialBlock)
+        SetupResult.For (_methodGraph.InitialBlock)
                    .Return (initialNode);
 
-        methodGraph.GetBasicBlockById (1);
+        _methodGraph.GetBasicBlockById (1);
         LastCall.Return (terminatingNode);
+
+        _methodGraphBuilder.GetResult();
+        LastCall.Return (_methodGraph);
+        _parameterSymbolTableBuilder.GetResult();
+        LastCall.Return(_methodPreConditions);
       }
-      ProblemCollection result = _methodParser.Parse (methodGraph, _methodPreConditions);
+      ProblemCollection result = ParseGraph();
       Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
     }
-
+    
     [Test]
     public void Parse_SequenceNewPrecondition_ReturnsProblem ()
     {
-      MockRepository mocks = new MockRepository();
-      IMethodGraph methodGraph = mocks.Stub<IMethodGraph>();
-
       List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
       SymbolTable postConditions = new SymbolTable (_blacklistManager);
       postConditions.MakeUnsafe("x");
@@ -261,27 +291,29 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
       successors = new List<int>();
       BasicBlock terminatingNode = new BasicBlock (1, preConditions.ToArray(), postConditions, successors.ToArray());
 
-      using (mocks.Record())
+      using (_mocks.Record())
       {
-        methodGraph.IsEmpty();
+        _methodGraph.IsEmpty();
         LastCall.Return (false);
 
-        SetupResult.For (methodGraph.InitialBlock)
+        SetupResult.For (_methodGraph.InitialBlock)
                    .Return (initialNode);
 
-        methodGraph.GetBasicBlockById (1);
+        _methodGraph.GetBasicBlockById (1);
         LastCall.Return (terminatingNode);
+
+        _methodGraphBuilder.GetResult();
+        LastCall.Return (_methodGraph);
+        _parameterSymbolTableBuilder.GetResult();
+        LastCall.Return(_methodPreConditions);
       }
-      ProblemCollection result = _methodParser.Parse (methodGraph, _methodPreConditions);
+      ProblemCollection result = ParseGraph();
       Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
     }
-
+    
     [Test]
     public void Parse_BranchPreconditionsNotViolated_NoProblem ()
     {
-      MockRepository mocks = new MockRepository();
-      IMethodGraph methodGraph = mocks.Stub<IMethodGraph>();
-
       List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
       SymbolTable postConditions = new SymbolTable (_blacklistManager);
       List<int> successors = new List<int> { 1, 2 };
@@ -297,30 +329,32 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
       successors = new List<int>();
       BasicBlock secondBranch = new BasicBlock (2, preConditions.ToArray(), postConditions, successors.ToArray());
 
-      using (mocks.Record())
+      using (_mocks.Record())
       {
-        methodGraph.IsEmpty();
+        _methodGraph.IsEmpty();
         LastCall.Return (false);
 
-        SetupResult.For (methodGraph.InitialBlock)
+        SetupResult.For (_methodGraph.InitialBlock)
                    .Return (initialNode);
 
-        methodGraph.GetBasicBlockById (1);
+        _methodGraph.GetBasicBlockById (1);
         LastCall.Return (firstBranch);
 
-        methodGraph.GetBasicBlockById (2);
+        _methodGraph.GetBasicBlockById (2);
         LastCall.Return (secondBranch);
+
+        _methodGraphBuilder.GetResult();
+        LastCall.Return (_methodGraph);
+        _parameterSymbolTableBuilder.GetResult();
+        LastCall.Return(_methodPreConditions);
       }
-      ProblemCollection result = _methodParser.Parse (methodGraph, _methodPreConditions);
+      ProblemCollection result = ParseGraph();
       Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
     }
-
+    
     [Test]
     public void Parse_BranchPreconditionsOneBranchViolated_ReturnsProblem ()
     {
-      MockRepository mocks = new MockRepository();
-      IMethodGraph methodGraph = mocks.Stub<IMethodGraph>();
-
       List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
       SymbolTable postConditions = new SymbolTable (_blacklistManager);
       List<int> successors = new List<int> { 1, 2 };
@@ -336,30 +370,32 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
       successors = new List<int>();
       BasicBlock secondBranch = new BasicBlock (2, preConditions.ToArray(), postConditions, successors.ToArray());
 
-      using (mocks.Record())
+      using (_mocks.Record())
       {
-        methodGraph.IsEmpty();
+        _methodGraph.IsEmpty();
         LastCall.Return (false);
 
-        SetupResult.For (methodGraph.InitialBlock)
+        SetupResult.For (_methodGraph.InitialBlock)
                    .Return (initialNode);
 
-        methodGraph.GetBasicBlockById (1);
+        _methodGraph.GetBasicBlockById (1);
         LastCall.Return (firstBranch);
 
-        methodGraph.GetBasicBlockById (2);
+        _methodGraph.GetBasicBlockById (2);
         LastCall.Return (secondBranch);
+
+        _methodGraphBuilder.GetResult();
+        LastCall.Return (_methodGraph);
+        _parameterSymbolTableBuilder.GetResult();
+        LastCall.Return(_methodPreConditions);
       }
-      ProblemCollection result = _methodParser.Parse (methodGraph, _methodPreConditions);
+      ProblemCollection result = ParseGraph();
       Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result) && result.Count == 1, Is.True);
     }
 
     [Test]
     public void Parse_BranchPreconditionsTwoBranchesViolated_ReturnsProblem ()
     {
-      MockRepository mocks = new MockRepository();
-      IMethodGraph methodGraph = mocks.Stub<IMethodGraph>();
-
       List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
       SymbolTable postConditions = new SymbolTable (_blacklistManager);
       postConditions.MakeUnsafe("x");
@@ -376,30 +412,33 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
       successors = new List<int>();
       BasicBlock secondBranch = new BasicBlock (2, preConditions.ToArray(), postConditions, successors.ToArray());
 
-      using (mocks.Record())
+      using (_mocks.Record())
       {
-        methodGraph.IsEmpty();
+        _methodGraph.IsEmpty();
         LastCall.Return (false);
 
-        SetupResult.For (methodGraph.InitialBlock)
+        SetupResult.For (_methodGraph.InitialBlock)
                    .Return (initialNode);
 
-        methodGraph.GetBasicBlockById (1);
+        _methodGraph.GetBasicBlockById (1);
         LastCall.Return (firstBranch);
 
-        methodGraph.GetBasicBlockById (2);
+        _methodGraph.GetBasicBlockById (2);
         LastCall.Return (secondBranch);
+
+        _methodGraphBuilder.GetResult();
+        LastCall.Return (_methodGraph);
+        _parameterSymbolTableBuilder.GetResult();
+        LastCall.Return(_methodPreConditions);
       }
-      ProblemCollection result = _methodParser.Parse (methodGraph, _methodPreConditions);
+      ProblemCollection result = ParseGraph();
       Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result) && result.Count == 2, Is.True);
     }
 
+    
     [Test]
     public void Parse_SinkPreconditionsNotViolated_NoProblem ()
     {
-      MockRepository mocks = new MockRepository();
-      IMethodGraph methodGraph = mocks.Stub<IMethodGraph>();
-
       List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
       SymbolTable postConditions = new SymbolTable (_blacklistManager);
       List<int> successors = new List<int> { 1, 2 };
@@ -420,33 +459,36 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
       successors = new List<int>();
       BasicBlock sink = new BasicBlock (3, preConditions.ToArray(), postConditions, successors.ToArray());
 
-      using (mocks.Record())
+      using (_mocks.Record())
       {
-        methodGraph.IsEmpty();
+        _methodGraph.IsEmpty();
         LastCall.Return (false);
 
-        SetupResult.For (methodGraph.InitialBlock)
+        SetupResult.For (_methodGraph.InitialBlock)
                    .Return (initialNode);
 
-        methodGraph.GetBasicBlockById (1);
+        _methodGraph.GetBasicBlockById (1);
         LastCall.Return (firstBranch);
 
-        methodGraph.GetBasicBlockById (2);
+        _methodGraph.GetBasicBlockById (2);
         LastCall.Return (secondBranch);
 
-        methodGraph.GetBasicBlockById (3);
+        _methodGraph.GetBasicBlockById (3);
         LastCall.Return (sink);
+
+        _methodGraphBuilder.GetResult();
+        LastCall.Return (_methodGraph);
+        _parameterSymbolTableBuilder.GetResult();
+        LastCall.Return(_methodPreConditions);
       }
-      ProblemCollection result = _methodParser.Parse (methodGraph, _methodPreConditions);
+      ProblemCollection result = ParseGraph();
       Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
     }
 
+    
     [Test]
     public void Parse_SinkPreconditionsViolated_ReturnsProblem ()
     {
-      MockRepository mocks = new MockRepository();
-      IMethodGraph methodGraph = mocks.Stub<IMethodGraph>();
-
       List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
       SymbolTable postConditions = new SymbolTable (_blacklistManager);
       List<int> successors = new List<int> { 1, 2 };
@@ -467,33 +509,35 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
       successors = new List<int>();
       BasicBlock sink = new BasicBlock (3, preConditions.ToArray(), postConditions, successors.ToArray());
 
-      using (mocks.Record())
+      using (_mocks.Record())
       {
-        methodGraph.IsEmpty();
+        _methodGraph.IsEmpty();
         LastCall.Return (false);
 
-        SetupResult.For (methodGraph.InitialBlock)
+        SetupResult.For (_methodGraph.InitialBlock)
                    .Return (initialNode);
 
-        methodGraph.GetBasicBlockById (1);
+        _methodGraph.GetBasicBlockById (1);
         LastCall.Return (firstBranch);
 
-        methodGraph.GetBasicBlockById (2);
+        _methodGraph.GetBasicBlockById (2);
         LastCall.Return (secondBranch);
 
-        methodGraph.GetBasicBlockById (3);
+        _methodGraph.GetBasicBlockById (3);
         LastCall.Return (sink);
+
+        _methodGraphBuilder.GetResult();
+        LastCall.Return (_methodGraph);
+        _parameterSymbolTableBuilder.GetResult();
+        LastCall.Return(_methodPreConditions);
       }
-      ProblemCollection result = _methodParser.Parse (methodGraph, _methodPreConditions);
+      ProblemCollection result = ParseGraph();
       Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
     }
-
+    
     [Test]
     public void Parse_SinkPreconditionsViolatedInBranch_ReturnsProblem ()
     {
-      MockRepository mocks = new MockRepository();
-      IMethodGraph methodGraph = mocks.Stub<IMethodGraph>();
-
       List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
       SymbolTable postConditions = new SymbolTable (_blacklistManager);
       List<int> successors = new List<int> { 1, 2 };
@@ -515,33 +559,35 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
       successors = new List<int>();
       BasicBlock sink = new BasicBlock (3, preConditions.ToArray(), postConditions, successors.ToArray());
 
-      using (mocks.Record())
+      using (_mocks.Record())
       {
-        methodGraph.IsEmpty();
+        _methodGraph.IsEmpty();
         LastCall.Return (false);
 
-        SetupResult.For (methodGraph.InitialBlock)
+        SetupResult.For (_methodGraph.InitialBlock)
                    .Return (initialNode);
 
-        methodGraph.GetBasicBlockById (1);
+        _methodGraph.GetBasicBlockById (1);
         LastCall.Return (firstBranch);
 
-        methodGraph.GetBasicBlockById (2);
+        _methodGraph.GetBasicBlockById (2);
         LastCall.Return (secondBranch);
 
-        methodGraph.GetBasicBlockById (3);
+        _methodGraph.GetBasicBlockById (3);
         LastCall.Return (sink);
+
+        _methodGraphBuilder.GetResult();
+        LastCall.Return (_methodGraph);
+        _parameterSymbolTableBuilder.GetResult();
+        LastCall.Return(_methodPreConditions);
       }
-      ProblemCollection result = _methodParser.Parse (methodGraph, _methodPreConditions);
+      ProblemCollection result = ParseGraph();
       Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result) && result.Count == 1, Is.True);
     }
 
     [Test]
     public void Parse_SinkPreconditionsViolatedInOtherBranch_ReturnsProblem ()
     {
-      MockRepository mocks = new MockRepository();
-      IMethodGraph methodGraph = mocks.Stub<IMethodGraph>();
-
       List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
       SymbolTable postConditions = new SymbolTable (_blacklistManager);
       List<int> successors = new List<int> { 1, 2 };
@@ -563,33 +609,36 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
       successors = new List<int>();
       BasicBlock sink = new BasicBlock (3, preConditions.ToArray(), postConditions, successors.ToArray());
 
-      using (mocks.Record())
+      using (_mocks.Record())
       {
-        methodGraph.IsEmpty();
+        _methodGraph.IsEmpty();
         LastCall.Return (false);
 
-        SetupResult.For (methodGraph.InitialBlock)
+        SetupResult.For (_methodGraph.InitialBlock)
                    .Return (initialNode);
 
-        methodGraph.GetBasicBlockById (1);
+        _methodGraph.GetBasicBlockById (1);
         LastCall.Return (firstBranch);
 
-        methodGraph.GetBasicBlockById (2);
+        _methodGraph.GetBasicBlockById (2);
         LastCall.Return (secondBranch);
 
-        methodGraph.GetBasicBlockById (3);
+        _methodGraph.GetBasicBlockById (3);
         LastCall.Return (sink);
+
+        _methodGraphBuilder.GetResult();
+        LastCall.Return (_methodGraph);
+        _parameterSymbolTableBuilder.GetResult();
+        LastCall.Return(_methodPreConditions);
       }
-      ProblemCollection result = _methodParser.Parse (methodGraph, _methodPreConditions);
+      ProblemCollection result = ParseGraph();
       Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result) && result.Count == 1, Is.True);
     }
 
+    
     [Test]
     public void Parse_SinkPreconditionsViolatedInTwoBranches_ReturnsProblem ()
     {
-      MockRepository mocks = new MockRepository();
-      IMethodGraph methodGraph = mocks.Stub<IMethodGraph>();
-
       List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
       SymbolTable postConditions = new SymbolTable (_blacklistManager);
       List<int> successors = new List<int> { 1, 2 };
@@ -612,33 +661,35 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
       successors = new List<int>();
       BasicBlock sink = new BasicBlock (3, preConditions.ToArray(), postConditions, successors.ToArray());
 
-      using (mocks.Record())
+      using (_mocks.Record())
       {
-        methodGraph.IsEmpty();
+        _methodGraph.IsEmpty();
         LastCall.Return (false);
 
-        SetupResult.For (methodGraph.InitialBlock)
+        SetupResult.For (_methodGraph.InitialBlock)
                    .Return (initialNode);
 
-        methodGraph.GetBasicBlockById (1);
+        _methodGraph.GetBasicBlockById (1);
         LastCall.Return (firstBranch);
 
-        methodGraph.GetBasicBlockById (2);
+        _methodGraph.GetBasicBlockById (2);
         LastCall.Return (secondBranch);
 
-        methodGraph.GetBasicBlockById (3);
+        _methodGraph.GetBasicBlockById (3);
         LastCall.Return (sink);
+
+        _methodGraphBuilder.GetResult();
+        LastCall.Return (_methodGraph);
+        _parameterSymbolTableBuilder.GetResult();
+        LastCall.Return(_methodPreConditions);
       }
-      ProblemCollection result = _methodParser.Parse (methodGraph, _methodPreConditions);
+      ProblemCollection result = ParseGraph();
       Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
     }
-
+    
     [Test]
     public void Parse_LoopPreconditionsNotViolated_NoProblem ()
     {
-      MockRepository mocks = new MockRepository();
-      IMethodGraph methodGraph = mocks.Stub<IMethodGraph>();
-
       List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
       SymbolTable postConditions = new SymbolTable (_blacklistManager);
       List<int> successors = new List<int> { 1 };
@@ -649,30 +700,32 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
       successors = new List<int> { 0 };
       BasicBlock firstNode = new BasicBlock (1, preConditions.ToArray(), postConditions, successors.ToArray());
 
-      using (mocks.Record())
+      using (_mocks.Record())
       {
-        methodGraph.IsEmpty();
+        _methodGraph.IsEmpty();
         LastCall.Return (false);
 
-        SetupResult.For (methodGraph.InitialBlock)
+        SetupResult.For (_methodGraph.InitialBlock)
                    .Return (initialNode);
 
-        SetupResult.For (methodGraph.GetBasicBlockById (1))
+        SetupResult.For (_methodGraph.GetBasicBlockById (1))
                    .Return (firstNode);
 
-        SetupResult.For (methodGraph.GetBasicBlockById (0))
+        SetupResult.For (_methodGraph.GetBasicBlockById (0))
                    .Return (initialNode);
+
+        _methodGraphBuilder.GetResult();
+        LastCall.Return (_methodGraph);
+        _parameterSymbolTableBuilder.GetResult();
+        LastCall.Return(_methodPreConditions);
       }
-      ProblemCollection result = _methodParser.Parse (methodGraph, _methodPreConditions);
+      ProblemCollection result = ParseGraph();
       Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
     }
 
     [Test]
     public void Parse_LoopPreconditionsViolated_ReturnsProblem ()
     {
-      MockRepository mocks = new MockRepository();
-      IMethodGraph methodGraph = mocks.Stub<IMethodGraph>();
-
       List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
       SymbolTable postConditions = new SymbolTable (_blacklistManager);
       List<int> successors = new List<int> { 1 };
@@ -684,29 +737,32 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
       successors = new List<int> { 0 };
       BasicBlock firstNode = new BasicBlock (1, preConditions.ToArray(), postConditions, successors.ToArray());
 
-      using (mocks.Record())
+      using (_mocks.Record())
       {
-        methodGraph.IsEmpty();
+        _methodGraph.IsEmpty();
         LastCall.Return (false);
 
-        SetupResult.For (methodGraph.InitialBlock)
+        SetupResult.For (_methodGraph.InitialBlock)
                    .Return (initialNode);
 
-        SetupResult.For (methodGraph.GetBasicBlockById (1))
+        SetupResult.For (_methodGraph.GetBasicBlockById (1))
                    .Return (firstNode);
 
-        SetupResult.For (methodGraph.GetBasicBlockById (0))
+        SetupResult.For (_methodGraph.GetBasicBlockById (0))
                    .Return (initialNode);
+
+        _methodGraphBuilder.GetResult();
+        LastCall.Return (_methodGraph);
+        _parameterSymbolTableBuilder.GetResult();
+        LastCall.Return(_methodPreConditions);
       }
-      ProblemCollection result = _methodParser.Parse (methodGraph, _methodPreConditions);
+      ProblemCollection result = ParseGraph();
       Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
     }
-
+    
     [Test]
     public void Parse_LoopPreconditionsViolatedInBranch_ReturnsProblem ()
     {
-      MockRepository mocks = new MockRepository();
-      IMethodGraph methodGraph = mocks.Stub<IMethodGraph>();
       _methodPreConditions.MakeSafe ("z", "SqlFragment");
 
       List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment"), new PreCondition("z", "SqlFragment") };
@@ -725,28 +781,32 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
       successors = new List<int> { 0 };
       BasicBlock secondBranch = new BasicBlock (2, preConditions.ToArray(), postConditions, successors.ToArray());
       
-      using (mocks.Record())
+      using (_mocks.Record())
       {
-        methodGraph.IsEmpty();
+        _methodGraph.IsEmpty();
         LastCall.Return (false);
 
-        SetupResult.For (methodGraph.InitialBlock)
+        SetupResult.For (_methodGraph.InitialBlock)
                    .Return (initialNode);
 
-        SetupResult.For (methodGraph.GetBasicBlockById (0))
+        SetupResult.For (_methodGraph.GetBasicBlockById (0))
                    .Return (initialNode);
 
-        SetupResult.For (methodGraph.GetBasicBlockById (1))
+        SetupResult.For (_methodGraph.GetBasicBlockById (1))
                    .Return (firstBranch);
 
-        SetupResult.For (methodGraph.GetBasicBlockById (2))
+        SetupResult.For (_methodGraph.GetBasicBlockById (2))
                    .Return (secondBranch);
 
+        _methodGraphBuilder.GetResult();
+        LastCall.Return (_methodGraph);
+        _parameterSymbolTableBuilder.GetResult();
+        LastCall.Return(_methodPreConditions);
       }
-      ProblemCollection result = _methodParser.Parse (methodGraph, _methodPreConditions);
+      ProblemCollection result = ParseGraph();
       Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result) && result.Count == 1, Is.True);
-      // how many entries??
-    
+      
     }
+    
   }
 }
