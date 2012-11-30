@@ -20,8 +20,8 @@ namespace InjectionCop.Parser.MethodParsing
   /// <summary>
   /// Parses and analyzes a pair of methodgraph/preconditions
   /// </summary>
-  interface IMethodParser
+  interface IMethodGraphAnalyzer
   {
-    ProblemCollection Parse (IMethodParserDirector director);
+    ProblemCollection Parse (IMethodGraphBuilder methodGraphBuilder, IParameterSymbolTableBuilder parameterSymbolTableBuilder);
   }
 }

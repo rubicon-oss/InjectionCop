@@ -57,8 +57,7 @@
     <Compile Include="Parser\ISymbolTable.cs" />
     <Compile Include="Parser\MethodParsing\IMethodGraph.cs" />
     <Compile Include="Parser\MethodParsing\IMethodGraphBuilder.cs" />
-    <Compile Include="Parser\MethodParsing\IMethodParser.cs" />
-    <Compile Include="Parser\MethodParsing\IMethodParserDirector.cs" />
+    <Compile Include="Parser\MethodParsing\IMethodGraphAnalyzer.cs" />
     <Compile Include="Parser\MethodParsing\IParameterSymbolTableBuilder.cs" />
     <Compile Include="Parser\MethodParsing\MethodGraph.cs" />
     <Compile Include="Parser\BlockParsing\BasicBlock.cs" />
@@ -67,8 +66,7 @@
     <Compile Include="Parser\TypeParsing\BaseFxCopRule.cs" />
     <Compile Include="Parser\IntrospectionTools.cs" />
     <Compile Include="Parser\MethodParsing\MethodGraphBuilder.cs" />
-    <Compile Include="Parser\MethodParsing\MethodParser.cs" />
-    <Compile Include="Parser\MethodParsing\MethodParserDirector.cs" />
+    <Compile Include="Parser\MethodParsing\MethodGraphAnalyzer.cs" />
     <Compile Include="Parser\MethodParsing\ParameterSymbolTableBuilder.cs" />
     <Compile Include="Parser\BlockParsing\PreCondition.cs" />
     <Compile Include="Parser\SymbolTable.cs" />

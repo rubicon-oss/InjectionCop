@@ -29,50 +29,54 @@ namespace InjectionCop.Parser.MethodParsing
     private readonly IBlacklistManager _blacklistManager;
     private readonly TypeParser _typeParser;
 
-    public MethodGraphBuilder (Block methodBody, IBlacklistManager blacklistManager, TypeParser typeParser)
+    public MethodGraphBuilder (Method method, IBlacklistManager blacklistManager, TypeParser typeParser)
     {
-      _methodBody = methodBody;
+      _methodBody = method.Body;
       _blacklistManager = blacklistManager;
       _typeParser = typeParser;
+      _result = null;
     }
 
     public void Build ()
     {
-      _result = MethodGraph.Empty;
-      BlockParser parser = new BlockParser (_blacklistManager, _typeParser);
-      Dictionary<int, BasicBlock> graph = new Dictionary<int, BasicBlock>();
-      int initialBlockId;
-
-      List<Block> blockList = new List<Block> (_methodBody.Statements.OfType<Block>());
-
-      using (var blocksEnumerator = blockList.GetEnumerator())
+      if (_result == null)
       {
-        if (!blocksEnumerator.MoveNext())
-          return;
-        var currentBlock = blocksEnumerator.Current;
-        initialBlockId = currentBlock.UniqueKey;
-        BasicBlock currentBasicBlock;
-        while (blocksEnumerator.MoveNext())
+        _result = MethodGraph.Empty;
+        BlockParser parser = new BlockParser (_blacklistManager, _typeParser);
+        Dictionary<int, BasicBlock> graph = new Dictionary<int, BasicBlock>();
+        int initialBlockId;
+
+        List<Block> blockList = new List<Block> (_methodBody.Statements.OfType<Block>());
+
+        using (var blocksEnumerator = blockList.GetEnumerator())
         {
-          var nextBlock = blocksEnumerator.Current;
+          if (!blocksEnumerator.MoveNext())
+            return;
+          var currentBlock = blocksEnumerator.Current;
+          initialBlockId = currentBlock.UniqueKey;
+          BasicBlock currentBasicBlock;
+          while (blocksEnumerator.MoveNext())
+          {
+            var nextBlock = blocksEnumerator.Current;
 
-          if (ContainsUnconditionalBranch (currentBlock))
-          {
-            currentBasicBlock = parser.Parse (currentBlock);
+            if (ContainsUnconditionalBranch (currentBlock))
+            {
+              currentBasicBlock = parser.Parse (currentBlock);
+            }
+            else
+            {
+              currentBasicBlock = parser.Parse (currentBlock, nextBlock.UniqueKey);
+            }
+            graph.Add (currentBasicBlock.Id, currentBasicBlock);
+
+            currentBlock = nextBlock;
           }
-          else
-          {
-            currentBasicBlock = parser.Parse (currentBlock, nextBlock.UniqueKey);
-          }
+          currentBasicBlock = parser.Parse (currentBlock);
           graph.Add (currentBasicBlock.Id, currentBasicBlock);
-
-          currentBlock = nextBlock;
         }
-        currentBasicBlock = parser.Parse (currentBlock);
-        graph.Add (currentBasicBlock.Id, currentBasicBlock);
-      }
 
-      _result = new MethodGraph (initialBlockId, graph);
+        _result = new MethodGraph (initialBlockId, graph);
+      }
     }
 
     private bool ContainsUnconditionalBranch (Block currentBlock)
@@ -90,6 +94,7 @@ namespace InjectionCop.Parser.MethodParsing
 
     public IMethodGraph GetResult ()
     {
+      Build();
       return _result;
     }
   }

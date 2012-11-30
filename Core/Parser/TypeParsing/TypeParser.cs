@@ -54,9 +54,10 @@ namespace InjectionCop.Parser.TypeParsing
 
     public ProblemCollection Parse (Method method)
     {
-      IMethodParser methodParser = new MethodParser (this);
-      IMethodParserDirector director = new MethodParserDirector (method, _blacklistManager, this);
-      return methodParser.Parse (director);
+      IMethodGraphAnalyzer methodParser = new MethodGraphAnalyzer (this);
+      IMethodGraphBuilder methodGraphBuilder = new MethodGraphBuilder (method, _blacklistManager, this);
+      IParameterSymbolTableBuilder parameterSymbolTableBuilder = new ParameterSymbolTableBuilder (method, _blacklistManager);
+      return methodParser.Parse (methodGraphBuilder, parameterSymbolTableBuilder);
     }
   }
 }

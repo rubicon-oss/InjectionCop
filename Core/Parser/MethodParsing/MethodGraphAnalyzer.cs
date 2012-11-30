@@ -20,19 +20,19 @@ using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser.MethodParsing
 {
-  public class MethodParser : IMethodParser
+  public class MethodGraphAnalyzer : IMethodGraphAnalyzer
   {
     private TypeParser _typeParser;
     
-    public MethodParser (TypeParser typeParser)
+    public MethodGraphAnalyzer (TypeParser typeParser)
     {
       _typeParser = typeParser;
     }
 
-    public ProblemCollection Parse (IMethodParserDirector director)
+    public ProblemCollection Parse (IMethodGraphBuilder methodGraphBuilder, IParameterSymbolTableBuilder parameterSymbolTableBuilder)
     {
-      ISymbolTable parameterSafeness = director.GetParameterSafeness();
-      IMethodGraph methodGraph = director.GetMethodGraph();
+      IMethodGraph methodGraph = methodGraphBuilder.GetResult();
+      ISymbolTable parameterSafeness = parameterSymbolTableBuilder.GetResult();
       
       if (!methodGraph.IsEmpty())
       {

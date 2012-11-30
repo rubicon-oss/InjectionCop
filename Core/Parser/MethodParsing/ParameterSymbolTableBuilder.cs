@@ -21,35 +21,40 @@ namespace InjectionCop.Parser.MethodParsing
   public class ParameterSymbolTableBuilder : IParameterSymbolTableBuilder
   {
     private ISymbolTable _result;
-    private Method _method;
-    private IBlacklistManager _blacklistManager;
+    private readonly Method _method;
+    private readonly IBlacklistManager _blacklistManager;
 
     public ParameterSymbolTableBuilder (Method method, IBlacklistManager blacklistManager)
     {
       _method = method;
       _blacklistManager = blacklistManager;
+      _result = null;
     }
 
     public void Build ()
     {
-      ISymbolTable parameterSafeness = new SymbolTable (_blacklistManager);
-      foreach (Parameter parameter in _method.Parameters)
+      if (_result == null)
       {
-        if (FragmentTools.ContainsFragment (parameter.Attributes))
+        ISymbolTable parameterSafeness = new SymbolTable (_blacklistManager);
+        foreach (Parameter parameter in _method.Parameters)
         {
-          string fragmentType = FragmentTools.GetFragmentType (parameter.Attributes);
-          parameterSafeness.MakeSafe (parameter.Name.Name, fragmentType);
+          if (FragmentTools.ContainsFragment (parameter.Attributes))
+          {
+            string fragmentType = FragmentTools.GetFragmentType (parameter.Attributes);
+            parameterSafeness.MakeSafe (parameter.Name.Name, fragmentType);
+          }
+          else
+          {
+            parameterSafeness.MakeUnsafe (parameter.Name.Name);
+          }
         }
-        else
-        {
-          parameterSafeness.MakeUnsafe (parameter.Name.Name);
-        }
+        _result = parameterSafeness;
       }
-      _result = parameterSafeness;
     }
 
     public ISymbolTable GetResult ()
     {
+      Build();
       return _result;
     }
   }

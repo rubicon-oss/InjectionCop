@@ -27,10 +27,10 @@ using Rhino.Mocks;
 namespace InjectionCop.UnitTests.Parser.MethodParsing
 {
   [TestFixture]
-  public class MethodParserTest
+  public class MethodGraphAnalyzerTest
   {
     private SymbolTable _methodPreConditions;
-    private MethodParser _methodParser;
+    private MethodGraphAnalyzer _methodParser;
     private IBlacklistManager _blacklistManager;
     
     [SetUp]
@@ -41,7 +41,7 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
       _methodPreConditions.MakeSafe ("x", "SqlFragment");
       _methodPreConditions.MakeUnsafe ("y");
       TypeParser typeParser = new TypeParser ();
-      _methodParser = new MethodParser (typeParser);
+      _methodParser = new MethodGraphAnalyzer (typeParser);
     }
 
     [Test]
