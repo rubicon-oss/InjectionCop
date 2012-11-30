@@ -49,7 +49,6 @@ namespace InjectionCop.Parser.MethodParsing
     {
       if (_result == null)
       {
-        _result = MethodGraph.Empty;
         BlockParser parser = new BlockParser (_blacklistManager, _typeParser);
         Dictionary<int, BasicBlock> graph = new Dictionary<int, BasicBlock>();
         int initialBlockId;

@@ -19,7 +19,7 @@ namespace InjectionCop.Config
 {
   public class IDbCommandBlacklistManagerStub : IBlacklistManager
   {
-    public bool IsListed (string qualifiedTypeName, string methodName, List<string> qualifiedParameterTypes)
+    public bool IsListed (string qualifiedTypeName, string methodName, IList<string> qualifiedParameterTypes)
     {
       return qualifiedTypeName == "System.Data.IDbCommand"
              && methodName == "set_CommandText"
@@ -27,9 +27,9 @@ namespace InjectionCop.Config
              && qualifiedParameterTypes[0] == "System.String";
     }
 
-    public List<string> GetFragmentTypes (string qualifiedTypeName, string methodName, List<string> qualifiedParameterTypes)
+    public string[] GetFragmentTypes (string qualifiedTypeName, string methodName, IList<string> qualifiedParameterTypes)
     {
-      return new List<string> { "SqlFragment" };
+      return new[] { "SqlFragment" };
     }
   }
 }

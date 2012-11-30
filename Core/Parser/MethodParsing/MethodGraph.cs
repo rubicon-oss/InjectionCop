@@ -21,8 +21,6 @@ namespace InjectionCop.Parser.MethodParsing
 {
   public class MethodGraph : IMethodGraph
   {
-    private static MethodGraph _emptyGraph = new MethodGraph (-1, new Dictionary<int, BasicBlock>());
-
     private readonly int _initialBlockId;
     private readonly Dictionary<int, BasicBlock> _graph;
 
@@ -62,11 +60,6 @@ namespace InjectionCop.Parser.MethodParsing
           throw new InjectionCopException ("Graph is empty");
         }
       }
-    }
-
-    public static MethodGraph Empty
-    {
-      get { return _emptyGraph; }
     }
   }
 }

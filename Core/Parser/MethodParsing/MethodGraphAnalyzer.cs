@@ -49,7 +49,8 @@ namespace InjectionCop.Parser.MethodParsing
     private void Parse (IMethodGraph methodGraph, ISymbolTable context, BasicBlock currentBlock, Dictionary<int, int> visits)
     {
       UpdateVisits (currentBlock.Id, visits);
-      if (visits[currentBlock.Id] < 2)
+      bool loopIterationsExceeded = visits[currentBlock.Id] > 1;
+      if(!loopIterationsExceeded)
       {
         CheckPreCoditions (currentBlock.PreConditions, context);
         ISymbolTable adjustedContext = UpdateContext (context, currentBlock.PostConditionSymbolTable);

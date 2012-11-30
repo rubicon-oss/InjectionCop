@@ -24,17 +24,12 @@ namespace InjectionCop.Parser
 {
   public class SymbolTable : ISymbolTable
   {
-    private static readonly string LITERAL = "__Literal__";
-    private static readonly string _emptyFragment = "__EmptyFragment__";
+    private const string c_literal = "__Literal__";
+    public static readonly string EMPTY_FRAGMENT = "__EmptyFragment__";
 
     private readonly IBlacklistManager _blacklistManager;
 
     private Dictionary<string, string> _safenessMap;
-    
-    public static string EMPTY_FRAGMENT 
-    {
-      get { return _emptyFragment; }
-    }
     
     public SymbolTable (IBlacklistManager blacklistManager)
     {
@@ -57,7 +52,7 @@ namespace InjectionCop.Parser
       if (_safenessMap.ContainsKey (symbolName))
       {
         isFragment = _safenessMap[symbolName] == fragmentType;
-        isLiteral = _safenessMap[symbolName] == LITERAL;
+        isLiteral = _safenessMap[symbolName] == c_literal;
       }
       return isFragment || isLiteral;
     }
@@ -69,7 +64,7 @@ namespace InjectionCop.Parser
       string fragmentType = EMPTY_FRAGMENT;
       if (expression is Literal)
       {
-        fragmentType = LITERAL;
+        fragmentType = c_literal;
       }
       else if (expression is Local)
       {
@@ -105,15 +100,15 @@ namespace InjectionCop.Parser
       bool parameterSafe = true;
       requireSafenessParameters = new List<PreCondition>();
       Method calleeMethod = IntrospectionTools.ExtractMethod (methodCall);
-      List<string> parameterFragmentTypes = GetParameterFragmentTypes (calleeMethod);
+      string[] parameterFragmentTypes = GetParameterFragmentTypes (calleeMethod);
       
-      for (int i = 0; i < parameterFragmentTypes.Count; i++)
+      for (int i = 0; i < parameterFragmentTypes.Length; i++)
       {
         Expression operand = methodCall.Operands[i];
         string operandFragmentType = InferFragmentType (operand);
         string parameterFragmentType = parameterFragmentTypes[i];
         
-        if (operandFragmentType != LITERAL
+        if (operandFragmentType != c_literal
             && parameterFragmentType != EMPTY_FRAGMENT
             && operandFragmentType != parameterFragmentType)
         {
@@ -191,10 +186,10 @@ namespace InjectionCop.Parser
       return fragmentType;
     }
 
-    private List<string> GetParameterFragmentTypes (Method calleeMethod)
+    private string[] GetParameterFragmentTypes (Method calleeMethod)
     {
       List<string> parameterTypes = GetParameterTypes (calleeMethod);
-      List<string> parameterFragmentTypes = new List<string>();
+      string[] parameterFragmentTypes;
       
       if (_blacklistManager.IsListed (calleeMethod.DeclaringType.FullName, calleeMethod.Name.Name, parameterTypes))
       {
@@ -202,7 +197,9 @@ namespace InjectionCop.Parser
       }
       else
       {
-        parameterFragmentTypes.AddRange (calleeMethod.Parameters.Select (parameter => FragmentTools.GetFragmentType (parameter.Attributes)));
+        List<string> buffer = new List<string>();
+        buffer.AddRange (calleeMethod.Parameters.Select (parameter => FragmentTools.GetFragmentType (parameter.Attributes)));
+        parameterFragmentTypes = buffer.ToArray();
       }
 
       return parameterFragmentTypes;

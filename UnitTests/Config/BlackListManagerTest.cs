@@ -193,8 +193,8 @@ namespace InjectionCop.UnitTests.Config
     {
       LoadValidExample();
       List<string> parameters = new List<string> { "namespace.type3", "unknowntype" };
-      List<string> fragmentTypes = _blackListManager.GetFragmentTypes ("namespace.BlackType2", "Method2", parameters);
-      Assert.That (fragmentTypes.Count, Is.EqualTo(0));
+      string[] fragmentTypes = _blackListManager.GetFragmentTypes ("namespace.BlackType2", "Method2", parameters);
+      Assert.That (fragmentTypes.Length, Is.EqualTo(0));
     }
 
     [Test]
@@ -202,7 +202,7 @@ namespace InjectionCop.UnitTests.Config
     {
       LoadValidExample();
       List<string> parameters = new List<string> { "namespace.type1", "namespace.type2" };
-      List<string> fragmentTypes = _blackListManager.GetFragmentTypes ("namespace.BlackType", "Method", parameters);
+      string[] fragmentTypes = _blackListManager.GetFragmentTypes ("namespace.BlackType", "Method", parameters);
       bool fragmentCorrect = fragmentTypes[0] == "fragmentType";
       bool nonFragmentCorrect = fragmentTypes[1] == SymbolTable.EMPTY_FRAGMENT;
       Assert.That (fragmentCorrect && nonFragmentCorrect, Is.True);
@@ -213,8 +213,8 @@ namespace InjectionCop.UnitTests.Config
     {
       LoadValidExample();
       List<string> parameters = new List<string> ();
-      List<string> fragmentTypes = _blackListManager.GetFragmentTypes ("namespace.BlackType2", "ParameterlessMethod", parameters);
-      bool noFragmentTypesReturned = fragmentTypes.Count == 0;
+      string[] fragmentTypes = _blackListManager.GetFragmentTypes ("namespace.BlackType2", "ParameterlessMethod", parameters);
+      bool noFragmentTypesReturned = fragmentTypes.Length == 0;
       Assert.That (noFragmentTypesReturned, Is.True);
     }
   }
