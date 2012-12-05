@@ -28,7 +28,7 @@ namespace InjectionCop.IntegrationTests.Parser
     {
         TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
         Method sample = TestHelper.GetSample<FragmentToolsSample>("ContainsFragmentParameter", stringTypeNode);
-        bool isResult = FragmentTools.IsFragment(sample.Parameters[0].Attributes[0]);
+        bool isResult = FragmentUtilities.IsFragment(sample.Parameters[0].Attributes[0]);
         Assert.That(isResult, Is.True);
     }
 
@@ -37,7 +37,7 @@ namespace InjectionCop.IntegrationTests.Parser
     {
         TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
         Method sample = TestHelper.GetSample<FragmentToolsSample>("ContainsNonFragmentParameter", stringTypeNode);
-        bool isResult = FragmentTools.IsFragment(sample.Parameters[0].Attributes[0]);
+        bool isResult = FragmentUtilities.IsFragment(sample.Parameters[0].Attributes[0]);
         Assert.That(isResult, Is.False);
     }
 
@@ -46,7 +46,7 @@ namespace InjectionCop.IntegrationTests.Parser
     {
         TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
         Method sample = TestHelper.GetSample<FragmentToolsSample>("ContainsStronglyTypedSqlFragmentParameter", stringTypeNode);
-        bool isResult = FragmentTools.IsFragment(sample.Parameters[0].Attributes[0]);
+        bool isResult = FragmentUtilities.IsFragment(sample.Parameters[0].Attributes[0]);
         Assert.That(isResult, Is.True);
     }
 
@@ -55,7 +55,7 @@ namespace InjectionCop.IntegrationTests.Parser
     {
       TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
       Method sample = TestHelper.GetSample<FragmentToolsSample>("ContainsFragmentParameter", stringTypeNode);
-      bool isResult = FragmentTools.ContainsFragment(sample.Parameters[0].Attributes);
+      bool isResult = FragmentUtilities.ContainsFragment(sample.Parameters[0].Attributes);
       Assert.That(isResult, Is.True);
     }
 
@@ -64,7 +64,7 @@ namespace InjectionCop.IntegrationTests.Parser
     {
       TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
       Method sample = TestHelper.GetSample<FragmentToolsSample>("ContainsNonFragmentParameter", stringTypeNode);
-      bool isResult = FragmentTools.ContainsFragment(sample.Parameters[0].Attributes);
+      bool isResult = FragmentUtilities.ContainsFragment(sample.Parameters[0].Attributes);
       Assert.That(isResult, Is.False);
     }
 
@@ -73,7 +73,7 @@ namespace InjectionCop.IntegrationTests.Parser
     {
       TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
       Method sample = TestHelper.GetSample<FragmentToolsSample>("ContainsStronglyTypedSqlFragmentParameter", stringTypeNode);
-      bool isResult = FragmentTools.ContainsFragment(sample.Parameters[0].Attributes);
+      bool isResult = FragmentUtilities.ContainsFragment(sample.Parameters[0].Attributes);
       Assert.That(isResult, Is.True);
     }
 
@@ -82,7 +82,7 @@ namespace InjectionCop.IntegrationTests.Parser
     {
       TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
       Method sample = TestHelper.GetSample<FragmentToolsSample>("ContainsFragmentParameter", stringTypeNode);
-      string fragmentType = FragmentTools.GetFragmentType(sample.Parameters[0].Attributes);
+      string fragmentType = FragmentUtilities.GetFragmentType(sample.Parameters[0].Attributes);
       Assert.That(fragmentType, Is.EqualTo("FragmentType"));
     }
 
@@ -91,7 +91,7 @@ namespace InjectionCop.IntegrationTests.Parser
     {
       TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
       Method sample = TestHelper.GetSample<FragmentToolsSample>("ContainsStronglyTypedSqlFragmentParameter", stringTypeNode);
-      string fragmentType = FragmentTools.GetFragmentType(sample.Parameters[0].Attributes);
+      string fragmentType = FragmentUtilities.GetFragmentType(sample.Parameters[0].Attributes);
       Assert.That(fragmentType, Is.EqualTo("SqlFragment"));
     }
 
@@ -100,7 +100,7 @@ namespace InjectionCop.IntegrationTests.Parser
     {
       TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
       Method sample = TestHelper.GetSample<FragmentToolsSample>("ContainsNonFragmentParameter", stringTypeNode);
-      string returnedFragment = FragmentTools.GetFragmentType(sample.Parameters[0].Attributes);
+      string returnedFragment = FragmentUtilities.GetFragmentType(sample.Parameters[0].Attributes);
       Assert.That (returnedFragment, Is.EqualTo (SymbolTable.EMPTY_FRAGMENT));
     }
   }

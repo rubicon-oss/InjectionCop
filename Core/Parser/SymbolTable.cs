@@ -90,7 +90,7 @@ namespace InjectionCop.Parser
         Method calleeMethod = IntrospectionUtility.ExtractMethod ((MethodCall) expression);
         if (calleeMethod.ReturnAttributes != null)
         {
-          fragmentType = FragmentTools.GetFragmentType (calleeMethod.ReturnAttributes);
+          fragmentType = FragmentUtilities.GetFragmentType (calleeMethod.ReturnAttributes);
         }
       }
       else if (expression is UnaryExpression)
@@ -207,7 +207,7 @@ namespace InjectionCop.Parser
       else
       {
         List<string> buffer = new List<string>();
-        buffer.AddRange (calleeMethod.Parameters.Select (parameter => FragmentTools.GetFragmentType (parameter.Attributes)));
+        buffer.AddRange (calleeMethod.Parameters.Select (parameter => FragmentUtilities.GetFragmentType (parameter.Attributes)));
         parameterFragmentTypes = buffer.ToArray();
       }
 

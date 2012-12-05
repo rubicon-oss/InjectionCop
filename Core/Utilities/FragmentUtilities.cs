@@ -15,15 +15,15 @@
 using System;
 using System.Linq;
 using InjectionCop.Fragment;
-using InjectionCop.Utilities;
+using InjectionCop.Parser;
 using Microsoft.FxCop.Sdk;
 
-namespace InjectionCop.Parser
+namespace InjectionCop.Utilities
 {
   /// <summary>
   /// Helper methods for handling fragments
   /// </summary>
-  public class FragmentTools
+  public class FragmentUtilities
   {
     public static bool IsFragment (AttributeNode attribute)
     {

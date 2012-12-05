@@ -113,9 +113,9 @@ namespace InjectionCop.Parser.BlockParsing
       {
         string symbol = IntrospectionUtility.GetVariableName (targetExpression);
         Field target = IntrospectionUtility.GetField (targetExpression);
-        if (FragmentTools.ContainsFragment (target.Attributes))
+        if (FragmentUtilities.ContainsFragment (target.Attributes))
         {
-          string targetFragmentType = FragmentTools.GetFragmentType (target.Attributes);
+          string targetFragmentType = FragmentUtilities.GetFragmentType (target.Attributes);
           if (targetFragmentType != _symbolTableParser.GetFragmentType (symbol))
           {
             _typeParser.AddProblem();
@@ -165,9 +165,9 @@ namespace InjectionCop.Parser.BlockParsing
           if (method.Parameters[i].IsOut)
           {
             string symbol = IntrospectionUtility.GetVariableName (methodCall.Operands[i]);
-            if (FragmentTools.ContainsFragment (method.Parameters[i].Attributes))
+            if (FragmentUtilities.ContainsFragment (method.Parameters[i].Attributes))
             {
-              string fragmentType = FragmentTools.GetFragmentType (method.Parameters[i].Attributes);
+              string fragmentType = FragmentUtilities.GetFragmentType (method.Parameters[i].Attributes);
               _symbolTableParser.MakeSafe (symbol, fragmentType);
             }
             else

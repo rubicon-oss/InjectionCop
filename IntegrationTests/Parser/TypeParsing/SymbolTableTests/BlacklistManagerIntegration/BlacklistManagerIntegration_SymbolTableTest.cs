@@ -23,7 +23,7 @@ using NUnit.Framework;
 namespace InjectionCop.IntegrationTests.Parser.TypeParsing.SymbolTableTests.BlacklistManagerIntegration
 {
   [TestFixture]
-  public class BlacklistManagerIntegrationTest
+  public class BlacklistManagerIntegration_SymbolTableTest
   {
     private ISymbolTable _symbolTable;
 

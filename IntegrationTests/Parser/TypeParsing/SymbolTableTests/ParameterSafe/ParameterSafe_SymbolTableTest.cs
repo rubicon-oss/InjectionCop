@@ -23,7 +23,7 @@ using NUnit.Framework;
 namespace InjectionCop.IntegrationTests.Parser.TypeParsing.SymbolTableTests.ParameterSafe
 {
   [TestFixture]
-  public class ParameterSafeTest
+  public class ParameterSafe_SymbolTableTest
   {
     private ISymbolTable _symbolTable;
 
