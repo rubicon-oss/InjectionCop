@@ -59,7 +59,7 @@ namespace InjectionCop.Parser.TypeParsing
       ArgumentUtility.CheckNotNull ("method", method);
       IMethodGraphAnalyzer methodParser = new MethodGraphAnalyzer (this);
       IMethodGraphBuilder methodGraphBuilder = new MethodGraphBuilder (method, _blacklistManager, this);
-      IParameterSymbolTableBuilder parameterSymbolTableBuilder = new ParameterSymbolTableBuilder (method, _blacklistManager);
+      IInitialSymbolTableBuilder parameterSymbolTableBuilder = new InitialSymbolTableBuilder (method, _blacklistManager);
       return methodParser.Parse (methodGraphBuilder, parameterSymbolTableBuilder);
     }
   }

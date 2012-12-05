@@ -14,6 +14,7 @@
 
 using System;
 using InjectionCop.Parser;
+using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
 using NUnit.Framework;
 
@@ -36,7 +37,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Assig
     [Category("AssignmentPropagation")]
     public void Parse_InvalidSafenessPropagationParameter_ReturnsProblem()
     {
-      TypeNode stringTypeNode = IntrospectionTools.TypeNodeFactory<string>();
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
       Method sample = TestHelper.GetSample<AssignmentPropagationSample>("InvalidSafenessPropagationParameter", stringTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
@@ -47,7 +48,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Assig
     [Category("AssignmentPropagation")]
     public void Parse_ValidSafenessPropagationParameter_NoProblem()
     {
-      TypeNode stringTypeNode = IntrospectionTools.TypeNodeFactory<string>();
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
       Method sample = TestHelper.GetSample<AssignmentPropagationSample>("ValidSafenessPropagationParameter", stringTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 

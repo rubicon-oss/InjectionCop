@@ -17,6 +17,7 @@ using InjectionCop.Config;
 using InjectionCop.Parser;
 using InjectionCop.Parser.BlockParsing;
 using InjectionCop.Parser.TypeParsing;
+using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
 using NUnit.Framework;
 
@@ -61,7 +62,7 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
     [Test]
     public void Parse_UnsafePreCondition()
     {
-      TypeNode stringTypeNode = IntrospectionTools.TypeNodeFactory<string>();
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
       Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("UnsafePreCondition", stringTypeNode);
       Block sample = sampleMethod.Body.Statements[0] as Block;
       BasicBlock basicBlock = _blockParser.Parse(sample);
@@ -74,7 +75,7 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
     [Test]
     public void Parse_SafePreCondition ()
     {
-      TypeNode stringTypeNode = IntrospectionTools.TypeNodeFactory<string>();
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
       Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("SafePreCondition", stringTypeNode);
       Block sample = sampleMethod.Body.Statements[0] as Block;
       BasicBlock basicBlock = _blockParser.Parse (sample);
@@ -87,7 +88,7 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
     [Test]
     public void Parse_MultipleUnsafePreCondition ()
     {
-      TypeNode stringTypeNode = IntrospectionTools.TypeNodeFactory<string>();
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
       Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("MultipleUnsafePreCondition", stringTypeNode, stringTypeNode);
       Block sample = sampleMethod.Body.Statements[0] as Block;
       BasicBlock basicBlock = _blockParser.Parse (sample);
@@ -105,7 +106,7 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
     [Test]
     public void Parse_BlockInternalSafenessCondition_InternalSafenessSymbolNotInPreCondition ()
     {
-      TypeNode stringTypeNode = IntrospectionTools.TypeNodeFactory<string>();
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
       Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("BlockInternalSafenessCondition", stringTypeNode);
       Block sample = sampleMethod.Body.Statements[0] as Block;
       BasicBlock basicBlock = _blockParser.Parse (sample);
@@ -119,7 +120,7 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
     [Test]
     public void Parse_SetSuccessor ()
     {
-      TypeNode stringTypeNode = IntrospectionTools.TypeNodeFactory<string>();
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
       Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("SetSuccessor", stringTypeNode);
       Block sample = sampleMethod.Body.Statements[0] as Block;
       BasicBlock basicBlock = _blockParser.Parse (sample);

@@ -13,26 +13,23 @@
 // limitations under the License.
 
 using System;
-using System.Linq;
-using InjectionCop.Parser;
-using InjectionCop.Utilities;
-using Microsoft.FxCop.Sdk;
+using InjectionCop.Fragment;
 
-namespace InjectionCop.IntegrationTests.Parser
+namespace InjectionCop.IntegrationTests.Parser.MethodParsing
 {
-  public class TestHelper
+  class InitialSymbolTableBuilderSample
   {
-    public static bool ContainsProblemID (string id, ProblemCollection result)
-    {
-      return result.Any (problem => problem.Id == id);
-    }
+    [Fragment ("FieldType")]
+    private int _fragmentField = 0;
 
-    public static Method GetSample<SampleClass>(string methodName, params TypeNode[] methodParameters)
-    {
-      Identifier sampleName = Identifier.For(methodName);
-      Method sample = IntrospectionUtility.MethodFactory<SampleClass> (sampleName, methodParameters);
-      return sample;
-    }
+    [SqlFragment]
+    private string _sqlFragmentField = "dummy";
 
+    private readonly object _nonFragmentField = new object();
+
+    public string ParameterizedMethod (float floatParameter, object objectParameter)
+    {
+      return objectParameter.ToString() + floatParameter + _fragmentField + _nonFragmentField + _sqlFragmentField;
+    }
   }
 }

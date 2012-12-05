@@ -76,9 +76,18 @@ namespace InjectionCop.Parser
         Parameter parameter = (Parameter) expression;
         fragmentType = Lookup (parameter.Name.Name);
       }
+      else if (expression is MemberBinding)
+      {
+        MemberBinding memberBinding = (MemberBinding) expression;
+        if (memberBinding.BoundMember is Field)
+        {
+          Field field = (Field) memberBinding.BoundMember;
+          fragmentType = Lookup(field.Name.Name);
+        }
+      }
       else if (expression is MethodCall)
       {
-        Method calleeMethod = IntrospectionTools.ExtractMethod ((MethodCall) expression);
+        Method calleeMethod = IntrospectionUtility.ExtractMethod ((MethodCall) expression);
         if (calleeMethod.ReturnAttributes != null)
         {
           fragmentType = FragmentTools.GetFragmentType (calleeMethod.ReturnAttributes);
@@ -99,7 +108,7 @@ namespace InjectionCop.Parser
       
       bool parameterSafe = true;
       requireSafenessParameters = new List<PreCondition>();
-      Method calleeMethod = IntrospectionTools.ExtractMethod (methodCall);
+      Method calleeMethod = IntrospectionUtility.ExtractMethod (methodCall);
       string[] parameterFragmentTypes = GetParameterFragmentTypes (calleeMethod);
       
       for (int i = 0; i < parameterFragmentTypes.Length; i++)
@@ -113,7 +122,7 @@ namespace InjectionCop.Parser
             && operandFragmentType != parameterFragmentType)
         {
           string variableName;
-          if (IntrospectionTools.IsVariable (operand, out variableName)
+          if (IntrospectionUtility.IsVariable (operand, out variableName)
               && !_safenessMap.ContainsKey (variableName))
           {
             requireSafenessParameters.Add (new PreCondition (variableName, parameterFragmentType));

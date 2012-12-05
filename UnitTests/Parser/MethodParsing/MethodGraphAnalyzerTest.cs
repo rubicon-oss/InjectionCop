@@ -35,7 +35,7 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
     private MockRepository _mocks;
     private IMethodGraph _methodGraph;
     private IMethodGraphBuilder _methodGraphBuilder;
-    private IParameterSymbolTableBuilder _parameterSymbolTableBuilder;
+    private IInitialSymbolTableBuilder _parameterSymbolTableBuilder;
     
     [SetUp]
     public void SetUp ()
@@ -49,7 +49,7 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
       _mocks = new MockRepository();
       _methodGraph = _mocks.Stub<IMethodGraph>();
       _methodGraphBuilder = _mocks.Stub<IMethodGraphBuilder>();
-      _parameterSymbolTableBuilder = _mocks.Stub<IParameterSymbolTableBuilder>();
+      _parameterSymbolTableBuilder = _mocks.Stub<IInitialSymbolTableBuilder>();
       
     }
 

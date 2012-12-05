@@ -19,6 +19,7 @@ using InjectionCop.Parser;
 using InjectionCop.Parser.BlockParsing;
 using InjectionCop.Parser.MethodParsing;
 using InjectionCop.Parser.TypeParsing;
+using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
 using NUnit.Framework;
 
@@ -143,7 +144,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing
     [Test]
     public void MethodGraph_IfStatementTrueBlockOnly_ReturnsCorrectConditionSuccessors ()
     {
-      TypeNode stringTypeNode = IntrospectionTools.TypeNodeFactory<string>();
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
       Method sampleMethod = TestHelper.GetSample<MethodGraphSample> ("IfStatementTrueBlockOnly", stringTypeNode);
       Block conditionBlock = sampleMethod.Body.Statements[0] as Block;
       Block trueBlock = sampleMethod.Body.Statements[1] as Block;
@@ -167,7 +168,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing
     [Test]
     public void MethodGraph_IfStatementTrueBlockOnly_ReturnsCorrectTrueBlockSuccessors ()
     {
-      TypeNode stringTypeNode = IntrospectionTools.TypeNodeFactory<string>();
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
       Method sampleMethod = TestHelper.GetSample<MethodGraphSample> ("IfStatementTrueBlockOnly", stringTypeNode);
       Block trueBlock = sampleMethod.Body.Statements[1] as Block;
       Block preReturnBlock = sampleMethod.Body.Statements[2] as Block;
@@ -188,7 +189,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing
     [Test]
     public void MethodGraph_IfStatementTrueBlockOnly_ReturnsCorrectPreReturnSuccessors ()
     {
-      TypeNode stringTypeNode = IntrospectionTools.TypeNodeFactory<string>();
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
       Method sampleMethod = TestHelper.GetSample<MethodGraphSample> ("IfStatementTrueBlockOnly", stringTypeNode);
       Block preReturnBlock = sampleMethod.Body.Statements[2] as Block;
       Block returnBlock = sampleMethod.Body.Statements[3] as Block;
@@ -209,7 +210,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing
     [Test]
     public void MethodGraph_IfStatementTrueBlockOnly_ReturnsCorrectReturnSuccessors ()
     {
-      TypeNode stringTypeNode = IntrospectionTools.TypeNodeFactory<string>();
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
       Method sampleMethod = TestHelper.GetSample<MethodGraphSample> ("IfStatementTrueBlockOnly", stringTypeNode);
       Block returnBlock = sampleMethod.Body.Statements[3] as Block;
       if(returnBlock != null)

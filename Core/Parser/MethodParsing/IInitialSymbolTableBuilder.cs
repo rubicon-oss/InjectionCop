@@ -19,7 +19,7 @@ namespace InjectionCop.Parser.MethodParsing
   /// <summary>
   /// Builds parameter symboltable of a method
   /// </summary>
-  public interface IParameterSymbolTableBuilder
+  public interface IInitialSymbolTableBuilder
   {
     void Build ();
     ISymbolTable GetResult ();

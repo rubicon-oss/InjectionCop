@@ -14,6 +14,7 @@
 
 using System;
 using InjectionCop.Parser;
+using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
 using NUnit.Framework;
 
@@ -25,7 +26,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Switc
     [Test]
     public void Parse_ValidSwitch_NoProblem ()
     {
-      TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
+      TypeNode intTypeNode = IntrospectionUtility.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<SwitchSample> ("ValidSwitch", intTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
@@ -35,7 +36,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Switc
     [Test]
     public void Parse_UnsafeCallInsideSwitch_ReturnsProblem ()
     {
-      TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
+      TypeNode intTypeNode = IntrospectionUtility.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<SwitchSample> ("UnsafeCallInsideSwitch", intTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
@@ -46,7 +47,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Switc
     [Test]
     public void Parse_UnsafeCallAfterSwitch_ReturnsProblem ()
     {
-      TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
+      TypeNode intTypeNode = IntrospectionUtility.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<SwitchSample> ("UnsafeCallAfterSwitch", intTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
@@ -56,7 +57,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Switc
     [Test]
     public void Parse_UnsafeCallAfterNestedSwitch_ReturnsProblem ()
     {
-      TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
+      TypeNode intTypeNode = IntrospectionUtility.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<SwitchSample> ("UnsafeCallAfterNestedSwitch", intTypeNode, intTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
@@ -66,7 +67,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Switc
     [Test]
     public void Parse_SafeCallAfterNestedSwitch_NoProblem ()
     {
-      TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
+      TypeNode intTypeNode = IntrospectionUtility.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<SwitchSample> ("SafeCallAfterNestedSwitch", intTypeNode, intTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
@@ -76,7 +77,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Switc
     [Test]
     public void Parse_UnsafeCallInsideNestedSwitch_ReturnsProblem ()
     {
-      TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
+      TypeNode intTypeNode = IntrospectionUtility.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<SwitchSample> ("UnsafeCallInsideNestedSwitch", intTypeNode, intTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
@@ -86,7 +87,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Switc
     [Test]
     public void Parse_ValidFallThrough_NoProblem ()
     {
-      TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
+      TypeNode intTypeNode = IntrospectionUtility.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<SwitchSample> ("ValidFallThrough", intTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
@@ -96,7 +97,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Switc
     [Test]
     public void Parse_ValidFallThroughGoto_NoProblem ()
     {
-      TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
+      TypeNode intTypeNode = IntrospectionUtility.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<SwitchSample> ("ValidFallThroughGoto", intTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
@@ -106,7 +107,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Switc
     [Test]
     public void Parse_InvalidFallThrough_ReturnsProblem ()
     {
-      TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
+      TypeNode intTypeNode = IntrospectionUtility.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<SwitchSample> ("InvalidFallThrough", intTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
@@ -116,7 +117,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Switc
     [Test]
     public void Parse_InvalidFallThroughGoto_ReturnsProblem ()
     {
-      TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
+      TypeNode intTypeNode = IntrospectionUtility.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<SwitchSample> ("InvalidFallThroughGoto", intTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 

@@ -13,15 +13,14 @@
 // limitations under the License.
 
 using System;
-using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
 
-namespace InjectionCop.Parser
+namespace InjectionCop.Utilities
 {
   /// <summary>
   /// Helper methods for dealing with FxCop
   /// </summary>
-  public class IntrospectionTools
+  public class IntrospectionUtility
   {
     public static Method ExtractMethod (MethodCall methodCall)
     {
@@ -38,7 +37,15 @@ namespace InjectionCop.Parser
     public static bool IsVariable (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
+      
+      return expression is Parameter
+             || expression is Local
+             || IsVariableReference(expression)
+             || IsField(expression);
+    }
 
+    private static bool IsVariableReference (Expression expression)
+    {
       bool isVariableReference = false;
       if (expression.NodeType == NodeType.AddressOf)
       {
@@ -48,14 +55,36 @@ namespace InjectionCop.Parser
           isVariableReference = IsVariable (operand);
         }
       }
-      return expression is Parameter || expression is Local || isVariableReference;
+      return isVariableReference;
+    }
+
+    public static bool IsField (Expression expression)
+    {
+      bool isField = false;
+      if (expression is MemberBinding)
+      {
+        MemberBinding memberBinding = (MemberBinding) expression;
+        isField = memberBinding.BoundMember is Field;
+      }
+      return isField;
+    }
+
+    public static Field GetField (Expression expression)
+    {
+      Field field = null;
+      if (IsField (expression))
+      {
+        MemberBinding memberBinding = (MemberBinding) expression;
+        field = (Field) memberBinding.BoundMember;
+      }
+      return field;
     }
 
     public static string GetVariableName (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      string variableName = "";
+      string variableName = null;
       if (expression is Parameter)
       {
         Parameter operand = (Parameter) expression;
@@ -72,6 +101,15 @@ namespace InjectionCop.Parser
         if (operand != null)
         {
           variableName = operand.Name.Name;
+        }
+      }
+      else if (expression is MemberBinding)
+      {
+        MemberBinding memberBinding = (MemberBinding) expression;
+        if (memberBinding.BoundMember is Field)
+        {
+          Field field = (Field) memberBinding.BoundMember;
+          variableName = field.Name.Name;
         }
       }
       return variableName;

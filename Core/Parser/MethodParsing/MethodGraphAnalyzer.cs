@@ -30,17 +30,17 @@ namespace InjectionCop.Parser.MethodParsing
       _typeParser = ArgumentUtility.CheckNotNull ("typeParser", typeParser);
     }
 
-    public ProblemCollection Parse (IMethodGraphBuilder methodGraphBuilder, IParameterSymbolTableBuilder parameterSymbolTableBuilder)
+    public ProblemCollection Parse (IMethodGraphBuilder methodGraphBuilder, IInitialSymbolTableBuilder initialSymbolTableBuilder)
     {
       ArgumentUtility.CheckNotNull ("methodGraphBuilder", methodGraphBuilder);
-      ArgumentUtility.CheckNotNull ("parameterSymbolTableBuilder", parameterSymbolTableBuilder);
+      ArgumentUtility.CheckNotNull ("parameterSymbolTableBuilder", initialSymbolTableBuilder);
 
       IMethodGraph methodGraph = methodGraphBuilder.GetResult();
-      ISymbolTable parameterSafeness = parameterSymbolTableBuilder.GetResult();
+      ISymbolTable initialSymbolTable = initialSymbolTableBuilder.GetResult();
 
-      if (!methodGraph.IsEmpty() && parameterSafeness != null)
+      if (!methodGraph.IsEmpty() && initialSymbolTable != null)
       {
-        Parse (methodGraph, parameterSafeness, methodGraph.InitialBlock, new Dictionary<int, int>());
+        Parse (methodGraph, initialSymbolTable, methodGraph.InitialBlock, new Dictionary<int, int>());
       }
 
       return _typeParser.Problems;

@@ -15,6 +15,7 @@
 using System;
 using InjectionCop.Config;
 using InjectionCop.Parser;
+using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
 using NUnit.Framework;
 
@@ -141,7 +142,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.SymbolTableTests.Infe
     public void InferFragmentType_AssignmentWithParameterFragmentSetToTrue_ReturnsTrue ()
     {
       _symbolTable.MakeSafe ("parameter", "DummyType");
-      TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
+      TypeNode intTypeNode = IntrospectionUtility.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<InferFragmentSample>("AssignmentWithParameter", intTypeNode);
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[1];
@@ -153,7 +154,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.SymbolTableTests.Infe
     [Test]
     public void InferFragmentType_AssignmentWithParameterNonFragment_ReturnsFalse ()
     {
-      TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
+      TypeNode intTypeNode = IntrospectionUtility.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<InferFragmentSample>("AssignmentWithParameter", intTypeNode);
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[1];
@@ -166,7 +167,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.SymbolTableTests.Infe
     public void InferFragmentType_AssignmentWithParameterFragmentSetToFalse_ReturnsFalse ()
     {
       _symbolTable.MakeUnsafe ("parameter");
-      TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
+      TypeNode intTypeNode = IntrospectionUtility.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<InferFragmentSample>("AssignmentWithParameter", intTypeNode);
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[1];
@@ -179,7 +180,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.SymbolTableTests.Infe
     public void InferFragmentType_AssignmentWithParameterFragmentSetToTrue_InfersFragmentType ()
     {
       _symbolTable.MakeSafe ("parameter", "DummyType");
-      TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
+      TypeNode intTypeNode = IntrospectionUtility.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<InferFragmentSample>("AssignmentWithParameter", intTypeNode);
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[1];
@@ -192,7 +193,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.SymbolTableTests.Infe
     [Test]
     public void InferFragmentType_AssignmentWithParameterNonFragment_ReturnsNoFragmentType ()
     {
-      TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
+      TypeNode intTypeNode = IntrospectionUtility.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<InferFragmentSample>("AssignmentWithParameter", intTypeNode);
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[1];
@@ -205,7 +206,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.SymbolTableTests.Infe
     public void InferFragmentType_AssignmentWithParameterFragmentSetToFalse_ReturnsNoFragmentType ()
     {
       _symbolTable.MakeUnsafe ("parameter");
-      TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
+      TypeNode intTypeNode = IntrospectionUtility.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<InferFragmentSample>("AssignmentWithParameter", intTypeNode);
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[1];
@@ -257,6 +258,29 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.SymbolTableTests.Infe
       Expression sampleExpression = assignment.Source;
       string fragmentType = _symbolTable.InferFragmentType(sampleExpression);
       Assert.That(fragmentType, Is.EqualTo(EmptyFragment));
+    }
+
+    [Test]
+    public void InferFragmentType_AssignmentWithFragmentField_ReturnsEmptyFragmentType ([Values("AnyType1", "AnyType2")] string symbolTableType)
+    {
+      _symbolTable.MakeSafe ("_field", symbolTableType);
+      Method sample = TestHelper.GetSample<InferFragmentSample>("AssignmentWithField");
+      Block assignmentBlock = (Block)sample.Body.Statements[0];
+      AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[1];
+      Expression sampleExpression = assignment.Source;
+      string fragmentType = _symbolTable.InferFragmentType(sampleExpression);
+      Assert.That(fragmentType, Is.EqualTo(symbolTableType));
+    }
+
+    [Test]
+    public void InferFragmentType_AssignmentWithNonFragmentField_ReturnsEmptyFragmentType ()
+    {
+      Method sample = TestHelper.GetSample<InferFragmentSample>("AssignmentWithField");
+      Block assignmentBlock = (Block)sample.Body.Statements[0];
+      AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[1];
+      Expression sampleExpression = assignment.Source;
+      string fragmentType = _symbolTable.InferFragmentType(sampleExpression);
+      Assert.That(fragmentType, Is.EqualTo(SymbolTable.EMPTY_FRAGMENT));
     }
   }
 }

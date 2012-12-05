@@ -14,6 +14,7 @@
 
 using System;
 using InjectionCop.Parser;
+using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
 using NUnit.Framework;
 
@@ -26,7 +27,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Param
     [Category ("Parameter")]
     public void Parse_UnsafeMethodParameter_ReturnsProblem ()
     {
-      TypeNode stringTypeNode = IntrospectionTools.TypeNodeFactory<string>();
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
       Method sample = TestHelper.GetSample<ParameterSample> ("UnsafeMethodParameter", stringTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
@@ -37,7 +38,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Param
     [Category ("Parameter")]
     public void Parse_SafeMethodParameter_NoProblem ()
     {
-      TypeNode stringTypeNode = IntrospectionTools.TypeNodeFactory<string>();
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
       Method sample = TestHelper.GetSample<ParameterSample> ("SafeMethodParameter", stringTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
@@ -132,7 +133,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Param
     [Category ("Parameter")]
     public void Parse_ParameterOnly_NoProblem ()
     {
-      TypeNode intTypeNode = IntrospectionTools.TypeNodeFactory<int>();
+      TypeNode intTypeNode = IntrospectionUtility.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<ParameterSample> ("ParameterOnly", intTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
@@ -143,7 +144,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Param
     [Category ("Parameter")]
     public void Parse_ParameterSampleType_NoProblem ()
     {
-      TypeNode sample = IntrospectionTools.TypeNodeFactory<ParameterSampleType>();
+      TypeNode sample = IntrospectionUtility.TypeNodeFactory<ParameterSampleType>();
       ProblemCollection result = _typeParser.Check (sample);
       
       Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);

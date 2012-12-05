@@ -15,6 +15,7 @@
 using System;
 using InjectionCop.Parser;
 using InjectionCop.Parser.TypeParsing;
+using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
 using NUnit.Framework;
 
@@ -35,7 +36,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Attri
     [Category ("Attribute")]
     public void Parse_ParameterSampleType_NoProblem ()
     {
-      TypeNode sample = IntrospectionTools.TypeNodeFactory<SampleAttribute>();
+      TypeNode sample = IntrospectionUtility.TypeNodeFactory<SampleAttribute>();
       ProblemCollection result = _typeParser.Check (sample);
 
       Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);

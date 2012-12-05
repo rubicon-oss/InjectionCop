@@ -80,8 +80,9 @@ namespace InjectionCop.Parser.BlockParsing
 
           case NodeType.AssignmentStatement:
             AssignmentStatement asgn = (AssignmentStatement) stmt;
-            string symbol = IntrospectionTools.GetVariableName (asgn.Target);
+            string symbol = IntrospectionUtility.GetVariableName (asgn.Target);
             _symbolTableParser.InferSafeness (symbol, asgn.Source);
+            InspectIfFieldAssignment (asgn.Target);
             Inspect (asgn.Source);
             break;
 
@@ -102,6 +103,23 @@ namespace InjectionCop.Parser.BlockParsing
               _successors.Add (caseBlock.UniqueKey);
             }
             break;
+        }
+      }
+    }
+
+    private void InspectIfFieldAssignment (Expression targetExpression)
+    {
+      if (IntrospectionUtility.IsField (targetExpression))
+      {
+        string symbol = IntrospectionUtility.GetVariableName (targetExpression);
+        Field target = IntrospectionUtility.GetField (targetExpression);
+        if (FragmentTools.ContainsFragment (target.Attributes))
+        {
+          string targetFragmentType = FragmentTools.GetFragmentType (target.Attributes);
+          if (targetFragmentType != _symbolTableParser.GetFragmentType (symbol))
+          {
+            _typeParser.AddProblem();
+          }
         }
       }
     }
@@ -138,15 +156,15 @@ namespace InjectionCop.Parser.BlockParsing
 
     private void UpdateSafeOutParameters (MethodCall methodCall)
     {
-      Method method = IntrospectionTools.ExtractMethod (methodCall);
+      Method method = IntrospectionUtility.ExtractMethod (methodCall);
 
       for (int i = 0; i < methodCall.Operands.Count; i++)
       {
-        if (IntrospectionTools.IsVariable (methodCall.Operands[i]))
+        if (IntrospectionUtility.IsVariable (methodCall.Operands[i]))
         {
           if (method.Parameters[i].IsOut)
           {
-            string symbol = IntrospectionTools.GetVariableName (methodCall.Operands[i]);
+            string symbol = IntrospectionUtility.GetVariableName (methodCall.Operands[i]);
             if (FragmentTools.ContainsFragment (method.Parameters[i].Attributes))
             {
               string fragmentType = FragmentTools.GetFragmentType (method.Parameters[i].Attributes);

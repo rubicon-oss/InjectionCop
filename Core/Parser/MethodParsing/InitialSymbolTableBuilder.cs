@@ -19,13 +19,13 @@ using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser.MethodParsing
 {
-  public class ParameterSymbolTableBuilder : IParameterSymbolTableBuilder
+  public class InitialSymbolTableBuilder : IInitialSymbolTableBuilder
   {
     private ISymbolTable _result;
     private readonly Method _method;
     private readonly IBlacklistManager _blacklistManager;
 
-    public ParameterSymbolTableBuilder (Method method, IBlacklistManager blacklistManager)
+    public InitialSymbolTableBuilder (Method method, IBlacklistManager blacklistManager)
     {
       _method = ArgumentUtility.CheckNotNull ("method", method);
       _blacklistManager = ArgumentUtility.CheckNotNull ("blacklistManager", blacklistManager);
@@ -42,20 +42,42 @@ namespace InjectionCop.Parser.MethodParsing
     {
       if (_result == null)
       {
-        ISymbolTable parameterSafeness = new SymbolTable (_blacklistManager);
-        foreach (Parameter parameter in _method.Parameters)
+        _result = new SymbolTable (_blacklistManager);
+        AnalyzeParameters();
+        AnalyzeFields();
+      }
+    }
+
+    private void AnalyzeParameters ()
+    {
+      foreach (var parameter in _method.Parameters)
+      {
+        SetSymbolFragmentType (parameter.Name.Name, parameter.Attributes);
+      }
+    }
+
+    private void AnalyzeFields ()
+    {
+      foreach (var member in _method.DeclaringType.Members)
+      {
+        if (member is Field)
         {
-          if (FragmentTools.ContainsFragment (parameter.Attributes))
-          {
-            string fragmentType = FragmentTools.GetFragmentType (parameter.Attributes);
-            parameterSafeness.MakeSafe (parameter.Name.Name, fragmentType);
-          }
-          else
-          {
-            parameterSafeness.MakeUnsafe (parameter.Name.Name);
-          }
+          var field = (Field) member;
+          SetSymbolFragmentType (field.Name.Name, field.Attributes);
         }
-        _result = parameterSafeness;
+      }
+    }
+
+    private void SetSymbolFragmentType (string name, AttributeNodeCollection attributes)
+    {
+      if (FragmentTools.ContainsFragment (attributes))
+      {
+        string fragmentType = FragmentTools.GetFragmentType (attributes);
+        _result.MakeSafe (name, fragmentType);
+      }
+      else
+      {
+        _result.MakeUnsafe (name);
       }
     }
   }

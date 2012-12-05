@@ -18,6 +18,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.SymbolTableTests.Infe
 {
   class InferFragmentSample : ParserSampleBase
   {
+    private string _field = "dummy";
+
     public int AssignmentWithLiteral ()
     {
       int x = 3;
@@ -47,6 +49,12 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.SymbolTableTests.Infe
     public string AssignmentWithUnsafeMethodCall ()
     {
       string x = UnsafeSource();
+      return x;
+    }
+
+    public string AssignmentWithField ()
+    {
+      string x = _field;
       return x;
     }
   }

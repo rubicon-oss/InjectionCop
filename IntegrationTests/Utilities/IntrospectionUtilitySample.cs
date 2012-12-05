@@ -13,26 +13,32 @@
 // limitations under the License.
 
 using System;
-using System.Linq;
-using InjectionCop.Parser;
-using InjectionCop.Utilities;
-using Microsoft.FxCop.Sdk;
 
-namespace InjectionCop.IntegrationTests.Parser
+namespace InjectionCop.IntegrationTests.Utilities
 {
-  public class TestHelper
+  internal class IntrospectionUtilitySample
   {
-    public static bool ContainsProblemID (string id, ProblemCollection result)
+    private string _field = "dummy";
+
+    public void UsingField ()
     {
-      return result.Any (problem => problem.Id == id);
+      Dummy (_field);
     }
 
-    public static Method GetSample<SampleClass>(string methodName, params TypeNode[] methodParameters)
+    public void FieldAssignment ()
     {
-      Identifier sampleName = Identifier.For(methodName);
-      Method sample = IntrospectionUtility.MethodFactory<SampleClass> (sampleName, methodParameters);
-      return sample;
+      _field = "dummy";
     }
 
+    public string NonFieldAssignment ()
+    {
+      string x = Dummy("dummy");
+      return x;
+    }
+
+    public string Dummy (string parameter)
+    {
+      return parameter;
+    }
   }
 }

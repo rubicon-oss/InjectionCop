@@ -22,6 +22,6 @@ namespace InjectionCop.Parser.MethodParsing
   /// </summary>
   interface IMethodGraphAnalyzer
   {
-    ProblemCollection Parse (IMethodGraphBuilder methodGraphBuilder, IParameterSymbolTableBuilder parameterSymbolTableBuilder);
+    ProblemCollection Parse (IMethodGraphBuilder methodGraphBuilder, IInitialSymbolTableBuilder initialSymbolTableBuilder);
   }
 }
