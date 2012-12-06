@@ -62,12 +62,13 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Config\ConfigLoaderTest.cs" />
     <Compile Include="Parser\BlockParsing\BlockParserSample.cs" />
     <Compile Include="Parser\MethodParsing\InitialSymbolTableBuilderSample.cs" />
     <Compile Include="Parser\MethodParsing\MethodGraphSample.cs" />
     <Compile Include="Parser\MethodParsing\InitialSymbolTableBuilderTest.cs" />
     <Compile Include="Parser\NonFragmentAttribute.cs" />
-    <Compile Include="Parser\TypeParsing\SymbolTableTests\BlacklistManagerIntegration\BlacklistManagerIntegrationSample.cs" />
+    <Compile Include="Parser\TypeParsing\BlacklistManagerIntegrationSample.cs" />
     <Compile Include="Parser\TypeParsing\SymbolTableTests\InferFragment\InferFragmentSample.cs" />
     <Compile Include="Parser\TypeParsing\SymbolTableTests\BlacklistManagerIntegration\BlacklistManagerIntegration_SymbolTableTest.cs" />
     <Compile Include="Parser\TypeParsing\SymbolTableTests\ParameterSafe\ParameterSafeSample.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="Parser\TypeParsing\TypeParserTests\AttributePropagation\AttributePropagationSample.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Attribute\SampleAttribute.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Attribute\Attribute_TypeParserTest.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\BlacklistManagerIntegration\BlacklistManagerIntegration_TypeParserTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\BlackMethod\BlackMethodSample.cs" />
     <Compile Include="Parser\FragmentToolsSample.cs" />
     <Compile Include="Parser\FragmentToolsTest.cs" />

@@ -59,6 +59,6 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.SymbolTableTests.Blac
       bool isSafeCall = _symbolTable.ParametersSafe (methodCall, out preconditions);
       Assert.That(isSafeCall, Is.True);
     }
-
+    
   }
 }

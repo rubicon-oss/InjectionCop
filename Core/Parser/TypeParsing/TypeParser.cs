@@ -46,6 +46,14 @@ namespace InjectionCop.Parser.TypeParsing
       }
       return Problems;
     }
+    
+    /*
+    public void AddProblem (Node target)
+    {
+      Resolution resolution = GetResolution();
+      Problem problem = new Problem (resolution, target, CheckId);
+      Problems.Add (problem);
+    }*/
 
     public void AddProblem ()
     {
