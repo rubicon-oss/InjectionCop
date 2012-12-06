@@ -27,7 +27,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Field
       Method sample = TestHelper.GetSample<FieldSample>("CallWithSafeField");
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
 
     [Test]
@@ -36,7 +36,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Field
       Method sample = TestHelper.GetSample<FieldSample>("CallWithUnsafeField");
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
 
     [Test]
@@ -45,7 +45,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Field
       Method sample = TestHelper.GetSample<FieldSample>("CallWithWrongFragmentType");
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
 
     [Test]
@@ -54,7 +54,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Field
       Method sample = TestHelper.GetSample<FieldSample> ("NestedUnsafeCall");
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
 
     [Test]
@@ -63,7 +63,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Field
       Method sample = TestHelper.GetSample<FieldSample> ("NestedSafeCall");
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
 
     [Test]
@@ -72,7 +72,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Field
       Method sample = TestHelper.GetSample<FieldSample> ("NestedCallWithWrongFragmentType");
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
 
     [Test]
@@ -81,7 +81,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Field
       Method sample = TestHelper.GetSample<FieldSample> ("UnsafeFieldAssignment");
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
 
     [Test]
@@ -90,7 +90,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Field
       Method sample = TestHelper.GetSample<FieldSample> ("SafeFieldAssignment");
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
 
     [Test]
@@ -99,7 +99,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Field
       Method sample = TestHelper.GetSample<FieldSample> ("WrongFragmentTypeFieldAssignment");
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
   }
 }

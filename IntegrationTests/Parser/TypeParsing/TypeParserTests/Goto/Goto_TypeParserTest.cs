@@ -27,7 +27,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Goto
       Method sample = TestHelper.GetSample<GotoSample> ("SimpleGoto");
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
 
     [Test]
@@ -36,7 +36,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Goto
       Method sample = TestHelper.GetSample<GotoSample> ("GotoJumpsOverUnsafeAssignment");
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
 
     [Test]
@@ -45,7 +45,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Goto
       Method sample = TestHelper.GetSample<GotoSample> ("InvalidCallInsideWhileWithGoto");
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
 
     [Test]
@@ -54,7 +54,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Goto
       Method sample = TestHelper.GetSample<GotoSample> ("InvalidCallInsideIfWithGoto");
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
 
     [Test]
@@ -63,7 +63,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Goto
       Method sample = TestHelper.GetSample<GotoSample> ("InvalidCallInsideIfWithGotoAndBreak");
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
   }
 }

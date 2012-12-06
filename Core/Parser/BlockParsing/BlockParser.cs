@@ -116,10 +116,14 @@ namespace InjectionCop.Parser.BlockParsing
         if (FragmentUtilities.ContainsFragment (target.Attributes))
         {
           string targetFragmentType = FragmentUtilities.GetFragmentType (target.Attributes);
-          if (targetFragmentType != _symbolTableParser.GetFragmentType (symbol))
+          string givenFragmentType = _symbolTableParser.GetFragmentType (symbol);
+          if (targetFragmentType != givenFragmentType)
           {
-            //_typeParser.AddProblem(targetExpression);
-            _typeParser.AddProblem();
+            ProblemMetadata problemMetadata = new ProblemMetadata (
+                targetExpression.SourceContext,
+                targetFragmentType,
+                givenFragmentType);
+            _typeParser.AddProblem(problemMetadata);
           }
         }
       }
@@ -130,13 +134,7 @@ namespace InjectionCop.Parser.BlockParsing
       if (expression is MethodCall)
       {
         MethodCall methodCall = (MethodCall) expression;
-        List<PreCondition> additionalPreConditions;
-        if (!_symbolTableParser.ParametersSafe (methodCall, out additionalPreConditions))
-        {
-          //_typeParser.AddProblem(expression);
-          _typeParser.AddProblem();
-        }
-        _preConditions.AddRange (additionalPreConditions);
+        CheckParameters (methodCall);
         UpdateSafeOutParameters (methodCall);
         foreach (Expression operand in methodCall.Operands)
         {
@@ -154,6 +152,15 @@ namespace InjectionCop.Parser.BlockParsing
         Inspect (binaryExpression.Operand1);
         Inspect (binaryExpression.Operand2);
       }
+    }
+
+    private void CheckParameters (MethodCall methodCall)
+    {
+      List<PreCondition> additionalPreConditions;
+      List<ProblemMetadata> parameterProblems;
+      _symbolTableParser.ParametersSafe (methodCall, out additionalPreConditions, out parameterProblems);
+      parameterProblems.ForEach (parameterProblem => _typeParser.AddProblem (parameterProblem));
+      _preConditions.AddRange (additionalPreConditions);
     }
 
     private void UpdateSafeOutParameters (MethodCall methodCall)

@@ -55,12 +55,20 @@ namespace InjectionCop.Parser.TypeParsing
       Problems.Add (problem);
     }*/
 
+    public void AddProblem (ProblemMetadata problemMetadata)
+    {
+      Resolution resolution = GetResolution (problemMetadata.ExpectedFragment, problemMetadata.GivenFragment);
+      Problem problem = new Problem (resolution, problemMetadata.SourceContext, CheckId);
+      Problems.Add (problem);
+    }
+
+    /*
     public void AddProblem ()
     {
       Resolution resolution = GetResolution();
       Problem problem = new Problem (resolution, CheckId);
       Problems.Add (problem);
-    }
+    }*/
 
     public ProblemCollection Parse (Method method)
     {

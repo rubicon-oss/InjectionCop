@@ -21,6 +21,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests
   public class TypeParserTestBase
   {
     protected TypeParser _typeParser;
+    protected readonly string c_InjectionCopRuleId = "IC0001";
 
     [SetUp]
     public void SetUp()

@@ -43,8 +43,9 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.SymbolTableTests.Blac
       MethodCall methodCall = (MethodCall) expressionStatement.Expression;
 
       List<PreCondition> preconditions;
-      bool isSafeCall = _symbolTable.ParametersSafe (methodCall, out preconditions);
-      Assert.That(isSafeCall, Is.False);
+      List<ProblemMetadata> parameterProblems;
+      _symbolTable.ParametersSafe (methodCall, out preconditions, out parameterProblems);
+      Assert.That(parameterProblems.Count, Is.Not.EqualTo(0));
     }
     
     [Test]
@@ -56,8 +57,9 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.SymbolTableTests.Blac
       MethodCall methodCall = (MethodCall) expressionStatement.Expression;
 
       List<PreCondition> preconditions;
-      bool isSafeCall = _symbolTable.ParametersSafe (methodCall, out preconditions);
-      Assert.That(isSafeCall, Is.True);
+      List<ProblemMetadata> parameterProblems;
+      _symbolTable.ParametersSafe (methodCall, out preconditions, out parameterProblems);
+      Assert.That(parameterProblems.Count, Is.EqualTo(0));
     }
     
   }

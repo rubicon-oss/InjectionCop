@@ -36,7 +36,9 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
     private IMethodGraph _methodGraph;
     private IMethodGraphBuilder _methodGraphBuilder;
     private IInitialSymbolTableBuilder _parameterSymbolTableBuilder;
-    
+
+    private readonly string c_InjectionCopRuleId = "IC0001";
+
     [SetUp]
     public void SetUp ()
     {
@@ -124,7 +126,7 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
         LastCall.Return(_methodPreConditions);
       }
       ProblemCollection result = ParseGraph();
-      Assert.That (TestHelper.ContainsProblemID("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID(c_InjectionCopRuleId, result), Is.True);
     }
     
     [Test]
@@ -149,7 +151,7 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
         LastCall.Return(_methodPreConditions);
       }
       ProblemCollection result = ParseGraph();
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
     
     [Test]
@@ -174,7 +176,7 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
         LastCall.Return(_methodPreConditions);
       }
       ProblemCollection result = ParseGraph();
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
     
     [Test]
@@ -207,7 +209,7 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
         LastCall.Return(_methodPreConditions);
       }
       ProblemCollection result = ParseGraph();
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
     
     [Test]
@@ -240,7 +242,7 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
         LastCall.Return(_methodPreConditions);
       }
       ProblemCollection result = ParseGraph();
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
     
     [Test]
@@ -274,7 +276,7 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
         LastCall.Return(_methodPreConditions);
       }
       ProblemCollection result = ParseGraph();
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
     
     [Test]
@@ -308,7 +310,7 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
         LastCall.Return(_methodPreConditions);
       }
       ProblemCollection result = ParseGraph();
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
     
     [Test]
@@ -349,7 +351,7 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
         LastCall.Return(_methodPreConditions);
       }
       ProblemCollection result = ParseGraph();
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
     
     [Test]
@@ -390,7 +392,7 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
         LastCall.Return(_methodPreConditions);
       }
       ProblemCollection result = ParseGraph();
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result) && result.Count == 1, Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result) && result.Count == 1, Is.True);
     }
 
     [Test]
@@ -432,7 +434,7 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
         LastCall.Return(_methodPreConditions);
       }
       ProblemCollection result = ParseGraph();
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result) && result.Count == 2, Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result) && result.Count == 2, Is.True);
     }
 
     
@@ -482,7 +484,7 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
         LastCall.Return(_methodPreConditions);
       }
       ProblemCollection result = ParseGraph();
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
 
     
@@ -532,7 +534,7 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
         LastCall.Return(_methodPreConditions);
       }
       ProblemCollection result = ParseGraph();
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
     
     [Test]
@@ -582,7 +584,7 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
         LastCall.Return(_methodPreConditions);
       }
       ProblemCollection result = ParseGraph();
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result) && result.Count == 1, Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result) && result.Count == 1, Is.True);
     }
 
     [Test]
@@ -632,7 +634,7 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
         LastCall.Return(_methodPreConditions);
       }
       ProblemCollection result = ParseGraph();
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result) && result.Count == 1, Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result) && result.Count == 1, Is.True);
     }
 
     
@@ -684,7 +686,7 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
         LastCall.Return(_methodPreConditions);
       }
       ProblemCollection result = ParseGraph();
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
     
     [Test]
@@ -720,7 +722,7 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
         LastCall.Return(_methodPreConditions);
       }
       ProblemCollection result = ParseGraph();
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
 
     [Test]
@@ -757,7 +759,7 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
         LastCall.Return(_methodPreConditions);
       }
       ProblemCollection result = ParseGraph();
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
     
     [Test]
@@ -804,7 +806,7 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
         LastCall.Return(_methodPreConditions);
       }
       ProblemCollection result = ParseGraph();
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result) && result.Count == 1, Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result) && result.Count == 1, Is.True);
       
     }
     

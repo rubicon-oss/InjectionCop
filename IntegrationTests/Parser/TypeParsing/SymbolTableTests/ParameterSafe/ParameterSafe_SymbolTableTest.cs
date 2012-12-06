@@ -41,9 +41,10 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.SymbolTableTests.Para
       AssignmentStatement assignmentStatement = (AssignmentStatement) codeBlock.Statements[1];
       MethodCall sample = (MethodCall) assignmentStatement.Source;
       List<PreCondition> preconditions;
-      bool isSafeCall = _symbolTable.ParametersSafe (sample, out preconditions);
+      List<ProblemMetadata> parameterProblems;
+      _symbolTable.ParametersSafe (sample, out preconditions, out parameterProblems);
 
-      Assert.That (isSafeCall, Is.True);
+      Assert.That (parameterProblems.Count, Is.EqualTo(0));
     }
 
     [Test]
@@ -55,9 +56,10 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.SymbolTableTests.Para
       UnaryExpression unaryExpression = (UnaryExpression) expressionStatement.Expression;
       MethodCall sample = (MethodCall) unaryExpression.Operand;
       List<PreCondition> preconditions;
-      bool isSafeCall = _symbolTable.ParametersSafe (sample, out preconditions);
+      List<ProblemMetadata> parameterProblems;
+      _symbolTable.ParametersSafe (sample, out preconditions, out parameterProblems);
 
-      Assert.That (isSafeCall, Is.True);
+      Assert.That (parameterProblems.Count, Is.EqualTo(0));
     }
   }
 }

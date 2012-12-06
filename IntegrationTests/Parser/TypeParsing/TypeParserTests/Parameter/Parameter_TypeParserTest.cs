@@ -31,7 +31,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Param
       Method sample = TestHelper.GetSample<ParameterSample> ("UnsafeMethodParameter", stringTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
 
     [Test]
@@ -42,7 +42,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Param
       Method sample = TestHelper.GetSample<ParameterSample> ("SafeMethodParameter", stringTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
 
     [Test]
@@ -52,7 +52,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Param
       Method sample = TestHelper.GetSample<ParameterSample> ("FragmentOutParameterSafe");
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
 
     [Test]
@@ -62,7 +62,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Param
       Method sample = TestHelper.GetSample<ParameterSample> ("FragmentOutParameterUnsafe");
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
 
     [Test]
@@ -72,7 +72,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Param
       Method sample = TestHelper.GetSample<ParameterSample> ("OutParameterUnsafeOperand");
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
 
     [Test]
@@ -82,7 +82,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Param
       Method sample = TestHelper.GetSample<ParameterSample> ("OutParameterSafeOperand");
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
 
     [Test]
@@ -93,7 +93,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Param
       Method sample = TestHelper.GetSample<ParameterSample> ("FragmentRefParameterSafe");
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
 
     [Test]
@@ -104,7 +104,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Param
       Method sample = TestHelper.GetSample<ParameterSample> ("FragmentRefParameterUnsafe");
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
 
     [Test]
@@ -115,7 +115,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Param
       Method sample = TestHelper.GetSample<ParameterSample> ("RefParameterUnsafeOperand");
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
 
     [Test]
@@ -126,7 +126,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Param
       Method sample = TestHelper.GetSample<ParameterSample> ("RefParameterSafeOperand");
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
 
     [Test]
@@ -137,7 +137,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Param
       Method sample = TestHelper.GetSample<ParameterSample> ("ParameterOnly", intTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
 
     [Test]
@@ -147,7 +147,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Param
       TypeNode sample = IntrospectionUtility.TypeNodeFactory<ParameterSampleType>();
       ProblemCollection result = _typeParser.Check (sample);
       
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
   }
 }

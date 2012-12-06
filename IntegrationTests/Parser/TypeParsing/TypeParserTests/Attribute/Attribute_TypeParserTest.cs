@@ -13,8 +13,6 @@
 // limitations under the License.
 
 using System;
-using InjectionCop.Parser;
-using InjectionCop.Parser.TypeParsing;
 using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
 using NUnit.Framework;
@@ -22,16 +20,8 @@ using NUnit.Framework;
 namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Attribute
 {
   [TestFixture]
-  public class Attribute_TypeParserTest
+  public class Attribute_TypeParserTest : TypeParserTestBase
   {
-    private TypeParser _typeParser;
-
-    [SetUp]
-    public void SetUp ()
-    {
-      _typeParser = new TypeParser();
-    }
-
     [Test]
     [Category ("Attribute")]
     public void Parse_ParameterSampleType_NoProblem ()
@@ -39,7 +29,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Attri
       TypeNode sample = IntrospectionUtility.TypeNodeFactory<SampleAttribute>();
       ProblemCollection result = _typeParser.Check (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
   }
 }

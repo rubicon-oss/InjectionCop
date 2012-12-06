@@ -76,7 +76,7 @@ namespace InjectionCop.Parser.MethodParsing
       {
         if (!context.Contains (precondition.Symbol) || !context.IsFragment (precondition.Symbol, precondition.FragmentType))
         {
-          _typeParser.AddProblem();
+          _typeParser.AddProblem(precondition.ProblemMetadata);
         }
       }
     }

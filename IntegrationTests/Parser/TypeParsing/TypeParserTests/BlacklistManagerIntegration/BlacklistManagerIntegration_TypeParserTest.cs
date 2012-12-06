@@ -28,7 +28,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Black
       Method sample = TestHelper.GetSample<BlacklistManagerIntegrationSample>("UnsafeBlacklistedCall");
       ProblemCollection result = _typeParser.Parse(sample);
       
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
 
     [Test]
@@ -55,7 +55,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Black
       Method sample = TestHelper.GetSample<BlacklistManagerIntegrationSample>("ListedAndUnlistedViolation");
       ProblemCollection result = _typeParser.Parse(sample);
       
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
 
     [Test]
@@ -74,7 +74,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Black
       Method sample = TestHelper.GetSample<BlacklistManagerIntegrationSample> ("MixedViolations", intTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
 
     [Test]
@@ -83,7 +83,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Black
       Method sample = TestHelper.GetSample<BlacklistManagerIntegrationSample>("FragmentDefinedInXmlSafeCall");
       ProblemCollection result = _typeParser.Parse(sample);
       
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
     
     [Test]
@@ -92,7 +92,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Black
       Method sample = TestHelper.GetSample<BlacklistManagerIntegrationSample>("FragmentDefinedInXmlUnsafeCall");
       ProblemCollection result = _typeParser.Parse(sample);
       
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
 
     [Test]
@@ -104,7 +104,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Black
       bool problemIdsCorrect = true;
       foreach (var problem in result)
       {
-        problemIdsCorrect = problemIdsCorrect && problem.Id == "IC_SQLi";
+        problemIdsCorrect = problemIdsCorrect && problem.Id == c_InjectionCopRuleId;
       }
       bool allViolationsFound = result.Count == 4;
       Assert.That (problemIdsCorrect && allViolationsFound, Is.True);

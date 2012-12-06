@@ -27,7 +27,7 @@ namespace InjectionCop.Parser
   public interface ISymbolTable
   {
     IEnumerable<string> Symbols { get; }
-    bool ParametersSafe (MethodCall methodCall, out List<PreCondition> requireSafenessParameters);
+    void ParametersSafe (MethodCall methodCall, out List<PreCondition> requireSafenessParameters, out List<ProblemMetadata> parameterProblems);
     void InferSafeness (string symbolName, Expression expression);
     void MakeSafe (string symbolName, string fragmentType);
     void MakeUnsafe (string symbolName);

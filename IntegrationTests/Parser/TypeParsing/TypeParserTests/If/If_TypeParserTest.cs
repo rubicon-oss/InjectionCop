@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using InjectionCop.Parser;
 using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
 using NUnit.Framework;
@@ -32,7 +31,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.If
         intTypeNode, intTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
 
     [Test]
@@ -44,7 +43,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.If
         intTypeNode, intTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
     
     [Test]
@@ -56,7 +55,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.If
         intTypeNode, intTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
 
     [Test]
@@ -68,7 +67,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.If
         intTypeNode, intTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
 
     [Test]
@@ -80,7 +79,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.If
         intTypeNode, intTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
 
     [Test]
@@ -92,7 +91,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.If
         intTypeNode, intTypeNode, intTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
 
     [Test]
@@ -104,7 +103,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.If
         intTypeNode, intTypeNode, intTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
     
     [Test]
@@ -116,7 +115,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.If
         intTypeNode, intTypeNode, intTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
 
     [Test]
@@ -128,7 +127,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.If
         intTypeNode, intTypeNode, intTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
 
     [Test]
@@ -138,7 +137,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.If
       Method sample = TestHelper.GetSample<IfSample> ("InvalidCallInsideIfCondition");
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
   }
 }

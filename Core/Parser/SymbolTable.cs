@@ -102,12 +102,12 @@ namespace InjectionCop.Parser
       return fragmentType;
     }
 
-    public bool ParametersSafe (MethodCall methodCall, out List<PreCondition> requireSafenessParameters)
+    public void ParametersSafe (MethodCall methodCall, out List<PreCondition> requireSafenessParameters, out List<ProblemMetadata> parameterProblems)
     {
       ArgumentUtility.CheckNotNull ("methodCall", methodCall);
       
-      bool parameterSafe = true;
       requireSafenessParameters = new List<PreCondition>();
+      parameterProblems = new List<ProblemMetadata>();
       Method calleeMethod = IntrospectionUtility.ExtractMethod (methodCall);
       string[] parameterFragmentTypes = GetParameterFragmentTypes (calleeMethod);
       
@@ -122,18 +122,18 @@ namespace InjectionCop.Parser
             && operandFragmentType != parameterFragmentType)
         {
           string variableName;
+          ProblemMetadata problemMetadata = new ProblemMetadata (operand.SourceContext, parameterFragmentType, operandFragmentType);
           if (IntrospectionUtility.IsVariable (operand, out variableName)
               && !_safenessMap.ContainsKey (variableName))
           {
-            requireSafenessParameters.Add (new PreCondition (variableName, parameterFragmentType));
+            requireSafenessParameters.Add (new PreCondition (variableName, parameterFragmentType, problemMetadata));
           }
           else
           {
-            parameterSafe = false;
+            parameterProblems.Add (problemMetadata);
           }
         }
       }
-      return parameterSafe;
     }
 
     public void InferSafeness (string symbolName, Expression expression)

@@ -28,7 +28,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Prope
       Method sample = TestHelper.GetSample<PropertySample>("CallWithUnsafeProperty");
       ProblemCollection result = _typeParser.Parse(sample);
 
-      Assert.That(TestHelper.ContainsProblemID("IC_SQLi", result), Is.True);
+      Assert.That(TestHelper.ContainsProblemID(c_InjectionCopRuleId, result), Is.True);
     }
 
     [Test]
@@ -38,7 +38,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Prope
       Method sample = TestHelper.GetSample<PropertySample>("CallWithSafeProperty");
       ProblemCollection result = _typeParser.Parse(sample);
 
-      Assert.That(TestHelper.ContainsProblemID("IC_SQLi", result), Is.False);
+      Assert.That(TestHelper.ContainsProblemID(c_InjectionCopRuleId, result), Is.False);
     }
 
     [Test]
@@ -48,7 +48,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Prope
       Method sample = TestHelper.GetSample<PropertySample>("SetPropertySafe");
       ProblemCollection result = _typeParser.Parse(sample);
 
-      Assert.That(TestHelper.ContainsProblemID("IC_SQLi", result), Is.False);
+      Assert.That(TestHelper.ContainsProblemID(c_InjectionCopRuleId, result), Is.False);
     }
 
     [Test]
@@ -58,7 +58,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Prope
       Method sample = TestHelper.GetSample<PropertySample>("SetPropertyUnsafe");
       ProblemCollection result = _typeParser.Parse(sample);
 
-      Assert.That(TestHelper.ContainsProblemID("IC_SQLi", result), Is.True);
+      Assert.That(TestHelper.ContainsProblemID(c_InjectionCopRuleId, result), Is.True);
     }
   }
 }

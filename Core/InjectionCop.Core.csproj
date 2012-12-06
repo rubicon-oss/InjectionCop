@@ -62,6 +62,7 @@
     <Compile Include="Parser\MethodParsing\IInitialSymbolTableBuilder.cs" />
     <Compile Include="Parser\MethodParsing\MethodGraph.cs" />
     <Compile Include="Parser\BlockParsing\BasicBlock.cs" />
+    <Compile Include="Parser\ProblemMetadata.cs" />
     <Compile Include="Utilities\FragmentUtilities.cs" />
     <Compile Include="InjectionCopException.cs" />
     <Compile Include="Parser\TypeParsing\BaseFxCopRule.cs" />

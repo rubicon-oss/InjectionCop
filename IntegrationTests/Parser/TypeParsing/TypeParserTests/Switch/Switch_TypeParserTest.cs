@@ -30,7 +30,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Switc
       Method sample = TestHelper.GetSample<SwitchSample> ("ValidSwitch", intTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
 
     [Test]
@@ -40,7 +40,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Switc
       Method sample = TestHelper.GetSample<SwitchSample> ("UnsafeCallInsideSwitch", intTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
 
 
@@ -51,7 +51,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Switc
       Method sample = TestHelper.GetSample<SwitchSample> ("UnsafeCallAfterSwitch", intTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
 
     [Test]
@@ -61,7 +61,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Switc
       Method sample = TestHelper.GetSample<SwitchSample> ("UnsafeCallAfterNestedSwitch", intTypeNode, intTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
 
     [Test]
@@ -71,7 +71,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Switc
       Method sample = TestHelper.GetSample<SwitchSample> ("SafeCallAfterNestedSwitch", intTypeNode, intTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
 
     [Test]
@@ -81,7 +81,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Switc
       Method sample = TestHelper.GetSample<SwitchSample> ("UnsafeCallInsideNestedSwitch", intTypeNode, intTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
 
     [Test]
@@ -91,7 +91,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Switc
       Method sample = TestHelper.GetSample<SwitchSample> ("ValidFallThrough", intTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
 
     [Test]
@@ -101,7 +101,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Switc
       Method sample = TestHelper.GetSample<SwitchSample> ("ValidFallThroughGoto", intTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
 
     [Test]
@@ -111,7 +111,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Switc
       Method sample = TestHelper.GetSample<SwitchSample> ("InvalidFallThrough", intTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
 
     [Test]
@@ -121,7 +121,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Switc
       Method sample = TestHelper.GetSample<SwitchSample> ("InvalidFallThroughGoto", intTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
   }
 }

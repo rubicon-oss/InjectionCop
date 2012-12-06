@@ -14,6 +14,7 @@
 
 using System;
 using InjectionCop.Utilities;
+using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser.BlockParsing
 {
@@ -24,11 +25,18 @@ namespace InjectionCop.Parser.BlockParsing
   {
     private readonly string _symbol;
     private readonly string _fragmentType;
-
+    private readonly ProblemMetadata _problemMetadata;
+    
     public PreCondition (string symbol, string fragmentType)
+      : this(symbol, fragmentType, new ProblemMetadata (new SourceContext(), "?", "?"))
+    {
+    }
+
+    public PreCondition (string symbol, string fragmentType, ProblemMetadata problemMetadata)
     {
       _symbol = ArgumentUtility.CheckNotNullOrEmpty ("symbol", symbol);
       _fragmentType = ArgumentUtility.CheckNotNullOrEmpty ("fragmentType", fragmentType);
+      _problemMetadata = ArgumentUtility.CheckNotNull("sourceContext", problemMetadata);
     }
 
     public string Symbol
@@ -39,6 +47,11 @@ namespace InjectionCop.Parser.BlockParsing
     public string FragmentType
     {
       get { return _fragmentType; }
+    }
+
+    public ProblemMetadata ProblemMetadata
+    {
+      get { return _problemMetadata; }
     }
   }
 }

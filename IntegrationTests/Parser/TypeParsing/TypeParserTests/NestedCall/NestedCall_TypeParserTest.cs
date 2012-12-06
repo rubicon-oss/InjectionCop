@@ -27,7 +27,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Neste
       Method sample = TestHelper.GetSample<NestedCallSample> ("NestedValidCallReturn");
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
 
     [Test]
@@ -36,7 +36,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Neste
       Method sample = TestHelper.GetSample<NestedCallSample> ("NestedInvalidCallReturn");
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
   
     [Test]
@@ -45,7 +45,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Neste
       Method sample = TestHelper.GetSample<NestedCallSample> ("NestedInvalidCall");
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
 
     [Test]
@@ -54,7 +54,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Neste
       Method sample = TestHelper.GetSample<NestedCallSample> ("DeeperNestedInvalidCall");
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
 
     [Test]
@@ -63,7 +63,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Neste
       Method sample = TestHelper.GetSample<NestedCallSample> ("ValidMethodCallChain");
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
 
     [Test]
@@ -72,7 +72,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Neste
       Method sample = TestHelper.GetSample<NestedCallSample> ("InvalidMethodCallChain");
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
     
     [Test]
@@ -81,7 +81,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Neste
       Method sample = TestHelper.GetSample<NestedCallSample> ("ValidMethodCallChainDifferentOperand");
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
 
     [Test]
@@ -90,7 +90,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Neste
       Method sample = TestHelper.GetSample<NestedCallSample> ("InvalidMethodCallChainDifferentOperand");
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
   }
 }

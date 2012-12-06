@@ -1,12 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Rules FriendlyName="InjectionCop">
-  <Rule TypeName="TypeParser" Category="InjectionCop.SQLi" CheckId="IC_SQLi">
+  <Rule TypeName="TypeParser" Category="InjectionCop.SQLi" CheckId="IC0001">
     <Name>Check for Fragment Violations</Name>
-    <Description>Methods that are vulnerable to SQL injection must be called with safe Parameters</Description>
+    <Description>See injectincop.codeplex.com for quick introduction</Description>
     <Url>injectioncop.codeplex.com</Url>
-    <Resolution>
-      Make parameter safe
-    </Resolution>
+    <Resolution>Expected fragment of type '{0}' but got '{1}'.</Resolution>
     <MessageLevel Certainty="95">Warning</MessageLevel>
     <FixCategories>NonBreaking</FixCategories>
     <Email />

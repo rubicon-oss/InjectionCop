@@ -29,7 +29,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Attri
       Method sample = TestHelper.GetSample<AttributePropagationSample>("SafeSource");
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
 
     [Test]
@@ -39,7 +39,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Attri
       Method sample = TestHelper.GetSample<AttributePropagationSample>("SafeCallOfSqlFragmentCallee");
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
 
     [Test]
@@ -49,7 +49,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Attri
       Method sample = TestHelper.GetSample<AttributePropagationSample>("UnsafeCallOfSqlFragmentCallee");
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
 
     [Test]
@@ -59,7 +59,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Attri
       Method sample = TestHelper.GetSample<AttributePropagationSample>("SafeCallOfMixedCallee");
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
 
     [Test]
@@ -69,7 +69,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Attri
       Method sample = TestHelper.GetSample<AttributePropagationSample>("UnsafeCallOfMixedCallee");
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
   }
 }

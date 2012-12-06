@@ -28,7 +28,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Black
       Method sample = TestHelper.GetSample<BlackMethodSample>("BlackMethodCallLiteral");
       ProblemCollection result = _typeParser.Parse(sample);
       
-      Assert.That(TestHelper.ContainsProblemID("IC_SQLi", result), Is.False);
+      Assert.That(TestHelper.ContainsProblemID(c_InjectionCopRuleId, result), Is.False);
     }
 
     [Test]
@@ -38,7 +38,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Black
       Method sample = TestHelper.GetSample<BlackMethodSample>("BlackMethodCallUnsafeSourceNoParameter");
       ProblemCollection result = _typeParser.Parse(sample);
 
-      Assert.That(TestHelper.ContainsProblemID("IC_SQLi", result), Is.True);
+      Assert.That(TestHelper.ContainsProblemID(c_InjectionCopRuleId, result), Is.True);
     }
 
     [Test]
@@ -48,7 +48,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Black
       Method sample = TestHelper.GetSample<BlackMethodSample>("BlackMethodCallSafeSource");
       ProblemCollection result = _typeParser.Parse(sample);
 
-      Assert.That(TestHelper.ContainsProblemID("IC_SQLi", result), Is.False);
+      Assert.That(TestHelper.ContainsProblemID(c_InjectionCopRuleId, result), Is.False);
     }
 
     [Test]
@@ -58,7 +58,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Black
       Method sample = TestHelper.GetSample<BlackMethodSample>("BlackMethodCallUnsafeSourceWithSafeParameter");
       ProblemCollection result = _typeParser.Parse(sample);
 
-      Assert.That(TestHelper.ContainsProblemID("IC_SQLi", result), Is.True);
+      Assert.That(TestHelper.ContainsProblemID(c_InjectionCopRuleId, result), Is.True);
     }
 
     [Test]
@@ -68,7 +68,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Black
       Method sample = TestHelper.GetSample<BlackMethodSample>("WhiteMethodCall");
       ProblemCollection result = _typeParser.Parse(sample);
 
-      Assert.That(TestHelper.ContainsProblemID("IC_SQLi", result), Is.False);
+      Assert.That(TestHelper.ContainsProblemID(c_InjectionCopRuleId, result), Is.False);
     }
   }
 }

@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using InjectionCop.Parser;
 using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
 using NUnit.Framework;
@@ -30,7 +29,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Assig
       Method sample = TestHelper.GetSample<AssignmentPropagationSample>("ValidSafenessPropagation");
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
 
     [Test]
@@ -41,7 +40,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Assig
       Method sample = TestHelper.GetSample<AssignmentPropagationSample>("InvalidSafenessPropagationParameter", stringTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
 
     [Test]
@@ -52,7 +51,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Assig
       Method sample = TestHelper.GetSample<AssignmentPropagationSample>("ValidSafenessPropagationParameter", stringTypeNode);
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
 
     [Test]
@@ -62,7 +61,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Assig
       Method sample = TestHelper.GetSample<AssignmentPropagationSample>("InvalidSafenessPropagationVariable");
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
 
     [Test]
@@ -72,7 +71,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Assig
       Method sample = TestHelper.GetSample<AssignmentPropagationSample>("ValidSafenessPropagationVariable");
       ProblemCollection result = _typeParser.Parse (sample);
 
-      Assert.That (TestHelper.ContainsProblemID ("IC_SQLi", result), Is.False);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
   }
 }
