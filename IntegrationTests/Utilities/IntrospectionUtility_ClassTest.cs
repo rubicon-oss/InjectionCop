@@ -21,12 +21,12 @@ using NUnit.Framework;
 namespace InjectionCop.IntegrationTests.Utilities
 {
   [TestFixture]
-  public class IntrospectionUtilityTest
+  public class IntrospectionUtility_ClassTest
   {
     [Test]
     public void IsVariable_FieldInMembebinding_IsTrue ()
     {
-      Method sample = TestHelper.GetSample<IntrospectionUtilitySample>("UsingField");
+      Method sample = TestHelper.GetSample<IntrospectionUtility_ClassSample>("UsingField");
       Block expressionBlock = (Block)sample.Body.Statements[0];
       ExpressionStatement expressionStatement = (ExpressionStatement)expressionBlock.Statements[1];
       UnaryExpression sampleUnaryExpression = (UnaryExpression)expressionStatement.Expression;
@@ -39,7 +39,7 @@ namespace InjectionCop.IntegrationTests.Utilities
     [Test]
     public void IsVariable_Method_IsFalse ()
     {
-      Method sample = TestHelper.GetSample<IntrospectionUtilitySample>("UsingField");
+      Method sample = TestHelper.GetSample<IntrospectionUtility_ClassSample>("UsingField");
       Block expressionBlock = (Block)sample.Body.Statements[0];
       ExpressionStatement expressionStatement = (ExpressionStatement)expressionBlock.Statements[1];
       UnaryExpression sampleUnaryExpression = (UnaryExpression)expressionStatement.Expression;
@@ -51,7 +51,7 @@ namespace InjectionCop.IntegrationTests.Utilities
     [Test]
     public void GetVariableName_FieldInMembebinding_ReturnsName ()
     {
-      Method sample = TestHelper.GetSample<IntrospectionUtilitySample>("UsingField");
+      Method sample = TestHelper.GetSample<IntrospectionUtility_ClassSample>("UsingField");
       Block expressionBlock = (Block)sample.Body.Statements[0];
       ExpressionStatement expressionStatement = (ExpressionStatement)expressionBlock.Statements[1];
       UnaryExpression sampleUnaryExpression = (UnaryExpression)expressionStatement.Expression;
@@ -64,7 +64,7 @@ namespace InjectionCop.IntegrationTests.Utilities
     [Test]
     public void GetVariableName_Method_IsNull ()
     {
-      Method sample = TestHelper.GetSample<IntrospectionUtilitySample>("UsingField");
+      Method sample = TestHelper.GetSample<IntrospectionUtility_ClassSample>("UsingField");
       Block expressionBlock = (Block)sample.Body.Statements[0];
       ExpressionStatement expressionStatement = (ExpressionStatement)expressionBlock.Statements[1];
       UnaryExpression sampleUnaryExpression = (UnaryExpression)expressionStatement.Expression;
@@ -76,7 +76,7 @@ namespace InjectionCop.IntegrationTests.Utilities
     [Test]
     public void IsVariableWithOutParameter_FieldInMemberbinding_IsTrueAndReturnsFieldName ()
     {
-      Method sample = TestHelper.GetSample<IntrospectionUtilitySample>("UsingField");
+      Method sample = TestHelper.GetSample<IntrospectionUtility_ClassSample>("UsingField");
       Block expressionBlock = (Block)sample.Body.Statements[0];
       ExpressionStatement expressionStatement = (ExpressionStatement)expressionBlock.Statements[1];
       UnaryExpression sampleUnaryExpression = (UnaryExpression)expressionStatement.Expression;
@@ -91,7 +91,7 @@ namespace InjectionCop.IntegrationTests.Utilities
     [Test]
     public void IsVariableWithOutParameter_Method_IsFalseAndReturnsNullAsVariableName ()
     {
-      Method sample = TestHelper.GetSample<IntrospectionUtilitySample>("UsingField");
+      Method sample = TestHelper.GetSample<IntrospectionUtility_ClassSample>("UsingField");
       Block expressionBlock = (Block)sample.Body.Statements[0];
       ExpressionStatement expressionStatement = (ExpressionStatement)expressionBlock.Statements[1];
       UnaryExpression sampleUnaryExpression = (UnaryExpression)expressionStatement.Expression;
@@ -105,7 +105,7 @@ namespace InjectionCop.IntegrationTests.Utilities
     [Test]
     public void IsField_FieldExpression_ReturnsTrue ()
     {
-      Method sample = TestHelper.GetSample<IntrospectionUtilitySample> ("FieldAssignment");
+      Method sample = TestHelper.GetSample<IntrospectionUtility_ClassSample> ("FieldAssignment");
       Block assignmentBlock = (Block) sample.Body.Statements[0];
       AssignmentStatement assignmentStatement = (AssignmentStatement) assignmentBlock.Statements[1];
       Expression sampleExpression = assignmentStatement.Target;
@@ -116,7 +116,7 @@ namespace InjectionCop.IntegrationTests.Utilities
     [Test]
     public void IsField_NonFieldAssignment_ReturnsFalse ()
     {
-      Method sample = TestHelper.GetSample<IntrospectionUtilitySample> ("NonFieldAssignment");
+      Method sample = TestHelper.GetSample<IntrospectionUtility_ClassSample> ("NonFieldAssignment");
       Block assignmentBlock = (Block) sample.Body.Statements[0];
       AssignmentStatement assignmentStatement = (AssignmentStatement) assignmentBlock.Statements[1];
       Expression sampleExpression = assignmentStatement.Target;
@@ -127,7 +127,7 @@ namespace InjectionCop.IntegrationTests.Utilities
     [Test]
     public void GetField_FieldExpression_ReturnsContainedField ()
     {
-      Method sample = TestHelper.GetSample<IntrospectionUtilitySample> ("FieldAssignment");
+      Method sample = TestHelper.GetSample<IntrospectionUtility_ClassSample> ("FieldAssignment");
       Block assignmentBlock = (Block) sample.Body.Statements[0];
       AssignmentStatement assignmentStatement = (AssignmentStatement) assignmentBlock.Statements[1];
       Expression sampleExpression = assignmentStatement.Target;
@@ -142,7 +142,7 @@ namespace InjectionCop.IntegrationTests.Utilities
     [Test]
     public void GetField_NonFieldAssignment_ReturnsNull ()
     {
-      Method sample = TestHelper.GetSample<IntrospectionUtilitySample> ("NonFieldAssignment");
+      Method sample = TestHelper.GetSample<IntrospectionUtility_ClassSample> ("NonFieldAssignment");
       Block assignmentBlock = (Block) sample.Body.Statements[0];
       AssignmentStatement assignmentStatement = (AssignmentStatement) assignmentBlock.Statements[1];
       Expression sampleExpression = assignmentStatement.Target;

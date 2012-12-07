@@ -14,40 +14,21 @@
 
 using System;
 using System.Linq;
-using InjectionCop.Config;
-using InjectionCop.Parser;
 using InjectionCop.Parser.BlockParsing;
 using InjectionCop.Parser.MethodParsing;
-using InjectionCop.Parser.TypeParsing;
 using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
 using NUnit.Framework;
 
-namespace InjectionCop.IntegrationTests.Parser.MethodParsing
+namespace InjectionCop.IntegrationTests.Parser.MethodParsing.MethodGraphTests
 {
   [TestFixture]
-  public class MethodGraphTest
+  public class MethodGraph_ClassTest : MethodGraph_TestBase
   {
-    private IBlacklistManager _blacklistManager;
-
-    [SetUp]
-    public void SetUp()
-    {
-      _blacklistManager = new IDbCommandBlacklistManagerStub();
-    }
-
-    private IMethodGraph BuildMethodGraph (Method method)
-    {
-      IMethodGraphBuilder methodGraphBuilder = new MethodGraphBuilder (method, _blacklistManager, new TypeParser());
-      methodGraphBuilder.Build();
-      IMethodGraph methodGraph = methodGraphBuilder.GetResult();
-      return methodGraph;
-    }
-
     [Test]
     public void GetInitialBlockId_DeclarationWithReturn_ReturnsIdOfInitialBlock ()
     {
-      Method sampleMethod = TestHelper.GetSample<MethodGraphSample> ("DeclarationWithReturn");
+      Method sampleMethod = TestHelper.GetSample<MethodGraph_ClassSample> ("DeclarationWithReturn");
       Block initialBlock = sampleMethod.Body.Statements[0] as Block;
       if (initialBlock != null)
       {
@@ -59,7 +40,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing
     [Test]
     public void GetBlockById_FirstBlockIdOfDeclarationWithReturnSample_ReturnsInitialBasicBlock ()
     {
-      Method sampleMethod = TestHelper.GetSample<MethodGraphSample> ("DeclarationWithReturn");
+      Method sampleMethod = TestHelper.GetSample<MethodGraph_ClassSample> ("DeclarationWithReturn");
       Block initialBlock = sampleMethod.Body.Statements[0] as Block;
       if(initialBlock != null)
       {
@@ -77,7 +58,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing
     [Test]
     public void GetBlockById_SuccessorOfFirstBlockIdOfDeclarationWithReturnSample_ReturnsReturnBasicBlock ()
     {
-      Method sampleMethod = TestHelper.GetSample<MethodGraphSample> ("DeclarationWithReturn");
+      Method sampleMethod = TestHelper.GetSample<MethodGraph_ClassSample> ("DeclarationWithReturn");
       Block initialBlock = sampleMethod.Body.Statements[0] as Block;
       Block returnBlock = sampleMethod.Body.Statements[1] as Block;
       if(initialBlock != null && returnBlock != null)
@@ -98,7 +79,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing
     [ExpectedException( typeof(InjectionCopException), ExpectedMessage = "The given key was not present in the MethodGraph")]
     public void GetBlockById_InvalidId_ThrowsException ()
     {
-      Method sampleMethod = TestHelper.GetSample<MethodGraphSample> ("DeclarationWithReturn");
+      Method sampleMethod = TestHelper.GetSample<MethodGraph_ClassSample> ("DeclarationWithReturn");
       IMethodGraph methodGraph = BuildMethodGraph(sampleMethod);
       methodGraph.GetBasicBlockById (-1);
     }
@@ -106,7 +87,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing
     [Test]
     public void MethodGraph_DeclarationWithReturn_ReturnsCorrectInitialBlockSuccessors()
     {
-      Method sampleMethod = TestHelper.GetSample<MethodGraphSample> ("DeclarationWithReturn");
+      Method sampleMethod = TestHelper.GetSample<MethodGraph_ClassSample> ("DeclarationWithReturn");
       Block initialBlock = sampleMethod.Body.Statements[0] as Block;
       Block returnBlock = sampleMethod.Body.Statements[1] as Block;
       if(initialBlock != null && returnBlock != null)
@@ -126,7 +107,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing
     [Test]
     public void MethodGraph_DeclarationWithReturn_ReturnBlockHasNoSuccessors()
     {
-      Method sampleMethod = TestHelper.GetSample<MethodGraphSample> ("DeclarationWithReturn");
+      Method sampleMethod = TestHelper.GetSample<MethodGraph_ClassSample> ("DeclarationWithReturn");
       Block returnBlock = sampleMethod.Body.Statements[1] as Block;
       if(returnBlock != null)
       {
@@ -145,7 +126,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing
     public void MethodGraph_IfStatementTrueBlockOnly_ReturnsCorrectConditionSuccessors ()
     {
       TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
-      Method sampleMethod = TestHelper.GetSample<MethodGraphSample> ("IfStatementTrueBlockOnly", stringTypeNode);
+      Method sampleMethod = TestHelper.GetSample<MethodGraph_ClassSample> ("IfStatementTrueBlockOnly", stringTypeNode);
       Block conditionBlock = sampleMethod.Body.Statements[0] as Block;
       Block trueBlock = sampleMethod.Body.Statements[1] as Block;
       Block preReturnBlock = sampleMethod.Body.Statements[2] as Block;
@@ -169,7 +150,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing
     public void MethodGraph_IfStatementTrueBlockOnly_ReturnsCorrectTrueBlockSuccessors ()
     {
       TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
-      Method sampleMethod = TestHelper.GetSample<MethodGraphSample> ("IfStatementTrueBlockOnly", stringTypeNode);
+      Method sampleMethod = TestHelper.GetSample<MethodGraph_ClassSample> ("IfStatementTrueBlockOnly", stringTypeNode);
       Block trueBlock = sampleMethod.Body.Statements[1] as Block;
       Block preReturnBlock = sampleMethod.Body.Statements[2] as Block;
       if(preReturnBlock != null && trueBlock != null)
@@ -190,7 +171,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing
     public void MethodGraph_IfStatementTrueBlockOnly_ReturnsCorrectPreReturnSuccessors ()
     {
       TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
-      Method sampleMethod = TestHelper.GetSample<MethodGraphSample> ("IfStatementTrueBlockOnly", stringTypeNode);
+      Method sampleMethod = TestHelper.GetSample<MethodGraph_ClassSample> ("IfStatementTrueBlockOnly", stringTypeNode);
       Block preReturnBlock = sampleMethod.Body.Statements[2] as Block;
       Block returnBlock = sampleMethod.Body.Statements[3] as Block;
       if(returnBlock != null && preReturnBlock != null)
@@ -211,7 +192,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing
     public void MethodGraph_IfStatementTrueBlockOnly_ReturnsCorrectReturnSuccessors ()
     {
       TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
-      Method sampleMethod = TestHelper.GetSample<MethodGraphSample> ("IfStatementTrueBlockOnly", stringTypeNode);
+      Method sampleMethod = TestHelper.GetSample<MethodGraph_ClassSample> ("IfStatementTrueBlockOnly", stringTypeNode);
       Block returnBlock = sampleMethod.Body.Statements[3] as Block;
       if(returnBlock != null)
       {
@@ -229,7 +210,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing
     [Test]
     public void MethodGraph_ForLoop_ReturnsCorrectPreForSuccessors ()
     {
-      Method sampleMethod = TestHelper.GetSample<MethodGraphSample> ("ForLoop");
+      Method sampleMethod = TestHelper.GetSample<MethodGraph_ClassSample> ("ForLoop");
       Block preForBlock = sampleMethod.Body.Statements[0] as Block;
       Block conditionBlock = sampleMethod.Body.Statements[2] as Block;
       if(preForBlock != null && conditionBlock != null)
@@ -250,7 +231,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing
     [Test]
     public void MethodGraph_ForLoop_ReturnsCorrectInnerForSuccessors ()
     {
-      Method sampleMethod = TestHelper.GetSample<MethodGraphSample> ("ForLoop");
+      Method sampleMethod = TestHelper.GetSample<MethodGraph_ClassSample> ("ForLoop");
       Block innerForBlock = sampleMethod.Body.Statements[1] as Block;
       Block conditionBlock = sampleMethod.Body.Statements[2] as Block;
       if (innerForBlock != null && conditionBlock != null)
@@ -271,7 +252,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing
     [Test]
     public void MethodGraph_ForLoop_ReturnsCorrectConditionSuccessors ()
     {
-      Method sampleMethod = TestHelper.GetSample<MethodGraphSample> ("ForLoop");
+      Method sampleMethod = TestHelper.GetSample<MethodGraph_ClassSample> ("ForLoop");
       Block innerForBlock = sampleMethod.Body.Statements[1] as Block;
       Block conditionBlock = sampleMethod.Body.Statements[2] as Block;
       Block preReturnBlock = sampleMethod.Body.Statements[3] as Block;
@@ -295,7 +276,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing
     [Test]
     public void MethodGraph_ForLoop_ReturnsCorrectPreReturnSuccessors ()
     {
-      Method sampleMethod = TestHelper.GetSample<MethodGraphSample> ("ForLoop");
+      Method sampleMethod = TestHelper.GetSample<MethodGraph_ClassSample> ("ForLoop");
       Block preReturnBlock = sampleMethod.Body.Statements[3] as Block;
       Block returnBlock = sampleMethod.Body.Statements[4] as Block;
       if (preReturnBlock != null && returnBlock != null)
@@ -316,7 +297,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing
     [Test]
     public void MethodGraph_ForLoop_ReturnsCorrectReturnSuccessors ()
     {
-      Method sampleMethod = TestHelper.GetSample<MethodGraphSample> ("ForLoop");
+      Method sampleMethod = TestHelper.GetSample<MethodGraph_ClassSample> ("ForLoop");
       Block returnBlock = sampleMethod.Body.Statements[4] as Block;
       if (returnBlock != null)
       {

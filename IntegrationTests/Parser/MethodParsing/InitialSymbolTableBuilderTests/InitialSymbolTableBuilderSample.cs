@@ -13,32 +13,23 @@
 // limitations under the License.
 
 using System;
+using InjectionCop.Fragment;
 
-namespace InjectionCop.IntegrationTests.Utilities
+namespace InjectionCop.IntegrationTests.Parser.MethodParsing.InitialSymbolTableBuilderTests
 {
-  internal class IntrospectionUtilitySample
+  class InitialSymbolTableBuilderSample
   {
-    private string _field = "dummy";
+    [Fragment ("FieldType")]
+    private int _fragmentField = 0;
 
-    public void UsingField ()
-    {
-      Dummy (_field);
-    }
+    [SqlFragment]
+    private string _sqlFragmentField = "dummy";
 
-    public void FieldAssignment ()
-    {
-      _field = "dummy";
-    }
+    private readonly object _nonFragmentField = new object();
 
-    public string NonFieldAssignment ()
+    public string ParameterizedMethod (float floatParameter, object objectParameter)
     {
-      string x = Dummy("dummy");
-      return x;
-    }
-
-    public string Dummy (string parameter)
-    {
-      return parameter;
+      return objectParameter.ToString() + floatParameter + _fragmentField + _nonFragmentField + _sqlFragmentField;
     }
   }
 }

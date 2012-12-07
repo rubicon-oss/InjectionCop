@@ -14,9 +14,9 @@
 
 using System;
 
-namespace InjectionCop.IntegrationTests.Parser.MethodParsing
+namespace InjectionCop.IntegrationTests.Parser.MethodParsing.MethodGraphTests
 {
-  public class MethodGraphSample
+  public class MethodGraph_ClassSample
   {
     public int DeclarationWithReturn()
     {

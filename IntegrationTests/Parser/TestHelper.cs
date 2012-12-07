@@ -29,8 +29,13 @@ namespace InjectionCop.IntegrationTests.Parser
 
     public static Method GetSample<SampleClass>(string methodName, params TypeNode[] methodParameters)
     {
-      Identifier sampleName = Identifier.For(methodName);
-      Method sample = IntrospectionUtility.MethodFactory<SampleClass> (sampleName, methodParameters);
+      Method sample = IntrospectionUtility.MethodFactory<SampleClass> (methodName, methodParameters);
+      return sample;
+    }
+
+    public static Method GetSample (Type targetType, string methodName, params TypeNode[] methodParameters)
+    {
+      Method sample = IntrospectionUtility.MethodFactory(targetType, methodName, methodParameters);
       return sample;
     }
 

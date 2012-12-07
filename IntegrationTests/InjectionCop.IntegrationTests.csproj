@@ -64,9 +64,10 @@
   <ItemGroup>
     <Compile Include="Config\ConfigLoaderTest.cs" />
     <Compile Include="Parser\BlockParsing\BlockParserSample.cs" />
-    <Compile Include="Parser\MethodParsing\InitialSymbolTableBuilderSample.cs" />
-    <Compile Include="Parser\MethodParsing\MethodGraphSample.cs" />
-    <Compile Include="Parser\MethodParsing\InitialSymbolTableBuilderTest.cs" />
+    <Compile Include="Parser\MethodParsing\InitialSymbolTableBuilderTests\InitialSymbolTableBuilderSample.cs" />
+    <Compile Include="Parser\MethodParsing\MethodGraphTests\MethodGraph_ClassSample.cs" />
+    <Compile Include="Parser\MethodParsing\InitialSymbolTableBuilderTests\InitialSymbolTableBuilderTest.cs" />
+    <Compile Include="Parser\MethodParsing\MethodGraphTests\MethodGraph_TestBase.cs" />
     <Compile Include="Parser\NonFragmentAttribute.cs" />
     <Compile Include="Parser\TypeParsing\BlacklistManagerIntegrationSample.cs" />
     <Compile Include="Parser\TypeParsing\SymbolTableTests\InferFragment\InferFragmentSample.cs" />
@@ -89,6 +90,8 @@
     <Compile Include="Parser\TypeParsing\TypeParserTests\Goto\Goto_TypeParserTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\If\IfSample.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\If\If_TypeParserTest.cs" />
+    <Compile Include="Parser\MethodParsing\MethodGraphTests\MethodGraph_InterfaceSample.cs" />
+    <Compile Include="Parser\MethodParsing\MethodGraphTests\MethodGraph_InterfaceTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\NestedCall\NestedCallSample.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\NestedCall\NestedCall_TypeParserTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Parameter\ParameterSample.cs" />
@@ -104,13 +107,15 @@
     <Compile Include="Parser\TypeParsing\TypeParserTests\While_loop\WhileLoop_TypeParserTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\While_loop\WhileLoopSample.cs" />
     <Compile Include="Parser\BlockParsing\BlockParserTest.cs" />
-    <Compile Include="Parser\MethodParsing\MethodGraphTest.cs" />
+    <Compile Include="Parser\MethodParsing\MethodGraphTests\MethodGraph_ClassTest.cs" />
     <Compile Include="Parser\TypeParsing\SymbolTableTests\InferFragment\InferFragment_SymbolTableTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Parser\ParserSampleBase.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\TypeParserTestBase.cs" />
-    <Compile Include="Utilities\IntrospectionUtilitySample.cs" />
-    <Compile Include="Utilities\IntrospectionUtilityTest.cs" />
+    <Compile Include="Utilities\IntrospectionUtility_ClassSample.cs" />
+    <Compile Include="Utilities\IntrospectionUtility_ClassTest.cs" />
+    <Compile Include="Utilities\IntrospectionUtility_InterfaceSample.cs" />
+    <Compile Include="Utilities\IntrospectionUtility_InterfaceTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\InjectionCop.Core.csproj">

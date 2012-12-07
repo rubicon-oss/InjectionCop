@@ -18,7 +18,6 @@ using System.Linq;
 using InjectionCop.Config;
 using InjectionCop.Parser.BlockParsing;
 using InjectionCop.Parser.ProblemPipe;
-using InjectionCop.Parser.TypeParsing;
 using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
 
@@ -34,10 +33,18 @@ namespace InjectionCop.Parser.MethodParsing
     public MethodGraphBuilder (Method method, IBlacklistManager blacklistManager, IProblemPipe problemPipe)
     {
       ArgumentUtility.CheckNotNull ("method", method);
-      _methodBody = method.Body;
       _blacklistManager = ArgumentUtility.CheckNotNull ("blacklistManager", blacklistManager);
       _problemPipe = ArgumentUtility.CheckNotNull ("problemPipe", problemPipe);
-      _result = null;
+      bool isInterfaceMethod = method.Body.Statements.Count == 0;
+      if (!isInterfaceMethod)
+      {
+        _methodBody = method.Body;
+        _result = null;
+      }
+      else
+      {
+        _result = new MethodGraph (-1, new Dictionary<int, BasicBlock>());
+      }
     }
 
     public IMethodGraph GetResult ()

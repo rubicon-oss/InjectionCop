@@ -20,7 +20,7 @@ using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
 using NUnit.Framework;
 
-namespace InjectionCop.IntegrationTests.Parser.MethodParsing
+namespace InjectionCop.IntegrationTests.Parser.MethodParsing.InitialSymbolTableBuilderTests
 {
   [TestFixture]
   public class InitialSymbolTableBuilderTest

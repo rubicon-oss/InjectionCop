@@ -126,20 +126,34 @@ namespace InjectionCop.Utilities
     public static TypeNode TypeNodeFactory<T> ()
     {
       Type targetType = typeof (T);
+      return TypeNodeFactory (targetType);
+    }
+
+    public static Method MethodFactory<T> (string methodName, params TypeNode[] methodParameters)
+    {
+      Type targetTypeNode = typeof(T);
+      return MethodFactory(targetTypeNode, methodName, methodParameters);
+    }
+
+    public static Method MethodFactory (Type targetType, string methodName, params TypeNode[] methodParameters)
+    {
+      ArgumentUtility.CheckNotNull ("methodName", methodName);
+      ArgumentUtility.CheckNotNull ("methodParameters", methodParameters);
+
+      TypeNode targetTypeNode = TypeNodeFactory(targetType);
+      Identifier methodIdentifier = Identifier.For (methodName);
+      Method targetMethod = targetTypeNode.GetMethod (methodIdentifier, methodParameters);
+      return targetMethod;
+    }
+
+    public static TypeNode TypeNodeFactory (Type targetType)
+    {
+      ArgumentUtility.CheckNotNull ("targetType", targetType);
       string targetLocation = targetType.Assembly.Location;
       AssemblyNode targetAssembly = AssemblyNode.GetAssembly (targetLocation);
       Identifier targetNamespace = Identifier.For (targetType.Namespace);
       Identifier targetName = Identifier.For (targetType.Name);
       return targetAssembly.GetType (targetNamespace, targetName);
-    }
-
-    public static Method MethodFactory<T> (Identifier methodName, params TypeNode[] methodParameters)
-    {
-      ArgumentUtility.CheckNotNull ("methodName", methodName);
-      ArgumentUtility.CheckNotNull ("methodParameters", methodParameters);
-
-      TypeNode ct = TypeNodeFactory<T>();
-      return ct.GetMethod (methodName, methodParameters);
     }
   }
 }
