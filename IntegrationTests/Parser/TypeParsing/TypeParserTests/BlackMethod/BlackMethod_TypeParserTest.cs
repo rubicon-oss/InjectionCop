@@ -26,7 +26,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Black
     public void Parse_BlackMethodCallLiteral_NoProblem()
     {
       Method sample = TestHelper.GetSample<BlackMethodSample>("BlackMethodCallLiteral");
-      ProblemCollection result = _typeParser.Parse(sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
       
       Assert.That(TestHelper.ContainsProblemID(c_InjectionCopRuleId, result), Is.False);
     }
@@ -36,7 +37,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Black
     public void Parse_BlackMethodCallUnsafeSourceNoParameter_ReturnsProblem()
     {
       Method sample = TestHelper.GetSample<BlackMethodSample>("BlackMethodCallUnsafeSourceNoParameter");
-      ProblemCollection result = _typeParser.Parse(sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That(TestHelper.ContainsProblemID(c_InjectionCopRuleId, result), Is.True);
     }
@@ -46,7 +48,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Black
     public void Parse_BlackMethodCallSafeSource_NoProblem()
     {
       Method sample = TestHelper.GetSample<BlackMethodSample>("BlackMethodCallSafeSource");
-      ProblemCollection result = _typeParser.Parse(sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That(TestHelper.ContainsProblemID(c_InjectionCopRuleId, result), Is.False);
     }
@@ -56,7 +59,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Black
     public void Parse_BlackMethodCallUnsafeSourceWithSafeParameter_ReturnsProblem()
     {
       Method sample = TestHelper.GetSample<BlackMethodSample>("BlackMethodCallUnsafeSourceWithSafeParameter");
-      ProblemCollection result = _typeParser.Parse(sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That(TestHelper.ContainsProblemID(c_InjectionCopRuleId, result), Is.True);
     }
@@ -66,7 +70,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Black
     public void Parse_WhiteMethodCall_NoProblem()
     {
       Method sample = TestHelper.GetSample<BlackMethodSample>("WhiteMethodCall");
-      ProblemCollection result = _typeParser.Parse(sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That(TestHelper.ContainsProblemID(c_InjectionCopRuleId, result), Is.False);
     }

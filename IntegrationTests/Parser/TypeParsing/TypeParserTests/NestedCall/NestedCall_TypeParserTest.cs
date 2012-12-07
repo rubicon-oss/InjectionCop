@@ -25,7 +25,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Neste
     public void Parse_NestedValidCallReturn_NoProblem ()
     {
       Method sample = TestHelper.GetSample<NestedCallSample> ("NestedValidCallReturn");
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
@@ -34,7 +35,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Neste
     public void Parse_NestedInvalidCallReturn_ReturnsProblem ()
     {
       Method sample = TestHelper.GetSample<NestedCallSample> ("NestedInvalidCallReturn");
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
@@ -43,7 +45,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Neste
     public void Parse_NestedInvalidCall_ReturnsProblem ()
     {
       Method sample = TestHelper.GetSample<NestedCallSample> ("NestedInvalidCall");
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
@@ -52,7 +55,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Neste
     public void Parse_DeeperNestedInvalidCall_ReturnsProblem ()
     {
       Method sample = TestHelper.GetSample<NestedCallSample> ("DeeperNestedInvalidCall");
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
@@ -61,7 +65,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Neste
     public void Parse_ValidMethodCallChain_NoProblem ()
     {
       Method sample = TestHelper.GetSample<NestedCallSample> ("ValidMethodCallChain");
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
@@ -70,7 +75,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Neste
     public void Parse_InvalidMethodCallChain_ReturnsProblem ()
     {
       Method sample = TestHelper.GetSample<NestedCallSample> ("InvalidMethodCallChain");
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
@@ -79,7 +85,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Neste
     public void Parse_ValidMethodCallChainDifferentOperand_ReturnsProblem ()
     {
       Method sample = TestHelper.GetSample<NestedCallSample> ("ValidMethodCallChainDifferentOperand");
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
@@ -88,7 +95,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Neste
     public void Parse_InvalidMethodCallChainDifferentOperand_ReturnsProblem ()
     {
       Method sample = TestHelper.GetSample<NestedCallSample> ("InvalidMethodCallChainDifferentOperand");
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }

@@ -25,7 +25,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Goto
     public void Parse_SimpleGoto_NoProblem ()
     {
       Method sample = TestHelper.GetSample<GotoSample> ("SimpleGoto");
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
@@ -34,7 +35,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Goto
     public void Parse_GotoJumpsOverUnsafeAssignment_ReturnsProblem ()
     {
       Method sample = TestHelper.GetSample<GotoSample> ("GotoJumpsOverUnsafeAssignment");
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
@@ -43,7 +45,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Goto
     public void Parse_InvalidCallInsideWhileWithGoto_ReturnsProblem ()
     {
       Method sample = TestHelper.GetSample<GotoSample> ("InvalidCallInsideWhileWithGoto");
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
@@ -52,7 +55,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Goto
     public void Parse_InvalidCallInsideIfWithGoto_ReturnsProblem ()
     {
       Method sample = TestHelper.GetSample<GotoSample> ("InvalidCallInsideIfWithGoto");
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
@@ -61,7 +65,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Goto
     public void Parse_InvalidCallInsideIfWithGotoAndBreak_ReturnsProblem ()
     {
       Method sample = TestHelper.GetSample<GotoSample> ("InvalidCallInsideIfWithGotoAndBreak");
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }

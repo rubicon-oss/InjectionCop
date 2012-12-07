@@ -27,7 +27,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Attri
     public void Parse_SafeSource_NoProblem()
     {
       Method sample = TestHelper.GetSample<AttributePropagationSample>("SafeSource");
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
@@ -37,7 +38,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Attri
     public void Parse_SafeCallOfSqlFragmentCallee_NoProblem()
     {
       Method sample = TestHelper.GetSample<AttributePropagationSample>("SafeCallOfSqlFragmentCallee");
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
@@ -47,7 +49,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Attri
     public void Parse_UnsafeCallOfSqlFragmentCallee_ReturnsProblem()
     {
       Method sample = TestHelper.GetSample<AttributePropagationSample>("UnsafeCallOfSqlFragmentCallee");
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
@@ -57,7 +60,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Attri
     public void Parse_SafeCallOfMixedCallee_NoProblem()
     {
       Method sample = TestHelper.GetSample<AttributePropagationSample>("SafeCallOfMixedCallee");
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
@@ -67,7 +71,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Attri
     public void Parse_UnsafeCallOfMixedCallee_ReturnsProblem()
     {
       Method sample = TestHelper.GetSample<AttributePropagationSample>("UnsafeCallOfMixedCallee");
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }

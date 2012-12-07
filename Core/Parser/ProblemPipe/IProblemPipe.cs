@@ -13,15 +13,11 @@
 // limitations under the License.
 
 using System;
-using Microsoft.FxCop.Sdk;
 
-namespace InjectionCop.Parser.MethodParsing
+namespace InjectionCop.Parser.ProblemPipe
 {
-  /// <summary>
-  /// Parses and analyzes a pair of methodgraph/preconditions
-  /// </summary>
-  interface IMethodGraphAnalyzer
+  public interface IProblemPipe
   {
-    void Parse (IMethodGraphBuilder methodGraphBuilder, IInitialSymbolTableBuilder initialSymbolTableBuilder);
+    void AddProblem (ProblemMetadata problemMetadata);
   }
 }

@@ -26,7 +26,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Black
     public void Parse_UnsafeBlacklistedCall_ReturnsProblem ()
     {
       Method sample = TestHelper.GetSample<BlacklistManagerIntegrationSample>("UnsafeBlacklistedCall");
-      ProblemCollection result = _typeParser.Parse(sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
       
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
@@ -35,7 +36,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Black
     public void Parse_UnsafeBlacklistedCall_ReturnsExactlyOneProblem ()
     {
       Method sample = TestHelper.GetSample<BlacklistManagerIntegrationSample>("UnsafeBlacklistedCall");
-      ProblemCollection result = _typeParser.Parse(sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
       
       Assert.That (result.Count, Is.EqualTo(1));
     }
@@ -44,7 +46,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Black
     public void Parse_SafeBlacklistedCall_NoProblem ()
     {    
       Method sample = TestHelper.GetSample<BlacklistManagerIntegrationSample>("SafeBlacklistedCall");
-      ProblemCollection result = _typeParser.Parse(sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
       
       Assert.That (result.Count, Is.EqualTo(0));
     }
@@ -53,7 +56,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Black
     public void Parse_ListedAndUnlistedViolation_ReturnsProblem ()
     {
       Method sample = TestHelper.GetSample<BlacklistManagerIntegrationSample>("ListedAndUnlistedViolation");
-      ProblemCollection result = _typeParser.Parse(sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
       
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
@@ -62,7 +66,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Black
     public void Parse_ListedAndUnlistedViolation_ReturnsExactlyTwoProblems ()
     {
       Method sample = TestHelper.GetSample<BlacklistManagerIntegrationSample>("ListedAndUnlistedViolation");
-      ProblemCollection result = _typeParser.Parse(sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
       
       Assert.That (result.Count, Is.EqualTo(2));
     }
@@ -72,7 +77,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Black
     {
       TypeNode intTypeNode = IntrospectionUtility.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<BlacklistManagerIntegrationSample> ("MixedViolations", intTypeNode);
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
@@ -81,7 +87,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Black
     public void Parse_FragmentDefinedInXmlSafeCall_ReturnsProblem ()
     {
       Method sample = TestHelper.GetSample<BlacklistManagerIntegrationSample>("FragmentDefinedInXmlSafeCall");
-      ProblemCollection result = _typeParser.Parse(sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
       
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
@@ -90,7 +97,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Black
     public void Parse_FragmentDefinedInXmlUnsafeCall_ReturnsProblem ()
     {
       Method sample = TestHelper.GetSample<BlacklistManagerIntegrationSample>("FragmentDefinedInXmlUnsafeCall");
-      ProblemCollection result = _typeParser.Parse(sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
       
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
@@ -100,7 +108,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Black
     {
       TypeNode intTypeNode = IntrospectionUtility.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<BlacklistManagerIntegrationSample> ("MixedViolations", intTypeNode);
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
       bool problemIdsCorrect = true;
       foreach (var problem in result)
       {

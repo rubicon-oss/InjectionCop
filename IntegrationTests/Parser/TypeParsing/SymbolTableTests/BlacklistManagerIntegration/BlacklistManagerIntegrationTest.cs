@@ -17,14 +17,13 @@ using System.Collections.Generic;
 using InjectionCop.Config;
 using InjectionCop.Parser;
 using InjectionCop.Parser.BlockParsing;
-using InjectionCop.Parser.ProblemPipe;
 using Microsoft.FxCop.Sdk;
 using NUnit.Framework;
 
 namespace InjectionCop.IntegrationTests.Parser.TypeParsing.SymbolTableTests.BlacklistManagerIntegration
 {
   [TestFixture]
-  public class BlacklistManagerIntegration_SymbolTableTest
+  public class BlacklistManagerIntegrationTest
   {
     private ISymbolTable _symbolTable;
 
@@ -44,9 +43,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.SymbolTableTests.Blac
       MethodCall methodCall = (MethodCall) expressionStatement.Expression;
 
       List<PreCondition> preconditions;
-      List<ProblemMetadata> parameterProblems;
-      _symbolTable.ParametersSafe (methodCall, out preconditions, out parameterProblems);
-      Assert.That(parameterProblems.Count, Is.Not.EqualTo(0));
+      bool isSafeCall = _symbolTable.ParametersSafe (methodCall, out preconditions);
+      Assert.That(isSafeCall, Is.False);
     }
     
     [Test]
@@ -58,10 +56,9 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.SymbolTableTests.Blac
       MethodCall methodCall = (MethodCall) expressionStatement.Expression;
 
       List<PreCondition> preconditions;
-      List<ProblemMetadata> parameterProblems;
-      _symbolTable.ParametersSafe (methodCall, out preconditions, out parameterProblems);
-      Assert.That(parameterProblems.Count, Is.EqualTo(0));
+      bool isSafeCall = _symbolTable.ParametersSafe (methodCall, out preconditions);
+      Assert.That(isSafeCall, Is.True);
     }
-    
+
   }
 }

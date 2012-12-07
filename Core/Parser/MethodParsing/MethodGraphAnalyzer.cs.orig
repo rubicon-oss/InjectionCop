@@ -15,21 +15,22 @@
 using System;
 using System.Collections.Generic;
 using InjectionCop.Parser.BlockParsing;
-using InjectionCop.Parser.ProblemPipe;
+using InjectionCop.Parser.TypeParsing;
 using InjectionCop.Utilities;
+using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser.MethodParsing
 {
   public class MethodGraphAnalyzer : IMethodGraphAnalyzer
   {
-    private readonly IProblemPipe _problemPipe;
+    private readonly TypeParser _typeParser;
 
-    public MethodGraphAnalyzer (IProblemPipe problemPipe)
+    public MethodGraphAnalyzer (TypeParser typeParser)
     {
-      _problemPipe = ArgumentUtility.CheckNotNull ("problemPipe", problemPipe);
+      _typeParser = ArgumentUtility.CheckNotNull ("typeParser", typeParser);
     }
 
-    public void Parse (IMethodGraphBuilder methodGraphBuilder, IInitialSymbolTableBuilder initialSymbolTableBuilder)
+    public ProblemCollection Parse (IMethodGraphBuilder methodGraphBuilder, IInitialSymbolTableBuilder initialSymbolTableBuilder)
     {
       ArgumentUtility.CheckNotNull ("methodGraphBuilder", methodGraphBuilder);
       ArgumentUtility.CheckNotNull ("parameterSymbolTableBuilder", initialSymbolTableBuilder);
@@ -41,13 +42,14 @@ namespace InjectionCop.Parser.MethodParsing
       {
         Parse (methodGraph, initialSymbolTable, methodGraph.InitialBlock, new Dictionary<int, int>());
       }
+
+      return _typeParser.Problems;
     }
 
     private void Parse (IMethodGraph methodGraph, ISymbolTable context, BasicBlock currentBlock, Dictionary<int, int> visits)
     {
       UpdateVisits (currentBlock.Id, visits);
-      bool loopIterationsExceeded = visits[currentBlock.Id] > 1;
-      if(!loopIterationsExceeded)
+      if (visits[currentBlock.Id] < 2)
       {
         CheckPreCoditions (currentBlock.PreConditions, context);
         ISymbolTable adjustedContext = UpdateContext (context, currentBlock.PostConditionSymbolTable);
@@ -73,7 +75,7 @@ namespace InjectionCop.Parser.MethodParsing
       {
         if (!context.Contains (precondition.Symbol) || !context.IsFragment (precondition.Symbol, precondition.FragmentType))
         {
-          _problemPipe.AddProblem(precondition.ProblemMetadata);
+          _typeParser.AddProblem();
         }
       }
     }

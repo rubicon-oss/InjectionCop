@@ -13,15 +13,23 @@
 // limitations under the License.
 
 using System;
-using Microsoft.FxCop.Sdk;
+using System.Data;
+using System.Data.SqlClient;
 
-namespace InjectionCop.Parser.MethodParsing
+namespace InjectionCop.IntegrationTests.Parser.TypeParsing.SymbolTableTests.BlacklistManagerIntegration
 {
-  /// <summary>
-  /// Parses and analyzes a pair of methodgraph/preconditions
-  /// </summary>
-  interface IMethodGraphAnalyzer
+  public class BlacklistManagerIntegrationSample : ParserSampleBase
   {
-    void Parse (IMethodGraphBuilder methodGraphBuilder, IInitialSymbolTableBuilder initialSymbolTableBuilder);
+    public void UnsafeBlacklistedCall ()
+    {
+      IDbCommand command = new SqlCommand();
+      command.CommandText = UnsafeSource ("");
+    }
+
+    public void SafeBlacklistedCall ()
+    {
+      IDbCommand command = new SqlCommand();
+      command.CommandText = SafeSource();
+    }
   }
 }

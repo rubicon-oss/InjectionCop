@@ -13,15 +13,26 @@
 // limitations under the License.
 
 using System;
-using Microsoft.FxCop.Sdk;
 
-namespace InjectionCop.Parser.MethodParsing
+namespace InjectionCop.Attributes
 {
   /// <summary>
-  /// Parses and analyzes a pair of methodgraph/preconditions
+  /// Declares parameter or returnvalue of a method as fragment
   /// </summary>
-  interface IMethodGraphAnalyzer
+  [AttributeUsage (AttributeTargets.Parameter
+                   | AttributeTargets.ReturnValue)]
+  public class FragmentAttribute : Attribute
   {
-    void Parse (IMethodGraphBuilder methodGraphBuilder, IInitialSymbolTableBuilder initialSymbolTableBuilder);
+    private readonly string _fragmentType;
+
+    public FragmentAttribute (string fragmentType)
+    {
+      _fragmentType = fragmentType;
+    }
+
+    public string FragmentType
+    {
+      get { return _fragmentType; }
+    }
   }
 }

@@ -13,15 +13,11 @@
 // limitations under the License.
 
 using System;
-using Microsoft.FxCop.Sdk;
 
-namespace InjectionCop.Parser.MethodParsing
+namespace InjectionCop.Attributes
 {
-  /// <summary>
-  /// Parses and analyzes a pair of methodgraph/preconditions
-  /// </summary>
-  interface IMethodGraphAnalyzer
+  [AttributeUsage (AttributeTargets.Method)]
+  public class TrustedSqlGeneration : Attribute
   {
-    void Parse (IMethodGraphBuilder methodGraphBuilder, IInitialSymbolTableBuilder initialSymbolTableBuilder);
   }
 }

@@ -17,14 +17,13 @@ using System.Collections.Generic;
 using InjectionCop.Config;
 using InjectionCop.Parser;
 using InjectionCop.Parser.BlockParsing;
-using InjectionCop.Parser.ProblemPipe;
 using Microsoft.FxCop.Sdk;
 using NUnit.Framework;
 
 namespace InjectionCop.IntegrationTests.Parser.TypeParsing.SymbolTableTests.ParameterSafe
 {
   [TestFixture]
-  public class ParameterSafe_SymbolTableTest
+  public class ParameterSafeTest
   {
     private ISymbolTable _symbolTable;
 
@@ -42,10 +41,9 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.SymbolTableTests.Para
       AssignmentStatement assignmentStatement = (AssignmentStatement) codeBlock.Statements[1];
       MethodCall sample = (MethodCall) assignmentStatement.Source;
       List<PreCondition> preconditions;
-      List<ProblemMetadata> parameterProblems;
-      _symbolTable.ParametersSafe (sample, out preconditions, out parameterProblems);
+      bool isSafeCall = _symbolTable.ParametersSafe (sample, out preconditions);
 
-      Assert.That (parameterProblems.Count, Is.EqualTo(0));
+      Assert.That (isSafeCall, Is.True);
     }
 
     [Test]
@@ -57,10 +55,9 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.SymbolTableTests.Para
       UnaryExpression unaryExpression = (UnaryExpression) expressionStatement.Expression;
       MethodCall sample = (MethodCall) unaryExpression.Operand;
       List<PreCondition> preconditions;
-      List<ProblemMetadata> parameterProblems;
-      _symbolTable.ParametersSafe (sample, out preconditions, out parameterProblems);
+      bool isSafeCall = _symbolTable.ParametersSafe (sample, out preconditions);
 
-      Assert.That (parameterProblems.Count, Is.EqualTo(0));
+      Assert.That (isSafeCall, Is.True);
     }
   }
 }

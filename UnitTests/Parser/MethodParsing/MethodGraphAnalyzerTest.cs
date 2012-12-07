@@ -19,7 +19,6 @@ using InjectionCop.IntegrationTests.Parser;
 using InjectionCop.Parser;
 using InjectionCop.Parser.BlockParsing;
 using InjectionCop.Parser.MethodParsing;
-using InjectionCop.Parser.TypeParsing;
 using Microsoft.FxCop.Sdk;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -30,6 +29,7 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
   public class MethodGraphAnalyzerTest
   {
     private SymbolTable _methodPreConditions;
+    private ProblemPipeStub _problemPipeStub;
     private MethodGraphAnalyzer _methodGraphAnalyzer;
     private IBlacklistManager _blacklistManager;
     private MockRepository _mocks;
@@ -37,7 +37,7 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
     private IMethodGraphBuilder _methodGraphBuilder;
     private IInitialSymbolTableBuilder _parameterSymbolTableBuilder;
 
-    private readonly string c_InjectionCopRuleId = "IC0001";
+    private const string c_InjectionCopRuleId = "IC0001";
 
     [SetUp]
     public void SetUp ()
@@ -46,8 +46,8 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
       _methodPreConditions = new SymbolTable (_blacklistManager);
       _methodPreConditions.MakeSafe ("x", "SqlFragment");
       _methodPreConditions.MakeUnsafe ("y");
-      TypeParser typeParser = new TypeParser ();
-      _methodGraphAnalyzer = new MethodGraphAnalyzer (typeParser);
+      _problemPipeStub = new ProblemPipeStub();
+      _methodGraphAnalyzer = new MethodGraphAnalyzer (_problemPipeStub);
       _mocks = new MockRepository();
       _methodGraph = _mocks.Stub<IMethodGraph>();
       _methodGraphBuilder = _mocks.Stub<IMethodGraphBuilder>();
@@ -57,7 +57,10 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
 
     private ProblemCollection ParseGraph ()
     {
-      return _methodGraphAnalyzer.Parse (_methodGraphBuilder, _parameterSymbolTableBuilder);
+      _methodGraphAnalyzer.Parse (_methodGraphBuilder, _parameterSymbolTableBuilder);
+      ProblemCollection problemCollection = new ProblemCollection();
+      _problemPipeStub.Problems.ForEach (problem => problemCollection.Add (new Problem (new Resolution("resolution"), c_InjectionCopRuleId)));
+      return problemCollection;
     }
 
     [Test]

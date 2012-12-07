@@ -25,7 +25,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Field
     public void Parse_CallWithSafeField_NoProblem ()
     {
       Method sample = TestHelper.GetSample<FieldSample>("CallWithSafeField");
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
@@ -34,7 +35,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Field
     public void Parse_CallWithUnsafeField_ReturnsProblem ()
     {
       Method sample = TestHelper.GetSample<FieldSample>("CallWithUnsafeField");
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
@@ -43,7 +45,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Field
     public void Parse_CallWithWrongFragmentType_ReturnsProblem ()
     {
       Method sample = TestHelper.GetSample<FieldSample>("CallWithWrongFragmentType");
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
@@ -52,7 +55,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Field
     public void Parse_NestedUnsafeCall_ReturnsProblem ()
     {
       Method sample = TestHelper.GetSample<FieldSample> ("NestedUnsafeCall");
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
@@ -61,7 +65,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Field
     public void Parse_NestedSafeCall_NoProblem ()
     {
       Method sample = TestHelper.GetSample<FieldSample> ("NestedSafeCall");
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
@@ -70,7 +75,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Field
     public void Parse_NestedCallWithWrongFragmentType_ReturnsProblem ()
     {
       Method sample = TestHelper.GetSample<FieldSample> ("NestedCallWithWrongFragmentType");
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
@@ -79,7 +85,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Field
     public void Parse_UnsafeFieldAssignment_ReturnsProblem ()
     {
       Method sample = TestHelper.GetSample<FieldSample> ("UnsafeFieldAssignment");
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
@@ -88,7 +95,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Field
     public void Parse_SafeFieldAssignment_NoProblem ()
     {
       Method sample = TestHelper.GetSample<FieldSample> ("SafeFieldAssignment");
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
@@ -97,7 +105,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Field
     public void Parse_WrongFragmentTypeFieldAssignment_ReturnsProblem ()
     {
       Method sample = TestHelper.GetSample<FieldSample> ("WrongFragmentTypeFieldAssignment");
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }

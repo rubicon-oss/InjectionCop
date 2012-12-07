@@ -26,7 +26,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Prope
     public void Parse_CallWithUnsafeProperty_ReturnsProblem()
     {
       Method sample = TestHelper.GetSample<PropertySample>("CallWithUnsafeProperty");
-      ProblemCollection result = _typeParser.Parse(sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That(TestHelper.ContainsProblemID(c_InjectionCopRuleId, result), Is.True);
     }
@@ -36,7 +37,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Prope
     public void Parse_CallWithSafeProperty_NoProblem()
     {
       Method sample = TestHelper.GetSample<PropertySample>("CallWithSafeProperty");
-      ProblemCollection result = _typeParser.Parse(sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That(TestHelper.ContainsProblemID(c_InjectionCopRuleId, result), Is.False);
     }
@@ -46,7 +48,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Prope
     public void Parse_SetPropertySafe_NoProblem()
     {
       Method sample = TestHelper.GetSample<PropertySample>("SetPropertySafe");
-      ProblemCollection result = _typeParser.Parse(sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That(TestHelper.ContainsProblemID(c_InjectionCopRuleId, result), Is.False);
     }
@@ -56,7 +59,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Prope
     public void Parse_SetPropertyUnsafe_ReturnsProblem()
     {
       Method sample = TestHelper.GetSample<PropertySample>("SetPropertyUnsafe");
-      ProblemCollection result = _typeParser.Parse(sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That(TestHelper.ContainsProblemID(c_InjectionCopRuleId, result), Is.True);
     }

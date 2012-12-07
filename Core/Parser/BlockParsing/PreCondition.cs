@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using InjectionCop.Parser.ProblemPipe;
 using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
 
@@ -28,7 +29,7 @@ namespace InjectionCop.Parser.BlockParsing
     private readonly ProblemMetadata _problemMetadata;
     
     public PreCondition (string symbol, string fragmentType)
-      : this(symbol, fragmentType, new ProblemMetadata (new SourceContext(), "?", "?"))
+      : this(symbol, fragmentType, new ProblemMetadata (-1, new SourceContext(), "?", "?"))
     {
     }
 

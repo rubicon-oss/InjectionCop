@@ -15,7 +15,7 @@
 using System;
 using System.Collections.Generic;
 using InjectionCop.Config;
-using InjectionCop.Parser.TypeParsing;
+using InjectionCop.Parser.ProblemPipe;
 using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
 
@@ -30,12 +30,12 @@ namespace InjectionCop.Parser.BlockParsing
     private List<PreCondition> _preConditions;
     private List<int> _successors;
     private readonly IBlacklistManager _blacklistManager;
-    private readonly TypeParser _typeParser;
+    private readonly IProblemPipe _problemPipe;
 
-    public BlockParser (IBlacklistManager blacklistManager, TypeParser typeParser)
+    public BlockParser (IBlacklistManager blacklistManager, IProblemPipe problemPipe)
     {
       _blacklistManager = ArgumentUtility.CheckNotNull ("blacklistManager", blacklistManager);
-      _typeParser = ArgumentUtility.CheckNotNull ("typeParser", typeParser);
+      _problemPipe = ArgumentUtility.CheckNotNull ("typeParser", problemPipe);
       _symbolTableParser = new SymbolTable (blacklistManager);
       _preConditions = new List<PreCondition>();
       _successors = new List<int>();
@@ -120,10 +120,11 @@ namespace InjectionCop.Parser.BlockParsing
           if (targetFragmentType != givenFragmentType)
           {
             ProblemMetadata problemMetadata = new ProblemMetadata (
+                targetExpression.UniqueKey,
                 targetExpression.SourceContext,
                 targetFragmentType,
                 givenFragmentType);
-            _typeParser.AddProblem(problemMetadata);
+            _problemPipe.AddProblem(problemMetadata);
           }
         }
       }
@@ -159,7 +160,7 @@ namespace InjectionCop.Parser.BlockParsing
       List<PreCondition> additionalPreConditions;
       List<ProblemMetadata> parameterProblems;
       _symbolTableParser.ParametersSafe (methodCall, out additionalPreConditions, out parameterProblems);
-      parameterProblems.ForEach (parameterProblem => _typeParser.AddProblem (parameterProblem));
+      parameterProblems.ForEach (parameterProblem => _problemPipe.AddProblem (parameterProblem));
       _preConditions.AddRange (additionalPreConditions);
     }
 

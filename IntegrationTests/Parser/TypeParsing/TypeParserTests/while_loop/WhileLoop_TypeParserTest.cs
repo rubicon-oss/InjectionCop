@@ -25,7 +25,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.While
     public void Parse_ValidCallInsideWhile_NoProblem ()
     {
       Method sample = TestHelper.GetSample<WhileLoopSample> ("ValidCallInsideWhile");
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
@@ -34,8 +35,9 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.While
     public void Parse_InValidCallInsideWhile_ReturnsProblem ()
     {
       Method sample = TestHelper.GetSample<WhileLoopSample> ("InValidCallInsideWhile");
-      ProblemCollection result = _typeParser.Parse (sample);
-
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+      
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
 
@@ -43,8 +45,9 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.While
     public void Parse_InValidCallInsideWhileReprocessingRequired_ReturnsProblem ()
     {
       Method sample = TestHelper.GetSample<WhileLoopSample> ("InValidCallInsideWhileReprocessingRequired");
-      ProblemCollection result = _typeParser.Parse (sample);
-
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+      
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
 
@@ -52,7 +55,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.While
     public void Parse_InvalidCallInsideNestedWhile_ReturnsProblem ()
     {
       Method sample = TestHelper.GetSample<WhileLoopSample> ("InvalidCallInsideNestedWhile");
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
@@ -61,7 +65,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.While
     public void Parse_InValidCallInsideNestedWhileReprocessingRequired_ReturnsProblem ()
     {
       Method sample = TestHelper.GetSample<WhileLoopSample> ("InValidCallInsideNestedWhileReprocessingRequired");
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
@@ -70,7 +75,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.While
     public void Parse_InValidCallInsideDeeperNestedWhileReprocessingRequired_ReturnsProblem ()
     {
       Method sample = TestHelper.GetSample<WhileLoopSample> ("InValidCallInsideDeeperNestedWhileReprocessingRequired");
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
@@ -79,7 +85,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.While
     public void Parse_ValidCallInsideWhileWithContinue_NoProblem ()
     {
       Method sample = TestHelper.GetSample<WhileLoopSample> ("ValidCallInsideWhileWithContinue");
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
@@ -88,7 +95,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.While
     public void Parse_InvalidCallInsideWhileWithContinue_ReturnsProblem ()
     {
       Method sample = TestHelper.GetSample<WhileLoopSample> ("InvalidCallInsideWhileWithContinue");
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
@@ -97,7 +105,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.While
     public void Parse_InvalidCallInsideIfWithContinue_ReturnsProblem ()
     {
       Method sample = TestHelper.GetSample<WhileLoopSample> ("InvalidCallInsideIfWithContinue");
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
@@ -106,7 +115,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.While
     public void Parse_ValidCallInsideWhileWithBreak_NoProblem ()
     {
       Method sample = TestHelper.GetSample<WhileLoopSample> ("ValidCallInsideWhileWithBreak");
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
@@ -115,7 +125,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.While
     public void Parse_InvalidCallInsideWhileWithBreak_ReturnsProblem ()
     {
       Method sample = TestHelper.GetSample<WhileLoopSample> ("InvalidCallInsideWhileWithBreak");
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
@@ -124,7 +135,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.While
     public void Parse_InvalidCallInsideIfWithBreak_ReturnsProblem ()
     {
       Method sample = TestHelper.GetSample<WhileLoopSample> ("InvalidCallInsideIfWithBreak");
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
@@ -133,7 +145,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.While
     public void Parse_InValidCallInsideWhileCondition_ReturnsProblem ()
     {
       Method sample = TestHelper.GetSample<WhileLoopSample> ("InValidCallInsideWhileCondition");
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }

@@ -13,15 +13,16 @@
 // limitations under the License.
 
 using System;
-using Microsoft.FxCop.Sdk;
+using System.Collections.Generic;
 
-namespace InjectionCop.Parser.MethodParsing
+namespace InjectionCop.Config
 {
   /// <summary>
-  /// Parses and analyzes a pair of methodgraph/preconditions
+  /// Checks if methods are blacklisted, returns corresponding fragment types
   /// </summary>
-  interface IMethodGraphAnalyzer
+  public interface IBlacklistManager
   {
-    void Parse (IMethodGraphBuilder methodGraphBuilder, IInitialSymbolTableBuilder initialSymbolTableBuilder);
+    bool IsListed (string qualifiedTypeName, string methodName, List<string> qualifiedParameterTypes);
+    List<string> GetFragmentTypes (string qualifiedTypeName, string methodName, List<string> qualifiedParameterTypes);
   }
 }

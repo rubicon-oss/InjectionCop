@@ -16,21 +16,28 @@ using System;
 using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
 
-namespace InjectionCop.Parser
+namespace InjectionCop.Parser.ProblemPipe
 {
   public class ProblemMetadata
   {
+    private readonly int _sourceExpressionId;
     private readonly SourceContext _sourceContext;
     private readonly string _expectedFragment;
     private readonly string _givenFragment;
 
-    public ProblemMetadata (SourceContext sourceContext, string expectedFragment, string givenFragment)
+    public ProblemMetadata (int sourceExpressionId, SourceContext sourceContext, string expectedFragment, string givenFragment)
     {
+      _sourceExpressionId = sourceExpressionId;
       _sourceContext = ArgumentUtility.CheckNotNull ("sourceContext", sourceContext);
       _expectedFragment = ArgumentUtility.CheckNotNullOrEmpty ("expectedFragment", expectedFragment);
       _givenFragment = ArgumentUtility.CheckNotNullOrEmpty ("givenFragment", givenFragment);
     }
 
+    public int SourceExpressionId
+    {
+      get { return _sourceExpressionId; }
+    }
+  
     public SourceContext SourceContext
     {
       get { return _sourceContext; }

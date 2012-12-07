@@ -67,6 +67,8 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Config\BlacklistManagerTest.cs" />
+    <Compile Include="Parser\MethodParsing\ProblemPipeStub.cs" />
+    <Compile Include="Parser\ProblemPipe\ProblemDuplicateFilterTest.cs" />
     <Compile Include="Parser\SymbolTableTest.cs" />
     <Compile Include="Parser\MethodParsing\MethodGraphAnalyzerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -29,7 +29,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.If
       TypeNode intTypeNode = IntrospectionUtility.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<IfSample>("ValidExampleInsideIf", 
         intTypeNode, intTypeNode);
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
@@ -41,7 +42,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.If
       TypeNode intTypeNode = IntrospectionUtility.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<IfSample>("InvalidExampleInsideIf", 
         intTypeNode, intTypeNode);
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
@@ -53,7 +55,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.If
       TypeNode intTypeNode = IntrospectionUtility.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<IfSample>("InvalidExampleInsideElse", 
         intTypeNode, intTypeNode);
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
@@ -65,7 +68,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.If
       TypeNode intTypeNode = IntrospectionUtility.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<IfSample>("UnsafeAssignmentInsideIf", 
         intTypeNode, intTypeNode);
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
@@ -77,7 +81,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.If
       TypeNode intTypeNode = IntrospectionUtility.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<IfSample>("UnsafeAssignmentInsideIfTwisted", 
         intTypeNode, intTypeNode);
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
@@ -89,7 +94,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.If
       TypeNode intTypeNode = IntrospectionUtility.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<IfSample>("UnsafeAssignmentInsideIfNested", 
         intTypeNode, intTypeNode, intTypeNode);
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
@@ -101,7 +107,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.If
       TypeNode intTypeNode = IntrospectionUtility.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<IfSample>("SafeAssignmentInsideIfNested", 
         intTypeNode, intTypeNode, intTypeNode);
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
@@ -113,7 +120,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.If
       TypeNode intTypeNode = IntrospectionUtility.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<IfSample>("UnsafeAssignmentInsideIfNestedDeeper", 
         intTypeNode, intTypeNode, intTypeNode);
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
@@ -125,7 +133,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.If
       TypeNode intTypeNode = IntrospectionUtility.TypeNodeFactory<int>();
       Method sample = TestHelper.GetSample<IfSample>("UnsafeAssignmentInsideIfNestedElse", 
         intTypeNode, intTypeNode, intTypeNode);
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
@@ -135,7 +144,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.If
     public void Parse_InvalidCallInsideIfCondition_ReturnsProblem ()
     {
       Method sample = TestHelper.GetSample<IfSample> ("InvalidCallInsideIfCondition");
-      ProblemCollection result = _typeParser.Parse (sample);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }

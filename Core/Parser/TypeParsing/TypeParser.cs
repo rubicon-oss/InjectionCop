@@ -15,6 +15,7 @@
 using System;
 using InjectionCop.Config;
 using InjectionCop.Parser.MethodParsing;
+using InjectionCop.Parser.ProblemPipe;
 using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
 
@@ -23,14 +24,16 @@ namespace InjectionCop.Parser.TypeParsing
   /// <summary>
   /// Checks all members of a given type for safeness violations
   /// </summary>
-  public class TypeParser : BaseFxCopRule
+  public class TypeParser : BaseFxCopRule, IProblemPipe
   {
     private readonly IBlacklistManager _blacklistManager;
+    private readonly IProblemPipe _problemFilter;
 
     public TypeParser ()
         : base ("TypeParser")
     {
       _blacklistManager = ConfigLoader.LoadBlacklist();
+      _problemFilter = new ProblemDuplicateFilter (this);
     }
 
     public override ProblemCollection Check (TypeNode type)
@@ -47,36 +50,20 @@ namespace InjectionCop.Parser.TypeParsing
       return Problems;
     }
     
-    /*
-    public void AddProblem (Node target)
-    {
-      Resolution resolution = GetResolution();
-      Problem problem = new Problem (resolution, target, CheckId);
-      Problems.Add (problem);
-    }*/
-
     public void AddProblem (ProblemMetadata problemMetadata)
     {
       Resolution resolution = GetResolution (problemMetadata.ExpectedFragment, problemMetadata.GivenFragment);
       Problem problem = new Problem (resolution, problemMetadata.SourceContext, CheckId);
       Problems.Add (problem);
     }
-
-    /*
-    public void AddProblem ()
-    {
-      Resolution resolution = GetResolution();
-      Problem problem = new Problem (resolution, CheckId);
-      Problems.Add (problem);
-    }*/
-
-    public ProblemCollection Parse (Method method)
+    
+    public void Parse (Method method)
     {
       ArgumentUtility.CheckNotNull ("method", method);
-      IMethodGraphAnalyzer methodParser = new MethodGraphAnalyzer (this);
-      IMethodGraphBuilder methodGraphBuilder = new MethodGraphBuilder (method, _blacklistManager, this);
+      IMethodGraphAnalyzer methodParser = new MethodGraphAnalyzer (_problemFilter);
+      IMethodGraphBuilder methodGraphBuilder = new MethodGraphBuilder (method, _blacklistManager, _problemFilter);
       IInitialSymbolTableBuilder parameterSymbolTableBuilder = new InitialSymbolTableBuilder (method, _blacklistManager);
-      return methodParser.Parse (methodGraphBuilder, parameterSymbolTableBuilder);
+      methodParser.Parse (methodGraphBuilder, parameterSymbolTableBuilder);
     }
   }
 }

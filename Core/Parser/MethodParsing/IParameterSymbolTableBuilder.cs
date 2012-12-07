@@ -13,15 +13,15 @@
 // limitations under the License.
 
 using System;
-using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser.MethodParsing
 {
   /// <summary>
-  /// Parses and analyzes a pair of methodgraph/preconditions
+  /// Builds parameter symboltable of a method
   /// </summary>
-  interface IMethodGraphAnalyzer
+  public interface IParameterSymbolTableBuilder
   {
-    void Parse (IMethodGraphBuilder methodGraphBuilder, IInitialSymbolTableBuilder initialSymbolTableBuilder);
+    void Build ();
+    ISymbolTable GetResult ();
   }
 }
