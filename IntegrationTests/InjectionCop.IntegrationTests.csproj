@@ -84,6 +84,9 @@
     <Compile Include="Parser\TypeParsing\TypeParserTests\BlackMethod\BlackMethodSample.cs" />
     <Compile Include="Parser\FragmentToolsSample.cs" />
     <Compile Include="Parser\FragmentToolsTest.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Concatenation\ConcatenationSample.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Constructor\ConstructorSample.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Constructor\Constructor_TypeParserTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Field\FieldSample.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Field\Field_TypeParserTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Goto\GotoSample.cs" />
@@ -92,6 +95,8 @@
     <Compile Include="Parser\TypeParsing\TypeParserTests\If\If_TypeParserTest.cs" />
     <Compile Include="Parser\MethodParsing\MethodGraphTests\MethodGraph_InterfaceSample.cs" />
     <Compile Include="Parser\MethodParsing\MethodGraphTests\MethodGraph_InterfaceTest.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Interface\InterfaceSample.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Interface\Interface_TypeParserTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\NestedCall\NestedCallSample.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\NestedCall\NestedCall_TypeParserTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Parameter\ParameterSample.cs" />
