@@ -89,10 +89,7 @@ namespace InjectionCop.Parser
       else if (expression is MethodCall)
       {
         Method calleeMethod = IntrospectionUtility.ExtractMethod ((MethodCall) expression);
-        if (calleeMethod.ReturnAttributes != null)
-        {
-          fragmentType = FragmentUtilities.GetFragmentType (calleeMethod.ReturnAttributes);
-        }
+        fragmentType = InferFragmentType (calleeMethod);
       }
       else if (expression is UnaryExpression)
       {
@@ -103,6 +100,28 @@ namespace InjectionCop.Parser
       return fragmentType;
     }
 
+    private string InferFragmentType (Method method)
+    {
+      string fragmentType = EMPTY_FRAGMENT;
+      AttributeNodeCollection candidateAttributes;
+      
+      if (!IsAnnotatedPropertyGetter(method))
+      {
+        candidateAttributes = method.ReturnAttributes;
+      }
+      else
+      {
+        candidateAttributes = method.DeclaringMember.Attributes;
+      }
+
+      if (candidateAttributes != null)
+      {
+        fragmentType = FragmentUtilities.GetFragmentType (candidateAttributes);
+      }
+      
+      return fragmentType;
+    }
+    
     public void ParametersSafe (MethodCall methodCall, out List<PreCondition> requireSafenessParameters, out List<ProblemMetadata> parameterProblems)
     {
       ArgumentUtility.CheckNotNull ("methodCall", methodCall);
@@ -204,11 +223,40 @@ namespace InjectionCop.Parser
       if (parameterFragmentTypes == null)
       {
         List<string> buffer = new List<string>();
-        buffer.AddRange (calleeMethod.Parameters.Select (parameter => FragmentUtilities.GetFragmentType (parameter.Attributes)));
+
+        if (!IsAnnotatedPropertySetter (calleeMethod))
+        {
+          buffer.AddRange (calleeMethod.Parameters.Select (parameter => FragmentUtilities.GetFragmentType (parameter.Attributes)));
+        }
+        else
+        {
+          buffer.Add (FragmentUtilities.GetFragmentType (calleeMethod.DeclaringMember.Attributes));
+        }
+        
         parameterFragmentTypes = buffer.ToArray();
       }
 
       return parameterFragmentTypes;
+    }
+
+    private bool IsAnnotatedPropertySetter (Method method)
+    {
+      bool isAnnotatedPropertySetter = false;
+      if (IntrospectionUtility.IsPropertySetter (method))
+      {
+        isAnnotatedPropertySetter = FragmentUtilities.ContainsFragment (method.DeclaringMember.Attributes);
+      }
+      return isAnnotatedPropertySetter;
+    }
+
+    private bool IsAnnotatedPropertyGetter (Method method)
+    {
+      bool isAnnotatedPropertyGetter = false;
+      if (IntrospectionUtility.IsPropertyGetter (method))
+      {
+        isAnnotatedPropertyGetter = FragmentUtilities.ContainsFragment (method.DeclaringMember.Attributes);
+      }
+      return isAnnotatedPropertyGetter;
     }
 
     private List<string> GetParameterTypes (Method method)

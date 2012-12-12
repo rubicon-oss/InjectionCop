@@ -66,10 +66,6 @@ namespace InjectionCop.IntegrationTests.Parser
       return "HtmlFragment";
     }
 
-    public string SafeProperty { [return: Fragment("SqlFragment")]
-    get; [param: Fragment("SqlFragment")]
-    set; }
-
-    public string UnsafeProp { get; set; }
+    
   }
 }

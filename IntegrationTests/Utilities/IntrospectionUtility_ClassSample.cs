@@ -32,7 +32,7 @@ namespace InjectionCop.IntegrationTests.Utilities
 
     public string NonFieldAssignment ()
     {
-      string x = Dummy("dummy");
+      string x = Dummy ("dummy");
       return x;
     }
 
@@ -40,5 +40,22 @@ namespace InjectionCop.IntegrationTests.Utilities
     {
       return parameter;
     }
+
+    public object AnyProperty { get; set; }
+
+    public string get_NonExistingProperty ()
+    {
+      return "dummy";
+    }
+
+    public string get_NonExistingProperty (string parameter)
+    {
+      return parameter;
+    }
+
+    public void set_NonExistingProperty ()
+    {
+    }
   }
+
 }

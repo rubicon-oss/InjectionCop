@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using InjectionCop.Fragment;
 
 namespace InjectionCop.IntegrationTests.Parser.TypeParsing.SymbolTableTests.InferFragment
 {
@@ -57,5 +58,16 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.SymbolTableTests.Infe
       string x = _field;
       return x;
     }
+
+    public object AssignmentWithFragmentProperty ()
+    {
+      object x = PropertyWithFragment;
+      return x;
+    }
+
+    [Fragment("PropertyFragmentType")]
+    public object PropertyWithFragment { get; set; }
+
+    public int PropertyWithoutFragment { get; set; }
   }
 }

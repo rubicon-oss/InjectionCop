@@ -151,5 +151,83 @@ namespace InjectionCop.IntegrationTests.Utilities
 
       Assert.That (extractionCorrect, Is.True);
     }
+
+    [Test]
+    public void IsPropertyGetter_PropertyGetter_ReturnsTrue ()
+    {
+      Method sample = TestHelper.GetSample<IntrospectionUtility_ClassSample> ("get_AnyProperty");
+      bool isPropertyGetter = IntrospectionUtility.IsPropertyGetter(sample);
+
+      Assert.That (isPropertyGetter, Is.True);
+    }
+
+    [Test]
+    public void IsPropertyGetter_PropertySetter_ReturnsFalse ()
+    {
+      TypeNode objectTypeNode = IntrospectionUtility.TypeNodeFactory<Object>();
+      Method sample = TestHelper.GetSample<IntrospectionUtility_ClassSample> ("set_AnyProperty", objectTypeNode);
+      bool isPropertyGetter = IntrospectionUtility.IsPropertyGetter(sample);
+
+      Assert.That (isPropertyGetter, Is.False);
+    }
+
+    [Test]
+    public void IsPropertyGetter_MethodNamedLikeGetter_ReturnsFalse ()
+    {
+      Method sample = TestHelper.GetSample<IntrospectionUtility_ClassSample> ("get_NonExistingProperty");
+      bool isPropertyGetter = IntrospectionUtility.IsPropertyGetter (sample);
+
+      Assert.That (isPropertyGetter, Is.False);
+    }
+
+    [Test]
+    public void IsPropertyGetter_MethodWithParameterNamedLikeGetter_ReturnsFalse ()
+    {
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      Method sample = TestHelper.GetSample<IntrospectionUtility_ClassSample> ("get_NonExistingProperty", stringTypeNode);
+      bool isPropertyGetter = IntrospectionUtility.IsPropertyGetter (sample);
+
+      Assert.That (isPropertyGetter, Is.False);
+    }
+
+    [Test]
+    public void IsPropertyGetter_DummyMethod_ReturnsFalse ()
+    {
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      Method sample = TestHelper.GetSample<IntrospectionUtility_ClassSample> ("Dummy", stringTypeNode);
+      bool isPropertyGetter = IntrospectionUtility.IsPropertyGetter (sample);
+
+      Assert.That (isPropertyGetter, Is.False);
+    }
+
+    [Test]
+    public void IsPropertySetter_PropertySetter_ReturnsTrue ()
+    {
+      TypeNode objectTypeNode = IntrospectionUtility.TypeNodeFactory<Object>();
+      Method sample = TestHelper.GetSample<IntrospectionUtility_ClassSample> ("set_AnyProperty", objectTypeNode);
+      bool isPropertyGetter = IntrospectionUtility.IsPropertySetter(sample);
+
+      Assert.That (isPropertyGetter, Is.True);
+    }
+
+    [Test]
+    public void IsPropertySetter_DummyMethod_ReturnsFalse ()
+    {
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      Method sample = TestHelper.GetSample<IntrospectionUtility_ClassSample> ("Dummy", stringTypeNode);
+      bool isPropertySetter = IntrospectionUtility.IsPropertySetter (sample);
+
+      Assert.That (isPropertySetter, Is.False);
+    }
+
+    [Test]
+    public void IsPropertySetter_PropertyGetter_ReturnsFalse ()
+    {
+      Method sample = TestHelper.GetSample<IntrospectionUtility_ClassSample> ("get_AnyProperty");
+      bool isPropertyGetter = IntrospectionUtility.IsPropertySetter (sample);
+
+      Assert.That (isPropertyGetter, Is.False);
+    }
+
   }
 }

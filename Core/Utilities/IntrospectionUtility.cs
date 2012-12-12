@@ -155,5 +155,38 @@ namespace InjectionCop.Utilities
       Identifier targetName = Identifier.For (targetType.Name);
       return targetAssembly.GetType (targetNamespace, targetName);
     }
+
+    /// <summary>
+    /// Property getters are transformed to methdods named get_PROPERTYNAME()
+    /// </summary>
+    /// <param name="method"></param>
+    /// <returns></returns>
+    public static bool IsPropertyGetter (Method method)
+    {
+      bool isPropertyGetter = false;
+      string[] nameParts = method.Name.Name.Split ('_');
+      if (method.DeclaringMember != null
+          && method.DeclaringMember.NodeType == NodeType.Property
+          && nameParts.Length >= 2
+          && "get" == nameParts[0])
+      {
+        isPropertyGetter = true;
+      }
+      return isPropertyGetter;
+    }
+
+    public static bool IsPropertySetter (Method method)
+    {
+      bool isPropertySetter = false;
+      string[] nameParts = method.Name.Name.Split ('_');
+      if (method.DeclaringMember != null
+          && method.DeclaringMember.NodeType == NodeType.Property
+          && nameParts.Length >= 2
+          && "set" == nameParts[0])
+      {
+        isPropertySetter = true;
+      }
+      return isPropertySetter;
+    }
   }
 }

@@ -282,5 +282,16 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.SymbolTableTests.Infe
       string fragmentType = _symbolTable.InferFragmentType(sampleExpression);
       Assert.That(fragmentType, Is.EqualTo(SymbolTable.EMPTY_FRAGMENT));
     }
+
+    [Test]
+    public void InferFragmentType_AssignmentWithFragmentProperty_ReturnsPropertyFragmentType ()
+    {
+      Method sample = TestHelper.GetSample<InferFragmentSample>("AssignmentWithFragmentProperty");
+      Block assignmentBlock = (Block)sample.Body.Statements[0];
+      AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[1];
+      Expression sampleExpression = assignment.Source;
+      string fragmentType = _symbolTable.InferFragmentType(sampleExpression);
+      Assert.That(fragmentType, Is.EqualTo("PropertyFragmentType"));
+    }
   }
 }

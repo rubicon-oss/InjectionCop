@@ -19,50 +19,76 @@ using NUnit.Framework;
 namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Property
 {
   [TestFixture]
-  public class Property_BlockParserTest: TypeParserTestBase
+  public class Property_BlockParserTest : TypeParserTestBase
   {
     [Test]
-    [Category("Property")]
-    public void Parse_CallWithUnsafeProperty_ReturnsProblem()
+    public void Parse_CallWithUnsafeProperty_ReturnsProblem ()
     {
-      Method sample = TestHelper.GetSample<PropertySample>("CallWithUnsafeProperty");
+      Method sample = TestHelper.GetSample<PropertySample> ("CallWithUnsafeProperty");
       _typeParser.Parse (sample);
       ProblemCollection result = _typeParser.Problems;
 
-      Assert.That(TestHelper.ContainsProblemID(c_InjectionCopRuleId, result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
 
     [Test]
-    [Category("Property")]
-    public void Parse_CallWithSafeProperty_NoProblem()
+    public void Parse_CallWithSafePropertyVerboseAnnotation_NoProblem ()
     {
-      Method sample = TestHelper.GetSample<PropertySample>("CallWithSafeProperty");
+      Method sample = TestHelper.GetSample<PropertySample> ("CallWithSafePropertyVerboseAnnotation");
       _typeParser.Parse (sample);
       ProblemCollection result = _typeParser.Problems;
 
-      Assert.That(TestHelper.ContainsProblemID(c_InjectionCopRuleId, result), Is.False);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
 
     [Test]
-    [Category("Property")]
-    public void Parse_SetPropertySafe_NoProblem()
+    public void Parse_SetSafePropertyVerboseAnnotationWithSafeValue_NoProblem ()
     {
-      Method sample = TestHelper.GetSample<PropertySample>("SetPropertySafe");
+      Method sample = TestHelper.GetSample<PropertySample> ("SetSafePropertyVerboseAnnotationWithSafeValue");
       _typeParser.Parse (sample);
       ProblemCollection result = _typeParser.Problems;
 
-      Assert.That(TestHelper.ContainsProblemID(c_InjectionCopRuleId, result), Is.False);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
 
     [Test]
-    [Category("Property")]
-    public void Parse_SetPropertyUnsafe_ReturnsProblem()
+    public void Parse_SetSafePropertyVerboseAnnotationWithUnsafeValue_ReturnsProblem ()
     {
-      Method sample = TestHelper.GetSample<PropertySample>("SetPropertyUnsafe");
+      Method sample = TestHelper.GetSample<PropertySample> ("SetSafePropertyVerboseAnnotationWithUnsafeValue");
       _typeParser.Parse (sample);
       ProblemCollection result = _typeParser.Problems;
 
-      Assert.That(TestHelper.ContainsProblemID(c_InjectionCopRuleId, result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
+
+    [Test]
+    public void Parse_CallWithSafeProperty_NoProblem ()
+    {
+      Method sample = TestHelper.GetSample<PropertySample> ("CallWithSafeProperty");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
+
+    [Test]
+    public void Parse_SetSafePropertyWithSafeValue_NoProblem ()
+    {
+      Method sample = TestHelper.GetSample<PropertySample> ("SetSafePropertyWithSafeValue");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
+
+    [Test]
+    public void Parse_SetSafePropertyWithUnsafeValue_ReturnsProblem ()
+    {
+      Method sample = TestHelper.GetSample<PropertySample> ("SetSafePropertyWithUnsafeValue");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
   }
 }

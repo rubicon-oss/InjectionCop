@@ -21,7 +21,8 @@ namespace InjectionCop.Fragment
   /// </summary>
   [AttributeUsage (AttributeTargets.Parameter
                    | AttributeTargets.ReturnValue
-                   | AttributeTargets.Field)]
+                   | AttributeTargets.Field
+                   | AttributeTargets.Property)]
   public class FragmentAttribute : Attribute
   {
     private readonly string _fragmentType;

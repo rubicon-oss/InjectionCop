@@ -13,14 +13,43 @@
 // limitations under the License.
 
 using System;
+using InjectionCop.Fragment;
 
 namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Property
 {
-  class PropertySample: ParserSampleBase
+  public class PropertySample: ParserSampleBase
   {
+    public string SafePropertyVerboseAnnotation
+    { 
+      [return: Fragment("SqlFragment")]
+      get;
+      [param: Fragment("SqlFragment")]
+      set;
+    }
+
+    [Fragment("SqlFragment")]
+    public string SafeProperty { get; set; }
+
+    public string UnsafeProp { get; set; }
+
     public void CallWithUnsafeProperty()
     {
       RequiresSqlFragment (UnsafeProp);
+    }
+
+    public void CallWithSafePropertyVerboseAnnotation()
+    {
+      RequiresSqlFragment (SafePropertyVerboseAnnotation);
+    }
+
+    public void SetSafePropertyVerboseAnnotationWithSafeValue()
+    {
+      SafePropertyVerboseAnnotation = "safe";
+    }
+
+    public void SetSafePropertyVerboseAnnotationWithUnsafeValue()
+    {
+      SafePropertyVerboseAnnotation = UnsafeSource();
     }
 
     public void CallWithSafeProperty()
@@ -28,12 +57,12 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Prope
       RequiresSqlFragment (SafeProperty);
     }
 
-    public void SetPropertySafe()
+    public void SetSafePropertyWithSafeValue()
     {
       SafeProperty = "safe";
     }
 
-    public void SetPropertyUnsafe()
+    public void SetSafePropertyWithUnsafeValue()
     {
       SafeProperty = UnsafeSource();
     }
