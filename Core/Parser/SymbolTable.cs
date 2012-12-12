@@ -139,7 +139,7 @@ namespace InjectionCop.Parser
 
     public void InferSafeness (string symbolName, Expression expression)
     {
-      ArgumentUtility.CheckNotNull ("symbolName", symbolName);
+      ArgumentUtility.CheckNotNullOrEmpty ("symbolName", symbolName);
       ArgumentUtility.CheckNotNull ("expression", expression);
 
       string fragmentType = InferFragmentType (expression);
