@@ -27,9 +27,9 @@ namespace InjectionCop.IntegrationTests.Config
     {
       IBlacklistManager blacklist = ConfigLoader.LoadBlacklist();
       IList<string> parameters = new List<string> { "System.String" };
-      bool commandTextListed = blacklist.IsListed("namespace.ExternallyDefined", "FragmentDefinedInXml", parameters);
+      string[] parameterFragmentTypes = blacklist.GetFragmentTypes("namespace.ExternallyDefined", "FragmentDefinedInXml", parameters);
 
-      Assert.That (commandTextListed, Is.True);
+      Assert.That (parameterFragmentTypes != null, Is.True);
     }
 
     [Test]
@@ -47,9 +47,9 @@ namespace InjectionCop.IntegrationTests.Config
     {
       IBlacklistManager blacklist = ConfigLoader.LoadBlacklist();
       IList<string> parameters = new List<string> ();
-      bool unknownClassListed = blacklist.IsListed("namespace.NotExistingType", "Dummy", parameters);
+      string[] parameterFragmentTypes = blacklist.GetFragmentTypes("namespace.NotExistingType", "Dummy", parameters);
 
-      Assert.That (unknownClassListed, Is.False);
+      Assert.That (parameterFragmentTypes, Is.Null);
     }
 
     [Test]
@@ -59,9 +59,9 @@ namespace InjectionCop.IntegrationTests.Config
       IList<string> parameters = new List<string> ();
       string testNamespace = "InjectionCop.IntegrationTests.Config";
       string testMethodName = "LoadBlackList_KnownPrototypeNotAddedToXmlNotListed";
-      bool unknownClassListed = blacklist.IsListed(testNamespace, testMethodName, parameters);
+      string[] parameterFragmentTypes = blacklist.GetFragmentTypes(testNamespace, testMethodName, parameters);
 
-      Assert.That (unknownClassListed, Is.False);
+      Assert.That (parameterFragmentTypes, Is.Null);
     }
   }
 }
