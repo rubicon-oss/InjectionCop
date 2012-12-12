@@ -90,111 +90,111 @@ namespace InjectionCop.UnitTests.Config
     }
 
     [Test]
-    public void IsListed_FirstListedMethod_ReturnsTrue ()
+    public void GetFragmentTypes_FirstListedMethod_RecognizesMethodSignature ()
     {
       LoadValidExample();
       List<string> parameters = new List<string> { "namespace.type1", "namespace.type2" };
-      bool isListed = _blackListManager.IsListed ("namespace.BlackType", "Method", parameters);
+      bool isListed = null != _blackListManager.GetFragmentTypes ("namespace.BlackType", "Method", parameters);
       Assert.That (isListed, Is.True);
     }
 
     [Test]
-    public void IsListed_ListedMethod_ReturnsTrue ()
+    public void GetFragmentTypes_ListedMethod_RecognizesMethodSignature ()
     {
       LoadValidExample();
       List<string> parameters = new List<string> { "namespace.type3", "namespace.type4" };
-      bool isListed = _blackListManager.IsListed ("namespace.BlackType2", "Method2", parameters);
+      bool isListed = null != _blackListManager.GetFragmentTypes ("namespace.BlackType2", "Method2", parameters);
       Assert.That (isListed, Is.True);
     }
 
     [Test]
-    public void IsListed_UnknownType_ReturnsFalse ()
+    public void GetFragmentTypes_UnknownType_ReturnsNull ()
     {
       LoadValidExample();
       List<string> parameters = new List<string>();
-      bool isListed = _blackListManager.IsListed ("ns.NotExistingType", "Method", parameters);
-      Assert.That (isListed, Is.False);
+      string[] fragmentTypes = _blackListManager.GetFragmentTypes ("ns.NotExistingType", "Method", parameters);
+      Assert.That (fragmentTypes, Is.Null);
     }
 
     [Test]
-    public void IsListed_UnknownMethod_ReturnsFalse ()
+    public void GetFragmentTypes_UnknownMethod_ReturnsNull ()
     {
       LoadValidExample();
       List<string> parameters = new List<string> { "namespace.type3", "namespace.type4" };
-      bool isListed = _blackListManager.IsListed ("namespace.BlackType2", "UnknownMethod", parameters);
-      Assert.That (isListed, Is.False);
+      string[] fragmentTypes = _blackListManager.GetFragmentTypes ("namespace.BlackType2", "UnknownMethod", parameters);
+      Assert.That (fragmentTypes, Is.Null);
     }
 
     [Test]
-    public void IsListed_UnknownMethodSignature_ReturnsFalse ()
-    {
-      LoadValidExample();
-      List<string> parameters = new List<string> { "namespace.type3", "unknowntype" };
-      bool isListed = _blackListManager.IsListed ("namespace.BlackType2", "Method2", parameters);
-      Assert.That (isListed, Is.False);
-    }
-
-    [Test]
-    public void IsListed_ParameterlessMethod_ReturnsTrue ()
-    {
-      LoadValidExample();
-      List<string> parameters = new List<string> ();
-      bool isListed = _blackListManager.IsListed ("namespace.BlackType2", "ParameterlessMethod", parameters);
-      Assert.That (isListed, Is.True);
-    }
-    
-    [Test]
-    public void IsListed_EmptyType_ReturnsFalse ()
-    {
-      LoadValidExample();
-      List<string> parameters = new List<string> ();
-      bool isListed = _blackListManager.IsListed ("namespace.EmptyType", "dummy", parameters);
-      Assert.That (isListed, Is.False);
-    }
-
-    [Test]
-    public void IsListed_NonExistingMethodInHeaderLessXML_ReturnsFalse ()
-    {
-      LoadHeaderlessExample();
-      List<string> parameters = new List<string>();
-      bool isListed = _blackListManager.IsListed ("namespace.BlackType", "NonExistingMethod", parameters);
-      Assert.That (isListed, Is.False);
-    }
-
-    [Test]
-    public void IsListed_ExistingMethodInHeaderLessXML_ReturnsTrue ()
-    {
-      LoadHeaderlessExample();
-      List<string> parameters = new List<string>();
-      bool isListed = _blackListManager.IsListed ("namespace.BlackType", "Method", parameters);
-      Assert.That (isListed, Is.True);
-    }
-
-    [Test]
-    public void IsListed_WrongElementNaming_ReturnsFalse ()
-    {
-      LoadWrongSource();
-      List<string> parameters = new List<string>();
-      bool isListed = _blackListManager.IsListed ("namespace.BlackType", "Method", parameters);
-      Assert.That (isListed, Is.False);
-    }
-
-    [Test]
-    public void IsListed_TypoInElementNaming_ReturnsFalse ()
-    {
-      LoadTypoExample();
-      List<string> parameters = new List<string>();
-      bool isListed = _blackListManager.IsListed ("namespace.BlackType", "Method", parameters);
-      Assert.That (isListed, Is.False);
-    }
-    
-    [Test]
-    public void GetFragmentTypes_UnknownMethodSignature_ReturnsNoFragmentTypes ()
+    public void GetFragmentTypes_UnknownMethodSignature_ReturnsNull ()
     {
       LoadValidExample();
       List<string> parameters = new List<string> { "namespace.type3", "unknowntype" };
       string[] fragmentTypes = _blackListManager.GetFragmentTypes ("namespace.BlackType2", "Method2", parameters);
-      Assert.That (fragmentTypes.Length, Is.EqualTo(0));
+      Assert.That (fragmentTypes, Is.Null);
+    }
+
+    [Test]
+    public void GetFragmentTypes_ParameterlessMethod_RecognizesSignature ()
+    {
+      LoadValidExample();
+      List<string> parameters = new List<string> ();
+      bool isListed = null != _blackListManager.GetFragmentTypes ("namespace.BlackType2", "ParameterlessMethod", parameters);
+      Assert.That (isListed, Is.True);
+    }
+    
+    [Test]
+    public void GetFragmentTypes_EmptyType_ReturnsNull ()
+    {
+      LoadValidExample();
+      List<string> parameters = new List<string> ();
+      string[] fragmentTypes = _blackListManager.GetFragmentTypes ("namespace.EmptyType", "dummy", parameters);
+      Assert.That (fragmentTypes, Is.Null);
+    }
+
+    [Test]
+    public void GetFragmentTypes_NonExistingMethodInHeaderLessXML_ReturnsNull ()
+    {
+      LoadHeaderlessExample();
+      List<string> parameters = new List<string>();
+      string[] fragmentTypes = _blackListManager.GetFragmentTypes ("namespace.BlackType", "NonExistingMethod", parameters);
+      Assert.That (fragmentTypes, Is.Null);
+    }
+
+    [Test]
+    public void GetFragmentTypes_ExistingMethodInHeaderLessXML_RecognizesHeader ()
+    {
+      LoadHeaderlessExample();
+      List<string> parameters = new List<string>();
+      bool isListed = null != _blackListManager.GetFragmentTypes ("namespace.BlackType", "Method", parameters);
+      Assert.That (isListed, Is.True);
+    }
+
+    [Test]
+    public void GetFragmentTypes_WrongElementNaming_ReturnsNull ()
+    {
+      LoadWrongSource();
+      List<string> parameters = new List<string>();
+      string[] fragmentTypes = _blackListManager.GetFragmentTypes ("namespace.BlackType", "Method", parameters);
+      Assert.That (fragmentTypes, Is.Null);
+    }
+
+    [Test]
+    public void GetFragmentTypes_TypoInElementNaming_ReturnsNull ()
+    {
+      LoadTypoExample();
+      List<string> parameters = new List<string>();
+      string[] fragmentTypes = _blackListManager.GetFragmentTypes ("namespace.BlackType", "Method", parameters);
+      Assert.That (fragmentTypes, Is.Null);
+    }
+    
+    [Test]
+    public void GetFragmentTypes_AnotherUnknownMethodSignature_ReturnsNull ()
+    {
+      LoadValidExample();
+      List<string> parameters = new List<string> { "namespace.type3", "unknowntype" };
+      string[] fragmentTypes = _blackListManager.GetFragmentTypes ("namespace.BlackType2", "Method2", parameters);
+      Assert.That (fragmentTypes, Is.Null);
     }
 
     [Test]
