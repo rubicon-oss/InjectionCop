@@ -29,7 +29,14 @@ namespace InjectionCop.Config
 
     public string[] GetFragmentTypes (string qualifiedTypeName, string methodName, IList<string> qualifiedParameterTypes)
     {
-      return new[] { "SqlFragment" };
+      if (IsListed (qualifiedTypeName, methodName, qualifiedParameterTypes))
+      {
+        return new[] { "SqlFragment" };
+      }
+      else
+      {
+        return null;
+      }
     }
   }
 }

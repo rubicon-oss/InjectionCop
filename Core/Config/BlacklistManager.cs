@@ -42,40 +42,29 @@ namespace InjectionCop.Config
     {
       _blacklist = ArgumentUtility.CheckNotNull ("blacklist", blacklist);
     }
-
-    public bool IsListed (string qualifiedTypeName, string methodName, IList<string> qualifiedParameterTypes)
-    {
-      ArgumentUtility.CheckNotNullOrEmpty ("qualifiedTypeName", qualifiedTypeName);
-      ArgumentUtility.CheckNotNullOrEmpty ("methodName", methodName);
-      ArgumentUtility.CheckNotNull ("qualifiedParameterTypes", qualifiedParameterTypes);
-
-      bool isListed = false;
-      if (_blacklist.Name == c_blacklist)
-      {
-        IEnumerable<XElement> filteredMethods = FilterMethods (qualifiedTypeName, methodName, qualifiedParameterTypes);
-        isListed = filteredMethods.Any();
-      }
-      return isListed;
-    }
-
+    
     public string[] GetFragmentTypes (string qualifiedTypeName, string methodName, IList<string> qualifiedParameterTypes)
     {
       ArgumentUtility.CheckNotNullOrEmpty ("qualifiedTypeName", qualifiedTypeName);
       ArgumentUtility.CheckNotNullOrEmpty ("methodName", methodName);
       ArgumentUtility.CheckNotNull ("qualifiedParameterTypes", qualifiedParameterTypes);
 
+      string[] fragmentTypesArray;
       IList<string> fragmentTypes = new List<string>();
-      if (IsListed (qualifiedTypeName, methodName, qualifiedParameterTypes))
+
+      IEnumerable<XElement> filteredMethods = FilterMethods (qualifiedTypeName, methodName, qualifiedParameterTypes);
+      var methodEnumerator = filteredMethods.GetEnumerator();
+      if (_blacklist.Name == c_blacklist && methodEnumerator.MoveNext())
       {
-        IEnumerable<XElement> filteredMethods = FilterMethods (qualifiedTypeName, methodName, qualifiedParameterTypes);
-        var methodEnumerator = filteredMethods.GetEnumerator();
-        if (methodEnumerator.MoveNext())
-        {
-          XElement method = methodEnumerator.Current;
-          method.Elements (c_parameter).ToList().ForEach (parameter => fragmentTypes.Add (GetFragmentType (parameter)));
-        }
+        XElement method = methodEnumerator.Current;
+        method.Elements (c_parameter).ToList().ForEach (parameter => fragmentTypes.Add (GetFragmentType (parameter)));
+        fragmentTypesArray = fragmentTypes.ToArray();
       }
-      return fragmentTypes.ToArray();
+      else
+      {
+        fragmentTypesArray = null;
+      }
+      return fragmentTypesArray;
     }
 
     private IEnumerable<XElement> FilterMethods (string qualifiedTypeName, string methodName, IList<string> qualifiedParameterTypes)
