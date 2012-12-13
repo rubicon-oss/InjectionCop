@@ -13,18 +13,19 @@
 // limitations under the License.
 
 using System;
+using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
 using NUnit.Framework;
 
-namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.AttributePropagation
+namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Return
 {
   [TestFixture]
-  public class AttributePropagation_TypeParserTest: TypeParserTestBase
+  public class Return_TypeParserTest : TypeParserTestBase
   {
     [Test]
-    public void Parse_SafeCallOfSqlFragmentCallee_NoProblem()
+    public void Parse_SafeSource_NoProblem()
     {
-      Method sample = TestHelper.GetSample<AttributePropagationSample>("SafeCallOfSqlFragmentCallee");
+      Method sample = TestHelper.GetSample<ParserSampleBase>("SafeSource");
       _typeParser.Parse (sample);
       ProblemCollection result = _typeParser.Problems;
 
@@ -32,9 +33,9 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Attri
     }
 
     [Test]
-    public void Parse_UnsafeCallOfSqlFragmentCallee_ReturnsProblem()
+    public void Parse_UnsafeSource_ReturnsProblem()
     {
-      Method sample = TestHelper.GetSample<AttributePropagationSample>("UnsafeCallOfSqlFragmentCallee");
+      Method sample = TestHelper.GetSample<ReturnSample>("ReturnFragmentMismatch");
       _typeParser.Parse (sample);
       ProblemCollection result = _typeParser.Problems;
 
@@ -42,9 +43,9 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Attri
     }
 
     [Test]
-    public void Parse_SafeCallOfMixedCallee_NoProblem()
+    public void Parse_NoReturnAnnotation_NoProblem()
     {
-      Method sample = TestHelper.GetSample<AttributePropagationSample>("SafeCallOfMixedCallee");
+      Method sample = TestHelper.GetSample<ReturnSample>("NoReturnAnnotation");
       _typeParser.Parse (sample);
       ProblemCollection result = _typeParser.Problems;
 
@@ -52,13 +53,24 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Attri
     }
 
     [Test]
-    public void Parse_UnsafeCallOfMixedCallee_ReturnsProblem()
+    public void Parse_DeclarationWithReturn_NoProblem ()
     {
-      Method sample = TestHelper.GetSample<AttributePropagationSample>("UnsafeCallOfMixedCallee");
+      Method sample = TestHelper.GetSample<ReturnSample> ("DeclarationWithReturn");
       _typeParser.Parse (sample);
       ProblemCollection result = _typeParser.Problems;
 
-      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
+    
+    [Test]
+    public void Parse_ValidReturnWithIf_NoProblem ()
+    {
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      Method sample = TestHelper.GetSample<ReturnSample> ("ValidReturnWithIf", stringTypeNode);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
   }
 }

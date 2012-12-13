@@ -55,7 +55,33 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
       RequiresSqlFragment (x);
       RequiresSqlFragment (y);
     }
-    
+
+    [return : Fragment("ReturnFragmentType")]
+    public string ReturnFragmentRequiredLiteralReturn ()
+    {
+      return "dummy";
+    }
+
+    public string UnsafeReturnWhenFragmentRequired ()
+    {
+      return UnsafeSource();
+    }
+
+    public string UnsafeReturnWhenFragmentRequiredMoreComplex ()
+    {
+      int piIstGenauDrei = 3;
+      string dummy = "dummy";
+      doSomething (piIstGenauDrei, dummy);
+      return UnsafeSource();
+    }
+
+    public void DummyProcedure ()
+    {
+      int piIstGenauDrei = 3;
+      string dummy = "dummy";
+      doSomething (piIstGenauDrei, dummy);
+    }
+
     public string SetSuccessor(string param)
     {
       param += "dummy";
@@ -71,6 +97,21 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
     public int SafeSourceInt()
     {
       return 3;
+    }
+
+    [return: Fragment ("DummyFragment")]
+    public string ValidReturnWithIf ([Fragment ("DummyFragment")] string parameter)
+    {
+      string returnValue;
+      if (SafeSource() == "Dummy")
+      {
+        returnValue = "safe";
+      }
+      else
+      {
+        returnValue = parameter;
+      }
+      return returnValue;
     }
   }
 }

@@ -69,6 +69,7 @@
     <Compile Include="Parser\MethodParsing\InitialSymbolTableBuilderTests\InitialSymbolTableBuilderTest.cs" />
     <Compile Include="Parser\MethodParsing\MethodGraphTests\MethodGraph_TestBase.cs" />
     <Compile Include="Parser\NonFragmentAttribute.cs" />
+    <Compile Include="Parser\ProblemPipeStub.cs" />
     <Compile Include="Parser\TypeParsing\BlacklistManagerIntegrationSample.cs" />
     <Compile Include="Parser\TypeParsing\SymbolTableTests\InferFragment\InferFragmentSample.cs" />
     <Compile Include="Parser\TypeParsing\SymbolTableTests\BlacklistManagerIntegration\BlacklistManagerIntegration_SymbolTableTest.cs" />
@@ -82,8 +83,8 @@
     <Compile Include="Parser\TypeParsing\TypeParserTests\Attribute\Attribute_TypeParserTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\BlacklistManagerIntegration\BlacklistManagerIntegration_TypeParserTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\BlackMethod\BlackMethodSample.cs" />
-    <Compile Include="Parser\FragmentToolsSample.cs" />
-    <Compile Include="Parser\FragmentToolsTest.cs" />
+    <Compile Include="Utilities\FragmentUtilitySample.cs" />
+    <Compile Include="Utilities\FragmentUtilityTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Concatenation\ConcatenationSample.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Constructor\ConstructorSample.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Constructor\Constructor_TypeParserTest.cs" />
@@ -107,6 +108,8 @@
     <Compile Include="Parser\TypeParsing\TypeParserTests\AssignmentPropagation\AssignmentPropagation_TypeParserTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\AttributePropagation\AttributePropagation_TypeParserTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\BlackMethod\BlackMethod_TypeParserTest.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Return\ReturnSample.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Return\Return_TypeParserTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Switch\SwitchSample.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Switch\Switch_TypeParserTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\While_loop\WhileLoop_TypeParserTest.cs" />

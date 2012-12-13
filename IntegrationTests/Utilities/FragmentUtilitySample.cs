@@ -14,49 +14,41 @@
 
 using System;
 using InjectionCop.Fragment;
+using InjectionCop.IntegrationTests.Parser;
 
 namespace InjectionCop.IntegrationTests.Utilities
 {
-  internal class IntrospectionUtility_ClassSample
+  class FragmentUtilitySample
   {
-    private string _field = "dummy";
-
-    public void UsingField ()
+    public void ContainsFragmentParameter([Fragment("FragmentType")] string parameter)
     {
-      Dummy (_field);
     }
 
-    public void FieldAssignment ()
+    public void NoFragmentParameter(string parameter)
     {
-      _field = "dummy";
     }
 
-    public string NonFieldAssignment ()
+    public void ContainsNonFragmentParameter([NonFragment("FragmentType")] string parameter)
     {
-      string x = Dummy ("dummy");
-      return x;
     }
 
-    public string Dummy (string parameter)
+    public void ContainsSqlFragmentParameter([Fragment("SqlFragment")] string parameter)
     {
-      return parameter;
     }
 
-    public object AnyProperty { get; set; }
-
-    public string get_NonExistingProperty ()
+    public void ContainsStronglyTypedSqlFragmentParameter([SqlFragment] string parameter)
     {
-      return "dummy";
     }
 
-    public string get_NonExistingProperty (string parameter)
+    public int NoReturnFragment ()
     {
-      return parameter;
+      return 3;
     }
 
-    public void set_NonExistingProperty ()
+    [return : Fragment("ReturnFragmentType")]
+    public int ReturnFragment ()
     {
+      return 3;
     }
   }
-
 }

@@ -123,6 +123,25 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.MethodGraphTests
     }
 
     [Test]
+    public void MethodGraph_DeclarationWithReturn_ReturnBlockHasReturnFragmentPrecondition()
+    {
+      Method sampleMethod = TestHelper.GetSample<MethodGraph_ClassSample> ("DeclarationWithReturn");
+      Block returnBlock = sampleMethod.Body.Statements[1] as Block;
+      if(returnBlock != null)
+      {
+        IMethodGraph methodGraph = BuildMethodGraph(sampleMethod);
+        BasicBlock returnBasicBlock = methodGraph.GetBasicBlockById (returnBlock.UniqueKey);
+        string preConditionFragmentType = returnBasicBlock.PreConditions[0].FragmentType;
+
+        Assert.That (preConditionFragmentType, Is.EqualTo("ReturnFragmentType"));
+      }
+      else
+      {
+        Assert.Ignore ("Bad Sample");
+      }
+    }
+
+    [Test]
     public void MethodGraph_IfStatementTrueBlockOnly_ReturnsCorrectConditionSuccessors ()
     {
       TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
@@ -311,5 +330,51 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.MethodGraphTests
         Assert.Ignore ("Bad Sample");
       }
     }
+
+    [Test]
+    public void MethodGraph_DeclarationWithReturn_ReturnsCorrectPostConditions ()
+    {
+      Method sampleMethod = TestHelper.GetSample<MethodGraph_ClassSample> ("DeclarationWithReturn");
+      Block initialBlock = sampleMethod.Body.Statements[0] as Block;
+      if(initialBlock != null)
+      {
+        IMethodGraph methodGraph = BuildMethodGraph(sampleMethod);
+        BasicBlock initialBasicBlock = methodGraph.GetBasicBlockById (initialBlock.UniqueKey);
+        string postConditionFragmentType = initialBasicBlock.PostConditionSymbolTable.GetFragmentType("local$0");
+
+        Assert.That (postConditionFragmentType, Is.EqualTo("__Literal__"));
+      }
+      else
+      {
+        Assert.Ignore ("Bad Sample");
+      }
+    }
+
+    [Test]
+    public void MethodGraph_ValidReturnWithIf_ReturnsCorrectPostConditions ()
+    {
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      Method sampleMethod = TestHelper.GetSample<MethodGraph_ClassSample> ("ValidReturnWithIf", stringTypeNode);
+      Block preIfBlock = sampleMethod.Body.Statements[0] as Block;
+      Block ifBlock = sampleMethod.Body.Statements[1] as Block;
+      Block preReturnBlock = sampleMethod.Body.Statements[2] as Block;
+      if(preReturnBlock != null)
+      {
+        IMethodGraph methodGraph = BuildMethodGraph(sampleMethod);
+        BasicBlock preIfBasicBlock = methodGraph.GetBasicBlockById (preIfBlock.UniqueKey);
+        BasicBlock ifBasicBlock = methodGraph.GetBasicBlockById (ifBlock.UniqueKey);
+        BasicBlock preReturnBasicBlock = methodGraph.GetBasicBlockById (preReturnBlock.UniqueKey);
+        string postConditionFragmentType = preReturnBasicBlock.PostConditionSymbolTable.GetFragmentType("local$1");
+
+        // debuggen
+        Assert.That (postConditionFragmentType, Is.EqualTo("__Literal__"));
+      }
+      else
+      {
+        Assert.Ignore ("Bad Sample");
+      }
+      
+    }
+
   }
 }

@@ -228,6 +228,5 @@ namespace InjectionCop.IntegrationTests.Utilities
 
       Assert.That (isPropertyGetter, Is.False);
     }
-
   }
 }

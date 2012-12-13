@@ -14,7 +14,6 @@
 
 using System;
 using System.Linq;
-using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
 using NUnit.Framework;
 

@@ -13,30 +13,28 @@
 // limitations under the License.
 
 using System;
-using InjectionCop.Fragment;
+using System.Collections.Generic;
+using InjectionCop.Parser.ProblemPipe;
 
 namespace InjectionCop.IntegrationTests.Parser
 {
-  class FragmentToolsSample
+  class ProblemPipeStub : IProblemPipe
   {
-    public void ContainsFragmentParameter([Fragment("FragmentType")] string parameter)
+    private List<ProblemMetadata> _problems;
+
+    public ProblemPipeStub ()
     {
+      _problems = new List<ProblemMetadata>();
     }
 
-    public void NoFragmentParameter(string parameter)
+    public void AddProblem (ProblemMetadata problemMetadata)
     {
+      _problems.Add (problemMetadata);
     }
 
-    public void ContainsNonFragmentParameter([NonFragment("FragmentType")] string parameter)
+    public List<ProblemMetadata> Problems
     {
-    }
-
-    public void ContainsSqlFragmentParameter([Fragment("SqlFragment")] string parameter)
-    {
-    }
-
-    public void ContainsStronglyTypedSqlFragmentParameter([SqlFragment] string parameter)
-    {
+      get { return _problems; }
     }
   }
 }

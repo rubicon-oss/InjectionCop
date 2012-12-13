@@ -15,10 +15,21 @@
 using System;
 using InjectionCop.Fragment;
 
-namespace InjectionCop.IntegrationTests.Parser.MethodParsing.MethodGraphTests
+namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Return
 {
-  public class MethodGraph_ClassSample
+  class ReturnSample : ParserSampleBase
   {
+    [return: Fragment ("DummyType")]
+    public string ReturnFragmentMismatch ()
+    {
+      return UnsafeSource();
+    }
+
+    public string NoReturnAnnotation ()
+    {
+      return UnsafeSource();
+    }
+
     [return: Fragment("ReturnFragmentType")]
     public int DeclarationWithReturn()
     {
@@ -26,37 +37,18 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.MethodGraphTests
       return i;
     }
 
-    public string IfStatementTrueBlockOnly(string param)
-    {
-      if (param == "dummy")
-      {
-        param = "changed";
-      }
-      return param;
-    }
-
-    public int ForLoop()
-    {
-      int result = 0;
-      for(int i = 10; i > 0; i--)
-      {
-        result += i;
-      }
-      return result;
-    }
-
     [return: Fragment ("DummyFragment")]
     public string ValidReturnWithIf ([Fragment ("DummyFragment")] string parameter)
     {
       string returnValue = "";
-      if (parameter == "Dummy")
+      if (SafeSource() == "Dummy")
       {
         returnValue = "safe";
       }
-      /*else
+      else
       {
         returnValue = parameter;
-      }*/
+      }
       return returnValue;
     }
   }
