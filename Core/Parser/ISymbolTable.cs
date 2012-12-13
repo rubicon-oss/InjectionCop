@@ -34,6 +34,7 @@ namespace InjectionCop.Parser
     void MakeUnsafe (string symbolName);
     string GetFragmentType (string symbolName);
     bool IsFragment (string symbolName, string fragmentType);
+    string InferFragmentType (Expression expression);
     bool Contains (string symbolName);
     ISymbolTable Copy ();
   }

@@ -70,9 +70,9 @@ namespace InjectionCop.Parser.MethodParsing
 
     private void SetSymbolFragmentType (string name, AttributeNodeCollection attributes)
     {
-      if (FragmentUtilities.ContainsFragment (attributes))
+      if (FragmentUtility.ContainsFragment (attributes))
       {
-        string fragmentType = FragmentUtilities.GetFragmentType (attributes);
+        string fragmentType = FragmentUtility.GetFragmentType (attributes);
         _result.MakeSafe (name, fragmentType);
       }
       else

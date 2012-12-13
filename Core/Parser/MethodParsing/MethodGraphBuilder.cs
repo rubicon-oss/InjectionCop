@@ -29,6 +29,7 @@ namespace InjectionCop.Parser.MethodParsing
     private readonly Block _methodBody;
     private readonly IBlacklistManager _blacklistManager;
     private readonly IProblemPipe _problemPipe;
+    private readonly string _returnFragmentType;
 
     public MethodGraphBuilder (Method method, IBlacklistManager blacklistManager, IProblemPipe problemPipe)
     {
@@ -45,6 +46,7 @@ namespace InjectionCop.Parser.MethodParsing
       {
         _result = new MethodGraph (-1, new Dictionary<int, BasicBlock>());
       }
+      _returnFragmentType = FragmentUtility.ReturnFragmentType (method);
     }
 
     public IMethodGraph GetResult ()
@@ -57,7 +59,7 @@ namespace InjectionCop.Parser.MethodParsing
     {
       if (_result == null)
       {
-        BlockParser parser = new BlockParser (_blacklistManager, _problemPipe);
+        BlockParser parser = new BlockParser (_blacklistManager, _problemPipe, _returnFragmentType);
         Dictionary<int, BasicBlock> graph = new Dictionary<int, BasicBlock>();
         int initialBlockId;
 

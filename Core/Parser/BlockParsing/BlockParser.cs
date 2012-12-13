@@ -31,14 +31,16 @@ namespace InjectionCop.Parser.BlockParsing
     private List<int> _successors;
     private readonly IBlacklistManager _blacklistManager;
     private readonly IProblemPipe _problemPipe;
+    private readonly string _returnFragmentType;
 
-    public BlockParser (IBlacklistManager blacklistManager, IProblemPipe problemPipe)
+    public BlockParser (IBlacklistManager blacklistManager, IProblemPipe problemPipe, string returnFragmentType)
     {
       _blacklistManager = ArgumentUtility.CheckNotNull ("blacklistManager", blacklistManager);
       _problemPipe = ArgumentUtility.CheckNotNull ("typeParser", problemPipe);
       _symbolTableParser = new SymbolTable (blacklistManager);
       _preConditions = new List<PreCondition>();
       _successors = new List<int>();
+      _returnFragmentType = ArgumentUtility.CheckNotNullOrEmpty("returnFragmentType", returnFragmentType);
     }
 
     public BasicBlock Parse (Block block)
@@ -88,7 +90,29 @@ namespace InjectionCop.Parser.BlockParsing
 
           case NodeType.Return:
             ReturnNode returnNode = (ReturnNode) stmt;
-            Inspect (returnNode.Expression);
+            if (returnNode.Expression != null)
+            {
+              Inspect (returnNode.Expression);
+              string returnSymbol = IntrospectionUtility.GetVariableName (returnNode.Expression);
+              ProblemMetadata problemMetadata = new ProblemMetadata (
+                  returnNode.UniqueKey, returnNode.SourceContext, _returnFragmentType, _symbolTableParser.GetFragmentType ("local$0"));
+              PreCondition returnBlockCondition = new PreCondition (returnSymbol, _returnFragmentType, problemMetadata);
+              _preConditions.Add (returnBlockCondition);
+            }
+            /*
+            if (_returnFragmentType != null)
+            {
+              string returnExpressionFragmentType = _symbolTableParser.InferFragmentType (returnNode.Expression);
+              if (_returnFragmentType != returnExpressionFragmentType)
+              {
+                ProblemMetadata problemMetadata = new ProblemMetadata (
+                    returnNode.Expression.UniqueKey,
+                    returnNode.SourceContext,
+                    _returnFragmentType,
+                    returnExpressionFragmentType);
+                _problemPipe.AddProblem (problemMetadata);
+              }
+            }*/
             break;
 
           case NodeType.Branch:
@@ -113,9 +137,9 @@ namespace InjectionCop.Parser.BlockParsing
       {
         string symbol = IntrospectionUtility.GetVariableName (targetExpression);
         Field target = IntrospectionUtility.GetField (targetExpression);
-        if (FragmentUtilities.ContainsFragment (target.Attributes))
+        if (FragmentUtility.ContainsFragment (target.Attributes))
         {
-          string targetFragmentType = FragmentUtilities.GetFragmentType (target.Attributes);
+          string targetFragmentType = FragmentUtility.GetFragmentType (target.Attributes);
           string givenFragmentType = _symbolTableParser.GetFragmentType (symbol);
           if (targetFragmentType != givenFragmentType)
           {
@@ -129,7 +153,7 @@ namespace InjectionCop.Parser.BlockParsing
         }
       }
     }
-
+    
     private void Inspect (Expression expression)
     {
       if (expression is MethodCall)
@@ -175,9 +199,9 @@ namespace InjectionCop.Parser.BlockParsing
           if (method.Parameters[i].IsOut)
           {
             string symbol = IntrospectionUtility.GetVariableName (methodCall.Operands[i]);
-            if (FragmentUtilities.ContainsFragment (method.Parameters[i].Attributes))
+            if (FragmentUtility.ContainsFragment (method.Parameters[i].Attributes))
             {
-              string fragmentType = FragmentUtilities.GetFragmentType (method.Parameters[i].Attributes);
+              string fragmentType = FragmentUtility.GetFragmentType (method.Parameters[i].Attributes);
               _symbolTableParser.MakeSafe (symbol, fragmentType);
             }
             else

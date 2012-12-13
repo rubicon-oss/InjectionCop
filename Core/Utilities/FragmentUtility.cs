@@ -23,7 +23,7 @@ namespace InjectionCop.Utilities
   /// <summary>
   /// Helper methods for handling fragments
   /// </summary>
-  public class FragmentUtilities
+  public class FragmentUtility
   {
     public static bool IsFragment (AttributeNode attribute)
     {
@@ -71,6 +71,17 @@ namespace InjectionCop.Utilities
         }
       }
       return fragmentType;
+    }
+
+    public static string ReturnFragmentType (Method method)
+    {
+      ArgumentUtility.CheckNotNull ("method", method);
+      string returnFragment = SymbolTable.EMPTY_FRAGMENT;
+      if (method.ReturnAttributes != null && ContainsFragment (method.ReturnAttributes))
+      {
+        returnFragment = GetFragmentType (method.ReturnAttributes);
+      }
+      return returnFragment;
     }
   }
 }

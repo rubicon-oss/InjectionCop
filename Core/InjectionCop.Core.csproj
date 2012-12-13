@@ -65,7 +65,7 @@
     <Compile Include="Parser\ProblemPipe\ProblemMetadata.cs" />
     <Compile Include="Parser\ProblemPipe\IProblemPipe.cs" />
     <Compile Include="Parser\ProblemPipe\ProblemDuplicateFilter.cs" />
-    <Compile Include="Utilities\FragmentUtilities.cs" />
+    <Compile Include="Utilities\FragmentUtility.cs" />
     <Compile Include="InjectionCopException.cs" />
     <Compile Include="Parser\TypeParsing\BaseFxCopRule.cs" />
     <Compile Include="Utilities\IntrospectionUtility.cs" />

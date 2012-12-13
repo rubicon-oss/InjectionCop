@@ -159,10 +159,9 @@ namespace InjectionCop.Utilities
     /// <summary>
     /// Property getters are transformed to methdods named get_PROPERTYNAME()
     /// </summary>
-    /// <param name="method"></param>
-    /// <returns></returns>
     public static bool IsPropertyGetter (Method method)
     {
+      ArgumentUtility.CheckNotNull ("method", method);
       bool isPropertyGetter = false;
       string[] nameParts = method.Name.Name.Split ('_');
       if (method.DeclaringMember != null
@@ -177,6 +176,7 @@ namespace InjectionCop.Utilities
 
     public static bool IsPropertySetter (Method method)
     {
+      ArgumentUtility.CheckNotNull ("method", method);
       bool isPropertySetter = false;
       string[] nameParts = method.Name.Name.Split ('_');
       if (method.DeclaringMember != null

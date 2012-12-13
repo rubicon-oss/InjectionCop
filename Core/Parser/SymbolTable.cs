@@ -116,7 +116,7 @@ namespace InjectionCop.Parser
 
       if (candidateAttributes != null)
       {
-        fragmentType = FragmentUtilities.GetFragmentType (candidateAttributes);
+        fragmentType = FragmentUtility.GetFragmentType (candidateAttributes);
       }
       
       return fragmentType;
@@ -226,11 +226,11 @@ namespace InjectionCop.Parser
 
         if (!IsAnnotatedPropertySetter (calleeMethod))
         {
-          buffer.AddRange (calleeMethod.Parameters.Select (parameter => FragmentUtilities.GetFragmentType (parameter.Attributes)));
+          buffer.AddRange (calleeMethod.Parameters.Select (parameter => FragmentUtility.GetFragmentType (parameter.Attributes)));
         }
         else
         {
-          buffer.Add (FragmentUtilities.GetFragmentType (calleeMethod.DeclaringMember.Attributes));
+          buffer.Add (FragmentUtility.GetFragmentType (calleeMethod.DeclaringMember.Attributes));
         }
         
         parameterFragmentTypes = buffer.ToArray();
@@ -244,7 +244,7 @@ namespace InjectionCop.Parser
       bool isAnnotatedPropertySetter = false;
       if (IntrospectionUtility.IsPropertySetter (method))
       {
-        isAnnotatedPropertySetter = FragmentUtilities.ContainsFragment (method.DeclaringMember.Attributes);
+        isAnnotatedPropertySetter = FragmentUtility.ContainsFragment (method.DeclaringMember.Attributes);
       }
       return isAnnotatedPropertySetter;
     }
@@ -254,7 +254,7 @@ namespace InjectionCop.Parser
       bool isAnnotatedPropertyGetter = false;
       if (IntrospectionUtility.IsPropertyGetter (method))
       {
-        isAnnotatedPropertyGetter = FragmentUtilities.ContainsFragment (method.DeclaringMember.Attributes);
+        isAnnotatedPropertyGetter = FragmentUtility.ContainsFragment (method.DeclaringMember.Attributes);
       }
       return isAnnotatedPropertyGetter;
     }
