@@ -78,5 +78,137 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Assig
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
+
+    [Test]
+    public void Parse_ValidReturnWithIf_NoProblem ()
+    {
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      Method sample = TestHelper.GetSample<AssignmentPropagationSample> ("ValidReturnWithIf", stringTypeNode);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
+
+    [Test]
+    public void Parse_InvalidReturnWithIf_NoProblem ()
+    {
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      Method sample = TestHelper.GetSample<AssignmentPropagationSample> ("InvalidReturnWithIf", stringTypeNode);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
+
+    [Test]
+    public void Parse_InvalidReturnWithIfFragmentTypeConsidered_NoProblem ()
+    {
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      Method sample = TestHelper.GetSample<AssignmentPropagationSample> ("InvalidReturnWithIfFragmentTypeConsidered", stringTypeNode);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
+
+    [Test]
+    public void Parse_InvalidReturnWithTempVariable_NoProblem ()
+    {
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      Method sample = TestHelper.GetSample<AssignmentPropagationSample> ("InvalidReturnWithTempVariable", stringTypeNode);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
+
+    [Test]
+    public void Parse_InvalidReturnWithParameterReset_ReturnsProblem ()
+    {
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      Method sample = TestHelper.GetSample<AssignmentPropagationSample> ("InvalidReturnWithParameterReset", stringTypeNode);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
+
+    [Test]
+    public void Parse_ValidReturnWithParameterReset_NoProblem ()
+    {
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      Method sample = TestHelper.GetSample<AssignmentPropagationSample> ("ValidReturnWithParameterReset", stringTypeNode);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
+
+    [Test]
+    public void Parse_InvalidReturnWithFieldReset_ReturnsProblem ()
+    {
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      Method sample = TestHelper.GetSample<AssignmentPropagationSample> ("InvalidReturnWithFieldReset", stringTypeNode);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
+
+    [Test]
+    public void Parse_ValidReturnWithFieldReset_NoProblem ()
+    {
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      Method sample = TestHelper.GetSample<AssignmentPropagationSample> ("ValidReturnWithFieldReset", stringTypeNode);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
+    
+    [Test]
+    public void Parse_InvalidReturnWithField_ReturnsProblem ()
+    {
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      Method sample = TestHelper.GetSample<AssignmentPropagationSample> ("InvalidReturnWithField", stringTypeNode);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
+
+    [Test]
+    public void Parse_ValidReturnWithField_NoProblem ()
+    {
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      Method sample = TestHelper.GetSample<AssignmentPropagationSample> ("ValidReturnWithField", stringTypeNode);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
+
+    [Test]
+    public void Parse_InvalidReturnWithFieldAndLoops_ReturnsProblem ()
+    {
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      Method sample = TestHelper.GetSample<AssignmentPropagationSample> ("InvalidReturnWithFieldAndLoops", stringTypeNode);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
+
+    [Test]
+    public void Parse_ValidReturnWithFieldAndLoops_ReturnsProblem ()
+    {
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      Method sample = TestHelper.GetSample<AssignmentPropagationSample> ("ValidReturnWithFieldAndLoops", stringTypeNode);
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
   }
 }

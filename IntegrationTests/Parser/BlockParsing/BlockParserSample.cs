@@ -100,15 +100,41 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
     }
 
     [return: Fragment ("DummyFragment")]
-    public string ValidReturnWithIf ([Fragment ("DummyFragment")] string parameter)
+    public string ValidReturnWithLiteralAssignmentInsideIf ([Fragment ("DummyFragment")] string parameter)
     {
-      string returnValue;
-      if (SafeSource() == "Dummy")
+      string returnValue = "";
+      if (parameter == "Dummy")
       {
         returnValue = "safe";
       }
-      else
+      return returnValue;
+    }
+
+    [return: Fragment("ReturnFragmentType")]
+    public int DeclarationWithReturn()
+    {
+      int i = 3;
+      return i;
+    }
+
+    [return: Fragment ("DummyFragment")]
+    public string ValidReturnWithParameterAssignmentInsideIf ([Fragment ("DummyFragment")] string parameter)
+    {
+      string returnValue = "";
+      if (parameter == "Dummy")
       {
+        returnValue = parameter;
+      }
+      return returnValue;
+    }
+
+    [return: Fragment ("DummyFragment")]
+    public string ValidReturnWithParameterResetAndAssignmentInsideIf ([Fragment ("DummyFragment")] string parameter)
+    {
+      string returnValue = "";
+      if (parameter == "Dummy")
+      {
+        parameter = "safe";
         returnValue = parameter;
       }
       return returnValue;

@@ -53,5 +53,239 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Assig
       temp = SafeSource();
       RequiresSqlFragment (temp);
     }
+
+    [return: Fragment ("DummyFragment")]
+    public string ValidReturnWithIf ([Fragment ("DummyFragment")] string parameter)
+    {
+      string returnValue;
+      if (SafeSource() == "Dummy")
+      {
+        returnValue = "safe";
+      }
+      else
+      {
+        returnValue = parameter;
+      }
+      return returnValue;
+    }
+
+    [return: Fragment ("DummyFragment")]
+    public string InvalidReturnWithIf ([Fragment ("DummyFragment")] string parameter)
+    {
+      string returnValue;
+      if (SafeSource() == "Dummy")
+      {
+        returnValue = "safe";
+      }
+      else
+      {
+        returnValue = UnsafeSource();
+      }
+      return returnValue;
+    }
+
+    [return: Fragment ("DummyFragment")]
+    public string InvalidReturnWithIfFragmentTypeConsidered ([Fragment ("DummyFragment")] string parameter)
+    {
+      string returnValue = parameter;
+      if (SafeSource() == "Dummy")
+      {
+        DummyMethod("dummy");
+      }
+      else
+      {
+        returnValue = UnsafeSource();
+      }
+      return returnValue;
+    }
+
+    [return: Fragment ("DummyFragment")]
+    public string InvalidReturnWithTempVariable ([Fragment ("DummyFragment")] string parameter)
+    {
+      string returnValue = parameter;
+      if (SafeSource() == "Dummy")
+      {
+        DummyMethod("dummy");
+      }
+      else
+      {
+        string temp = UnsafeSource();
+        DummyMethod (temp);
+        returnValue = temp;
+      }
+      return returnValue;
+    }
+
+    [return: Fragment ("DummyFragment")]
+    public string InvalidReturnWithParameterReset ([Fragment ("DummyFragment")] string parameter)
+    {
+      string returnValue = parameter;
+      if (SafeSource() == "Dummy")
+      {
+        DummyMethod ("dummy");
+      }
+      else
+      {
+        parameter = UnsafeSource();
+        returnValue = parameter;
+      }
+      return returnValue;
+    }
+
+    [return: Fragment("DummyFragment")]
+    private string SafeDummyFragmentSource ()
+    {
+      return "safe";
+    }
+
+    [return: Fragment ("DummyFragment")]
+    public string ValidReturnWithParameterReset ([Fragment ("DummyFragment")] string parameter)
+    {
+      string returnValue = parameter;
+      if (SafeSource() == "Dummy")
+      {
+        DummyMethod ("dummy");
+      }
+      else
+      {
+        parameter = SafeDummyFragmentSource();
+        returnValue = parameter;
+      }
+      return returnValue;
+    }
+
+    [Fragment("DummyFragment")]
+    private string fragmentField = "";
+    
+    [return: Fragment ("DummyFragment")]
+    public string InvalidReturnWithFieldReset ([Fragment ("DummyFragment")] string parameter)
+    {
+      string returnValue = parameter;
+      if (SafeSource() == "Dummy")
+      {
+        DummyMethod ("dummy");
+      }
+      else
+      {
+        fragmentField = UnsafeSource();
+        returnValue = fragmentField;
+      }
+      return returnValue;
+    }
+
+    [return: Fragment ("DummyFragment")]
+    public string ValidReturnWithFieldReset ([Fragment ("DummyFragment")] string parameter)
+    {
+      string returnValue = parameter;
+      if (SafeSource() == "Dummy")
+      {
+        DummyMethod ("dummy");
+      }
+      else
+      {
+        fragmentField = SafeDummyFragmentSource();
+        returnValue = fragmentField;
+      }
+      return returnValue;
+    }
+
+    [return: Fragment ("DummyFragment")]
+    public string InvalidReturnWithField ([Fragment ("DummyFragment")] string parameter)
+    {
+      fragmentField = parameter;
+      if (SafeSource() == "Dummy")
+      {
+        DummyMethod("dummy");
+      }
+      else
+      {
+        string temp = UnsafeSource();
+        DummyMethod (temp);
+        fragmentField = temp;
+      }
+      return fragmentField;
+    }
+
+    [return: Fragment ("DummyFragment")]
+    public string ValidReturnWithField ([Fragment ("DummyFragment")] string parameter)
+    {
+      fragmentField = parameter;
+      if (SafeSource() == "Dummy")
+      {
+        DummyMethod("dummy");
+      }
+      else
+      {
+        string temp = SafeDummyFragmentSource();
+        DummyMethod (temp);
+        fragmentField = temp;
+      }
+      return fragmentField;
+    }
+
+    /// <summary>
+    /// because InjectionCop does not support analyzing while conditions 
+    /// this sample is declared invalid although an unsafe value never gets
+    /// assigned to fragmentField
+    /// </summary>
+    /// <param name="parameter"></param>
+    /// <returns></returns>
+    [return: Fragment ("DummyFragment")]
+    public string InvalidReturnWithFieldAndLoops ([Fragment ("DummyFragment")] string parameter)
+    {
+      fragmentField = parameter;
+      if (SafeSource() == "Dummy")
+      {
+        DummyMethod("dummy");
+      }
+      else
+      {
+        string temp = SafeSource();
+        DummyMethod (temp);
+        int i = 0;
+        while (i < 10)
+        {
+          while (i < 5)
+          {
+            DummyMethod (temp);
+            fragmentField = temp;
+            temp = SafeSource();
+            i++;
+          }
+          temp = UnsafeSource();
+          i++;
+        }
+      }
+      return fragmentField;
+    }
+
+    [return: Fragment ("DummyFragment")]
+    public string ValidReturnWithFieldAndLoops ([Fragment ("DummyFragment")] string parameter)
+    {
+      fragmentField = parameter;
+      if (SafeSource() == "Dummy")
+      {
+        DummyMethod("dummy");
+      }
+      else
+      {
+        string temp = SafeSource();
+        DummyMethod (temp);
+        int i = 0;
+        while (i < 10)
+        {
+          while (i < 5)
+          {
+            DummyMethod (temp);
+            fragmentField = temp;
+            temp = SafeSource();
+            i++;
+          }
+          temp = "safe";
+          i++;
+        }
+      }
+      return fragmentField;
+    }
   }
 }

@@ -53,10 +53,6 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.MethodGraphTests
       {
         returnValue = "safe";
       }
-      /*else
-      {
-        returnValue = parameter;
-      }*/
       return returnValue;
     }
   }

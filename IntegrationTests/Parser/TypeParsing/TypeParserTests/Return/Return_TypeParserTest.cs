@@ -61,16 +61,5 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Retur
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
-    
-    [Test]
-    public void Parse_ValidReturnWithIf_NoProblem ()
-    {
-      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
-      Method sample = TestHelper.GetSample<ReturnSample> ("ValidReturnWithIf", stringTypeNode);
-      _typeParser.Parse (sample);
-      ProblemCollection result = _typeParser.Problems;
-
-      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
-    }
   }
 }

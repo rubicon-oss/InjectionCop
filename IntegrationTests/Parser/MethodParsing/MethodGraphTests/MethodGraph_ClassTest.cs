@@ -14,6 +14,7 @@
 
 using System;
 using System.Linq;
+using InjectionCop.Parser;
 using InjectionCop.Parser.BlockParsing;
 using InjectionCop.Parser.MethodParsing;
 using InjectionCop.Utilities;
@@ -331,6 +332,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.MethodGraphTests
       }
     }
 
+    
     [Test]
     public void MethodGraph_DeclarationWithReturn_ReturnsCorrectPostConditions ()
     {
@@ -355,25 +357,19 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.MethodGraphTests
     {
       TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
       Method sampleMethod = TestHelper.GetSample<MethodGraph_ClassSample> ("ValidReturnWithIf", stringTypeNode);
-      Block preIfBlock = sampleMethod.Body.Statements[0] as Block;
-      Block ifBlock = sampleMethod.Body.Statements[1] as Block;
       Block preReturnBlock = sampleMethod.Body.Statements[2] as Block;
       if(preReturnBlock != null)
       {
         IMethodGraph methodGraph = BuildMethodGraph(sampleMethod);
-        BasicBlock preIfBasicBlock = methodGraph.GetBasicBlockById (preIfBlock.UniqueKey);
-        BasicBlock ifBasicBlock = methodGraph.GetBasicBlockById (ifBlock.UniqueKey);
         BasicBlock preReturnBasicBlock = methodGraph.GetBasicBlockById (preReturnBlock.UniqueKey);
         string postConditionFragmentType = preReturnBasicBlock.PostConditionSymbolTable.GetFragmentType("local$1");
 
-        // debuggen
-        Assert.That (postConditionFragmentType, Is.EqualTo("__Literal__"));
+        Assert.That (postConditionFragmentType, Is.EqualTo(SymbolTable.EMPTY_FRAGMENT));
       }
       else
       {
         Assert.Ignore ("Bad Sample");
-      }
-      
+      }   
     }
 
   }

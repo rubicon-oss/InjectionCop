@@ -14,6 +14,7 @@
 
 using System;
 using InjectionCop.Config;
+using InjectionCop.Parser;
 using InjectionCop.Parser.BlockParsing;
 using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
@@ -203,8 +204,8 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
     public void Parse_ValidReturnWithIf_ReturnsLocalVariableThatGetsReturned ()
     {
       TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
-      Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("ValidReturnWithIf", stringTypeNode);
-      Block sample = sampleMethod.Body.Statements[4] as Block;
+      Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("ValidReturnWithLiteralAssignmentInsideIf", stringTypeNode);
+      Block sample = sampleMethod.Body.Statements[3] as Block;
       BasicBlock returnedBlock = _blockParser.Parse (sample);
       string preConditionSymbol = returnedBlock.PreConditions[0].Symbol;
       
@@ -216,12 +217,119 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
     {
       _blockParser = new BlockParser (_blacklist, _problemPipeStub, "DummyFragment");
       TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
-      Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("ValidReturnWithIf", stringTypeNode);
-      Block sample = sampleMethod.Body.Statements[4] as Block;
+      Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("ValidReturnWithLiteralAssignmentInsideIf", stringTypeNode);
+      Block sample = sampleMethod.Body.Statements[3] as Block;
       BasicBlock returnedBlock = _blockParser.Parse (sample);
       string preConditionFragmentType = returnedBlock.PreConditions[0].FragmentType;
       
       Assert.That (preConditionFragmentType, Is.EqualTo ("DummyFragment"));
+    }
+
+    [Test]
+    public void MethodGraph_ValidReturnWithIfBlockWithLocalAssignment_ReturnsLocalAssignment ()
+    {
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("ValidReturnWithLiteralAssignmentInsideIf", stringTypeNode);
+      Block preReturnBlock = sampleMethod.Body.Statements[2] as Block;
+      BasicBlock preReturnBasicBlock = _blockParser.Parse (preReturnBlock);
+      
+      Assert.That (preReturnBasicBlock.BlockAssignments.Length, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void MethodGraph_ValidReturnWithIfBlockWithLocalAssignment_ReturnsCorrectLocalAssignment ()
+    {
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("ValidReturnWithLiteralAssignmentInsideIf", stringTypeNode);
+      Block preReturnBlock = sampleMethod.Body.Statements[2] as Block;
+      BasicBlock preReturnBasicBlock = _blockParser.Parse (preReturnBlock);
+      string source = preReturnBasicBlock.BlockAssignments[0].SourceSymbol;
+      string target = preReturnBasicBlock.BlockAssignments[0].TargetSymbol;
+
+      bool correctLocalAssignment = source == "local$0" && target == "local$1";
+      Assert.That (correctLocalAssignment, Is.True);
+    }
+
+    [Test]
+    public void MethodGraph_ValidReturnWithIfBlockWithoutLocalAssignment_ReturnsNoLocalAssignment ()
+    {
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("ValidReturnWithLiteralAssignmentInsideIf", stringTypeNode);
+      Block ifBlock = sampleMethod.Body.Statements[1] as Block;
+      BasicBlock ifBasicBlock = _blockParser.Parse (ifBlock);
+      
+      Assert.That (ifBasicBlock.BlockAssignments.Length, Is.EqualTo(0));
+    }
+
+    [Test]
+    public void MethodGraph_ValidReturnWithIfBlockWithoutLocalAssignment_ReturnsCorrectPostCondition ()
+    {
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("ValidReturnWithLiteralAssignmentInsideIf", stringTypeNode);
+      Block ifBlock = sampleMethod.Body.Statements[1] as Block;
+      BasicBlock ifBasicBlock = _blockParser.Parse (ifBlock);
+      string postConditionFragmentType = ifBasicBlock.PostConditionSymbolTable.GetFragmentType("local$0");
+
+      Assert.That (postConditionFragmentType, Is.EqualTo("__Literal__"));
+    }
+
+    [Test]
+    public void Parse_DeclarationWithReturn_ReturnsCorrectPostConditions ()
+    {
+      Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("DeclarationWithReturn");
+      Block initialBlock = sampleMethod.Body.Statements[0] as Block;
+      BasicBlock initialBasicBlock = _blockParser.Parse (initialBlock);
+      string local0FragmentType = initialBasicBlock.PostConditionSymbolTable.GetFragmentType ("local$0");
+      string local1FragmentType = initialBasicBlock.PostConditionSymbolTable.GetFragmentType ("local$1");
+      bool correctPostConditions = local0FragmentType == local1FragmentType && local0FragmentType == "__Literal__";
+
+      Assert.That (correctPostConditions, Is.True);
+    }
+
+    [Test]
+    public void Parse_ValidReturnWithParameterAssignmentInsideIf_ReturnsLocalAssignment ()
+    {
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("ValidReturnWithParameterAssignmentInsideIf", stringTypeNode);
+      Block ifBlock = sampleMethod.Body.Statements[1] as Block;
+      BasicBlock ifBasicBlock = _blockParser.Parse (ifBlock);
+      
+      Assert.That (ifBasicBlock.BlockAssignments.Length, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void Parse_ValidReturnWithParameterAssignmentInsideIf_ReturnsCorrectPostCondition ()
+    {
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("ValidReturnWithParameterAssignmentInsideIf", stringTypeNode);
+      Block ifBlock = sampleMethod.Body.Statements[1] as Block;
+      BasicBlock ifBasicBlock = _blockParser.Parse (ifBlock);
+      string postConditionFragmentType = ifBasicBlock.PostConditionSymbolTable.GetFragmentType("local$0");
+
+      Assert.That (postConditionFragmentType, Is.EqualTo(SymbolTable.EMPTY_FRAGMENT));
+    }
+
+      [Test]
+    public void Parse_ValidReturnWithParameterResetAndAssignmentInsideIf_ReturnsNoLocalAssignment ()
+    {
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("ValidReturnWithParameterResetAndAssignmentInsideIf", stringTypeNode);
+      Block ifBlock = sampleMethod.Body.Statements[1] as Block;
+      BasicBlock ifBasicBlock = _blockParser.Parse (ifBlock);
+      
+      Assert.That (ifBasicBlock.BlockAssignments.Length, Is.EqualTo(0));
+    }
+
+    [Test]
+    public void Parse_ValidReturnWithParameterResetAndAssignmentInsideIf_ReturnsCorrectPostCondition ()
+    {
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("ValidReturnWithParameterResetAndAssignmentInsideIf", stringTypeNode);
+      Block ifBlock = sampleMethod.Body.Statements[1] as Block;
+      BasicBlock ifBasicBlock = _blockParser.Parse (ifBlock);
+      string postConditionFragmentType = ifBasicBlock.PostConditionSymbolTable.GetFragmentType("local$0");
+
+      Assert.That (postConditionFragmentType, Is.EqualTo("__Literal__"));
     }
   }
 }

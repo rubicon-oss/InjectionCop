@@ -36,20 +36,5 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Retur
       int i = 3;
       return i;
     }
-
-    [return: Fragment ("DummyFragment")]
-    public string ValidReturnWithIf ([Fragment ("DummyFragment")] string parameter)
-    {
-      string returnValue = "";
-      if (SafeSource() == "Dummy")
-      {
-        returnValue = "safe";
-      }
-      else
-      {
-        returnValue = parameter;
-      }
-      return returnValue;
-    }
   }
 }
