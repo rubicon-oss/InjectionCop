@@ -50,7 +50,7 @@ namespace InjectionCop.Parser.MethodParsing
       if(!loopIterationsExceeded)
       {
         CheckPreCoditions (currentBlock.PreConditions, context);
-        ISymbolTable adjustedContext = UpdateContext (context, currentBlock.PostConditionSymbolTable);
+        ISymbolTable adjustedContext = UpdateContext (context, currentBlock.PostConditionSymbolTable, currentBlock.BlockAssignments);
         ParseSuccessors (currentBlock.SuccessorKeys, visits, methodGraph, adjustedContext);
       }
     }
@@ -78,14 +78,29 @@ namespace InjectionCop.Parser.MethodParsing
       }
     }
 
-    private ISymbolTable UpdateContext (ISymbolTable context, ISymbolTable postConditionSymbolTable)
+    private ISymbolTable UpdateContext (ISymbolTable context, ISymbolTable postConditionSymbolTable, BlockAssignment[] blockAssignments)
     {
       ISymbolTable adjustedContext = context.Copy();
+      MergePostConditions (adjustedContext, postConditionSymbolTable);
+      MergeBlockAssignments (context, adjustedContext, blockAssignments);
+      return adjustedContext;
+    }
+    
+    private void MergePostConditions (ISymbolTable adjustedContext, ISymbolTable postConditionSymbolTable)
+    {
       foreach (string symbol in postConditionSymbolTable.Symbols)
       {
         adjustedContext.MakeSafe (symbol, postConditionSymbolTable.GetFragmentType (symbol));
       }
-      return adjustedContext;
+    }
+
+    private void MergeBlockAssignments (ISymbolTable context, ISymbolTable adjustedContext, BlockAssignment[] blockAssignments)
+    {
+      foreach (var blockAssignment in blockAssignments)
+      {
+        string propagatedFragmentType = context.GetFragmentType (blockAssignment.SourceSymbol);
+        adjustedContext.MakeSafe (blockAssignment.TargetSymbol, propagatedFragmentType);
+      }
     }
 
     private void ParseSuccessors (int[] successorKeys, Dictionary<int, int> visits, IMethodGraph methodGraph, ISymbolTable adjustedContext)

@@ -29,9 +29,11 @@ namespace InjectionCop.Parser.BlockParsing
     private ISymbolTable _symbolTableParser;
     private List<PreCondition> _preConditions;
     private List<int> _successors;
+    private List<BlockAssignment> _blockAssignments;
     private readonly IBlacklistManager _blacklistManager;
     private readonly IProblemPipe _problemPipe;
     private readonly string _returnFragmentType;
+    private List<string> _assignmentTargetVariables;
 
     public BlockParser (IBlacklistManager blacklistManager, IProblemPipe problemPipe, string returnFragmentType)
     {
@@ -40,7 +42,9 @@ namespace InjectionCop.Parser.BlockParsing
       _symbolTableParser = new SymbolTable (blacklistManager);
       _preConditions = new List<PreCondition>();
       _successors = new List<int>();
+      _blockAssignments = new List<BlockAssignment>();
       _returnFragmentType = ArgumentUtility.CheckNotNullOrEmpty("returnFragmentType", returnFragmentType);
+      _assignmentTargetVariables = new List<string>();
     }
 
     public BasicBlock Parse (Block block)
@@ -48,7 +52,7 @@ namespace InjectionCop.Parser.BlockParsing
       ArgumentUtility.CheckNotNull ("block", block);
       Reset();
       Inspect (block);
-      BasicBlock basicBlock = new BasicBlock (block.UniqueKey, _preConditions.ToArray(), _symbolTableParser, _successors.ToArray());
+      BasicBlock basicBlock = new BasicBlock (block.UniqueKey, _preConditions.ToArray(), _symbolTableParser, _successors.ToArray(), _blockAssignments.ToArray());
       return basicBlock;
     }
 
@@ -58,7 +62,7 @@ namespace InjectionCop.Parser.BlockParsing
       Reset();
       _successors.Add (directSuccessorKey);
       Inspect (block);
-      BasicBlock basicBlock = new BasicBlock (block.UniqueKey, _preConditions.ToArray(), _symbolTableParser, _successors.ToArray());
+      BasicBlock basicBlock = new BasicBlock (block.UniqueKey, _preConditions.ToArray(), _symbolTableParser, _successors.ToArray(), _blockAssignments.ToArray());
       return basicBlock;
     }
 
@@ -67,76 +71,76 @@ namespace InjectionCop.Parser.BlockParsing
       _symbolTableParser = new SymbolTable (_blacklistManager);
       _preConditions = new List<PreCondition>();
       _successors = new List<int>();
+      _blockAssignments = new List<BlockAssignment>();
+      _assignmentTargetVariables = new List<string>();
     }
 
     private void Inspect (Block methodBodyBlock)
     {
-      foreach (Statement stmt in methodBodyBlock.Statements)
+      foreach (Statement statement in methodBodyBlock.Statements)
       {
-        switch (stmt.NodeType)
+        switch (statement.NodeType)
         {
           case NodeType.ExpressionStatement:
-            ExpressionStatement exprStmt = (ExpressionStatement) stmt;
-            Inspect (exprStmt.Expression);
+            ExpressionStatement expressionStatement = (ExpressionStatement) statement;
+            Inspect (expressionStatement.Expression);
             break;
 
           case NodeType.AssignmentStatement:
-            AssignmentStatement asgn = (AssignmentStatement) stmt;
-            string symbol = IntrospectionUtility.GetVariableName (asgn.Target);
-            _symbolTableParser.InferSafeness (symbol, asgn.Source);
-            InspectIfFieldAssignment (asgn.Target);
-            Inspect (asgn.Source);
+            AssignmentStatement assignmentStatement = (AssignmentStatement) statement;
+            AssignmentStatementHandler (assignmentStatement);
             break;
 
           case NodeType.Return:
-            ReturnNode returnNode = (ReturnNode) stmt;
-            if (returnNode.Expression != null)
-            {
-              Inspect (returnNode.Expression);
-              string returnSymbol = IntrospectionUtility.GetVariableName (returnNode.Expression);
-              ProblemMetadata problemMetadata = new ProblemMetadata (
-                  returnNode.UniqueKey, returnNode.SourceContext, _returnFragmentType, _symbolTableParser.GetFragmentType ("local$0"));
-              PreCondition returnBlockCondition = new PreCondition (returnSymbol, _returnFragmentType, problemMetadata);
-              _preConditions.Add (returnBlockCondition);
-            }
-            /*
-            if (_returnFragmentType != null)
-            {
-              string returnExpressionFragmentType = _symbolTableParser.InferFragmentType (returnNode.Expression);
-              if (_returnFragmentType != returnExpressionFragmentType)
-              {
-                ProblemMetadata problemMetadata = new ProblemMetadata (
-                    returnNode.Expression.UniqueKey,
-                    returnNode.SourceContext,
-                    _returnFragmentType,
-                    returnExpressionFragmentType);
-                _problemPipe.AddProblem (problemMetadata);
-              }
-            }*/
+            ReturnNode returnNode = (ReturnNode) statement;
+            ReturnStatementHandler (returnNode);
             break;
 
           case NodeType.Branch:
-            Branch branch = (Branch) stmt;
+            Branch branch = (Branch) statement;
             _successors.Add (branch.Target.UniqueKey);
             break;
 
           case NodeType.SwitchInstruction:
-            SwitchInstruction switchInstruction = (SwitchInstruction) stmt;
+            SwitchInstruction switchInstruction = (SwitchInstruction) statement;
             foreach (Block caseBlock in switchInstruction.Targets)
             {
               _successors.Add (caseBlock.UniqueKey);
             }
             break;
+          //default:
+            // exception werfen + logging
         }
       }
     }
 
-    private void InspectIfFieldAssignment (Expression targetExpression)
+    private void AssignmentStatementHandler (AssignmentStatement assignmentStatement)
+    {
+      string targetSymbol = IntrospectionUtility.GetVariableName (assignmentStatement.Target);
+      _assignmentTargetVariables.Add (targetSymbol);
+
+      string sourceSymbol = IntrospectionUtility.GetVariableName (assignmentStatement.Source);
+      bool variableNotAssignedInsideCurrentBlock = sourceSymbol != null && !_assignmentTargetVariables.Contains (sourceSymbol);
+      if (variableNotAssignedInsideCurrentBlock)
+      {
+        BlockAssignment blockAssignment = new BlockAssignment (sourceSymbol, targetSymbol);
+        _blockAssignments.Add (blockAssignment);
+      }
+      else
+      {
+        _symbolTableParser.InferSafeness (targetSymbol, assignmentStatement.Source);
+        VerifyAssignmentTargetFragmentType (assignmentStatement.Target);
+      }
+      Inspect (assignmentStatement.Source);
+    }
+    
+    private void VerifyAssignmentTargetFragmentType (Expression targetExpression)
     {
       if (IntrospectionUtility.IsField (targetExpression))
       {
-        string symbol = IntrospectionUtility.GetVariableName (targetExpression);
         Field target = IntrospectionUtility.GetField (targetExpression);
+        string symbol = target.Name.Name;
+
         if (FragmentUtility.ContainsFragment (target.Attributes))
         {
           string targetFragmentType = FragmentUtility.GetFragmentType (target.Attributes);
@@ -148,12 +152,25 @@ namespace InjectionCop.Parser.BlockParsing
                 targetExpression.SourceContext,
                 targetFragmentType,
                 givenFragmentType);
-            _problemPipe.AddProblem(problemMetadata);
+            _problemPipe.AddProblem (problemMetadata);
           }
         }
       }
     }
-    
+
+    private void ReturnStatementHandler (ReturnNode returnNode)
+    {
+      if (returnNode.Expression != null)
+      {
+        Inspect (returnNode.Expression);
+        string returnSymbol = IntrospectionUtility.GetVariableName (returnNode.Expression);
+        ProblemMetadata problemMetadata = new ProblemMetadata (
+            returnNode.UniqueKey, returnNode.SourceContext, _returnFragmentType, _symbolTableParser.GetFragmentType (returnSymbol));
+        PreCondition returnBlockCondition = new PreCondition (returnSymbol, _returnFragmentType, problemMetadata);
+        _preConditions.Add (returnBlockCondition);
+      }
+    }
+
     private void Inspect (Expression expression)
     {
       if (expression is MethodCall)

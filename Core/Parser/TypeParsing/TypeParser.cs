@@ -52,6 +52,7 @@ namespace InjectionCop.Parser.TypeParsing
     
     public void AddProblem (ProblemMetadata problemMetadata)
     {
+      ArgumentUtility.CheckNotNull ("problemMetadata", problemMetadata);
       Resolution resolution = GetResolution (problemMetadata.ExpectedFragment, problemMetadata.GivenFragment);
       Problem problem = new Problem (resolution, problemMetadata.SourceContext, CheckId);
       Problems.Add (problem);

@@ -55,6 +55,7 @@
     <Compile Include="Config\ConfigLoader.cs" />
     <Compile Include="Config\IBlacklistManager.cs" />
     <Compile Include="Config\IDbCommandBlacklistManagerStub.cs" />
+    <Compile Include="Parser\BlockParsing\BlockAssignment.cs" />
     <Compile Include="Parser\ISymbolTable.cs" />
     <Compile Include="Parser\MethodParsing\IMethodGraph.cs" />
     <Compile Include="Parser\MethodParsing\IMethodGraphBuilder.cs" />
