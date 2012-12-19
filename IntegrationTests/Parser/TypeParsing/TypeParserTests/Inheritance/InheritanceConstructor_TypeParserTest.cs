@@ -13,18 +13,20 @@
 // limitations under the License.
 
 using System;
+using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
 using NUnit.Framework;
 
-namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Return
+namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Inheritance
 {
   [TestFixture]
-  public class Return_TypeParserTest : TypeParserTestBase
+  public class InheritanceConstructor_TypeParserTest : TypeParserTestBase
   {
     [Test]
-    public void Parse_SafeSource_NoProblem()
+    public void Parse_ConstructorChainingWithBaseClassCorrectFragment_NoProblem ()
     {
-      Method sample = TestHelper.GetSample<ParserSampleBase>("SafeSource");
+      TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<InheritanceSampleConstructor>();
+      Method sample = IntrospectionUtility.MethodFactory (sampleTypeNode, ".ctor");
       _typeParser.Parse (sample);
       ProblemCollection result = _typeParser.Problems;
 
@@ -32,9 +34,11 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Retur
     }
 
     [Test]
-    public void Parse_UnsafeSource_ReturnsProblem()
+    public void Parse_ConstructorChainingWithBaseClassIncorrectFragment_ReturnsProblem ()
     {
-      Method sample = TestHelper.GetSample<ReturnSample>("ReturnFragmentMismatch");
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<InheritanceSampleConstructor>();
+      Method sample = IntrospectionUtility.MethodFactory (sampleTypeNode, ".ctor", stringTypeNode);
       _typeParser.Parse (sample);
       ProblemCollection result = _typeParser.Problems;
 
@@ -42,23 +46,16 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Retur
     }
 
     [Test]
-    public void Parse_NoReturnAnnotation_NoProblem()
+    public void Parse_ConstructorChainingWithBaseClassConstructorWithoutFragment_NoProblem ()
     {
-      Method sample = TestHelper.GetSample<ReturnSample>("NoReturnAnnotation");
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<InheritanceSampleConstructor>();
+      Method sample = IntrospectionUtility.MethodFactory (sampleTypeNode, ".ctor", stringTypeNode, stringTypeNode);
       _typeParser.Parse (sample);
       ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
 
-    [Test]
-    public void Parse_DeclarationWithReturn_NoProblem ()
-    {
-      Method sample = TestHelper.GetSample<ReturnSample> ("DeclarationWithReturn");
-      _typeParser.Parse (sample);
-      ProblemCollection result = _typeParser.Problems;
-
-      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
-    }
   }
 }

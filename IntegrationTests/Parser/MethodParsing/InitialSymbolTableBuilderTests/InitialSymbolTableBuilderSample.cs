@@ -20,16 +20,27 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.InitialSymbolTableB
   class InitialSymbolTableBuilderSample
   {
     [Fragment ("FieldType")]
-    private int _fragmentField = 0;
+    protected int _fragmentField = 0;
 
     [SqlFragment]
-    private string _sqlFragmentField = "dummy";
-
-    private readonly object _nonFragmentField = new object();
+    protected string _sqlFragmentField = "dummy";
+    
+    protected readonly object _nonFragmentField = new object();
 
     public string ParameterizedMethod (float floatParameter, object objectParameter)
     {
       return objectParameter.ToString() + floatParameter + _fragmentField + _nonFragmentField + _sqlFragmentField;
     }
+  }
+
+  internal class ExtendedInitialSymbolTableBuilderSample : InitialSymbolTableBuilderSample
+  {
+    new protected int _fragmentField;
+  }
+
+  internal class ExtendedExtendedInitialSymbolTableBuilderSample : ExtendedInitialSymbolTableBuilderSample
+  {
+    [Fragment("NewFieldType")]
+    protected new int _fragmentField;
   }
 }

@@ -25,7 +25,7 @@ namespace InjectionCop.Parser
 {
   public class SymbolTable : ISymbolTable
   {
-    private const string c_literal = "__Literal__";
+    public static readonly string LITERAL = "__Literal__";
     public static readonly string EMPTY_FRAGMENT = "__EmptyFragment__";
 
     private readonly IBlacklistManager _blacklistManager;
@@ -53,7 +53,7 @@ namespace InjectionCop.Parser
       if (_safenessMap.ContainsKey (symbolName))
       {
         isFragment = _safenessMap[symbolName] == fragmentType;
-        isLiteral = _safenessMap[symbolName] == c_literal;
+        isLiteral = _safenessMap[symbolName] == LITERAL;
       }
       return isFragment || isLiteral;
     }
@@ -65,7 +65,7 @@ namespace InjectionCop.Parser
       string fragmentType = EMPTY_FRAGMENT;
       if (expression is Literal)
       {
-        fragmentType = c_literal;
+        fragmentType = LITERAL;
       }
       else if (expression is Local)
       {
@@ -137,7 +137,7 @@ namespace InjectionCop.Parser
         string operandFragmentType = InferFragmentType (operand);
         string parameterFragmentType = parameterFragmentTypes[i];
         
-        if (operandFragmentType != c_literal
+        if (operandFragmentType != LITERAL
             && parameterFragmentType != EMPTY_FRAGMENT
             && operandFragmentType != parameterFragmentType)
         {

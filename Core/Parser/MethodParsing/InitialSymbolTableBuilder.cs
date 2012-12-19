@@ -58,26 +58,38 @@ namespace InjectionCop.Parser.MethodParsing
 
     private void AnalyzeFields ()
     {
-      foreach (var member in _method.DeclaringType.Members)
+      AnalyzeFields (_method.DeclaringType);
+    }
+
+    private void AnalyzeFields (TypeNode type)
+    {
+      if (type != null)
       {
-        if (member is Field)
+        foreach (var member in type.Members)
         {
-          var field = (Field) member;
-          SetSymbolFragmentType (field.Name.Name, field.Attributes);
+          if (member is Field)
+          {
+            var field = (Field) member;
+            SetSymbolFragmentType (field.Name.Name, field.Attributes);
+          }
         }
+        AnalyzeFields (type.BaseType);
       }
     }
 
     private void SetSymbolFragmentType (string name, AttributeNodeCollection attributes)
     {
-      if (FragmentUtility.ContainsFragment (attributes))
+      if (!_result.Contains (name))
       {
-        string fragmentType = FragmentUtility.GetFragmentType (attributes);
-        _result.MakeSafe (name, fragmentType);
-      }
-      else
-      {
-        _result.MakeUnsafe (name);
+        if (FragmentUtility.ContainsFragment (attributes))
+        {
+          string fragmentType = FragmentUtility.GetFragmentType (attributes);
+          _result.MakeSafe (name, fragmentType);
+        }
+        else
+        {
+          _result.MakeUnsafe (name);
+        }
       }
     }
   }

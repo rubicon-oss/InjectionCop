@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using InjectionCop.Fragment;
 
 namespace InjectionCop.IntegrationTests.Utilities
 {
@@ -46,7 +45,8 @@ namespace InjectionCop.IntegrationTests.Utilities
 
     public string get_NonExistingProperty ()
     {
-      return "dummy";
+      NestedClass nested = new NestedClass();
+      return "dummy" + nested;
     }
 
     public string get_NonExistingProperty (string parameter)
@@ -55,6 +55,10 @@ namespace InjectionCop.IntegrationTests.Utilities
     }
 
     public void set_NonExistingProperty ()
+    {
+    }
+
+    private class NestedClass
     {
     }
   }

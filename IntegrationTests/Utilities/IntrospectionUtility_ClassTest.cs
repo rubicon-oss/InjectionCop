@@ -228,5 +228,21 @@ namespace InjectionCop.IntegrationTests.Utilities
 
       Assert.That (isPropertyGetter, Is.False);
     }
+
+    [Test]
+    public void GetNestedType_ExistingNestedType_ReturnsNestedType ()
+    {
+      TypeNode parent = IntrospectionUtility.TypeNodeFactory<IntrospectionUtility_ClassSample>();
+      TypeNode nestedType = IntrospectionUtility.GetNestedType (parent, "NestedClass");
+      Assert.That (nestedType, Is.Not.Null);
+    }
+
+    [Test]
+    public void GetNestedType_NonExistingNestedType_ReturnsNestedType ()
+    {
+      TypeNode parent = IntrospectionUtility.TypeNodeFactory<IntrospectionUtility_ClassSample>();
+      TypeNode nestedType = IntrospectionUtility.GetNestedType (parent, "DoesNotExist");
+      Assert.That (nestedType, Is.Null);
+    }
   }
 }

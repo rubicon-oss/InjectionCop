@@ -41,7 +41,7 @@ namespace InjectionCop.IntegrationTests.Utilities
     [ExpectedException(typeof(ArgumentNullException))]
     public void MethodFactory_TypeNull_ReturnsException ()
     {
-      IntrospectionUtility.MethodFactory (null, "methodname");
+      IntrospectionUtility.MethodFactory ((Type)null, "methodname");
     }
 
     [Test]

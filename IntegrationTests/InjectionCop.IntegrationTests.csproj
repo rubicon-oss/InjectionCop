@@ -39,6 +39,9 @@
     <Reference Include="FxCopSdk">
       <HintPath>..\..\..\..\Program Files (x86)\Microsoft Visual Studio 11.0\Team Tools\Static Analysis Tools\FxCop\FxCopSdk.dll</HintPath>
     </Reference>
+    <Reference Include="JetBrains.Annotations">
+      <HintPath>..\..\..\..\Program Files (x86)\JetBrains\ReSharper\v7.1\Bin\JetBrains.Annotations.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Cci">
       <HintPath>..\..\..\..\Program Files (x86)\Microsoft Visual Studio 11.0\Team Tools\Static Analysis Tools\FxCop\Microsoft.Cci.dll</HintPath>
     </Reference>
@@ -83,6 +86,14 @@
     <Compile Include="Parser\TypeParsing\TypeParserTests\Attribute\Attribute_TypeParserTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\BlacklistManagerIntegration\BlacklistManagerIntegration_TypeParserTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\BlackMethod\BlackMethodSample.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\InheritanceSampleBase.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\InheritanceSampleConstructor.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\InheritanceSampleField.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\InheritanceConstructor_TypeParserTest.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\InheritanceField_TypeParserTest.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\InheritanceSampleMethod.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\InheritanceSampleProperty.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\InheritanceMethod_TypeParserTest.cs" />
     <Compile Include="Utilities\FragmentUtilitySample.cs" />
     <Compile Include="Utilities\FragmentUtilityTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Concatenation\ConcatenationSample.cs" />

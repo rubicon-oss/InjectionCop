@@ -102,6 +102,16 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Field
     }
 
     [Test]
+    public void Parse_SafeFieldAssignmentWithLiteral_NoProblem ()
+    {
+      Method sample = TestHelper.GetSample<FieldSample> ("SafeFieldAssignmentWithLiteral");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
+
+    [Test]
     public void Parse_WrongFragmentTypeFieldAssignment_ReturnsProblem ()
     {
       Method sample = TestHelper.GetSample<FieldSample> ("WrongFragmentTypeFieldAssignment");

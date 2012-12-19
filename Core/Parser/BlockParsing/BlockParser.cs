@@ -145,7 +145,7 @@ namespace InjectionCop.Parser.BlockParsing
         {
           string targetFragmentType = FragmentUtility.GetFragmentType (target.Attributes);
           string givenFragmentType = _symbolTableParser.GetFragmentType (symbol);
-          if (targetFragmentType != givenFragmentType)
+          if (targetFragmentType != givenFragmentType && givenFragmentType != SymbolTable.LITERAL)
           {
             ProblemMetadata problemMetadata = new ProblemMetadata (
                 targetExpression.UniqueKey,

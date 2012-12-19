@@ -41,8 +41,8 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.InitialSymbolTableB
       Method sampleMethod = TestHelper.GetSample<InitialSymbolTableBuilderSample> ("ParameterizedMethod", floatType, objectType);
       InitialSymbolTableBuilder initialSymbolTableBuilder = new InitialSymbolTableBuilder (sampleMethod, _blacklistManager);
       ISymbolTable resultSymbolTable = initialSymbolTableBuilder.GetResult();
-      bool fieldIsCorrectFragment = resultSymbolTable.IsFragment("_fragmentField", "FieldType");
-      Assert.That (fieldIsCorrectFragment, Is.True);
+      
+      Assert.That (resultSymbolTable.GetFragmentType ("_fragmentField"), Is.EqualTo ("FieldType"));
     }
 
     [Test]
@@ -53,8 +53,8 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.InitialSymbolTableB
       Method sampleMethod = TestHelper.GetSample<InitialSymbolTableBuilderSample> ("ParameterizedMethod", floatType, objectType);
       InitialSymbolTableBuilder initialSymbolTableBuilder = new InitialSymbolTableBuilder (sampleMethod, _blacklistManager);
       ISymbolTable resultSymbolTable = initialSymbolTableBuilder.GetResult();
-      bool fieldIsCorrectFragment = resultSymbolTable.IsFragment("_nonFragmentField", SymbolTable.EMPTY_FRAGMENT);
-      Assert.That (fieldIsCorrectFragment, Is.True);
+      
+      Assert.That (resultSymbolTable.GetFragmentType ("_nonFragmentField"), Is.EqualTo (SymbolTable.EMPTY_FRAGMENT));
     }
 
     [Test]
@@ -65,8 +65,52 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.InitialSymbolTableB
       Method sampleMethod = TestHelper.GetSample<InitialSymbolTableBuilderSample> ("ParameterizedMethod", floatType, objectType);
       InitialSymbolTableBuilder initialSymbolTableBuilder = new InitialSymbolTableBuilder (sampleMethod, _blacklistManager);
       ISymbolTable resultSymbolTable = initialSymbolTableBuilder.GetResult();
-      bool fieldIsCorrectFragment = resultSymbolTable.IsFragment("_sqlFragmentField", "SqlFragment");
+      
+      Assert.That (resultSymbolTable.GetFragmentType ("_sqlFragmentField"), Is.EqualTo ("SqlFragment"));
+    }
+
+    [Test]
+    public void GetResult_ConstructorFromExtendedClass_ReturnsSymbolTableContainingSqlFragmentFieldFromBaseClass ()
+    {
+      TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<ExtendedInitialSymbolTableBuilderSample>();
+      Method otherSample = IntrospectionUtility.MethodFactory (sampleTypeNode, ".ctor");
+      InitialSymbolTableBuilder initialSymbolTableBuilder = new InitialSymbolTableBuilder (otherSample, _blacklistManager);
+      ISymbolTable resultSymbolTable = initialSymbolTableBuilder.GetResult();
+
+      Assert.That (resultSymbolTable.GetFragmentType ("_sqlFragmentField"), Is.EqualTo ("SqlFragment"));
+    }
+
+    [Test]
+    public void GetResult_ConstructorFromExtendedExtendedClass_ReturnsSymbolTableContainingSqlFragmentFieldFromInheritanceRoot ()
+    {
+      TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<ExtendedExtendedInitialSymbolTableBuilderSample>();
+      Method otherSample = IntrospectionUtility.MethodFactory (sampleTypeNode, ".ctor");
+      InitialSymbolTableBuilder initialSymbolTableBuilder = new InitialSymbolTableBuilder (otherSample, _blacklistManager);
+      ISymbolTable resultSymbolTable = initialSymbolTableBuilder.GetResult();
+      
+      Assert.That (resultSymbolTable.GetFragmentType ("_sqlFragmentField"), Is.EqualTo ("SqlFragment"));
+    }
+
+    [Test]
+    public void GetResult_ConstructorFromExtendedClass_ReturnsSymbolTableContainingResetFragmentField ()
+    {
+      TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<ExtendedInitialSymbolTableBuilderSample>();
+      Method otherSample = IntrospectionUtility.MethodFactory (sampleTypeNode, ".ctor");
+      InitialSymbolTableBuilder initialSymbolTableBuilder = new InitialSymbolTableBuilder (otherSample, _blacklistManager);
+      ISymbolTable resultSymbolTable = initialSymbolTableBuilder.GetResult();
+      bool fieldIsCorrectFragment = resultSymbolTable.IsFragment("_fragmentField", SymbolTable.EMPTY_FRAGMENT);
       Assert.That (fieldIsCorrectFragment, Is.True);
+    }
+
+    [Test]
+    public void GetResult_ConstructorFromExtendedExtendedClass_ReturnsSymbolTableContainingNewFragmentField ()
+    {
+      TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<ExtendedExtendedInitialSymbolTableBuilderSample>();
+      Method otherSample = IntrospectionUtility.MethodFactory (sampleTypeNode, ".ctor");
+      InitialSymbolTableBuilder initialSymbolTableBuilder = new InitialSymbolTableBuilder (otherSample, _blacklistManager);
+      ISymbolTable resultSymbolTable = initialSymbolTableBuilder.GetResult();
+      
+      Assert.That (resultSymbolTable.GetFragmentType("_fragmentField"), Is.EqualTo("NewFieldType"));
     }
   }
 }

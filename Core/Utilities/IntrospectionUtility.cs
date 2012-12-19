@@ -137,10 +137,16 @@ namespace InjectionCop.Utilities
 
     public static Method MethodFactory (Type targetType, string methodName, params TypeNode[] methodParameters)
     {
+      TypeNode targetTypeNode = TypeNodeFactory(targetType);
+      return MethodFactory (targetTypeNode, methodName, methodParameters);
+    }
+
+    public static Method MethodFactory (TypeNode targetTypeNode, string methodName, params TypeNode[] methodParameters)
+    {
       ArgumentUtility.CheckNotNull ("methodName", methodName);
       ArgumentUtility.CheckNotNull ("methodParameters", methodParameters);
+      ArgumentUtility.CheckNotNull ("targetTypeNode", targetTypeNode);
 
-      TypeNode targetTypeNode = TypeNodeFactory(targetType);
       Identifier methodIdentifier = Identifier.For (methodName);
       Method targetMethod = targetTypeNode.GetMethod (methodIdentifier, methodParameters);
       return targetMethod;
@@ -187,6 +193,22 @@ namespace InjectionCop.Utilities
         isPropertySetter = true;
       }
       return isPropertySetter;
+    }
+
+    public static TypeNode GetNestedType (TypeNode parent, string nestedTypeName)
+    {
+      ArgumentUtility.CheckNotNull ("parent", parent);
+      ArgumentUtility.CheckNotNullOrEmpty ("nestedTypeName", nestedTypeName);
+
+      TypeNode returnType = null;
+      foreach (var nestedType in parent.NestedTypes)
+      {
+        if (nestedType.Name.Name == nestedTypeName)
+        {
+          returnType = nestedType;
+        }
+      }
+      return returnType;
     }
   }
 }
