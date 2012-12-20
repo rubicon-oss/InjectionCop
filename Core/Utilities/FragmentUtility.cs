@@ -42,9 +42,9 @@ namespace InjectionCop.Utilities
 
     public static string GetFragmentType (AttributeNodeCollection attributes)
     {
-      ArgumentUtility.CheckNotNull ("attributes", attributes);
+      //ArgumentUtility.CheckNotNull ("attributes", attributes);
       string fragmentType = SymbolTable.EMPTY_FRAGMENT;
-      if (ContainsFragment (attributes))
+      if (attributes != null && ContainsFragment (attributes))
       {
         string fragmentFullName = typeof (FragmentAttribute).FullName;
 

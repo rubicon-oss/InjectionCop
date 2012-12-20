@@ -83,7 +83,8 @@ namespace InjectionCop.Parser
         if (memberBinding.BoundMember is Field)
         {
           Field field = (Field) memberBinding.BoundMember;
-          fragmentType = Lookup(field.Name.Name);
+          fragmentType = FragmentUtility.GetFragmentType (field.Attributes);
+          //fragmentType = Lookup(field.Name.Name);
         }
       }
       else if (expression is MethodCall)

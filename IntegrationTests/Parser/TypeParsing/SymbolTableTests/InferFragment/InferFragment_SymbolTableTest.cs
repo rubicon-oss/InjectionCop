@@ -261,21 +261,21 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.SymbolTableTests.Infe
     }
 
     [Test]
-    public void InferFragmentType_AssignmentWithFragmentField_ReturnsEmptyFragmentType ([Values("AnyType1", "AnyType2")] string symbolTableType)
+    public void InferFragmentType_AssignmentWithFragmentField_ReturnsEmptyFragmentType (/*[Values("AnyType1", "AnyType2")] string symbolTableType*/)
     {
-      _symbolTable.MakeSafe ("_field", symbolTableType);
-      Method sample = TestHelper.GetSample<InferFragmentSample>("AssignmentWithField");
+      //_symbolTable.MakeSafe ("_field", symbolTableType);
+      Method sample = TestHelper.GetSample<InferFragmentSample>("AssignmentWithFragmentField");
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[1];
       Expression sampleExpression = assignment.Source;
       string fragmentType = _symbolTable.InferFragmentType(sampleExpression);
-      Assert.That(fragmentType, Is.EqualTo(symbolTableType));
+      Assert.That(fragmentType, Is.EqualTo("SampleFragment"));
     }
 
     [Test]
     public void InferFragmentType_AssignmentWithNonFragmentField_ReturnsEmptyFragmentType ()
     {
-      Method sample = TestHelper.GetSample<InferFragmentSample>("AssignmentWithField");
+      Method sample = TestHelper.GetSample<InferFragmentSample>("AssignmentWithNonFragmentField");
       Block assignmentBlock = (Block)sample.Body.Statements[0];
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[1];
       Expression sampleExpression = assignment.Source;

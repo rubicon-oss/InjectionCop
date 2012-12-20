@@ -199,16 +199,5 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Inher
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
-    
-    [Test]
-    public void Parse_UnsafeAssignmentOnBaseField_NoProblem ()
-    {
-      TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<InheritanceSampleProperty>();
-      Method sample = IntrospectionUtility.MethodFactory (sampleTypeNode, "UnsafeAssignmentOnBaseField");
-      _typeParser.Parse (sample);
-      ProblemCollection result = _typeParser.Problems;
-
-      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
-    }
   }
 }

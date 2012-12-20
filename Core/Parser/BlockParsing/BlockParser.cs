@@ -120,8 +120,11 @@ namespace InjectionCop.Parser.BlockParsing
       _assignmentTargetVariables.Add (targetSymbol);
 
       string sourceSymbol = IntrospectionUtility.GetVariableName (assignmentStatement.Source);
-      bool variableNotAssignedInsideCurrentBlock = sourceSymbol != null && !_assignmentTargetVariables.Contains (sourceSymbol);
-      if (variableNotAssignedInsideCurrentBlock)
+      bool methodVariableNotAssignedInsideCurrentBlock =
+          sourceSymbol != null
+          && !_assignmentTargetVariables.Contains (sourceSymbol)
+          && !IntrospectionUtility.IsField (assignmentStatement.Source);
+      if (methodVariableNotAssignedInsideCurrentBlock)
       {
         BlockAssignment blockAssignment = new BlockAssignment (sourceSymbol, targetSymbol);
         _blockAssignments.Add (blockAssignment);

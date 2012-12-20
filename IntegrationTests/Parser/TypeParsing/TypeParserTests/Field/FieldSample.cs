@@ -84,6 +84,11 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Field
       _safeField = "safe";
     }
 
+    public void UnsafeFieldAssignmentWithField ()
+    {
+      _safeField = _unsafeField;
+    }
+
     public void WrongFragmentTypeFieldAssignment ()
     {
       _safeField = ReturnsHtmlFragment();

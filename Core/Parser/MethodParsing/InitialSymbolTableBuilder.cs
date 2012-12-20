@@ -44,7 +44,7 @@ namespace InjectionCop.Parser.MethodParsing
       {
         _result = new SymbolTable (_blacklistManager);
         AnalyzeParameters();
-        AnalyzeFields();
+        //AnalyzeFields();
       }
     }
 

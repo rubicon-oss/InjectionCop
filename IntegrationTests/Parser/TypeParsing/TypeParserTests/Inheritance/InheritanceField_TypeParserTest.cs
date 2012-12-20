@@ -132,5 +132,38 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Inher
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
+
+    [Test]
+    public void Parse_UnsafeAssignmentOnBaseField_ReturnsProblem ()
+    {
+      TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<InheritanceSampleField>();
+      Method sample = IntrospectionUtility.MethodFactory (sampleTypeNode, "UnsafeAssignmentOnBaseField");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
+    
+    [Test]
+    public void Parse_SafeAssignmentUsingBaseField_NoProblem ()
+    {
+      TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<InheritanceSampleField>();
+      Method sample = IntrospectionUtility.MethodFactory (sampleTypeNode, "SafeAssignmentUsingBaseField");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
+    
+    [Test]
+    public void Parse_UnsafeAssignmentUsingBaseField_ReturnsProblem ()
+    {
+      TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<InheritanceSampleField>();
+      Method sample = IntrospectionUtility.MethodFactory (sampleTypeNode, "UnsafeAssignmentUsingBaseField");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
   }
 }

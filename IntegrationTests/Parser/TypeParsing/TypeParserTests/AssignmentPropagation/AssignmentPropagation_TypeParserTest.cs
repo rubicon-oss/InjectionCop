@@ -208,7 +208,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Assig
       _typeParser.Parse (sample);
       ProblemCollection result = _typeParser.Problems;
 
-      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
   }
 }

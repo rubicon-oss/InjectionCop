@@ -34,6 +34,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.InitialSymbolTableB
     }
 
     [Test]
+    [Ignore]
     public void GetResult_ParameterizedMethod_ReturnsSymbolTableContainingFragmentField ()
     {
       TypeNode floatType = IntrospectionUtility.TypeNodeFactory<float>();
@@ -46,6 +47,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.InitialSymbolTableB
     }
 
     [Test]
+    [Ignore]
     public void GetResult_ParameterizedMethod_ReturnsSymbolTableContainingNonFragmentField ()
     {
       TypeNode floatType = IntrospectionUtility.TypeNodeFactory<float>();
@@ -58,6 +60,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.InitialSymbolTableB
     }
 
     [Test]
+    [Ignore]
     public void GetResult_ParameterizedMethod_ReturnsSymbolTableContainingSqlFragmentField ()
     {
       TypeNode floatType = IntrospectionUtility.TypeNodeFactory<float>();
@@ -70,6 +73,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.InitialSymbolTableB
     }
 
     [Test]
+    [Ignore]
     public void GetResult_ConstructorFromExtendedClass_ReturnsSymbolTableContainingSqlFragmentFieldFromBaseClass ()
     {
       TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<ExtendedInitialSymbolTableBuilderSample>();
@@ -81,6 +85,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.InitialSymbolTableB
     }
 
     [Test]
+    [Ignore]
     public void GetResult_ConstructorFromExtendedExtendedClass_ReturnsSymbolTableContainingSqlFragmentFieldFromInheritanceRoot ()
     {
       TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<ExtendedExtendedInitialSymbolTableBuilderSample>();
@@ -92,6 +97,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.InitialSymbolTableB
     }
 
     [Test]
+    [Ignore]
     public void GetResult_ConstructorFromExtendedClass_ReturnsSymbolTableContainingResetFragmentField ()
     {
       TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<ExtendedInitialSymbolTableBuilderSample>();
@@ -103,6 +109,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.InitialSymbolTableB
     }
 
     [Test]
+    [Ignore]
     public void GetResult_ConstructorFromExtendedExtendedClass_ReturnsSymbolTableContainingNewFragmentField ()
     {
       TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<ExtendedExtendedInitialSymbolTableBuilderSample>();
