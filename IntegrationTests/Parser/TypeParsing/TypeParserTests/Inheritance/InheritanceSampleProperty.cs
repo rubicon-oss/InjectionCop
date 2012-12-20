@@ -17,7 +17,7 @@ using InjectionCop.Fragment;
 
 namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Inheritance
 {
-  class InheritanceSampleProperty : InheritanceSampleBase
+  internal class InheritanceSampleProperty : InheritanceSampleBase
   {
     public InheritanceSampleProperty ()
         : base ("safe", "safe")
@@ -25,59 +25,95 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Inher
     }
 
     [Fragment ("InheritanceFragment")]
-    public new string InitialNonFragmentField
+    public new string InitialNonFragmentProperty { get; set; }
+
+    public new string InitialFragmentProperty { get; set; }
+
+    [Fragment ("InheritanceFragment")]
+    public override string VirtualProperty { get; set; }
+
+    protected void UnsafeAssignmentOnInheritedProperty ()
     {
-      get { return _initialNonFragmentField; }
-      set { _initialNonFragmentField = value; }
+      FragmentProperty = UnsafeInheritanceFragmentSource();
     }
 
-    /*
-    protected new string _initialFragmentField;
+    protected void SafeAssignmentOnInheritedPropertyWithLiteral ()
+    {
+      FragmentProperty = "safe";
+    }
+
+    protected void SafeAssignmentOnInheritedProperty ()
+    {
+      FragmentProperty = SafeInheritanceFragmentSource();
+    }
+
+    protected void SafeAssignmentOnPropertyHidingParent ()
+    {
+      InitialNonFragmentProperty = SafeInheritanceFragmentSource();
+    }
+
+    protected void UnsafeAssignmentOnPropertyHidingParent ()
+    {
+      InitialFragmentProperty = UnsafeInheritanceFragmentSource();
+    }
+
+    protected void SafeCallWithInheritedProperty ()
+    {
+      RequiresInheritanceFragment (FragmentProperty);
+    }
+
+    protected void UnsafeCallWithInheritedProperty ()
+    {
+      RequiresInheritanceFragment (NonFragmentProperty);
+    }
+
+    protected void SafeCallWithPropertyHidingParent ()
+    {
+      RequiresInheritanceFragment (InitialNonFragmentProperty);
+    }
     
-
-    protected void UnsafeAssignmentOnInheritedField ()
+    protected void UnsafeCallWithPropertyHidingParent ()
     {
-      _fragmentField = UnsafeInheritanceFragmentSource();
+      RequiresInheritanceFragment (InitialFragmentProperty);
     }
 
-    protected void SafeAssignmentOnInheritedFieldWithLiteral ()
+    public void SafeStaticBindingOnNewProperty ()
     {
-      _fragmentField = "safe";
+      InheritanceSampleBase sample = new InheritanceSampleProperty();
+      sample.FragmentProperty = SafeInheritanceFragmentSource();
     }
 
-    protected void SafeAssignmentOnInheritedField ()
+    public void UnsafeStaticBindingOnNewProperty ()
     {
-      _fragmentField = SafeInheritanceFragmentSource();
+      InheritanceSampleBase sample = new InheritanceSampleProperty();
+      sample.FragmentProperty = UnsafeInheritanceFragmentSource();
+    }
+    
+    public void SafeSetOnOverriddenProperty()
+    {
+      VirtualProperty = SafeInheritanceFragmentSource();
+    }
+    
+    public void AnotherSafeSetOfOverriddenProperty()
+    {
+      VirtualProperty = "safe";
     }
 
-    protected void SafeAssignmentOnFieldSetByHidingParent ()
+    public void UnsafeSetOnOverriddenProperty()
     {
-      _initialNonFragmentField = SafeInheritanceFragmentSource();
+      VirtualProperty = UnsafeInheritanceFragmentSource();
+    }
+    
+    public void SafeDynamicBindingOnProperty ()
+    {
+      InheritanceSampleBase sample = new InheritanceSampleProperty();
+      sample.VirtualProperty = SafeInheritanceFragmentSource();
     }
 
-    protected void UnsafeAssignmentOnFieldResetByHidingParent ()
+    public void UnsafeDynamicBindingOnProperty ()
     {
-      _initialFragmentField = UnsafeInheritanceFragmentSource();
+      InheritanceSampleBase sample = new InheritanceSampleProperty();
+      sample.VirtualProperty = UnsafeInheritanceFragmentSource();
     }
-
-    protected void SafeCallWithInheritedField ()
-    {
-      RequiresInheritanceFragment (_fragmentField);
-    }
-
-    protected void UnsafeCallWithInheritedField ()
-    {
-      RequiresInheritanceFragment (_nonFragmentField);
-    }
-
-    protected void SafeCallWithFieldSetByHidingParentField ()
-    {
-      RequiresInheritanceFragment (_initialNonFragmentField);
-    }
-
-    protected void UnsafeCallWithFieldSetByHidingParentField ()
-    {
-      RequiresInheritanceFragment (_initialFragmentField);
-    }*/
   }
 }

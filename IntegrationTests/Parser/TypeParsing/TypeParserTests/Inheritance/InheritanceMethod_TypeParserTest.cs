@@ -46,6 +46,94 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Inher
     }
 
     [Test]
+    public void Parse_SafeCallOnMethodInheritedFromSuperiorClass_NoProblem ()
+    {
+      TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<InheritanceSampleMethod>();
+      Method sample = IntrospectionUtility.MethodFactory (sampleTypeNode, "SafeCallOnMethodInheritedFromSuperiorClass");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
+
+    [Test]
+    public void Parse_UnsafeCallOnMethodInheritedFromSuperiorClass_ReturnsProblem ()
+    {
+      TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<InheritanceSampleMethod>();
+      Method sample = IntrospectionUtility.MethodFactory (sampleTypeNode, "UnsafeCallOnMethodInheritedFromSuperiorClass");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
+    
+    [Test]
+    public void Parse_SafeCallOnNewMethod_NoProblem ()
+    {
+      TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<InheritanceSampleMethod>();
+      Method sample = IntrospectionUtility.MethodFactory (sampleTypeNode, "SafeCallOnNewMethod");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
+    
+    [Test]
+    public void Parse_UnsafeCallOnNewMethod_ReturnsProblem ()
+    {
+      TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<InheritanceSampleMethod>();
+      Method sample = IntrospectionUtility.MethodFactory (sampleTypeNode, "UnsafeCallOnNewMethod");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
+    
+    [Test]
+    public void Parse_SafeStaticBindingOnNewMethod_NoProblem ()
+    {
+      TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<InheritanceSampleMethod>();
+      Method sample = IntrospectionUtility.MethodFactory (sampleTypeNode, "SafeStaticBindingOnNewMethod");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
+
+    [Test]
+    public void Parse_UnsafeStaticBindingOnNewMethod_ReturnsProblem ()
+    {
+      TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<InheritanceSampleMethod>();
+      Method sample = IntrospectionUtility.MethodFactory (sampleTypeNode, "UnsafeStaticBindingOnNewMethod");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
+
+    [Test]
+    public void Parse_SafeCallBaseMethod_NoProblem ()
+    {
+      TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<InheritanceSampleMethod>();
+      Method sample = IntrospectionUtility.MethodFactory (sampleTypeNode, "SafeCallBaseMethod");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
+    
+    [Test]
+    public void Parse_UnsafeCallBaseMethod_ReturnsProblem ()
+    {
+      TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<InheritanceSampleMethod>();
+      Method sample = IntrospectionUtility.MethodFactory (sampleTypeNode, "UnsafeCallBaseMethod");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
+
+    [Test]
     public void Parse_SafeCallOnOverriddenMethod_NoProblem ()
     {
       TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<InheritanceSampleMethod>();
@@ -55,7 +143,18 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Inher
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
+    
+    [Test]
+    public void Parse_AnotherSafeCallOnOverriddenMethod_NoProblem ()
+    {
+      TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<InheritanceSampleMethod>();
+      Method sample = IntrospectionUtility.MethodFactory (sampleTypeNode, "AnotherSafeCallOnOverriddenMethod");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
 
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
+    
     [Test]
     public void Parse_UnsafeCallOnOverriddenMethod_ReturnsProblem ()
     {
@@ -68,13 +167,42 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Inher
     }
 
     [Test]
+    public void Parse_SafeDynamicBinding_NoProblem ()
+    {
+      TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<InheritanceSampleMethod>();
+      Method sample = IntrospectionUtility.MethodFactory (sampleTypeNode, "SafeDynamicBinding");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
+
+    [Test]
+    public void Parse_UnsafeDynamicBinding_ReturnsProblem ()
+    {
+      TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<InheritanceSampleMethod>();
+      Method sample = IntrospectionUtility.MethodFactory (sampleTypeNode, "UnsafeDynamicBinding");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
+    /*
+    [Test]
+    [Ignore]
     public void reflectioncheck ()
     {
+      InheritanceSampleBase isb = new InheritanceSampleBase("","");
+      ParameterInfo[] pisb = (isb.GetType().GetMethod ("VirtualMethod")).GetParameters();
+      TypeNode isbtn = IntrospectionUtility.TypeNodeFactory<InheritanceSampleBase>();
+
       InheritanceSampleMethod ism = new InheritanceSampleMethod();
-      ism.VirtualMethod ("", "");
-      ParameterInfo[] pc = ((MethodInfo)ism.GetType().GetMethod ("VirtualMethod")).GetParameters();
+      ParameterInfo[] pism = (ism.GetType().GetMethod ("VirtualMethod")).GetParameters();
+      TypeNode ismtn = IntrospectionUtility.TypeNodeFactory<InheritanceSampleMethod>();
+      ism.UnsafeCallOnOverriddenMethod();
+
       Assert.Fail();
-    }
+    }*/
 
   }
 }

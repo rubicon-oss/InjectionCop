@@ -94,6 +94,7 @@
     <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\InheritanceSampleMethod.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\InheritanceSampleProperty.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\InheritanceMethod_TypeParserTest.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\InheritanceProperty_TypeParserTest.cs" />
     <Compile Include="Utilities\FragmentUtilitySample.cs" />
     <Compile Include="Utilities\FragmentUtilityTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Concatenation\ConcatenationSample.cs" />

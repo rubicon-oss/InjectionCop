@@ -73,5 +73,15 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Inher
     {
       RequiresInheritanceFragment (_initialFragmentField);
     }
+
+    protected void SafeAssignmentOnBaseField ()
+    {
+      base._initialFragmentField = SafeInheritanceFragmentSource();
+    }
+
+    protected void UnsafeAssignmentOnBaseField ()
+    {
+      base._initialFragmentField = UnsafeInheritanceFragmentSource();
+    }
   }
 }

@@ -43,42 +43,29 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Inher
     }
 
     [Fragment ("InheritanceFragment")]
-    public string FragmentField
-    {
-      get { return _fragmentField; }
-      set { _fragmentField = value; }
-    }
+    public string FragmentProperty { get; set; }
 
     [Fragment ("InheritanceFragment")]
-    public string InitialFragmentField
-    {
-      get { return _initialFragmentField; }
-      set { _initialFragmentField = value; }
-    }
+    public string InitialFragmentProperty { get; set; }
 
-    public string NonFragmentField
-    {
-      get { return _nonFragmentField; }
-      set { _nonFragmentField = value; }
-    }
+    public string NonFragmentProperty { get; set; }
 
-    public string InitialNonFragmentField
-    {
-      get { return _initialNonFragmentField; }
-      set { _initialNonFragmentField = value; }
-    }
+    public string InitialNonFragmentProperty { get; set; }
+
+    [Fragment ("InheritanceFragment")]
+    public virtual string VirtualProperty { get; set; }
 
     public virtual string VirtualMethod ([Fragment ("InheritanceFragment")] string annotatedParameter, string nonAnnotatedParameter)
     {
       return null;
     }
 
-    protected string NonVirtualMethod ([Fragment ("InheritanceFragment")] string annotatedParameter, string nonAnnotatedParameter)
+    public string NonVirtualMethod ([Fragment ("InheritanceFragment")] string annotatedParameter, string nonAnnotatedParameter)
     {
       return null;
     }
 
-    protected string InvariantMethod ([Fragment ("InheritanceFragment")] string annotatedParameter, string nonAnnotatedParameter)
+    public string InvariantMethod ([Fragment ("InheritanceFragment")] string annotatedParameter, string nonAnnotatedParameter)
     {
       return null;
     }

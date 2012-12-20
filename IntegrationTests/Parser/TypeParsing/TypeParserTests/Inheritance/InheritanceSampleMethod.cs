@@ -19,18 +19,29 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Inher
 {
   public class InheritanceSampleMethod : InheritanceSampleBase
   {
+    public class ExtendedSample : InheritanceSampleBase
+    {
+      public ExtendedSample ()
+          : base ("", "")
+      {
+      }
+    }
+
+    public class ExtendedExtendedSample : ExtendedSample
+    {
+    }
+
     public InheritanceSampleMethod ()
         : base ("safe", "safe")
     {
     }
+   
+    public override string VirtualMethod ([Fragment ("InheritanceFragment")] string annotatedParameter, string nonAnnotatedParameter)
+    {
+      return "dummy";
+    }
 
-    /// <summary>
-    /// Overriding a method from base class, note that FragmentAttribute of nonAnnotatedParameter is ignored because signature of virtual method is used
-    /// </summary>
-    /// <param name="annotatedParameter"></param>
-    /// <param name="nonAnnotatedParameter"></param>
-    /// <returns></returns>
-    public override string VirtualMethod ([Fragment ("InheritanceFragment")] string annotatedParameter, [Fragment ("InheritanceFragment")] string nonAnnotatedParameter)
+    public new string NonVirtualMethod ([Fragment ("InheritanceFragment")] string annotatedParameter, [Fragment ("InheritanceFragment")] string nonAnnotatedParameter)
     {
       return "dummy";
     }
@@ -45,14 +56,75 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Inher
       InvariantMethod (UnsafeInheritanceFragmentSource(), "safe");
     }
 
+    public void SafeCallOnMethodInheritedFromSuperiorClass()
+    {
+      ExtendedExtendedSample sample = new ExtendedExtendedSample();
+      sample.InvariantMethod ("safe", "safe");
+    }
+
+    public void UnsafeCallOnMethodInheritedFromSuperiorClass()
+    {
+      ExtendedExtendedSample sample = new ExtendedExtendedSample();
+      sample.InvariantMethod (UnsafeInheritanceFragmentSource(), "safe");
+    }
+
+    public void SafeCallOnNewMethod ()
+    {
+      NonVirtualMethod ("safe", "safe");
+    }
+
+    public void UnsafeCallOnNewMethod ()
+    {
+      NonVirtualMethod ("safe", UnsafeInheritanceFragmentSource());
+    }
+
+    public void SafeStaticBindingOnNewMethod ()
+    {
+      InheritanceSampleBase sample = new InheritanceSampleMethod();
+      sample.NonVirtualMethod ("", "");
+    }
+
+    public void UnsafeStaticBindingOnNewMethod ()
+    {
+      InheritanceSampleBase sample = new InheritanceSampleMethod();
+      sample.NonVirtualMethod (UnsafeInheritanceFragmentSource(), "");
+    }
+
+    public void SafeCallBaseMethod ()
+    {
+      base.NonVirtualMethod ("safe", "safe");
+    }
+
+    public void UnsafeCallBaseMethod ()
+    {
+      base.NonVirtualMethod (UnsafeInheritanceFragmentSource(), "safe");
+    }
+
     public void SafeCallOnOverriddenMethod()
     {
       VirtualMethod ("safe", "safe");
     }
 
-    public void UnsafeCallOnOverriddenMethod()
+    public void AnotherSafeCallOnOverriddenMethod()
     {
       VirtualMethod ("safe", UnsafeInheritanceFragmentSource());
+    }
+
+    public void UnsafeCallOnOverriddenMethod()
+    {
+      VirtualMethod (UnsafeInheritanceFragmentSource(), "safe");
+    }
+
+    public void SafeDynamicBinding ()
+    {
+      InheritanceSampleBase sample = new InheritanceSampleMethod();
+      sample.VirtualMethod ("safe", "safe");
+    }
+
+    public void UnsafeDynamicBinding ()
+    {
+      InheritanceSampleBase sample = new InheritanceSampleMethod();
+      sample.VirtualMethod (UnsafeInheritanceFragmentSource(), "safe");
     }
   }
 }

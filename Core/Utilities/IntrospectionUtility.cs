@@ -185,6 +185,7 @@ namespace InjectionCop.Utilities
       ArgumentUtility.CheckNotNull ("method", method);
       bool isPropertySetter = false;
       string[] nameParts = method.Name.Name.Split ('_');
+      LoadDeclaringMembers (method);
       if (method.DeclaringMember != null
           && method.DeclaringMember.NodeType == NodeType.Property
           && nameParts.Length >= 2
@@ -193,6 +194,16 @@ namespace InjectionCop.Utilities
         isPropertySetter = true;
       }
       return isPropertySetter;
+    }
+
+    /// <summary>
+    /// DeclaringMember is only set when the type declaring the member is loaded, otherwise null is returned. Loading the declaring type can be done by accessing DeclaringType property.
+    /// </summary>
+// ReSharper disable UnusedMethodReturnValue.Local
+    private static MemberCollection LoadDeclaringMembers (Method method)
+// ReSharper restore UnusedMethodReturnValue.Local
+    {
+      return method.DeclaringType.Members;
     }
 
     public static TypeNode GetNestedType (TypeNode parent, string nestedTypeName)

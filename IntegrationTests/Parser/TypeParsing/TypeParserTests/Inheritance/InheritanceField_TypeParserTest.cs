@@ -90,7 +90,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Inher
     }
 
     [Test]
-    public void Parse_UnsafeCallWithInheritedField_NoProblem ()
+    public void Parse_UnsafeCallWithInheritedField_ReturnsProblem ()
     {
       TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<InheritanceSampleField>();
       Method sample = IntrospectionUtility.MethodFactory (sampleTypeNode, "UnsafeCallWithInheritedField");
@@ -112,7 +112,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Inher
     }
 
     [Test]
-    public void Parse_UnsafeCallWithFieldSetByHidingParentField_NoProblem ()
+    public void Parse_UnsafeCallWithFieldSetByHidingParentField_ReturnsProblem ()
     {
       TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<InheritanceSampleField>();
       Method sample = IntrospectionUtility.MethodFactory (sampleTypeNode, "UnsafeCallWithFieldSetByHidingParentField");
@@ -120,6 +120,17 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Inher
       ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
+
+    [Test]
+    public void Parse_SafeAssignmentOnBaseField_NoProblem ()
+    {
+      TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<InheritanceSampleField>();
+      Method sample = IntrospectionUtility.MethodFactory (sampleTypeNode, "SafeAssignmentOnBaseField");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
   }
 }
