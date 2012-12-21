@@ -70,7 +70,9 @@ namespace InjectionCop.Parser.MethodParsing
           if (!blocksEnumerator.MoveNext())
             return;
           var currentBlock = blocksEnumerator.Current;
+// ReSharper disable PossibleNullReferenceException
           initialBlockId = currentBlock.UniqueKey;
+// ReSharper restore PossibleNullReferenceException
           BasicBlock currentBasicBlock;
           while (blocksEnumerator.MoveNext())
           {
@@ -82,7 +84,9 @@ namespace InjectionCop.Parser.MethodParsing
             }
             else
             {
+// ReSharper disable PossibleNullReferenceException
               currentBasicBlock = parser.Parse (currentBlock, nextBlock.UniqueKey);
+// ReSharper restore PossibleNullReferenceException
             }
             graph.Add (currentBasicBlock.Id, currentBasicBlock);
 

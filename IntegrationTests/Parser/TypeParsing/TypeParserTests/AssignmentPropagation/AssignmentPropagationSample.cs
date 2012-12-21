@@ -155,7 +155,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Assig
     }
 
     [Fragment("DummyFragment")]
-    private string fragmentField = "";
+    private string _dummyFragmentField = "";
     
     [return: Fragment ("DummyFragment")]
     public string InvalidReturnWithFieldReset ([Fragment ("DummyFragment")] string parameter)
@@ -167,8 +167,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Assig
       }
       else
       {
-        fragmentField = UnsafeSource();
-        returnValue = fragmentField;
+        _dummyFragmentField = UnsafeSource();
+        returnValue = _dummyFragmentField;
       }
       return returnValue;
     }
@@ -183,8 +183,8 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Assig
       }
       else
       {
-        fragmentField = SafeDummyFragmentSource();
-        returnValue = fragmentField;
+        _dummyFragmentField = SafeDummyFragmentSource();
+        returnValue = _dummyFragmentField;
       }
       return returnValue;
     }
@@ -192,7 +192,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Assig
     [return: Fragment ("DummyFragment")]
     public string InvalidReturnWithField ([Fragment ("DummyFragment")] string parameter)
     {
-      fragmentField = parameter;
+      _dummyFragmentField = parameter;
       if (SafeSource() == "Dummy")
       {
         DummyMethod("dummy");
@@ -201,15 +201,15 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Assig
       {
         string temp = UnsafeSource();
         DummyMethod (temp);
-        fragmentField = temp;
+        _dummyFragmentField = temp;
       }
-      return fragmentField;
+      return _dummyFragmentField;
     }
 
     [return: Fragment ("DummyFragment")]
     public string ValidReturnWithField ([Fragment ("DummyFragment")] string parameter)
     {
-      fragmentField = parameter;
+      _dummyFragmentField = parameter;
       if (SafeSource() == "Dummy")
       {
         DummyMethod("dummy");
@@ -218,9 +218,9 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Assig
       {
         string temp = SafeDummyFragmentSource();
         DummyMethod (temp);
-        fragmentField = temp;
+        _dummyFragmentField = temp;
       }
-      return fragmentField;
+      return _dummyFragmentField;
     }
 
     /// <summary>
@@ -233,14 +233,14 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Assig
     [return: Fragment ("DummyFragment")]
     public string InvalidReturnWithFieldAndLoops ([Fragment ("DummyFragment")] string parameter)
     {
-      fragmentField = parameter;
+      _dummyFragmentField = parameter;
       if (SafeSource() == "Dummy")
       {
         DummyMethod("dummy");
       }
       else
       {
-        string temp = SafeSource();
+        string temp = SafeDummyFragmentSource();
         DummyMethod (temp);
         int i = 0;
         while (i < 10)
@@ -248,28 +248,28 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Assig
           while (i < 5)
           {
             DummyMethod (temp);
-            fragmentField = temp;
-            temp = SafeSource();
+            _dummyFragmentField = temp;
+            temp = SafeDummyFragmentSource();
             i++;
           }
           temp = UnsafeSource();
           i++;
         }
       }
-      return fragmentField;
+      return _dummyFragmentField;
     }
 
     [return: Fragment ("DummyFragment")]
     public string ValidReturnWithFieldAndLoops ([Fragment ("DummyFragment")] string parameter)
     {
-      fragmentField = parameter;
+      _dummyFragmentField = parameter;
       if (SafeSource() == "Dummy")
       {
         DummyMethod("dummy");
       }
       else
       {
-        string temp = SafeSource();
+        string temp = SafeDummyFragmentSource();
         DummyMethod (temp);
         int i = 0;
         while (i < 10)
@@ -277,15 +277,15 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Assig
           while (i < 5)
           {
             DummyMethod (temp);
-            fragmentField = temp;
-            temp = SafeSource();
+            _dummyFragmentField = temp;
+            temp = SafeDummyFragmentSource();
             i++;
           }
           temp = "safe";
           i++;
         }
       }
-      return fragmentField;
+      return _dummyFragmentField;
     }
   }
 }

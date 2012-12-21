@@ -201,7 +201,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Assig
     }
 
     [Test]
-    public void Parse_ValidReturnWithFieldAndLoops_ReturnsProblem ()
+    public void Parse_ValidReturnWithFieldAndLoops_NoProblem ()
     {
       TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
       Method sample = TestHelper.GetSample<AssignmentPropagationSample> ("ValidReturnWithFieldAndLoops", stringTypeNode);

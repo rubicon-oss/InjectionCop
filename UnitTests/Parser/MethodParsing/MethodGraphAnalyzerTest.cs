@@ -46,6 +46,7 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
       _blacklistManager = new IDbCommandBlacklistManagerStub();
       _methodPreConditions = new SymbolTable (_blacklistManager);
       _methodPreConditions.MakeSafe ("x", "SqlFragment");
+      _methodPreConditions.MakeSafe ("l", SymbolTable.LITERAL);
       _methodPreConditions.MakeUnsafe ("y");
       _problemPipeStub = new ProblemPipeStub();
       _methodGraphAnalyzer = new MethodGraphAnalyzer (_problemPipeStub);
@@ -136,6 +137,31 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
     public void Parse_SingleNodePreconditionNotViolated_NoProblem ()
     {
       PreCondition[] preConditions = { new PreCondition("x", "SqlFragment") };
+      SymbolTable postConditions = new SymbolTable (_blacklistManager);
+      int[] successors = (new List<int>()).ToArray();
+      BasicBlock node = new BasicBlock (0, preConditions, postConditions, successors, c_EmptyAssignments);
+
+      using (_mocks.Record())
+      {
+        _methodGraph.IsEmpty();
+        LastCall.Return (false);
+
+        SetupResult.For (_methodGraph.InitialBlock)
+                   .Return (node);
+
+        _methodGraphBuilder.GetResult();
+        LastCall.Return (_methodGraph);
+        _parameterSymbolTableBuilder.GetResult();
+        LastCall.Return(_methodPreConditions);
+      }
+      ProblemCollection result = ParseGraph();
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
+
+    [Test]
+    public void Parse_SingleNodePreconditionNotViolatedBecauseOfLiteral_NoProblem ()
+    {
+      PreCondition[] preConditions = { new PreCondition("l", "SqlFragment") };
       SymbolTable postConditions = new SymbolTable (_blacklistManager);
       int[] successors = (new List<int>()).ToArray();
       BasicBlock node = new BasicBlock (0, preConditions, postConditions, successors, c_EmptyAssignments);

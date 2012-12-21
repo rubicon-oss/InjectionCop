@@ -52,6 +52,16 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.While
     }
 
     [Test]
+    public void Parse_InValidAssignmentInsideWhileReprocessingRequired_ReturnsProblem ()
+    {
+      Method sample = TestHelper.GetSample<WhileLoopSample> ("InValidAssignmentInsideWhileReprocessingRequired");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+      
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
+
+    [Test]
     public void Parse_InvalidCallInsideNestedWhile_ReturnsProblem ()
     {
       Method sample = TestHelper.GetSample<WhileLoopSample> ("InvalidCallInsideNestedWhile");

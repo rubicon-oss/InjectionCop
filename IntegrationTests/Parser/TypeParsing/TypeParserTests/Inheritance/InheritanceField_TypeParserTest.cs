@@ -145,10 +145,10 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Inher
     }
     
     [Test]
-    public void Parse_SafeAssignmentUsingBaseField_NoProblem ()
+    public void Parse_SafeAssignmentOfBaseField_NoProblem ()
     {
       TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<InheritanceSampleField>();
-      Method sample = IntrospectionUtility.MethodFactory (sampleTypeNode, "SafeAssignmentUsingBaseField");
+      Method sample = IntrospectionUtility.MethodFactory (sampleTypeNode, "SafeAssignmentOfBaseField");
       _typeParser.Parse (sample);
       ProblemCollection result = _typeParser.Problems;
 
@@ -156,10 +156,32 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Inher
     }
     
     [Test]
-    public void Parse_UnsafeAssignmentUsingBaseField_ReturnsProblem ()
+    public void Parse_UnsafeAssignmentOfBaseField_ReturnsProblem ()
     {
       TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<InheritanceSampleField>();
-      Method sample = IntrospectionUtility.MethodFactory (sampleTypeNode, "UnsafeAssignmentUsingBaseField");
+      Method sample = IntrospectionUtility.MethodFactory (sampleTypeNode, "UnsafeAssignmentOfBaseField");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
+    
+    [Test]
+    public void Parse_SafeMethodCallUsingBaseField_NoProblem ()
+    {
+      TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<InheritanceSampleField>();
+      Method sample = IntrospectionUtility.MethodFactory (sampleTypeNode, "SafeMethodCallUsingBaseField");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
+
+    [Test]
+    public void Parse_UnsafeMethodCallUsingBaseField_ReturnsProblem ()
+    {
+      TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<InheritanceSampleField>();
+      Method sample = IntrospectionUtility.MethodFactory (sampleTypeNode, "UnsafeMethodCallUsingBaseField");
       _typeParser.Parse (sample);
       ProblemCollection result = _typeParser.Problems;
 

@@ -84,16 +84,24 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Inher
       base._initialFragmentField = UnsafeInheritanceFragmentSource();
     }
 
-    protected void SafeAssignmentUsingBaseField ()
+    protected void SafeAssignmentOfBaseField ()
     {
       _fragmentField = base._initialFragmentField;
     }
 
-    protected void UnsafeAssignmentUsingBaseField ()
+    protected void UnsafeAssignmentOfBaseField ()
     {
       _fragmentField = base._initialNonFragmentField;
     }
+    
+    public void SafeMethodCallUsingBaseField ()
+    {
+      RequiresInheritanceFragment (base._initialFragmentField);
+    }
 
-    // method calls with base field
+    public void UnsafeMethodCallUsingBaseField ()
+    {
+      RequiresInheritanceFragment (base._initialNonFragmentField);
+    }
   }
 }

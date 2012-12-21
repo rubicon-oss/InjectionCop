@@ -19,6 +19,9 @@ namespace InjectionCop.IntegrationTests.Parser
 {
   public class ParserSampleBase
   {
+    [SqlFragment]
+    protected string _fragmentField = "safe";
+
     protected string UnsafeSource ()
     {
       return "unsafe command";
@@ -38,7 +41,7 @@ namespace InjectionCop.IntegrationTests.Parser
     [return: Fragment("SqlFragment")]
     protected string SafeSourceRequiresSqlFragment ([SqlFragment] string param)
     {
-      return "safe command";
+      return _fragmentField;
     }
 
     protected void DummyMethod (string parameter)

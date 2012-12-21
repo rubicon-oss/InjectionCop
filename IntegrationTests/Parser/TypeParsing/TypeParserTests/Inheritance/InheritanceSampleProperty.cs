@@ -115,5 +115,35 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Inher
       InheritanceSampleBase sample = new InheritanceSampleProperty();
       sample.VirtualProperty = UnsafeInheritanceFragmentSource();
     }
+
+    protected void SafeAssignmentOnBaseProperty ()
+    {
+      base.InitialFragmentProperty = SafeInheritanceFragmentSource();
+    }
+
+    protected void UnsafeAssignmentOnBaseProperty ()
+    {
+      base.InitialFragmentProperty = UnsafeInheritanceFragmentSource();
+    }
+
+    protected void SafeAssignmentOfBaseProperty ()
+    {
+      FragmentProperty = base.InitialFragmentProperty;
+    }
+    
+    protected void UnsafeAssignmentOfBaseProperty ()
+    {
+      FragmentProperty = base.InitialNonFragmentProperty;
+    }
+    
+    public void SafeMethodCallUsingBaseProperty ()
+    {
+      RequiresInheritanceFragment (base.InitialFragmentProperty);
+    }
+    
+    public void UnsafeMethodCallUsingBaseProperty ()
+    {
+      RequiresInheritanceFragment (base.InitialNonFragmentProperty);
+    }
   }
 }

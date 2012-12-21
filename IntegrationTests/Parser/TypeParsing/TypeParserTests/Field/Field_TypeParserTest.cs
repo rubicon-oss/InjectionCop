@@ -120,6 +120,16 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Field
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
+    
+    [Test]
+    public void Parse_SafeFieldAssignmentWithField_NoProblem ()
+    {
+      Method sample = TestHelper.GetSample<FieldSample> ("SafeFieldAssignmentWithField");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
 
     [Test]
     public void Parse_WrongFragmentTypeFieldAssignment_ReturnsProblem ()

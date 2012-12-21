@@ -34,6 +34,9 @@
     <Reference Include="FxCopSdk">
       <HintPath>$(CodeAnalysisPath)\FxCopSdk.dll</HintPath>
     </Reference>
+    <Reference Include="JetBrains.Annotations">
+      <HintPath>..\..\..\..\Program Files (x86)\JetBrains\ReSharper\v7.1\Bin\JetBrains.Annotations.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Cci">
       <HintPath>$(CodeAnalysisPath)\Microsoft.Cci.dll</HintPath>
     </Reference>

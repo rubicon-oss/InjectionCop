@@ -22,6 +22,9 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Field
     [SqlFragment]
     private string _safeField = "safe";
 
+    [Fragment ("SqlFragment")]
+    private string _safeFieldDifferentAnnotation = "safe_too";
+
     private string _unsafeField = "dummy";
 
     [Fragment ("AnyType")]
@@ -87,6 +90,11 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Field
     public void UnsafeFieldAssignmentWithField ()
     {
       _safeField = _unsafeField;
+    }
+
+    public void SafeFieldAssignmentWithField ()
+    {
+      _safeField = _safeFieldDifferentAnnotation;
     }
 
     public void WrongFragmentTypeFieldAssignment ()

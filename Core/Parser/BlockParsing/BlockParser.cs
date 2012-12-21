@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using InjectionCop.Config;
 using InjectionCop.Parser.ProblemPipe;
 using InjectionCop.Utilities;
+using JetBrains.Annotations;
 using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser.BlockParsing
@@ -120,23 +121,68 @@ namespace InjectionCop.Parser.BlockParsing
       _assignmentTargetVariables.Add (targetSymbol);
 
       string sourceSymbol = IntrospectionUtility.GetVariableName (assignmentStatement.Source);
-      bool methodVariableNotAssignedInsideCurrentBlock =
+      bool localSourceVariableNotAssignedInsideCurrentBlock =
           sourceSymbol != null
           && !_assignmentTargetVariables.Contains (sourceSymbol)
           && !IntrospectionUtility.IsField (assignmentStatement.Source);
-      if (methodVariableNotAssignedInsideCurrentBlock)
+      if (localSourceVariableNotAssignedInsideCurrentBlock)
       {
         BlockAssignment blockAssignment = new BlockAssignment (sourceSymbol, targetSymbol);
         _blockAssignments.Add (blockAssignment);
+        if (IntrospectionUtility.IsField (assignmentStatement.Target))
+        {
+          Field targetField = IntrospectionUtility.GetField (assignmentStatement.Target);
+          string targetFragmentType = FragmentUtility.GetFragmentType (targetField.Attributes);
+          if (targetFragmentType != SymbolTable.EMPTY_FRAGMENT)
+          {
+            ProblemMetadata problemMetadata = new ProblemMetadata (
+                assignmentStatement.UniqueKey, 
+                assignmentStatement.SourceContext, 
+                targetFragmentType, 
+                "??");
+            PreCondition preCondition = new PreCondition (sourceSymbol, targetFragmentType, problemMetadata);
+            _preConditions.Add (preCondition);
+          }
+        }
       }
       else
       {
-        _symbolTableParser.InferSafeness (targetSymbol, assignmentStatement.Source);
-        VerifyAssignmentTargetFragmentType (assignmentStatement.Target);
+        if(!IntrospectionUtility.IsField(assignmentStatement.Target))
+        {
+          _symbolTableParser.InferSafeness (targetSymbol, assignmentStatement.Source);
+          //VerifyAssignmentTargetFragmentType (assignmentStatement.Target);
+        }
+        else
+        {
+          Field targetField = IntrospectionUtility.GetField (assignmentStatement.Target);
+          string targetFragmentType = FragmentUtility.GetFragmentType (targetField.Attributes);
+          string givenFragmentType;
+          if (IntrospectionUtility.IsField (assignmentStatement.Source))
+          {
+            Field source = IntrospectionUtility.GetField (assignmentStatement.Source);
+            givenFragmentType = FragmentUtility.GetFragmentType (source.Attributes);
+          }
+          else
+          {
+            givenFragmentType = _symbolTableParser.InferFragmentType (assignmentStatement.Source);
+          }
+
+          if (targetFragmentType != givenFragmentType && givenFragmentType != SymbolTable.LITERAL)
+          {
+            ProblemMetadata problemMetadata = new ProblemMetadata (
+                targetField.UniqueKey,
+                targetField.SourceContext,
+                targetFragmentType,
+                givenFragmentType);
+            _problemPipe.AddProblem (problemMetadata);
+          }
+        }
       }
       Inspect (assignmentStatement.Source);
     }
-    
+
+    private delegate void Foo ([NotNull] string value);
+
     private void VerifyAssignmentTargetFragmentType (Expression targetExpression)
     {
       if (IntrospectionUtility.IsField (targetExpression))
@@ -211,7 +257,6 @@ namespace InjectionCop.Parser.BlockParsing
     private void UpdateSafeOutParameters (MethodCall methodCall)
     {
       Method method = IntrospectionUtility.ExtractMethod (methodCall);
-      
       for (int i = 0; i < methodCall.Operands.Count; i++)
       {
         if (IntrospectionUtility.IsVariable (methodCall.Operands[i]))

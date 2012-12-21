@@ -16,7 +16,7 @@ using System;
 
 namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.While_loop
 {
-  internal class WhileLoopSample : ParserSampleBase
+  public class WhileLoopSample : ParserSampleBase
   {
     public void ValidCallInsideWhile ()
     {
@@ -45,6 +45,18 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.While
       while (i > 0)
       {
         RequiresSqlFragment (parameter);
+        parameter = UnsafeSource();
+        i--;
+      }
+    }
+
+    public void InValidAssignmentInsideWhileReprocessingRequired ()
+    {
+      int i = 10;
+      string parameter = SafeSource();
+      while (i > 0)
+      {
+        _fragmentField = parameter;
         parameter = UnsafeSource();
         i--;
       }
