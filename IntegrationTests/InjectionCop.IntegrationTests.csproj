@@ -87,14 +87,14 @@
     <Compile Include="Parser\TypeParsing\TypeParserTests\BlacklistManagerIntegration\BlacklistManagerIntegration_TypeParserTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\BlackMethod\BlackMethodSample.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\InheritanceSampleBase.cs" />
-    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\InheritanceSampleConstructor.cs" />
-    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\InheritanceSampleField.cs" />
-    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\InheritanceConstructor_TypeParserTest.cs" />
-    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\InheritanceField_TypeParserTest.cs" />
-    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\InheritanceSampleMethod.cs" />
-    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\InheritanceSampleProperty.cs" />
-    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\InheritanceMethod_TypeParserTest.cs" />
-    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\InheritanceProperty_TypeParserTest.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\Constructor\InheritanceSampleConstructor.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\Field\InheritanceSampleField.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\Constructor\InheritanceConstructor_TypeParserTest.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\Field\InheritanceField_TypeParserTest.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\MemberMethod\InheritanceSampleMethod.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\Property\InheritanceSampleProperty.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\MemberMethod\InheritanceMethod_TypeParserTest.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\Property\InheritanceProperty_TypeParserTest.cs" />
     <Compile Include="Utilities\FragmentUtilitySample.cs" />
     <Compile Include="Utilities\FragmentUtilityTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Concatenation\ConcatenationSample.cs" />
@@ -146,7 +146,9 @@
   <ItemGroup>
     <None Include="IntegrationTests.licenseheader" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Parser\TypeParsing\TypeParserTests\Inheritance\Interface\" />
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

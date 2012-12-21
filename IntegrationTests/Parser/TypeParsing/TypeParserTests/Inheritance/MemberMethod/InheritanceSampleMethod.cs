@@ -15,7 +15,7 @@
 using System;
 using InjectionCop.Fragment;
 
-namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Inheritance
+namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Inheritance.MemberMethod
 {
   public class InheritanceSampleMethod : InheritanceSampleBase
   {

@@ -14,7 +14,7 @@
 
 using System;
 
-namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Inheritance
+namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Inheritance.Constructor
 {
   internal class InheritanceSampleConstructor : InheritanceSampleBase
   {

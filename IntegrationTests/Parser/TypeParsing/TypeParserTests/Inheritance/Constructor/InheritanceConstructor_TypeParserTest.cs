@@ -17,7 +17,7 @@ using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
 using NUnit.Framework;
 
-namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Inheritance
+namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Inheritance.Constructor
 {
   [TestFixture]
   public class InheritanceConstructor_TypeParserTest : TypeParserTestBase
