@@ -19,6 +19,9 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Retur
 {
   class ReturnSample : ParserSampleBase
   {
+    [Fragment ("DummyType")]
+    private string _dummyTypeFragment = "safe";
+
     [return: Fragment ("DummyType")]
     public string ReturnFragmentMismatch ()
     {
@@ -35,6 +38,18 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Retur
     {
       int i = 3;
       return i;
+    }
+
+    [return: Fragment ("DummyType")]
+    public string ReturnsDummyType ()
+    {
+      return _dummyTypeFragment;
+    }
+
+    [return: Fragment ("DummyType")]
+    public string ReturnsFieldWithWrongType ()
+    {
+      return _fragmentField;
     }
   }
 }

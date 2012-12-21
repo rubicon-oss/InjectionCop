@@ -60,5 +60,25 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Retur
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
+
+    [Test]
+    public void Parse_ReturnsDummyType_NoProblem ()
+    {
+      Method sample = TestHelper.GetSample<ReturnSample> ("ReturnsDummyType");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
+    
+    [Test]
+    public void Parse_ReturnsFieldWithWrongType_ReturnsProblem()
+    {
+      Method sample = TestHelper.GetSample<ReturnSample>("ReturnsFieldWithWrongType");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
   }
 }
