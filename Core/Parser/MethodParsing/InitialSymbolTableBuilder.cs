@@ -44,7 +44,6 @@ namespace InjectionCop.Parser.MethodParsing
       {
         _result = new SymbolTable (_blacklistManager);
         AnalyzeParameters();
-        //AnalyzeFields();
       }
     }
 
@@ -55,28 +54,7 @@ namespace InjectionCop.Parser.MethodParsing
         SetSymbolFragmentType (parameter.Name.Name, parameter.Attributes);
       }
     }
-
-    private void AnalyzeFields ()
-    {
-      AnalyzeFields (_method.DeclaringType);
-    }
-
-    private void AnalyzeFields (TypeNode type)
-    {
-      if (type != null)
-      {
-        foreach (var member in type.Members)
-        {
-          if (member is Field)
-          {
-            var field = (Field) member;
-            SetSymbolFragmentType (field.Name.Name, field.Attributes);
-          }
-        }
-        AnalyzeFields (type.BaseType);
-      }
-    }
-
+    
     private void SetSymbolFragmentType (string name, AttributeNodeCollection attributes)
     {
       if (!_result.Contains (name))
