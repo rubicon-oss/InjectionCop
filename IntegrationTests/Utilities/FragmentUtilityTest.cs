@@ -122,5 +122,23 @@ namespace InjectionCop.IntegrationTests.Utilities
 
       Assert.That (returnFragment, Is.EqualTo("ReturnFragmentType"));
     }
+
+    [Test]
+    public void ReturnFragmentType_ImplementedInterfaceMethod_ReturnsFragment ()
+    {
+      Method sample = TestHelper.GetSample<ClassWithMethodReturningFragment> ("MethodWithReturnFragment");
+      string returnFragment = FragmentUtility.ReturnFragmentType (sample);
+
+      Assert.That (returnFragment, Is.EqualTo("ReturnFragmentType"));
+    }
+    
+    [Test]
+    public void ReturnFragmentType_ExplicitlyImplementedInterfaceMethod_ReturnsFragment ()
+    {
+      Method sample = TestHelper.GetSample<ClassWithExplicitlyDeclaredMethodReturningFragment> ("InjectionCop.IntegrationTests.Utilities.InterfaceWithReturnFragment.MethodWithReturnFragment");
+      string returnFragment = FragmentUtility.ReturnFragmentType (sample);
+
+      Assert.That (returnFragment, Is.EqualTo ("ReturnFragmentType"));
+    }
   }
 }

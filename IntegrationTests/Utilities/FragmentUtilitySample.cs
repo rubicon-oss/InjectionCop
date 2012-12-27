@@ -51,4 +51,26 @@ namespace InjectionCop.IntegrationTests.Utilities
       return 3;
     }
   }
+
+  public interface InterfaceWithReturnFragment
+  {
+    [return: Fragment ("ReturnFragmentType")]
+    int MethodWithReturnFragment ();
+  }
+
+  public class ClassWithMethodReturningFragment: InterfaceWithReturnFragment
+  {
+    public int MethodWithReturnFragment ()
+    {
+      return 3;
+    }
+  }
+
+  public class ClassWithExplicitlyDeclaredMethodReturningFragment: InterfaceWithReturnFragment
+  {
+    int InterfaceWithReturnFragment.MethodWithReturnFragment ()
+    {
+      return 3;
+    }
+  }
 }

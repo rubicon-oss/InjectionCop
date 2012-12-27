@@ -91,6 +91,8 @@
     <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\Field\InheritanceSampleField.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\Constructor\InheritanceConstructor_TypeParserTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\Field\InheritanceField_TypeParserTest.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\Interface\InheritanceSampleInterface.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\Interface\InheritanceInterface_TypeParserTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\MemberMethod\InheritanceSampleMethod.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\Property\InheritanceSampleProperty.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\MemberMethod\InheritanceMethod_TypeParserTest.cs" />
@@ -146,9 +148,7 @@
   <ItemGroup>
     <None Include="IntegrationTests.licenseheader" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Parser\TypeParsing\TypeParserTests\Inheritance\Interface\" />
-  </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
