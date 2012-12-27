@@ -104,8 +104,12 @@ namespace InjectionCop.Parser
     {
       string fragmentType = EMPTY_FRAGMENT;
       AttributeNodeCollection candidateAttributes;
-      
-      if (!IsAnnotatedPropertyGetter(method))
+      Method[] interfaceDeclarations = IntrospectionUtility.InterfaceDeclarations (method);
+      if (interfaceDeclarations.Any())
+      {
+        candidateAttributes = interfaceDeclarations.First().ReturnAttributes;
+      }
+      else if (!IsAnnotatedPropertyGetter(method))
       {
         candidateAttributes = method.ReturnAttributes;
       }
@@ -129,7 +133,7 @@ namespace InjectionCop.Parser
       requireSafenessParameters = new List<PreCondition>();
       parameterProblems = new List<ProblemMetadata>();
       Method calleeMethod = IntrospectionUtility.ExtractMethod (methodCall);
-      string[] parameterFragmentTypes = GetParameterFragmentTypes (calleeMethod);
+      string[] parameterFragmentTypes = InferParameterFragmentTypes (calleeMethod);
       
       for (int i = 0; i < parameterFragmentTypes.Length; i++)
       {
@@ -156,6 +160,23 @@ namespace InjectionCop.Parser
       }
     }
 
+    private string[] InferParameterFragmentTypes (Method calleeMethod)
+    {
+      string[] parameterFragmentTypes;
+      Method[] interfaceDeclarations = IntrospectionUtility.InterfaceDeclarations (calleeMethod);
+      
+      if (interfaceDeclarations.Any())
+      {
+        parameterFragmentTypes = GetParameterFragmentTypes (interfaceDeclarations.First());
+      }
+      else
+      {
+        parameterFragmentTypes = GetParameterFragmentTypes (calleeMethod);
+      }
+      
+      return parameterFragmentTypes;
+    }
+    
     public void InferSafeness (string symbolName, Expression expression)
     {
       ArgumentUtility.CheckNotNullOrEmpty ("symbolName", symbolName);

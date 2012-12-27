@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Utilities
@@ -163,7 +164,7 @@ namespace InjectionCop.Utilities
     }
 
     /// <summary>
-    /// Property getters are transformed to methdods named get_PROPERTYNAME()
+    /// Property getters are transformed to methods named get_PROPERTYNAME()
     /// </summary>
     public static bool IsPropertyGetter (Method method)
     {
@@ -220,6 +221,17 @@ namespace InjectionCop.Utilities
         }
       }
       return returnType;
+    }
+
+    public static Method[] InterfaceDeclarations (Method method)
+    {
+      TypeNode[] calleeMethodparameterTypes = method.Parameters.Select (parameter => parameter.Type).ToArray();
+
+      return (from @interface in method.DeclaringType.Interfaces
+              from interfaceMember in @interface.Members
+              where interfaceMember.Name.Name == method.Name.Name && interfaceMember is Method
+              select (Method) interfaceMember
+              into interfaceMethod where interfaceMethod.ParameterTypesMatch (calleeMethodparameterTypes) select interfaceMethod).ToArray();
     }
   }
 }

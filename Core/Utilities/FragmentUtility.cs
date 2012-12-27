@@ -77,9 +77,21 @@ namespace InjectionCop.Utilities
     {
       ArgumentUtility.CheckNotNull ("method", method);
       string returnFragment = SymbolTable.EMPTY_FRAGMENT;
-      if (method.ReturnAttributes != null && ContainsFragment (method.ReturnAttributes))
+      Method determiningMethod;
+
+      Method[] interfaceDeclarations = IntrospectionUtility.InterfaceDeclarations (method);
+      if (interfaceDeclarations.Any())
       {
-        returnFragment = GetFragmentType (method.ReturnAttributes);
+        determiningMethod = interfaceDeclarations.First();
+      }
+      else
+      {
+        determiningMethod = method;
+      }
+      
+      if (determiningMethod.ReturnAttributes != null && ContainsFragment (determiningMethod.ReturnAttributes))
+      {
+        returnFragment = GetFragmentType (determiningMethod.ReturnAttributes);
       }
       return returnFragment;
     }
