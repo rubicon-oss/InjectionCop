@@ -32,7 +32,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Anony
     }
 
     [Test]
-    public void Parse_AnonymousMethod_ReturnsProblem ()
+    public void Parse_UnsafeAnonymousMethodCall_ReturnsProblem ()
     {
       Method sample = TestHelper.GetSample<AnonymousMethodSample> ("UnsafeAnonymousMethodCall");
       _typeParser.Parse (sample);
@@ -49,6 +49,26 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Anony
       ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
+
+    [Test]
+    public void Parse_SafeMethodCallInsideAnonymousMethod_NoProblem ()
+    {
+      Method sample = TestHelper.GetSample<AnonymousMethodSample> ("SafeMethodCallInsideAnonymousMethod");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
+
+    [Test]
+    public void Parse_UnsafeMethodCallInsideAnonymousMethod_ReturnsProblem ()
+    {
+      Method sample = TestHelper.GetSample<AnonymousMethodSample> ("UnsafeMethodCallInsideAnonymousMethod");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
   }
 }

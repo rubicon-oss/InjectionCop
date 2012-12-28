@@ -88,8 +88,10 @@
     <Compile Include="Parser\TypeParsing\TypeParserTests\Attribute\Attribute_TypeParserTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\BlacklistManagerIntegration\BlacklistManagerIntegration_TypeParserTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\BlackMethod\BlackMethodSample.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Closure\ClosureSample.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Closure\Closure_TypeParserTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Delegate\DelegateSample.cs" />
-    <Compile Include="Parser\TypeParsing\TypeParserTests\Delegate\Delegate_TypeparserTest.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Delegate\Delegate_TypeParserTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\InheritanceSampleBase.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\Constructor\InheritanceSampleConstructor.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\Field\InheritanceSampleField.cs" />
@@ -101,6 +103,8 @@
     <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\Property\InheritanceSampleProperty.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\MemberMethod\InheritanceMethod_TypeParserTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\Property\InheritanceProperty_TypeParserTest.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Lambda\LambdaSample.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Lambda\Lambda_TypeParserTest.cs" />
     <Compile Include="Utilities\FragmentUtilitySample.cs" />
     <Compile Include="Utilities\FragmentUtilityTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Concatenation\ConcatenationSample.cs" />

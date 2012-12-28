@@ -16,15 +16,15 @@ using System;
 using Microsoft.FxCop.Sdk;
 using NUnit.Framework;
 
-namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Delegate
+namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Closure
 {
   [TestFixture]
-  public class Delegate_TypeParserTest: TypeParserTestBase
+  public class Closure_TypeParserTest : TypeParserTestBase
   {
     [Test]
-    public void Parse_SafeDelegateCall_NoProblem ()
+    public void Parse_SafeClosureUsingLocalVariable_NoProblem ()
     {
-      Method sample = TestHelper.GetSample<DelegateSample> ("SafeDelegateCall");
+      Method sample = TestHelper.GetSample<ClosureSample> ("SafeClosureUsingLocalVariable");
       _typeParser.Parse (sample);
       ProblemCollection result = _typeParser.Problems;
 
@@ -32,19 +32,19 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Deleg
     }
 
     [Test]
-    public void Parse_UnsafeDelegateCall_ReturnsProblem ()
+    public void Parse_UnsafeClosureUsingLocalVariable_ReturnsProblem ()
     {
-      Method sample = TestHelper.GetSample<DelegateSample> ("UnsafeDelegateCall");
+      Method sample = TestHelper.GetSample<ClosureSample> ("UnsafeClosureUsingLocalVariable");
       _typeParser.Parse (sample);
       ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
 
-     [Test]
-    public void Parse_SafeDelegateCallUsingReturn_NoProblem ()
+    [Test]
+    public void Parse_SafeClosureUsingField_NoProblem ()
     {
-      Method sample = TestHelper.GetSample<DelegateSample> ("SafeDelegateCallUsingReturn");
+      Method sample = TestHelper.GetSample<ClosureSample> ("SafeClosureUsingField");
       _typeParser.Parse (sample);
       ProblemCollection result = _typeParser.Problems;
 
@@ -52,19 +52,9 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Deleg
     }
 
     [Test]
-    public void Parse_SafeDelegateFieldCall_NoProblem ()
+    public void Parse_UnsafeClosureUsingField_ReturnsProblem ()
     {
-      Method sample = TestHelper.GetSample<DelegateSample> ("SafeDelegateFieldCall");
-      _typeParser.Parse (sample);
-      ProblemCollection result = _typeParser.Problems;
-
-      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
-    }
-
-    [Test]
-    public void Parse_UnsafeDelegateFieldCall_ReturnsProblem ()
-    {
-      Method sample = TestHelper.GetSample<DelegateSample> ("UnsafeDelegateFieldCall");
+      Method sample = TestHelper.GetSample<ClosureSample> ("UnsafeClosureUsingField");
       _typeParser.Parse (sample);
       ProblemCollection result = _typeParser.Problems;
 

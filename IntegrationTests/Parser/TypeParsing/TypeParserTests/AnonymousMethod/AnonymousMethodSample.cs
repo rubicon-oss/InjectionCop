@@ -19,9 +19,9 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Anony
 {
   class AnonymousMethodSample: ParserSampleBase
   {
-    public delegate string FragmentParameterDelegate ([Fragment ("DelegateFragmentType")] string fragmentParameter, string nonFragmentParameter);
+    public delegate string FragmentParameterDelegate ([Fragment ("AnonymousMethodFragmentType")] string fragmentParameter, string nonFragmentParameter);
 
-    [return: Fragment("DelegateFragmentType")]
+    [return: Fragment("AnonymousMethodFragmentType")]
     public delegate string ReturnFragmentDelegate ();
 
     public void SafeAnonymousMethodCall ()
@@ -45,6 +45,33 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Anony
       ReturnFragmentDelegate returnFragmentDelegate =
           delegate { return "safe"; };
       fragmentParameterDelegate (returnFragmentDelegate(), "safe");
+    }
+
+    public void SafeMethodCallInsideAnonymousMethod ()
+    {
+      FragmentParameterDelegate fragmentDelegate =
+          delegate (string fragmentParameter, string nonFragmentParameter)
+          {
+            RequiresAnonymousMethodFragment (fragmentParameter); 
+            return fragmentParameter + nonFragmentParameter; 
+          };
+      fragmentDelegate ("safe", "safe");
+    }
+
+    public void UnsafeMethodCallInsideAnonymousMethod ()
+    {
+      FragmentParameterDelegate fragmentDelegate =
+          delegate (string fragmentParameter, string nonFragmentParameter)
+          {
+            RequiresAnonymousMethodFragment (nonFragmentParameter); 
+            return fragmentParameter + nonFragmentParameter; 
+          };
+      fragmentDelegate ("safe", "safe");
+    }
+
+    private void RequiresAnonymousMethodFragment ([Fragment ("ClosureFragmentType")] string fragmentParameter)
+    {
+      DummyMethod (fragmentParameter);
     }
   }
 }
