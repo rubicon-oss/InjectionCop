@@ -229,7 +229,8 @@ namespace InjectionCop.Utilities
 
       return (from @interface in method.DeclaringType.Interfaces
               from interfaceMember in @interface.Members
-              where interfaceMember.Name.Name == method.Name.Name && interfaceMember is Method
+              where interfaceMember is Method
+                    && (interfaceMember.Name.Name == method.Name.Name || interfaceMember.FullName == method.Name.Name)
               select (Method) interfaceMember
               into interfaceMethod where interfaceMethod.ParameterTypesMatch (calleeMethodparameterTypes) select interfaceMethod).ToArray();
     }

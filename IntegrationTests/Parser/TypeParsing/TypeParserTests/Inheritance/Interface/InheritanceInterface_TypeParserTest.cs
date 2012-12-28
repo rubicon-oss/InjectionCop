@@ -168,5 +168,95 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Inher
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
+
+    [Test]
+    public void Parse_SafeCallOnClassImplementingMethodWithFragmentParameterFromMultipleInterfaces_NoProblem ()
+    {
+      TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<InheritanceSampleInterface>();
+      Method sample = IntrospectionUtility.MethodFactory (sampleTypeNode, "SafeCallOnClassImplementingMethodWithFragmentParameterFromMultipleInterfaces");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
+    
+    [Test]
+    public void Parse_UnsafeCallOnClassImplementingMethodWithFragmentParameterFromMultipleInterfaces_ReturnsProblem ()
+    {
+      TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<InheritanceSampleInterface>();
+      Method sample = IntrospectionUtility.MethodFactory (sampleTypeNode, "UnsafeCallOnClassImplementingMethodWithFragmentParameterFromMultipleInterfaces");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
+    
+    [Test]
+    public void Parse_InterfaceReturnFragmentsOfClassImplementingInterfaceMethodFromMultipleInterfacesAreConsidered_NoProblem ()
+    {
+      TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<InheritanceSampleInterface>();
+      Method sample = IntrospectionUtility.MethodFactory (sampleTypeNode, "InterfaceReturnFragmentsOfClassImplementingInterfaceMethodFromMultipleInterfacesAreConsidered");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
+
+    [Test]
+    public void Parse_SafeCallOnExtendedInterfaceMethodWithFragmentParameter_NoProblem ()
+    {
+      TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<InheritanceSampleInterface>();
+      Method sample = IntrospectionUtility.MethodFactory (sampleTypeNode, "SafeCallOnExtendedInterfaceMethodWithFragmentParameter");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
+
+    [Test]
+    public void Parse_UnsafeCallOnExtendedInterfaceMethodWithFragmentParameter_ReturnsProblem ()
+    {
+      TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<InheritanceSampleInterface>();
+      Method sample = IntrospectionUtility.MethodFactory (sampleTypeNode, "UnsafeCallOnExtendedInterfaceMethodWithFragmentParameter");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
+
+    [Test]
+    public void Parse_ExtendedInterfaceReturnFragmentsAreConsidered_NoProblem ()
+    {
+      TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<InheritanceSampleInterface>();
+      Method sample = IntrospectionUtility.MethodFactory (sampleTypeNode, "ExtendedInterfaceReturnFragmentsAreConsidered");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
+
+    [Test]
+    public void Parse_ValidReturnOnImplicitExtendedInterfaceMethod_NoProblem ()
+    {
+      TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory (typeof (ExtendedInterfaceSampleImplicitDeclarations));
+      Method sample = IntrospectionUtility.MethodFactory (sampleTypeNode, "MethodWithReturnFragment");
+
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
+
+    [Test]
+    public void Parse_InvalidReturnOnImplicitExtendedInterfaceMethod_ReturnsProblem ()
+    {
+      TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory (typeof (ExtendedInterfaceSampleImplicitDeclarationsInvalidReturn));
+      Method sample = IntrospectionUtility.MethodFactory (sampleTypeNode, "MethodWithReturnFragment");
+
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
   }
 }

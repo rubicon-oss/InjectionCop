@@ -25,8 +25,12 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Inher
     string MethodWithReturnFragment ();
   }
 
-  public interface IExtendedInheritanceSample : IInheritanceSample
+  public interface IInheritanceSampleDuplicate
   {
+    string MethodWithFragmentParameter ([Fragment ("InterfaceFragment")] string fragmentParameter, string nonFragmentParameter);
+
+    [return: Fragment ("InterfaceFragment")]
+    string MethodWithReturnFragment ();
   }
 
   public class InterfaceSampleImplicitDeclarations : IInheritanceSample
@@ -81,6 +85,51 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Inher
     }
   }
 
+  public class InterfaceSampleImplicitDeclarationsMultipleInheritance : IInheritanceSample, IInheritanceSampleDuplicate
+  {
+    public string MethodWithFragmentParameter (string fragmentParameter, string nonFragmentParameter)
+    {
+      return "dummy";
+    }
+
+    public string MethodWithReturnFragment ()
+    {
+      return "safe";
+    }
+  }
+
+// ReSharper disable PossibleInterfaceMemberAmbiguity
+  public interface IExtendedInheritanceSample : IInheritanceSample, IInheritanceSampleDuplicate
+// ReSharper restore PossibleInterfaceMemberAmbiguity
+  {
+  }
+
+  public class ExtendedInterfaceSampleImplicitDeclarations : IExtendedInheritanceSample
+  {
+    public string MethodWithFragmentParameter (string fragmentParameter, string nonFragmentParameter)
+    {
+      return "dummy";
+    }
+
+    public string MethodWithReturnFragment ()
+    {
+      return "safe";
+    }
+  }
+
+  public class ExtendedInterfaceSampleImplicitDeclarationsInvalidReturn : ParserSampleBase, IExtendedInheritanceSample
+  {
+    public string MethodWithFragmentParameter (string fragmentParameter, string nonFragmentParameter)
+    {
+      return "dummy";
+    }
+
+    public string MethodWithReturnFragment ()
+    {
+      return UnsafeSource();
+    }
+  }
+  
   public class InheritanceSampleInterface : ParserSampleBase
   {
     public void SafeCallOnInterfaceMethodWithFragmentParameter ()
@@ -115,7 +164,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Inher
 
     public void InterfaceReturnFragmentsOfExplicitlyDeclaredMethodAreConsidered ()
     {
-      IInheritanceSample sample = new InterfaceSampleImplicitDeclarations();
+      IInheritanceSample sample = new InterfaceSampleExplicitDeclarations();
       sample.MethodWithFragmentParameter (sample.MethodWithReturnFragment(), "safe");
     }
 
@@ -137,11 +186,40 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Inher
       sample.MethodWithFragmentParameter (sample.MethodWithReturnFragment(), "safe");
     }
 
-    /*
-     * roadmap:
-     * returntype test
-     * mehrfachvererbung
-     * tiefe interface vererbungshierarchie
-     */
+    public void SafeCallOnClassImplementingMethodWithFragmentParameterFromMultipleInterfaces ()
+    {
+      InterfaceSampleImplicitDeclarationsMultipleInheritance sample = new InterfaceSampleImplicitDeclarationsMultipleInheritance();
+      sample.MethodWithFragmentParameter ("safe", "safe");
+    }
+
+    public void UnsafeCallOnClassImplementingMethodWithFragmentParameterFromMultipleInterfaces ()
+    {
+      InterfaceSampleImplicitDeclarationsMultipleInheritance sample = new InterfaceSampleImplicitDeclarationsMultipleInheritance();
+      sample.MethodWithFragmentParameter (UnsafeSource(), "safe");
+    }
+
+    public void InterfaceReturnFragmentsOfClassImplementingInterfaceMethodFromMultipleInterfacesAreConsidered ()
+    {
+      InterfaceSampleImplicitDeclarationsMultipleInheritance sample = new InterfaceSampleImplicitDeclarationsMultipleInheritance();
+      sample.MethodWithFragmentParameter (sample.MethodWithReturnFragment(), "safe");
+    }
+    
+    public void SafeCallOnExtendedInterfaceMethodWithFragmentParameter ()
+    {
+      IInheritanceSampleDuplicate sample = new ExtendedInterfaceSampleImplicitDeclarations();
+      sample.MethodWithFragmentParameter ("safe", "safe");
+    }
+
+    public void UnsafeCallOnExtendedInterfaceMethodWithFragmentParameter ()
+    {
+      IInheritanceSample sample = new ExtendedInterfaceSampleImplicitDeclarations();
+      sample.MethodWithFragmentParameter (UnsafeSource(), "safe");
+    }
+
+    public void ExtendedInterfaceReturnFragmentsAreConsidered ()
+    {
+      IInheritanceSampleDuplicate sample = new ExtendedInterfaceSampleImplicitDeclarations();
+      sample.MethodWithFragmentParameter (sample.MethodWithReturnFragment(), "safe");
+    }
   }
 }
