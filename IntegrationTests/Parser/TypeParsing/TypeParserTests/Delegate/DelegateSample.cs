@@ -24,11 +24,18 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Deleg
     [return: Fragment("DelegateFragmentType")]
     public delegate string ReturnFragmentDelegate ();
 
+    private readonly FragmentParameterDelegate _fragmentParameterDelegate;
+
+    public DelegateSample ()
+    {
+      _fragmentParameterDelegate = MatchingFragmentParameterDelegate;
+    }
+
     private string MatchingFragmentParameterDelegate (string fragmentParameter, string nonFragmentParameter)
     {
       return fragmentParameter + nonFragmentParameter;
     }
-
+    
     private string SafeReturn ()
     {
       return "safe";
@@ -56,6 +63,16 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Deleg
       FragmentParameterDelegate fragmentParameterDelegate = MatchingFragmentParameterDelegate;
       ReturnFragmentDelegate returnFragmentDelegate = SafeReturn;
       fragmentParameterDelegate (returnFragmentDelegate(), "safe");
+    }
+
+    public void SafeDelegateFieldCall ()
+    {
+      _fragmentParameterDelegate ("safe", "safe");
+    }
+
+    public void UnsafeDelegateFieldCall ()
+    {
+      _fragmentParameterDelegate (UnsafeSource(), "safe");
     }
 
   }

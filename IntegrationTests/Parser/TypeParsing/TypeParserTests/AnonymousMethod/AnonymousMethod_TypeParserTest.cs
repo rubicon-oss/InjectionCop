@@ -16,15 +16,15 @@ using System;
 using Microsoft.FxCop.Sdk;
 using NUnit.Framework;
 
-namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Delegate
+namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.AnonymousMethod
 {
   [TestFixture]
-  public class Delegate_TypeparserTest: TypeParserTestBase
+  public class AnonymousMethod_TypeParserTest: TypeParserTestBase
   {
     [Test]
     public void Parse_SafeDelegateCall_NoProblem ()
     {
-      Method sample = TestHelper.GetSample<DelegateSample> ("SafeDelegateCall");
+      Method sample = TestHelper.GetSample<AnonymousMethodSample> ("SafeAnonymousMethodCall");
       _typeParser.Parse (sample);
       ProblemCollection result = _typeParser.Problems;
 
@@ -32,43 +32,23 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Deleg
     }
 
     [Test]
-    public void Parse_UnsafeDelegateCall_ReturnsProblem ()
+    public void Parse_AnonymousMethod_ReturnsProblem ()
     {
-      Method sample = TestHelper.GetSample<DelegateSample> ("UnsafeDelegateCall");
+      Method sample = TestHelper.GetSample<AnonymousMethodSample> ("UnsafeAnonymousMethodCall");
       _typeParser.Parse (sample);
       ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
 
-     [Test]
-    public void Parse_SafeDelegateCallUsingReturn_NoProblem ()
+    [Test]
+    public void Parse_SafeAnonymousMethodCallUsingReturn_NoProblem ()
     {
-      Method sample = TestHelper.GetSample<DelegateSample> ("SafeDelegateCallUsingReturn");
+      Method sample = TestHelper.GetSample<AnonymousMethodSample> ("SafeAnonymousMethodCallUsingReturn");
       _typeParser.Parse (sample);
       ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
-    }
-
-    [Test]
-    public void Parse_SafeDelegateFieldCall_NoProblem ()
-    {
-      Method sample = TestHelper.GetSample<DelegateSample> ("SafeDelegateFieldCall");
-      _typeParser.Parse (sample);
-      ProblemCollection result = _typeParser.Problems;
-
-      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
-    }
-
-    [Test]
-    public void Parse_UnsafeDelegateFieldCall_ReturnsProblem ()
-    {
-      Method sample = TestHelper.GetSample<DelegateSample> ("UnsafeDelegateFieldCall");
-      _typeParser.Parse (sample);
-      ProblemCollection result = _typeParser.Problems;
-
-      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
   }
 }

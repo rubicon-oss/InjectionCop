@@ -80,6 +80,8 @@
     <Compile Include="Parser\TypeParsing\SymbolTableTests\ParameterSafe\ParameterSafe_SymbolTableTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\AddProblem\AddProblemSample.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\AddProblem\AddProblem_TypeParserTest.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\AnonymousMethod\AnonymousMethodSample.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\AnonymousMethod\AnonymousMethod_TypeParserTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\AssignmentPropagation\AssignmentPropagationSample.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\AttributePropagation\AttributePropagationSample.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Attribute\SampleAttribute.cs" />
