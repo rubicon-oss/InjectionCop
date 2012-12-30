@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using InjectionCop.Config;
 using InjectionCop.Parser.ProblemPipe;
+using InjectionCop.Parser.MethodParsing;
 using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
 
@@ -88,7 +89,43 @@ namespace InjectionCop.Parser.BlockParsing
 
           case NodeType.AssignmentStatement:
             AssignmentStatement assignmentStatement = (AssignmentStatement) statement;
-            AssignmentStatementHandler (assignmentStatement);
+            if (assignmentStatement.Source.NodeType == NodeType.Construct
+                && assignmentStatement.Source.Type.NodeType == NodeType.DelegateNode)
+            {
+              Construct construct = (Construct)assignmentStatement.Source;
+              UnaryExpression methodWrapper = (UnaryExpression) construct.Operands[1];
+              MemberBinding methodBinding = (MemberBinding) methodWrapper.Operand;
+              Method assignedMethod = (Method) methodBinding.BoundMember;
+              
+              DelegateNode sourceDelegate = (DelegateNode)assignmentStatement.Source.Type;
+              string returnFragment = SymbolTable.EMPTY_FRAGMENT;
+              foreach (Member member in sourceDelegate.Members)
+              {
+                if (member.Name.Name == "Invoke")
+                {
+                  Method invoke = (Method) member;
+                  returnFragment = FragmentUtility.ReturnFragmentType(invoke);
+                }
+              }
+
+              ISymbolTable environment = new SymbolTable(_blacklistManager);
+              foreach (Parameter parameter in sourceDelegate.Parameters)
+              {
+                if (parameter.Attributes != null)
+                {
+                  environment.MakeSafe(parameter.Name.Name, FragmentUtility.GetFragmentType(parameter.Attributes));
+                }
+              }
+
+              IMethodGraphAnalyzer methodParser = new MethodGraphAnalyzer(_problemPipe);
+              IMethodGraphBuilder methodGraphBuilder = new MethodGraphBuilder(assignedMethod, _blacklistManager, _problemPipe, returnFragment);
+              IInitialSymbolTableBuilder parameterSymbolTableBuilder = new  EmbeddedInitialSymbolTableBuilder(assignedMethod, _blacklistManager, environment);
+              methodParser.Parse(methodGraphBuilder, parameterSymbolTableBuilder);
+            }
+            else
+            {
+              AssignmentStatementHandler(assignmentStatement);
+            }
             break;
 
           case NodeType.Return:

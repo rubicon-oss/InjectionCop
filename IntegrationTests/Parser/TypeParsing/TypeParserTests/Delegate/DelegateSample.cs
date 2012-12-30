@@ -24,6 +24,9 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Deleg
     [return: Fragment("DelegateFragmentType")]
     public delegate string ReturnFragmentDelegate ();
 
+    [return: Fragment("DelegateFragmentType")]
+    public delegate string FragmentParameterAndReturnDelegate([Fragment("DelegateFragmentType")] string fragmentParameter, string nonFragmentParameter);
+
     private readonly FragmentParameterDelegate _fragmentParameterDelegate;
 
     public DelegateSample ()
@@ -33,7 +36,20 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Deleg
 
     private string MatchingFragmentParameterDelegate (string fragmentParameter, string nonFragmentParameter)
     {
-      return fragmentParameter + nonFragmentParameter;
+      DummyMethod(nonFragmentParameter);
+      return fragmentParameter;
+    }
+
+    private string MatchingFragmentParameterAndReturnDelegateSafeReturn(string fragmentParameter, string nonFragmentParameter)
+    {
+      DummyMethod(nonFragmentParameter);
+      return fragmentParameter;
+    }
+
+    private string MatchingFragmentParameterAndReturnDelegateUnsafeReturn (string fragmentParameter, string nonFragmentParameter)
+    {
+      DummyMethod(fragmentParameter);
+      return nonFragmentParameter;
     }
     
     private string SafeReturn ()
@@ -73,6 +89,23 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Deleg
     public void UnsafeDelegateFieldCall ()
     {
       _fragmentParameterDelegate (UnsafeSource(), "safe");
+    }
+
+    public void DelegateWithSafeReturn()
+    {
+      FragmentParameterAndReturnDelegate sampleDelegate = MatchingFragmentParameterAndReturnDelegateSafeReturn;
+      sampleDelegate("safe", "safe");
+    }
+
+    public void DelegateWithUnsafeReturn()
+    {
+      FragmentParameterAndReturnDelegate sampleDelegate = MatchingFragmentParameterAndReturnDelegateUnsafeReturn;
+      sampleDelegate("safe", "safe");
+    }
+
+    private void RequiresDelegateFragmentType([Fragment("DelegateFragmentType")] string fragmentParameter)
+    {
+      DummyMethod(fragmentParameter);
     }
 
   }

@@ -39,7 +39,7 @@ namespace InjectionCop.UnitTests.Parser
       clone.MakeUnsafe ("key");
       ISymbolTable result = _symbolTable.Copy();
       
-      Assert.That (result.IsFragment("key", "FragmentType"), Is.True);
+      Assert.That (result.IsAssignableTo("key", "FragmentType"), Is.True);
     }
 
     [Test]

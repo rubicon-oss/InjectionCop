@@ -33,7 +33,7 @@ namespace InjectionCop.Parser
     void MakeSafe (string symbolName, string fragmentType);
     void MakeUnsafe (string symbolName);
     string GetFragmentType (string symbolName);
-    bool IsFragment (string symbolName, string fragmentType);
+    bool IsAssignableTo(string symbolName, string fragmentType);
     string InferFragmentType (Expression expression);
     bool Contains (string symbolName);
     ISymbolTable Copy ();

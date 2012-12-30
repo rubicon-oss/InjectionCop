@@ -19,6 +19,7 @@ using InjectionCop.Parser.MethodParsing;
 using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
 using NUnit.Framework;
+using InjectionCop.IntegrationTests.Parser.MethodParsing;
 
 namespace InjectionCop.IntegrationTests.Parser.MethodParsing.InitialSymbolTableBuilderTests
 {
@@ -26,98 +27,65 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.InitialSymbolTableB
   public class InitialSymbolTableBuilderTest
   {
     private IBlacklistManager _blacklistManager;
+    private TypeNode _floatType;
+    private TypeNode _objectType;
 
     [SetUp]
     public void SetUp()
     {
       _blacklistManager = new IDbCommandBlacklistManagerStub();
+      _floatType = IntrospectionUtility.TypeNodeFactory<float>();
+      _objectType = IntrospectionUtility.TypeNodeFactory<object>();
     }
 
     [Test]
-    [Ignore]
-    public void GetResult_ParameterizedMethod_ReturnsSymbolTableContainingFragmentField ()
+    public void GetResult_ParameterizedMethodSymbolTable_FragmentFieldIsListedAsEmptyFragment()
     {
-      TypeNode floatType = IntrospectionUtility.TypeNodeFactory<float>();
-      TypeNode objectType = IntrospectionUtility.TypeNodeFactory<object>();
-      Method sampleMethod = TestHelper.GetSample<InitialSymbolTableBuilderSample> ("ParameterizedMethod", floatType, objectType);
-      InitialSymbolTableBuilder initialSymbolTableBuilder = new InitialSymbolTableBuilder (sampleMethod, _blacklistManager);
+      Method sampleMethod = TestHelper.GetSample<SymbolTableBuilderSample>("ParameterizedMethod", _floatType, _objectType);
+      InitialSymbolTableBuilder initialSymbolTableBuilder = new InitialSymbolTableBuilder(sampleMethod, _blacklistManager);
       ISymbolTable resultSymbolTable = initialSymbolTableBuilder.GetResult();
-      
-      Assert.That (resultSymbolTable.GetFragmentType ("_fragmentField"), Is.EqualTo ("FieldType"));
+
+      Assert.That(resultSymbolTable.GetFragmentType("_fragmentField"), Is.EqualTo(SymbolTable.EMPTY_FRAGMENT));
     }
 
     [Test]
-    [Ignore]
-    public void GetResult_ParameterizedMethod_ReturnsSymbolTableContainingNonFragmentField ()
+    public void GetResult_ParameterizedMethodSymbolTable_NonFragmentFieldIsEmptyFragment()
     {
-      TypeNode floatType = IntrospectionUtility.TypeNodeFactory<float>();
-      TypeNode objectType = IntrospectionUtility.TypeNodeFactory<object>();
-      Method sampleMethod = TestHelper.GetSample<InitialSymbolTableBuilderSample> ("ParameterizedMethod", floatType, objectType);
-      InitialSymbolTableBuilder initialSymbolTableBuilder = new InitialSymbolTableBuilder (sampleMethod, _blacklistManager);
+      Method sampleMethod = TestHelper.GetSample<SymbolTableBuilderSample>("ParameterizedMethod", _floatType, _objectType);
+      InitialSymbolTableBuilder initialSymbolTableBuilder = new InitialSymbolTableBuilder(sampleMethod, _blacklistManager);
       ISymbolTable resultSymbolTable = initialSymbolTableBuilder.GetResult();
-      
-      Assert.That (resultSymbolTable.GetFragmentType ("_nonFragmentField"), Is.EqualTo (SymbolTable.EMPTY_FRAGMENT));
+
+      Assert.That(resultSymbolTable.GetFragmentType("_nonFragmentField"), Is.EqualTo(SymbolTable.EMPTY_FRAGMENT));
     }
 
     [Test]
-    [Ignore]
-    public void GetResult_ParameterizedMethod_ReturnsSymbolTableContainingSqlFragmentField ()
+    public void GetResult_ParameterizedMethodSymbolTable_UnknownSymbolIsListedAsEmptyFragment()
     {
-      TypeNode floatType = IntrospectionUtility.TypeNodeFactory<float>();
-      TypeNode objectType = IntrospectionUtility.TypeNodeFactory<object>();
-      Method sampleMethod = TestHelper.GetSample<InitialSymbolTableBuilderSample> ("ParameterizedMethod", floatType, objectType);
-      InitialSymbolTableBuilder initialSymbolTableBuilder = new InitialSymbolTableBuilder (sampleMethod, _blacklistManager);
+      Method sampleMethod = TestHelper.GetSample<SymbolTableBuilderSample>("ParameterizedMethod", _floatType, _objectType);
+      InitialSymbolTableBuilder initialSymbolTableBuilder = new InitialSymbolTableBuilder(sampleMethod, _blacklistManager);
       ISymbolTable resultSymbolTable = initialSymbolTableBuilder.GetResult();
-      
-      Assert.That (resultSymbolTable.GetFragmentType ("_sqlFragmentField"), Is.EqualTo ("SqlFragment"));
+
+      Assert.That(resultSymbolTable.GetFragmentType("unknownSymbol"), Is.EqualTo(SymbolTable.EMPTY_FRAGMENT));
     }
 
     [Test]
-    [Ignore]
-    public void GetResult_ConstructorFromExtendedClass_ReturnsSymbolTableContainingSqlFragmentFieldFromBaseClass ()
+    public void GetResult_ParameterizedMethodSymbolTable_NonFragmentParameterIsEmptyFragment()
     {
-      TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<ExtendedInitialSymbolTableBuilderSample>();
-      Method otherSample = IntrospectionUtility.MethodFactory (sampleTypeNode, ".ctor");
-      InitialSymbolTableBuilder initialSymbolTableBuilder = new InitialSymbolTableBuilder (otherSample, _blacklistManager);
+      Method sampleMethod = TestHelper.GetSample<SymbolTableBuilderSample>("ParameterizedMethod", _floatType, _objectType);
+      InitialSymbolTableBuilder initialSymbolTableBuilder = new InitialSymbolTableBuilder(sampleMethod, _blacklistManager);
       ISymbolTable resultSymbolTable = initialSymbolTableBuilder.GetResult();
 
-      Assert.That (resultSymbolTable.GetFragmentType ("_sqlFragmentField"), Is.EqualTo ("SqlFragment"));
+      Assert.That(resultSymbolTable.GetFragmentType("nonFragmentParameter"), Is.EqualTo(SymbolTable.EMPTY_FRAGMENT));
     }
 
     [Test]
-    [Ignore]
-    public void GetResult_ConstructorFromExtendedExtendedClass_ReturnsSymbolTableContainingSqlFragmentFieldFromInheritanceRoot ()
+    public void GetResult_ParameterizedMethodSymbolTable_FragmentParameterIsOfCorrectFragmentType()
     {
-      TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<ExtendedExtendedInitialSymbolTableBuilderSample>();
-      Method otherSample = IntrospectionUtility.MethodFactory (sampleTypeNode, ".ctor");
-      InitialSymbolTableBuilder initialSymbolTableBuilder = new InitialSymbolTableBuilder (otherSample, _blacklistManager);
+      Method sampleMethod = TestHelper.GetSample<SymbolTableBuilderSample>("ParameterizedMethod", _floatType, _objectType);
+      InitialSymbolTableBuilder initialSymbolTableBuilder = new InitialSymbolTableBuilder(sampleMethod, _blacklistManager);
       ISymbolTable resultSymbolTable = initialSymbolTableBuilder.GetResult();
-      
-      Assert.That (resultSymbolTable.GetFragmentType ("_sqlFragmentField"), Is.EqualTo ("SqlFragment"));
-    }
 
-    [Test]
-    [Ignore]
-    public void GetResult_ConstructorFromExtendedClass_ReturnsSymbolTableContainingResetFragmentField ()
-    {
-      TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<ExtendedInitialSymbolTableBuilderSample>();
-      Method otherSample = IntrospectionUtility.MethodFactory (sampleTypeNode, ".ctor");
-      InitialSymbolTableBuilder initialSymbolTableBuilder = new InitialSymbolTableBuilder (otherSample, _blacklistManager);
-      ISymbolTable resultSymbolTable = initialSymbolTableBuilder.GetResult();
-      bool fieldIsCorrectFragment = resultSymbolTable.IsFragment("_fragmentField", SymbolTable.EMPTY_FRAGMENT);
-      Assert.That (fieldIsCorrectFragment, Is.True);
-    }
-
-    [Test]
-    [Ignore]
-    public void GetResult_ConstructorFromExtendedExtendedClass_ReturnsSymbolTableContainingNewFragmentField ()
-    {
-      TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<ExtendedExtendedInitialSymbolTableBuilderSample>();
-      Method otherSample = IntrospectionUtility.MethodFactory (sampleTypeNode, ".ctor");
-      InitialSymbolTableBuilder initialSymbolTableBuilder = new InitialSymbolTableBuilder (otherSample, _blacklistManager);
-      ISymbolTable resultSymbolTable = initialSymbolTableBuilder.GetResult();
-      
-      Assert.That (resultSymbolTable.GetFragmentType("_fragmentField"), Is.EqualTo("NewFieldType"));
+      Assert.That(resultSymbolTable.GetFragmentType("fragmentParameter"), Is.EqualTo("FragmentType"));
     }
   }
 }

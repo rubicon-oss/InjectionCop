@@ -14,6 +14,8 @@
 
 using System;
 using System.Linq;
+using System.Collections;
+using System.Collections.Generic;
 using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Utilities
@@ -233,6 +235,13 @@ namespace InjectionCop.Utilities
                     && (interfaceMember.Name.Name == method.Name.Name || interfaceMember.FullName == method.Name.Name)
               select (Method) interfaceMember
               into interfaceMethod where interfaceMethod.ParameterTypesMatch (calleeMethodparameterTypes) select interfaceMethod).ToArray();
+    }
+
+    public static IEnumerable<Field> FilterFields(TypeNode typeNode)
+    {
+      return (from member in typeNode.Members
+             where member is Field
+             select (Field) member);
     }
   }
 }

@@ -20,9 +20,9 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.SymbolTableTests.Infe
   class InferFragmentSample : ParserSampleBase
   {
     [Fragment("SampleFragment")]
-    private string _fragmentField = "dummy";
+    private new string _fragmentField = "dummy";
 
-    private string _nonFragmentField;
+    private string _nonFragmentField = "dummy";
 
     public int AssignmentWithLiteral ()
     {

@@ -70,5 +70,25 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Deleg
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
+    
+    [Test]
+    public void Parse_DelegateWithSafeReturn_NoProblem()
+    {
+      Method sample = TestHelper.GetSample<DelegateSample>("DelegateWithSafeReturn");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
+
+    [Test]
+    public void Parse_DelegateWithUnsafeReturn_ReturnsProblem()
+    {
+      Method sample = TestHelper.GetSample<DelegateSample>("DelegateWithUnsafeReturn");
+      _typeParser.Parse(sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That(TestHelper.ContainsProblemID(c_InjectionCopRuleId, result), Is.True);
+    }
   }
 }

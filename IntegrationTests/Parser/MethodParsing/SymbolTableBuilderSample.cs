@@ -15,32 +15,18 @@
 using System;
 using InjectionCop.Fragment;
 
-namespace InjectionCop.IntegrationTests.Parser.MethodParsing.InitialSymbolTableBuilderTests
+namespace InjectionCop.IntegrationTests.Parser.MethodParsing
 {
-  class InitialSymbolTableBuilderSample
+  class SymbolTableBuilderSample
   {
-    [Fragment ("FieldType")]
+    [Fragment("FragmentType")]
     protected int _fragmentField = 0;
 
-    [SqlFragment]
-    protected string _sqlFragmentField = "dummy";
-    
     protected readonly object _nonFragmentField = new object();
 
-    public string ParameterizedMethod (float floatParameter, object objectParameter)
+    public string ParameterizedMethod(float nonFragmentParameter, [Fragment("FragmentType")] object fragmentParameter)
     {
-      return objectParameter.ToString() + floatParameter + _fragmentField + _nonFragmentField + _sqlFragmentField;
+      return fragmentParameter.ToString() + nonFragmentParameter + _fragmentField + _nonFragmentField;
     }
-  }
-
-  internal class ExtendedInitialSymbolTableBuilderSample : InitialSymbolTableBuilderSample
-  {
-    new protected int _fragmentField;
-  }
-
-  internal class ExtendedExtendedInitialSymbolTableBuilderSample : ExtendedInitialSymbolTableBuilderSample
-  {
-    [Fragment("NewFieldType")]
-    protected new int _fragmentField;
   }
 }

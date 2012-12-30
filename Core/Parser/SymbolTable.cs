@@ -43,19 +43,20 @@ namespace InjectionCop.Parser
       get { return new List<string> (_safenessMap.Keys).ToArray(); }
     }
 
-    public bool IsFragment (string symbolName, string fragmentType)
+    public bool IsAssignableTo (string symbolName, string fragmentType)
     {
       ArgumentUtility.CheckNotNull ("symbolName", symbolName);
       ArgumentUtility.CheckNotNull ("fragmentType", fragmentType);
 
       bool isFragment = false;
       bool isLiteral = false;
+      bool assignmentOnEmptyFragment = fragmentType == EMPTY_FRAGMENT;
       if (_safenessMap.ContainsKey (symbolName))
       {
         isFragment = _safenessMap[symbolName] == fragmentType;
         isLiteral = _safenessMap[symbolName] == LITERAL;
       }
-      return isFragment || isLiteral;
+      return isFragment || isLiteral || assignmentOnEmptyFragment;
     }
 
     public string InferFragmentType (Expression expression)

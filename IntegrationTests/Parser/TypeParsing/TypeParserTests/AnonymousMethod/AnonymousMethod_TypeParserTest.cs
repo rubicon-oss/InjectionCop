@@ -62,6 +62,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Anony
     }
 
     [Test]
+    [Ignore("Not supported in version 1.0, should be supported when declaration is inline")]
     public void Parse_UnsafeMethodCallInsideAnonymousMethod_ReturnsProblem ()
     {
       Method sample = TestHelper.GetSample<AnonymousMethodSample> ("UnsafeMethodCallInsideAnonymousMethod");

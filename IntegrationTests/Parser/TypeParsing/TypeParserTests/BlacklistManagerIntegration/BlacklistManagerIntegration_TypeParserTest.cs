@@ -20,6 +20,7 @@ using NUnit.Framework;
 namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.BlacklistManagerIntegration
 {
   [TestFixture]
+  [Ignore("XML interface is in experimental state")]
   public class BlacklistManagerIntegration_TypeParserTest : TypeParserTestBase
   {
     [Test]

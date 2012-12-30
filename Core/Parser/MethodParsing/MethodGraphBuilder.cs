@@ -49,6 +49,12 @@ namespace InjectionCop.Parser.MethodParsing
       _returnFragmentType = FragmentUtility.ReturnFragmentType (method);
     }
 
+    public MethodGraphBuilder(Method method, IBlacklistManager blacklistManager, IProblemPipe problemPipe, string returnFragmentType)
+      : this(method, blacklistManager, problemPipe)
+    {
+      _returnFragmentType = returnFragmentType;
+    }
+
     public IMethodGraph GetResult ()
     {
       Build();

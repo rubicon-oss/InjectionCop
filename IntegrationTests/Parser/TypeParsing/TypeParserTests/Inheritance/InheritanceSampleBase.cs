@@ -20,7 +20,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Inher
   public class InheritanceSampleBase : ParserSampleBase
   {
     [Fragment ("InheritanceFragment")]
-    protected string _fragmentField;
+    protected new string _fragmentField;
 
     [Fragment ("InheritanceFragment")]
     protected string _initialFragmentField;

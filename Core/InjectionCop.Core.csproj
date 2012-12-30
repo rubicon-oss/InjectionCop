@@ -34,9 +34,6 @@
     <Reference Include="FxCopSdk">
       <HintPath>$(CodeAnalysisPath)\FxCopSdk.dll</HintPath>
     </Reference>
-    <Reference Include="JetBrains.Annotations">
-      <HintPath>..\..\..\..\Program Files (x86)\JetBrains\ReSharper\v7.1\Bin\JetBrains.Annotations.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Cci">
       <HintPath>$(CodeAnalysisPath)\Microsoft.Cci.dll</HintPath>
     </Reference>
@@ -60,6 +57,7 @@
     <Compile Include="Config\IDbCommandBlacklistManagerStub.cs" />
     <Compile Include="Parser\BlockParsing\BlockAssignment.cs" />
     <Compile Include="Parser\ISymbolTable.cs" />
+    <Compile Include="Parser\MethodParsing\EmbeddedInitialSymbolTableBuilder.cs" />
     <Compile Include="Parser\MethodParsing\IMethodGraph.cs" />
     <Compile Include="Parser\MethodParsing\IMethodGraphBuilder.cs" />
     <Compile Include="Parser\MethodParsing\IMethodGraphAnalyzer.cs" />

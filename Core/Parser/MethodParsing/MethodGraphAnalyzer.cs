@@ -71,7 +71,7 @@ namespace InjectionCop.Parser.MethodParsing
     {
       foreach (PreCondition precondition in preconditions)
       {
-        if (!context.Contains (precondition.Symbol) || !context.IsFragment (precondition.Symbol, precondition.FragmentType))
+        if (!context.Contains(precondition.Symbol) || !context.IsAssignableTo(precondition.Symbol, precondition.FragmentType))
         {
           _problemPipe.AddProblem(precondition.ProblemMetadata);
         }

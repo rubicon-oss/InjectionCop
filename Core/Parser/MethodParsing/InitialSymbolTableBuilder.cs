@@ -21,8 +21,8 @@ namespace InjectionCop.Parser.MethodParsing
 {
   public class InitialSymbolTableBuilder : IInitialSymbolTableBuilder
   {
-    private ISymbolTable _result;
-    private readonly Method _method;
+    protected ISymbolTable _result;
+    protected readonly Method _method;
     private readonly IBlacklistManager _blacklistManager;
 
     public InitialSymbolTableBuilder (Method method, IBlacklistManager blacklistManager)
@@ -38,7 +38,7 @@ namespace InjectionCop.Parser.MethodParsing
       return _result;
     }
 
-    public void Build ()
+    public virtual void Build ()
     {
       if (_result == null)
       {
@@ -47,7 +47,7 @@ namespace InjectionCop.Parser.MethodParsing
       }
     }
 
-    private void AnalyzeParameters ()
+    protected void AnalyzeParameters ()
     {
       foreach (var parameter in _method.Parameters)
       {

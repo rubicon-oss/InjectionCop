@@ -69,9 +69,12 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Anony
       fragmentDelegate ("safe", "safe");
     }
 
-    private void RequiresAnonymousMethodFragment ([Fragment ("ClosureFragmentType")] string fragmentParameter)
+    private void RequiresAnonymousMethodFragment([Fragment("AnonymousMethodFragmentType")] string fragmentParameter)
     {
       DummyMethod (fragmentParameter);
     }
+
+    // ToDo: sample with unsafe call inside anonymous method returned by method 
+    // + sample with unsafe call inside named method 
   }
 }

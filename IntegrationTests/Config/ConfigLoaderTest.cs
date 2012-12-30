@@ -20,6 +20,7 @@ using NUnit.Framework;
 namespace InjectionCop.IntegrationTests.Config
 {
   [TestFixture]
+  [Ignore("XML interface is in experimental state")]
   public class ConfigLoaderTest
   {
     [Test]
