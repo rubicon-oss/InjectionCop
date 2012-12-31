@@ -50,5 +50,45 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Lambd
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
+
+    [Test]
+    public void Parse_SafeMethodCallInsideLambda_NoProblem()
+    {
+      Method sample = TestHelper.GetSample<LambdaSample>("SafeMethodCallInsideLambda");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
+
+    [Test]
+    public void Parse_UnsafeMethodCallInsideLambda_ReturnsProblem()
+    {
+      Method sample = TestHelper.GetSample<LambdaSample>("UnsafeMethodCallInsideLambda");
+      _typeParser.Parse(sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That(TestHelper.ContainsProblemID(c_InjectionCopRuleId, result), Is.True);
+    }
+
+    [Test]
+    public void Parse_SafeReturnInsideLambda_NoProblem()
+    {
+      Method sample = TestHelper.GetSample<LambdaSample>("SafeReturnInsideLambda");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
+
+    [Test]
+    public void Parse_UnsafeReturnInsideLambda_ReturnsProblem()
+    {
+      Method sample = TestHelper.GetSample<LambdaSample>("UnsafeReturnInsideLambda");
+      _typeParser.Parse(sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That(TestHelper.ContainsProblemID(c_InjectionCopRuleId, result), Is.True);
+    }
   }
 }

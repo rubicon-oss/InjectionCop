@@ -27,7 +27,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Lambd
 
     public void SafeLambdaCall ()
     {
-      AnonymousMethodSample.FragmentParameterDelegate fragmentDelegate =
+      FragmentParameterDelegate fragmentDelegate =
           (fragmentParameter, nonFragmentParameter) => fragmentParameter + nonFragmentParameter;
           
       fragmentDelegate ("safe", "safe");
@@ -35,18 +35,45 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Lambd
 
     public void UnsafeLambdaCall ()
     {
-      AnonymousMethodSample.FragmentParameterDelegate fragmentDelegate =
+      FragmentParameterDelegate fragmentDelegate =
           (fragmentParameter, nonFragmentParameter) => fragmentParameter + nonFragmentParameter;
       fragmentDelegate (UnsafeSource(), "safe");
     }
 
     public void SafeLambdaCallUsingReturn ()
     {
-      AnonymousMethodSample.FragmentParameterDelegate fragmentParameterDelegate =
+      FragmentParameterDelegate fragmentParameterDelegate =
           (fragmentParameter, nonFragmentParameter) => fragmentParameter + nonFragmentParameter;
-      AnonymousMethodSample.ReturnFragmentDelegate returnFragmentDelegate =
+      ReturnFragmentDelegate returnFragmentDelegate =
           () => "safe";
       fragmentParameterDelegate (returnFragmentDelegate(), "safe");
+    }
+
+    public void SafeMethodCallInsideLambda()
+    {
+      FragmentParameterDelegate fragmentDelegate =
+          (fragmentParameter, nonFragmentParameter) => { RequiresLambdaFragment(fragmentParameter); return fragmentParameter + nonFragmentParameter; };
+    }
+
+    public void UnsafeMethodCallInsideLambda()
+    {
+      FragmentParameterDelegate fragmentDelegate =
+          (fragmentParameter, nonFragmentParameter) => { RequiresLambdaFragment(nonFragmentParameter); return fragmentParameter + nonFragmentParameter; };
+    }
+
+    public void SafeReturnInsideLambda()
+    {
+      ReturnFragmentDelegate returnFragmentDelegate = () => "safe";
+    }
+
+    public void UnsafeReturnInsideLambda()
+    {
+      ReturnFragmentDelegate returnFragmentDelegate = () => UnsafeSource();
+    }
+
+    private void RequiresLambdaFragment([Fragment("LambdaFragmentType")] string fragmentParameter)
+    {
+      DummyMethod(fragmentParameter);
     }
   }
 }
