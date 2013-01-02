@@ -35,8 +35,9 @@ namespace InjectionCop.Parser.BlockParsing
     private readonly IProblemPipe _problemPipe;
     private readonly string _returnFragmentType;
     private List<string> _assignmentTargetVariables;
+    private List<PreCondition> _returnConditions;
 
-    public BlockParser (IBlacklistManager blacklistManager, IProblemPipe problemPipe, string returnFragmentType)
+    public BlockParser (IBlacklistManager blacklistManager, IProblemPipe problemPipe, string returnFragmentType, List<PreCondition> returnConditions)
     {
       _blacklistManager = ArgumentUtility.CheckNotNull ("blacklistManager", blacklistManager);
       _problemPipe = ArgumentUtility.CheckNotNull ("typeParser", problemPipe);
@@ -46,6 +47,7 @@ namespace InjectionCop.Parser.BlockParsing
       _blockAssignments = new List<BlockAssignment>();
       _returnFragmentType = ArgumentUtility.CheckNotNullOrEmpty("returnFragmentType", returnFragmentType);
       _assignmentTargetVariables = new List<string>();
+      _returnConditions = returnConditions;
     }
 
     public BasicBlock Parse (Block block)
@@ -130,7 +132,7 @@ namespace InjectionCop.Parser.BlockParsing
 
           case NodeType.Return:
             ReturnNode returnNode = (ReturnNode) statement;
-            ReturnStatementHandler (returnNode);
+            ReturnStatementHandler (returnNode, methodBodyBlock);
             break;
 
           case NodeType.Branch:
@@ -213,7 +215,7 @@ namespace InjectionCop.Parser.BlockParsing
       _blockAssignments.Add (blockAssignment);
     }
 
-    private void ReturnStatementHandler (ReturnNode returnNode)
+    private void ReturnStatementHandler (ReturnNode returnNode, Block methodBodyBlock)
     {
       if (returnNode.Expression != null)
       {
@@ -223,6 +225,34 @@ namespace InjectionCop.Parser.BlockParsing
             returnNode.UniqueKey, returnNode.SourceContext, _returnFragmentType, _symbolTableParser.GetFragmentType (returnSymbol));
         PreCondition returnBlockCondition = new PreCondition (returnSymbol, _returnFragmentType, problemMetadata);
         _preConditions.Add (returnBlockCondition);
+        _preConditions.AddRange (_returnConditions);
+      }
+      else if (methodBodyBlock.Statements.Count == 1)
+      {
+        _preConditions.AddRange (_returnConditions);
+      }
+      else{
+        foreach (var returnCondition in _returnConditions)
+        {
+          string blockInternalFragmentType = _symbolTableParser.GetFragmentType (returnCondition.Symbol);
+          if (blockInternalFragmentType != SymbolTable.LITERAL
+              && returnCondition.FragmentType != SymbolTable.EMPTY_FRAGMENT
+              && returnCondition.FragmentType != blockInternalFragmentType)
+          {
+            ProblemMetadata problemMetadata = new ProblemMetadata (
+            returnNode.UniqueKey,
+            returnNode.SourceContext,
+            returnCondition.FragmentType,
+            blockInternalFragmentType);
+            _problemPipe.AddProblem (problemMetadata);
+            if (blockInternalFragmentType == SymbolTable.EMPTY_FRAGMENT)
+            {
+              //string sourceSymbol = returnCondition.Symbol;
+              //PreCondition preCondition = new PreCondition (sourceSymbol, targetFragmentType, problemMetadata);
+              _preConditions.Add (returnCondition);
+            }
+          }
+        }
       }
     }
 
@@ -258,7 +288,7 @@ namespace InjectionCop.Parser.BlockParsing
       {
         MethodCall methodCall = (MethodCall) expression;
         CheckParameters (methodCall);
-        UpdateSafeOutParameters (methodCall);
+        UpdateOutAndRefSymbols (methodCall);
         foreach (Expression operand in methodCall.Operands)
         {
           Inspect (operand);
@@ -276,7 +306,7 @@ namespace InjectionCop.Parser.BlockParsing
         Inspect (binaryExpression.Operand2);
       }
     }
-
+    
     private void CheckParameters (MethodCall methodCall)
     {
       List<PreCondition> additionalPreConditions;
@@ -286,28 +316,26 @@ namespace InjectionCop.Parser.BlockParsing
       _preConditions.AddRange (additionalPreConditions);
     }
 
-    private void UpdateSafeOutParameters (MethodCall methodCall)
+    private void UpdateOutAndRefSymbols (MethodCall methodCall)
     {
       Method method = IntrospectionUtility.ExtractMethod (methodCall);
       for (int i = 0; i < methodCall.Operands.Count; i++)
       {
-        if (IntrospectionUtility.IsVariable (methodCall.Operands[i]))
+        if (IntrospectionUtility.IsVariable (methodCall.Operands[i])
+            && (method.Parameters[i].IsOut || method.Parameters[i].Type is Reference))
         {
-          if (method.Parameters[i].IsOut)
+          string symbol = IntrospectionUtility.GetVariableName (methodCall.Operands[i]);
+          if (FragmentUtility.ContainsFragment (method.Parameters[i].Attributes))
           {
-            string symbol = IntrospectionUtility.GetVariableName (methodCall.Operands[i]);
-            if (FragmentUtility.ContainsFragment (method.Parameters[i].Attributes))
-            {
-              string fragmentType = FragmentUtility.GetFragmentType (method.Parameters[i].Attributes);
-              _symbolTableParser.MakeSafe (symbol, fragmentType);
-            }
-            else
-            {
-              _symbolTableParser.MakeUnsafe (symbol);
-            }
+            string fragmentType = FragmentUtility.GetFragmentType (method.Parameters[i].Attributes);
+            _symbolTableParser.MakeSafe (symbol, fragmentType);
+          }
+          else
+          {
+            _symbolTableParser.MakeUnsafe (symbol);
           }
         }
-      }
+      }    
     }
   }
 }

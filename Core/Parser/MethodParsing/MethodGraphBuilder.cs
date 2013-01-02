@@ -30,6 +30,7 @@ namespace InjectionCop.Parser.MethodParsing
     private readonly IBlacklistManager _blacklistManager;
     private readonly IProblemPipe _problemPipe;
     private readonly string _returnFragmentType;
+    
 
     public MethodGraphBuilder (Method method, IBlacklistManager blacklistManager, IProblemPipe problemPipe)
     {
@@ -65,10 +66,9 @@ namespace InjectionCop.Parser.MethodParsing
     {
       if (_result == null)
       {
-        BlockParser parser = new BlockParser (_blacklistManager, _problemPipe, _returnFragmentType);
+        BlockParser parser = new BlockParser (_blacklistManager, _problemPipe, _returnFragmentType, new List<PreCondition>());
         Dictionary<int, BasicBlock> graph = new Dictionary<int, BasicBlock>();
         int initialBlockId;
-
         List<Block> blockList = new List<Block> (_methodBody.Statements.OfType<Block>());
 
         using (var blocksEnumerator = blockList.GetEnumerator())

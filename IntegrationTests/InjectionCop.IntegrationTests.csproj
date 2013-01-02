@@ -102,6 +102,12 @@
     <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\Property\InheritanceProperty_TypeParserTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Lambda\LambdaSample.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Lambda\Lambda_TypeParserTest.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Parameter\CallByReference\CallByReferenceSample.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Parameter\CallByReference\CallByReference_TypeParserTest.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Parameter\CallByShare\CallByShareSample.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Parameter\CallByShare\CallByShare_TypeParserTest.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Parameter\Out\OutSample.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Parameter\Out\Out_TypeParserTest.cs" />
     <Compile Include="Utilities\FragmentUtilitySample.cs" />
     <Compile Include="Utilities\FragmentUtilityTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Concatenation\ConcatenationSample.cs" />
@@ -119,8 +125,6 @@
     <Compile Include="Parser\TypeParsing\TypeParserTests\Interface\Interface_TypeParserTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\NestedCall\NestedCallSample.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\NestedCall\NestedCall_TypeParserTest.cs" />
-    <Compile Include="Parser\TypeParsing\TypeParserTests\Parameter\ParameterSample.cs" />
-    <Compile Include="Parser\TypeParsing\TypeParserTests\Parameter\Parameter_TypeParserTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Property\PropertySample.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Property\Property_TypeParserTest.cs" />
     <Compile Include="Parser\TestHelper.cs" />

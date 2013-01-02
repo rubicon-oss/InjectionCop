@@ -110,13 +110,13 @@ namespace InjectionCop.Parser
       {
         candidateAttributes = interfaceDeclarations.First().ReturnAttributes;
       }
-      else if (!IsAnnotatedPropertyGetter(method))
+      else if (IsAnnotatedPropertyGetter(method))
       {
-        candidateAttributes = method.ReturnAttributes;
+        candidateAttributes = method.DeclaringMember.Attributes;
       }
       else
       {
-        candidateAttributes = method.DeclaringMember.Attributes;
+        candidateAttributes = method.ReturnAttributes;
       }
 
       if (candidateAttributes != null)
@@ -239,9 +239,9 @@ namespace InjectionCop.Parser
 
     private string[] GetParameterFragmentTypes (Method calleeMethod)
     {
-      List<string> parameterTypes = GetParameterTypes (calleeMethod);
-      
+      List<string> parameterTypes = IntrospectionUtility.GetParameterTypes (calleeMethod);
       string[] parameterFragmentTypes = _blacklistManager.GetFragmentTypes (calleeMethod.DeclaringType.FullName, calleeMethod.Name.Name, parameterTypes);
+      
       if (parameterFragmentTypes == null)
       {
         List<string> buffer = new List<string>();
@@ -280,10 +280,6 @@ namespace InjectionCop.Parser
       }
       return isAnnotatedPropertyGetter;
     }
-
-    private List<string> GetParameterTypes (Method method)
-    {
-      return method.Parameters.Select (parameter => parameter.Type.FullName).ToList();
-    }
+    
   }
 }

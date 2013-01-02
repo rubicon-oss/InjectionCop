@@ -16,16 +16,15 @@ using System;
 using Microsoft.FxCop.Sdk;
 using NUnit.Framework;
 
-namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Closure
+namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Parameter.CallByReference
 {
   [TestFixture]
-  [Ignore("Closures are not suppoted in version 1.0")]
-  public class Closure_TypeParserTest : TypeParserTestBase
+  public class CallByReference_TypeParserTest: TypeParserTestBase
   {
     [Test]
-    public void Parse_SafeClosureUsingLocalVariable_NoProblem ()
+    public void Parse_FragmentRefParameterSafe_NoProblem ()
     {
-      Method sample = TestHelper.GetSample<ClosureSample> ("SafeClosureUsingLocalVariable");
+      Method sample = TestHelper.GetSample<CallByReferenceSample> ("FragmentRefParameterSafeCall");
       _typeParser.Parse (sample);
       ProblemCollection result = _typeParser.Problems;
 
@@ -33,9 +32,9 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Closu
     }
 
     [Test]
-    public void Parse_UnsafeClosureUsingLocalVariable_ReturnsProblem ()
+    public void Parse_FragmentRefParameterUnsafe_ReturnsProblem ()
     {
-      Method sample = TestHelper.GetSample<ClosureSample> ("UnsafeClosureUsingLocalVariable");
+      Method sample = TestHelper.GetSample<CallByReferenceSample> ("FragmentRefParameterUnsafeCall");
       _typeParser.Parse (sample);
       ProblemCollection result = _typeParser.Problems;
 
@@ -43,9 +42,9 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Closu
     }
 
     [Test]
-    public void Parse_SafeClosureUsingField_NoProblem ()
+    public void Parse_RefParameterSafeOperand_NoProblem ()
     {
-      Method sample = TestHelper.GetSample<ClosureSample> ("SafeClosureUsingField");
+      Method sample = TestHelper.GetSample<CallByReferenceSample> ("RefParameterSafeOperand");
       _typeParser.Parse (sample);
       ProblemCollection result = _typeParser.Problems;
 
@@ -53,9 +52,19 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Closu
     }
 
     [Test]
-    public void Parse_UnsafeClosureUsingField_ReturnsProblem ()
+    public void Parse_RefParameterUnsafeOperand_ReturnsProblem ()
     {
-      Method sample = TestHelper.GetSample<ClosureSample> ("UnsafeClosureUsingField");
+      Method sample = TestHelper.GetSample<CallByReferenceSample> ("RefParameterUnsafeOperand");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
+
+    [Test]
+    public void Parse_RefParameterSafeVariableTurningUnsafe_ReturnsProblem ()
+    {
+      Method sample = TestHelper.GetSample<CallByReferenceSample> ("RefParameterSafeVariableTurningUnsafe");
       _typeParser.Parse (sample);
       ProblemCollection result = _typeParser.Problems;
 

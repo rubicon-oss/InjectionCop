@@ -55,5 +55,10 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.MethodGraphTests
       }
       return returnValue;
     }
+
+    public void FragmentOutParameterSafeReturn([Fragment("SqlFragment")] out string safe)
+    {
+      safe = "safe";
+    }
   }
 }

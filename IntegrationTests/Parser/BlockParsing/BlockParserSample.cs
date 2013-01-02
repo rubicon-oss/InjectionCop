@@ -139,5 +139,70 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
       }
       return returnValue;
     }
+
+    public string ReturnLiteral ()
+    {
+      return "dummy";
+    }
+
+    public void ReturnPreconditionCheckSafe (out string returnPreCondition)
+    {
+      returnPreCondition = "safe";
+    }
+
+    public void ReturnPreconditionCheckUnSafe (out string returnPreCondition)
+    {
+      returnPreCondition = UnsafeSource();
+    }
+
+    public void ReturnPreconditionCheckSafeLiteralAssignment (out string returnPreCondition)
+    {
+      returnPreCondition = UnsafeSource();
+      DummyMethod (returnPreCondition);
+      returnPreCondition = "safe";
+    }
+
+    public void ReturnPreconditionCheckSafeFragmentAssignment (out string returnPreCondition)
+    {
+      returnPreCondition = UnsafeSource();
+      DummyMethod (returnPreCondition);
+      returnPreCondition = "safe";
+    }
+
+    public void ReturnPreconditionConditional (out string returnPreCondition)
+    {
+      string temp = "safe";
+      returnPreCondition = UnsafeSource();
+      if (returnPreCondition == "dummy")
+      {
+        returnPreCondition = temp;
+      }
+    }
+
+    public void ReturnPreconditionConditionalWithReturnInsideIf (out string returnPreCondition)
+    {
+      string temp = "safe";
+      returnPreCondition = UnsafeSource();
+      if (returnPreCondition == "dummy")
+      {
+        returnPreCondition = temp;
+        return;
+      }
+      DummyMethod (returnPreCondition);
+    }
+
+    public void ReturnPreconditionConditionalWithReturnAfterIf (out string returnPreCondition)
+    {
+      string temp = "safe";
+      returnPreCondition = UnsafeSource();
+      if (returnPreCondition == "dummy")
+      {
+        returnPreCondition = temp;
+        DummyMethod (returnPreCondition);
+      }
+      DummyMethod (returnPreCondition);
+      
+    }
+    
   }
 }

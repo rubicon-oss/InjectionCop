@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using InjectionCop.Config;
 using InjectionCop.Parser;
 using InjectionCop.Parser.BlockParsing;
@@ -30,13 +31,16 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
     private BlockParser _blockParser;
     private ProblemPipeStub _problemPipeStub;
     private IBlacklistManager _blacklist;
+    private PreCondition _returnPreCondition;
 
     [SetUp]
     public void SetUp()
     {
       _blacklist = new IDbCommandBlacklistManagerStub();
       _problemPipeStub = new ProblemPipeStub();
-      _blockParser = new BlockParser (_blacklist, _problemPipeStub, c_returnFragmentType);
+      _returnPreCondition = new PreCondition ("returnPreCondition", "ReturnPreConditionFragmentType");
+      List<PreCondition> returnPreConditions = new List<PreCondition> { _returnPreCondition };
+      _blockParser = new BlockParser (_blacklist, _problemPipeStub, c_returnFragmentType, returnPreConditions);
     }
 
     [Test]
@@ -77,13 +81,13 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
     }
 
     [Test]
-    public void Parse_SafePreCondition ()
+    public void Parse_SafePreCondition_OnlyReturnConditionCreated ()
     {
       TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
       Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("SafePreCondition", stringTypeNode);
       Block sample = sampleMethod.Body.Statements[0] as Block;
       BasicBlock basicBlock = _blockParser.Parse (sample);
-      bool correctPreCondition = basicBlock.PreConditions.Length == 0;
+      bool correctPreCondition = basicBlock.PreConditions.Length == 1;
 
       Assert.That (correctPreCondition, Is.True);
     }
@@ -169,7 +173,7 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
     [Test]
     public void Parse_ReturnFragmentRequiredUnsafeReturn_ReturnsCorrectReturnFragmentType ([Values("ReturnFragmentType1", "ReturnFragmentType2")] string returnFragmentType)
     {
-      _blockParser = new BlockParser (_blacklist, _problemPipeStub, returnFragmentType);
+      _blockParser = new BlockParser (_blacklist, _problemPipeStub, returnFragmentType, new List<PreCondition>());
       Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("UnsafeReturnWhenFragmentRequired");
       Block sample = sampleMethod.Body.Statements[1] as Block;
       BasicBlock returnedBlock = _blockParser.Parse (sample);
@@ -179,14 +183,14 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
     }
 
     [Test]
-    public void Parse_BlockWithReturnNodeNotReturningAnything_NoPreconditionCreated ()
+    public void Parse_BlockWithReturnNodeNotReturningAnything_OnlyReturnConditionCreated ()
     {
       Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("DummyProcedure");
       Block sample = sampleMethod.Body.Statements[0] as Block;
       BasicBlock returnedBlock = _blockParser.Parse (sample);
       int countPreconditions = returnedBlock.PreConditions.Length;
 
-      Assert.That (countPreconditions, Is.EqualTo (0));
+      Assert.That (countPreconditions, Is.EqualTo (1));
     }
 
     [Test]
@@ -215,7 +219,7 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
     [Test]
     public void Parse_ValidReturnWithIf_ReturnsCorrectReturnFragmentType ()
     {
-      _blockParser = new BlockParser (_blacklist, _problemPipeStub, "DummyFragment");
+      _blockParser = new BlockParser (_blacklist, _problemPipeStub, "DummyFragment", new List<PreCondition>());
       TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
       Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("ValidReturnWithLiteralAssignmentInsideIf", stringTypeNode);
       Block sample = sampleMethod.Body.Statements[3] as Block;
@@ -330,6 +334,101 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
       string postConditionFragmentType = ifBasicBlock.PostConditionSymbolTable.GetFragmentType("local$0");
 
       Assert.That (postConditionFragmentType, Is.EqualTo("__Literal__"));
+    }
+
+    [Test]
+    public void Parse_ReturnLiteral_ReturnConditionIsAddedToReturnBlock ()
+    {
+      Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("ReturnLiteral");
+      Block returnBlock = sampleMethod.Body.Statements[1] as Block;
+      BasicBlock returnBasicBlock = _blockParser.Parse (returnBlock);
+      string preConditionSymbol = returnBasicBlock.PreConditions[1].Symbol;
+      string preConditionFragmentType = returnBasicBlock.PreConditions[1].FragmentType;
+      bool correctPrecondition = preConditionSymbol == _returnPreCondition.Symbol
+                                 && preConditionFragmentType == _returnPreCondition.FragmentType;
+
+      Assert.That (correctPrecondition, Is.True);
+    }
+
+    [Test]
+    public void Parse_ReturnPreconditionCheckSafe_NoProblem ()
+    {
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("ReturnPreconditionCheckSafe", stringTypeNode.GetReferenceType());
+      Block sample = sampleMethod.Body.Statements[0] as Block;
+      _blockParser.Parse (sample);
+      bool noProblemsArised = _problemPipeStub.Problems.Count == 0;
+
+      Assert.That (noProblemsArised, Is.True);
+    }
+
+    [Test]
+    public void Parse_ReturnPreconditionCheckUnSafe_ReturnsProblem ()
+    {
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("ReturnPreconditionCheckUnSafe", stringTypeNode.GetReferenceType());
+      Block sample = sampleMethod.Body.Statements[0] as Block;
+      _blockParser.Parse (sample);
+      bool problemFound = _problemPipeStub.Problems.Count != 0;
+
+      Assert.That (problemFound, Is.True);
+    }
+
+    [Test]
+    public void Parse_ReturnPreconditionCheckSafeLiteralAssignment_NoProblem ()
+    {
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("ReturnPreconditionCheckSafeLiteralAssignment", stringTypeNode.GetReferenceType());
+      Block sample = sampleMethod.Body.Statements[0] as Block;
+      _blockParser.Parse (sample);
+      bool noProblemsArised = _problemPipeStub.Problems.Count == 0;
+
+      Assert.That (noProblemsArised, Is.True);
+    }
+
+    [Test]
+    public void Parse_ReturnPreconditionConditional_ReturnConditionIsAddedToReturnBlock ()
+    {
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("ReturnPreconditionConditional", stringTypeNode.GetReferenceType());
+      Block returnBlock = sampleMethod.Body.Statements[2] as Block;
+      BasicBlock returnBasicBlock = _blockParser.Parse (returnBlock);
+      string preConditionSymbol = returnBasicBlock.PreConditions[0].Symbol;
+      string preConditionFragmentType = returnBasicBlock.PreConditions[0].FragmentType;
+      bool correctPrecondition = preConditionSymbol == _returnPreCondition.Symbol
+                                 && preConditionFragmentType == _returnPreCondition.FragmentType;
+
+      Assert.That (correctPrecondition, Is.True);
+    }
+
+    [Test]
+    public void Parse_ReturnPreconditionConditionalWithReturnInsideIf_ReturnConditionIsAddedToReturnBlock ()
+    {
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("ReturnPreconditionConditionalWithReturnInsideIf", stringTypeNode.GetReferenceType());
+      Block returnBlock = sampleMethod.Body.Statements[3] as Block;
+      BasicBlock returnBasicBlock = _blockParser.Parse (returnBlock);
+      string preConditionSymbol = returnBasicBlock.PreConditions[0].Symbol;
+      string preConditionFragmentType = returnBasicBlock.PreConditions[0].FragmentType;
+      bool correctPrecondition = preConditionSymbol == _returnPreCondition.Symbol
+                                 && preConditionFragmentType == _returnPreCondition.FragmentType;
+
+      Assert.That (correctPrecondition, Is.True);
+    }
+
+    [Test]
+    public void Parse_ReturnPreconditionConditionalWithReturnAfterIf_ReturnConditionIsAddedToReturnBlock ()
+    {
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("ReturnPreconditionConditionalWithReturnAfterIf", stringTypeNode.GetReferenceType());
+      Block returnBlock = sampleMethod.Body.Statements[2] as Block;
+      BasicBlock returnBasicBlock = _blockParser.Parse (returnBlock);
+      string preConditionSymbol = returnBasicBlock.PreConditions[0].Symbol;
+      string preConditionFragmentType = returnBasicBlock.PreConditions[0].FragmentType;
+      bool correctPrecondition = preConditionSymbol == _returnPreCondition.Symbol
+                                 && preConditionFragmentType == _returnPreCondition.FragmentType;
+
+      Assert.That (correctPrecondition, Is.True);
     }
   }
 }

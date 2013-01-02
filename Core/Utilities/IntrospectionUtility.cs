@@ -14,7 +14,6 @@
 
 using System;
 using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
 using Microsoft.FxCop.Sdk;
 
@@ -105,6 +104,11 @@ namespace InjectionCop.Utilities
         {
           variableName = operand.Name.Name;
         }
+      }
+      else if (expression.NodeType == NodeType.AddressDereference)
+      {
+        AddressDereference addressDereference = (AddressDereference) expression;
+        variableName = GetVariableName (addressDereference.Address);
       }
       else if (expression is MemberBinding)
       {
@@ -242,6 +246,11 @@ namespace InjectionCop.Utilities
       return (from member in typeNode.Members
              where member is Field
              select (Field) member);
+    }
+
+    public static List<string> GetParameterTypes (Method method)
+    {
+      return method.Parameters.Select (parameter => parameter.Type.FullName).ToList();
     }
   }
 }
