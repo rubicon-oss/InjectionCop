@@ -14,7 +14,6 @@
 
 using System;
 using InjectionCop.Fragment;
-using InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.AnonymousMethod;
 
 namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Lambda
 {
@@ -53,22 +52,26 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Lambd
     {
       FragmentParameterDelegate fragmentDelegate =
           (fragmentParameter, nonFragmentParameter) => { RequiresLambdaFragment(fragmentParameter); return fragmentParameter + nonFragmentParameter; };
+      fragmentDelegate ("dummy", "dummy");
     }
 
     public void UnsafeMethodCallInsideLambda()
     {
       FragmentParameterDelegate fragmentDelegate =
           (fragmentParameter, nonFragmentParameter) => { RequiresLambdaFragment(nonFragmentParameter); return fragmentParameter + nonFragmentParameter; };
+      fragmentDelegate ("dummy", "dummy");
     }
 
     public void SafeReturnInsideLambda()
     {
       ReturnFragmentDelegate returnFragmentDelegate = () => "safe";
+      returnFragmentDelegate();
     }
 
     public void UnsafeReturnInsideLambda()
     {
       ReturnFragmentDelegate returnFragmentDelegate = () => UnsafeSource();
+      returnFragmentDelegate();
     }
 
     private void RequiresLambdaFragment([Fragment("LambdaFragmentType")] string fragmentParameter)

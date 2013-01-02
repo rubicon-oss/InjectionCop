@@ -102,11 +102,5 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Deleg
       FragmentParameterAndReturnDelegate sampleDelegate = MatchingFragmentParameterAndReturnDelegateUnsafeReturn;
       sampleDelegate("safe", "safe");
     }
-
-    private void RequiresDelegateFragmentType([Fragment("DelegateFragmentType")] string fragmentParameter)
-    {
-      DummyMethod(fragmentParameter);
-    }
-
   }
 }

@@ -72,19 +72,21 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Anony
     public void SafeReturnInsideAnonymousMethod()
     {
       ReturnFragmentDelegate returnFragmentDelegate =
-        delegate()
+        delegate
         {
           return "safe";
         };
+      returnFragmentDelegate();
     }
 
     public void UnsafeReturnInsideAnonymousMethod()
     {
       ReturnFragmentDelegate returnFragmentDelegate =
-        delegate()
+        delegate
         {
           return UnsafeSource();
         };
+      returnFragmentDelegate();
     }
 
     private void RequiresAnonymousMethodFragment([Fragment("AnonymousMethodFragmentType")] string fragmentParameter)
