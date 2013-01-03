@@ -49,7 +49,7 @@ namespace InjectionCop.IntegrationTests.Utilities
     }
 
     [Test]
-    public void GetVariableName_FieldInMembebinding_ReturnsName ()
+    public void GetVariableName_FieldInMemberbinding_ReturnsName ()
     {
       Method sample = TestHelper.GetSample<IntrospectionUtility_ClassSample>("UsingField");
       Block expressionBlock = (Block)sample.Body.Statements[0];
@@ -243,6 +243,50 @@ namespace InjectionCop.IntegrationTests.Utilities
       TypeNode parent = IntrospectionUtility.TypeNodeFactory<IntrospectionUtility_ClassSample>();
       TypeNode nestedType = IntrospectionUtility.GetNestedType (parent, "DoesNotExist");
       Assert.That (nestedType, Is.Null);
+    }
+
+    [Test]
+    public void IsVariable_ArrayVariable_ReturnsTrue ()
+    {
+      Method sampleMethod = TestHelper.GetSample<IntrospectionUtility_ClassSample> ("ArrayVariableAndIndexer");
+      Block sampleBlock = (Block) sampleMethod.Body.Statements[0];
+      AssignmentStatement sampleAssignment = (AssignmentStatement) sampleBlock.Statements[1];
+      Expression sample = sampleAssignment.Target;
+
+      Assert.That (IntrospectionUtility.IsVariable (sample), Is.True);
+    }
+
+    [Test]
+    public void GetVariableName_ArrayVariable_ReturnsCorrectName ()
+    {
+      Method sampleMethod = TestHelper.GetSample<IntrospectionUtility_ClassSample> ("ArrayVariableAndIndexer");
+      Block sampleBlock = (Block) sampleMethod.Body.Statements[0];
+      AssignmentStatement sampleAssignment = (AssignmentStatement) sampleBlock.Statements[1];
+      Expression sample = sampleAssignment.Target;
+
+      Assert.That (IntrospectionUtility.GetVariableName (sample), Is.EqualTo("local$0"));
+    }
+
+    [Test]
+    public void IsVariable_Indexer_ReturnsTrue ()
+    {
+      Method sampleMethod = TestHelper.GetSample<IntrospectionUtility_ClassSample> ("ArrayVariableAndIndexer");
+      Block sampleBlock = (Block) sampleMethod.Body.Statements[0];
+      AssignmentStatement sampleAssignment = (AssignmentStatement) sampleBlock.Statements[2];
+      Expression sample = sampleAssignment.Target;
+
+      Assert.That (IntrospectionUtility.IsVariable (sample), Is.True);
+    }
+
+    [Test]
+    public void GetVariableName_Indexer_ReturnsNameOfDeclaringObject ()
+    {
+      Method sampleMethod = TestHelper.GetSample<IntrospectionUtility_ClassSample> ("ArrayVariableAndIndexer");
+      Block sampleBlock = (Block) sampleMethod.Body.Statements[0];
+      AssignmentStatement sampleAssignment = (AssignmentStatement) sampleBlock.Statements[2];
+      Expression sample = sampleAssignment.Target;
+
+      Assert.That (IntrospectionUtility.GetVariableName (sample), Is.EqualTo("local$0"));
     }
   }
 }

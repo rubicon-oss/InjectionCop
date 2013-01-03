@@ -97,6 +97,11 @@ namespace InjectionCop.Parser
         UnaryExpression unaryExpression = (UnaryExpression) expression;
         fragmentType = InferFragmentType (unaryExpression.Operand);
       }
+      else if (expression is Indexer)
+      {
+        Indexer indexer = (Indexer) expression;
+        fragmentType = InferFragmentType (indexer.Object);
+      }
 
       return fragmentType;
     }

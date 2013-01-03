@@ -89,6 +89,8 @@
     <Compile Include="Parser\TypeParsing\TypeParserTests\Closure\Closure_TypeParserTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Delegate\DelegateSample.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Delegate\Delegate_TypeParserTest.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Indexer\IndexerSample.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Indexer\Indexer_TypeParserTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\InheritanceSampleBase.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\Constructor\InheritanceSampleConstructor.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\Field\InheritanceSampleField.cs" />

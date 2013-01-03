@@ -43,7 +43,8 @@ namespace InjectionCop.Utilities
       return expression is Parameter
              || expression is Local
              || IsVariableReference(expression)
-             || IsField(expression);
+             || IsField(expression)
+             || expression is Indexer;
     }
 
     private static bool IsVariableReference (Expression expression)
@@ -118,6 +119,11 @@ namespace InjectionCop.Utilities
           Field field = (Field) memberBinding.BoundMember;
           variableName = field.Name.Name;
         }
+      }
+      else if (expression.NodeType == NodeType.Indexer)
+      {
+        Indexer indexer = (Indexer) expression;
+        variableName = GetVariableName (indexer.Object);
       }
       return variableName;
     }

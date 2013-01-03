@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using InjectionCop.Config;
 using InjectionCop.Parser.ProblemPipe;
 using InjectionCop.Parser.MethodParsing;
@@ -156,40 +155,61 @@ namespace InjectionCop.Parser.BlockParsing
 
     private void AssignmentStatementHandler (AssignmentStatement assignmentStatement)
     {
-      string targetSymbol = IntrospectionUtility.GetVariableName (assignmentStatement.Target);
-      _assignmentTargetVariables.Add (targetSymbol);
-      string sourceSymbol = IntrospectionUtility.GetVariableName (assignmentStatement.Source);
-      bool localSourceVariableNotAssignedInsideCurrentBlock =
-          sourceSymbol != null
-          && !_assignmentTargetVariables.Contains (sourceSymbol)
-          && !IntrospectionUtility.IsField (assignmentStatement.Source);
-      bool targetIsField = IntrospectionUtility.IsField (assignmentStatement.Target);
-
-      if (localSourceVariableNotAssignedInsideCurrentBlock)
+      if (!(assignmentStatement.Target is Indexer))
       {
-        if (targetIsField)
+        string targetSymbol = IntrospectionUtility.GetVariableName (assignmentStatement.Target);
+        _assignmentTargetVariables.Add (targetSymbol);
+        string sourceSymbol = IntrospectionUtility.GetVariableName (assignmentStatement.Source);
+        bool localSourceVariableNotAssignedInsideCurrentBlock =
+            sourceSymbol != null
+            && !_assignmentTargetVariables.Contains (sourceSymbol)
+            && !IntrospectionUtility.IsField (assignmentStatement.Source);
+        bool targetIsField = IntrospectionUtility.IsField (assignmentStatement.Target);
+
+        if (localSourceVariableNotAssignedInsideCurrentBlock)
         {
-          AddAssignmentPreCondition (assignmentStatement);   
+          if (targetIsField)
+          {
+            AddAssignmentPreCondition (assignmentStatement);
+          }
+          else
+          {
+            AddBlockAssignment (assignmentStatement);
+          }
         }
         else
         {
-          AddBlockAssignment (assignmentStatement);
+          if (targetIsField)
+          {
+            ValidateAssignmentOnField (assignmentStatement);
+          }
+          else
+          {
+            _symbolTableParser.InferSafeness (targetSymbol, assignmentStatement.Source);
+          }
         }
       }
       else
       {
-        if(targetIsField)
+        Indexer targetIndexer = (Indexer) assignmentStatement.Target;
+        string targetName = IntrospectionUtility.GetVariableName (targetIndexer.Object);
+        string targetFragmentType = _symbolTableParser.GetFragmentType (targetName);
+        string sourceFragmentType = _symbolTableParser.InferFragmentType (assignmentStatement.Source);
+        if (targetFragmentType != sourceFragmentType )
         {
-          ValidateAssignmentOnField (assignmentStatement); 
+          _symbolTableParser.MakeUnsafe (targetName);
         }
         else
         {
-          if (targetSymbol == null)
-            Debugger.Launch();
-          _symbolTableParser.InferSafeness (targetSymbol, assignmentStatement.Source);
+          ProblemMetadata problemMetadata = new ProblemMetadata (
+              assignmentStatement.UniqueKey,
+              assignmentStatement.SourceContext,
+              targetFragmentType,
+              "??");
+          PreCondition preCondition = new PreCondition (targetName, targetFragmentType, problemMetadata);
+          _preConditions.Add (preCondition);
         }
       }
-
       Inspect (assignmentStatement.Source);
     }
     

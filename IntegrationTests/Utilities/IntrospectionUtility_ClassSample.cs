@@ -61,6 +61,13 @@ namespace InjectionCop.IntegrationTests.Utilities
     private class NestedClass
     {
     }
+
+    public object[] ArrayVariableAndIndexer ()
+    {
+      object[] objectArray = new object[5];
+      objectArray[0] = new object();
+      return objectArray;
+    }
   }
 
 }

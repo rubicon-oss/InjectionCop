@@ -23,7 +23,6 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.If
   public class If_TypeParserTest: TypeParserTestBase
   {
     [Test]
-    [Category("If")]
     public void Parse_ValidExampleInsideIf_NoProblem()
     {
       TypeNode intTypeNode = IntrospectionUtility.TypeNodeFactory<int>();
@@ -36,7 +35,6 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.If
     }
 
     [Test]
-    [Category("If")]
     public void Parse_InvalidExampleInsideIf_ReturnsProblem()
     {
       TypeNode intTypeNode = IntrospectionUtility.TypeNodeFactory<int>();
@@ -49,7 +47,6 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.If
     }
     
     [Test]
-    [Category("If")]
     public void Parse_InvalidExampleInsideElse_ReturnsProblem()
     {
       TypeNode intTypeNode = IntrospectionUtility.TypeNodeFactory<int>();
@@ -62,7 +59,6 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.If
     }
 
     [Test]
-    [Category("If")]
     public void Parse_UnsafeAssignmentInsideIf_ReturnsProblem()
     {
       TypeNode intTypeNode = IntrospectionUtility.TypeNodeFactory<int>();
@@ -75,7 +71,6 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.If
     }
 
     [Test]
-    [Category("If")]
     public void Parse_UnsafeAssignmentInsideIfTwisted_ReturnsProblem()
     {
       TypeNode intTypeNode = IntrospectionUtility.TypeNodeFactory<int>();
@@ -88,7 +83,6 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.If
     }
 
     [Test]
-    [Category("If")]
     public void Parse_UnsafeAssignmentInsideIfNested_ReturnsProblem()
     {
       TypeNode intTypeNode = IntrospectionUtility.TypeNodeFactory<int>();
@@ -101,7 +95,6 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.If
     }
 
     [Test]
-    [Category("If")]
     public void Parse_SafeAssignmentInsideIfNested_No()
     {
       TypeNode intTypeNode = IntrospectionUtility.TypeNodeFactory<int>();
@@ -114,7 +107,6 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.If
     }
     
     [Test]
-    [Category("If")]
     public void Parse_UnsafeAssignmentInsideIfNestedDeeper_ReturnsProblem()
     {
       TypeNode intTypeNode = IntrospectionUtility.TypeNodeFactory<int>();
@@ -127,7 +119,6 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.If
     }
 
     [Test]
-    [Category("If")]
     public void Parse_UnsafeAssignmentInsideIfNestedElse_ReturnsProblem()
     {
       TypeNode intTypeNode = IntrospectionUtility.TypeNodeFactory<int>();
@@ -140,7 +131,6 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.If
     }
 
     [Test]
-    [Category ("If")]
     public void Parse_InvalidCallInsideIfCondition_ReturnsProblem ()
     {
       Method sample = TestHelper.GetSample<IfSample> ("InvalidCallInsideIfCondition");
