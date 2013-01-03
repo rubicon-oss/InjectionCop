@@ -17,7 +17,7 @@ using InjectionCop.Fragment;
 
 namespace InjectionCop.IntegrationTests.Parser.MethodParsing.MethodGraphTests
 {
-  public class MethodGraph_ClassSample
+  public class MethodGraph_ClassSample: ParserSampleBase
   {
     [return: Fragment("ReturnFragmentType")]
     public int DeclarationWithReturn()
@@ -58,7 +58,23 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.MethodGraphTests
 
     public void FragmentOutParameterSafeReturn([Fragment("SqlFragment")] out string safe)
     {
+      string temp = "safe";
       safe = "safe";
+      if (SafeSource() == "dummy")
+      {
+        safe = temp;
+      }
+    }
+
+    public void FragmentRefParameterSafeReturn([Fragment("SqlFragment")] ref string safe)
+    {
+      DummyMethod (safe);
+      string temp = "safe";
+      safe = "safe";
+      if (SafeSource() == "dummy")
+      {
+        safe = temp;
+      }
     }
   }
 }

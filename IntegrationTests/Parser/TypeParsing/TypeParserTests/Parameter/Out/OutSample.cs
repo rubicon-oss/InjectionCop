@@ -62,7 +62,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Param
       RequiresSqlFragment(turnsUnsafe);
     }
 
-    private void FragmentOutParameterSafeReturn([Fragment("SqlFragment")] out string safe)
+    public void FragmentOutParameterSafeReturn([Fragment("SqlFragment")] out string safe)
     {
       safe = "safe";
     }
@@ -71,9 +71,71 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Param
     {
       unSafe = UnsafeSource();
     }
+    
+    public void FragmentOutParameterSafeReturnWithAssignment([Fragment("SqlFragment")] out string framentOutParameter)
+    {
+      framentOutParameter = UnsafeSource();
+      DummyMethod (framentOutParameter);
+      string temp = SafeSource();
+      framentOutParameter = temp;
+    }
+
+    public void FragmentOutParameterUnsafeReturnWithAssignment([Fragment("SqlFragment")] out string fragmentOutParameter)
+    {
+      fragmentOutParameter = SafeSource();
+      DummyMethod (fragmentOutParameter);
+      string temp = UnsafeSource();
+      fragmentOutParameter = temp;
+    }
+
+    public void SafeFragmentOutParameterInsideCondition ([Fragment ("SqlFragment")] out string fragmentOutParameter)
+    {
+      fragmentOutParameter = "safe";
+      string temp = SafeSource();
+      if (SafeSource() == "dummy")
+      {
+        fragmentOutParameter = temp;
+      }
+    }
+
+    public void UnsafeFragmentOutParameterInsideCondition ([Fragment ("SqlFragment")] out string fragmentOutParameter)
+    {
+      fragmentOutParameter = "safe";
+      string temp = UnsafeSource();
+      if (SafeSource() == "dummy")
+      {
+        fragmentOutParameter = temp;
+      }
+    }
+
+    public void SafeFragmentOutParameterInsideWhile ([Fragment ("SqlFragment")] out string fragmentOutParameter)
+    {
+      fragmentOutParameter = "safe";
+      string temp = SafeSource();
+      int i = 0;
+      while(i < 5)
+      {
+        fragmentOutParameter = temp;
+        temp = SafeSource();
+        i++;
+      }
+    }
+
+    public void UnsafeFragmentOutParameterInsideWhile ([Fragment ("SqlFragment")] out string fragmentOutParameter)
+    {
+      fragmentOutParameter = "safe";
+      string temp = SafeSource();
+      int i = 0;
+      while(i < 5)
+      {
+        fragmentOutParameter = temp;
+        temp = UnsafeSource();
+        i++;
+      }
+    }
 
     [return: SqlFragment]
-    public string FragmentOutParameterUnsafeReturnWithAssignment([Fragment("SqlFragment")] out string unSafe)
+    public string UnsafeReturnWithAssignment([Fragment("SqlFragment")] out string unSafe)
     {
       unSafe = UnsafeSource();
       string temp = unSafe;
@@ -81,9 +143,6 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Param
       return temp;
     }
    
-    // sample mit return in der condition
-
-
     private void NonFragmentOutParameter(out string unSafe)
     {
       unSafe = "unsafe";

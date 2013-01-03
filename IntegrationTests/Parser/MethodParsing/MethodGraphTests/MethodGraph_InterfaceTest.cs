@@ -30,7 +30,8 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.MethodGraphTests
       TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory (typeof (string));
       Method sampleMethod = IntrospectionUtility.MethodFactory (typeof (InterfaceSample), "MethodNonAnnotated", objectTypeNode, stringTypeNode);
       IMethodGraph methodGraph = BuildMethodGraph(sampleMethod);
-      Assert.That (methodGraph.IsEmpty(), Is.True);
+      //Assert.That (methodGraph.IsEmpty(), Is.True);
+      Assert.That (methodGraph, Is.Null);
     }
   }
 }

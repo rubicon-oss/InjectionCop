@@ -377,7 +377,29 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.MethodGraphTests
     {
       TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
       Method sampleMethod = TestHelper.GetSample<MethodGraph_ClassSample> ("FragmentOutParameterSafeReturn", stringTypeNode.GetReferenceType());
-      Block returnBlock = sampleMethod.Body.Statements[1] as Block;
+      Block returnBlock = sampleMethod.Body.Statements[2] as Block;
+      if(returnBlock != null)
+      {
+        IMethodGraph methodGraph = BuildMethodGraph(sampleMethod);
+        BasicBlock returnBasicBlock = methodGraph.GetBasicBlockById (returnBlock.UniqueKey);
+        string preConditionSymbolName = returnBasicBlock.PreConditions[0].Symbol;
+        string preConditionFragmentType = returnBasicBlock.PreConditions[0].FragmentType;
+        bool correctPreCondition = preConditionSymbolName == "safe" && preConditionFragmentType == "SqlFragment";
+
+        Assert.That (correctPreCondition, Is.True);
+      }
+      else
+      {
+        Assert.Ignore ("Bad Sample");
+      }   
+    }
+
+    [Test]
+    public void MethodGraph_FragmentRefParameterSafeReturn_AddsPreconditionToReturnBlock ()
+    {
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      Method sampleMethod = TestHelper.GetSample<MethodGraph_ClassSample> ("FragmentRefParameterSafeReturn", stringTypeNode.GetReferenceType());
+      Block returnBlock = sampleMethod.Body.Statements[2] as Block;
       if(returnBlock != null)
       {
         IMethodGraph methodGraph = BuildMethodGraph(sampleMethod);

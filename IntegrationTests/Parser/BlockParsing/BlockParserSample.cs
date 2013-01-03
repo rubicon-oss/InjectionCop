@@ -145,31 +145,24 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
       return "dummy";
     }
 
-    public void ReturnPreconditionCheckSafe (out string returnPreCondition)
+    public void OutReturnPreconditionCheckSafe (out string returnPreCondition)
     {
       returnPreCondition = "safe";
     }
 
-    public void ReturnPreconditionCheckUnSafe (out string returnPreCondition)
+    public void OutReturnPreconditionCheckUnSafe (out string returnPreCondition)
     {
       returnPreCondition = UnsafeSource();
     }
 
-    public void ReturnPreconditionCheckSafeLiteralAssignment (out string returnPreCondition)
-    {
-      returnPreCondition = UnsafeSource();
-      DummyMethod (returnPreCondition);
-      returnPreCondition = "safe";
-    }
-
-    public void ReturnPreconditionCheckSafeFragmentAssignment (out string returnPreCondition)
+    public void OutReturnPreconditionCheckSafeLiteralAssignment (out string returnPreCondition)
     {
       returnPreCondition = UnsafeSource();
       DummyMethod (returnPreCondition);
       returnPreCondition = "safe";
     }
-
-    public void ReturnPreconditionConditional (out string returnPreCondition)
+    
+    public void OutReturnPreconditionConditional (out string returnPreCondition)
     {
       string temp = "safe";
       returnPreCondition = UnsafeSource();
@@ -179,7 +172,7 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
       }
     }
 
-    public void ReturnPreconditionConditionalWithReturnInsideIf (out string returnPreCondition)
+    public void OutReturnPreconditionConditionalWithReturnInsideIf (out string returnPreCondition)
     {
       string temp = "safe";
       returnPreCondition = UnsafeSource();
@@ -191,7 +184,7 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
       DummyMethod (returnPreCondition);
     }
 
-    public void ReturnPreconditionConditionalWithReturnAfterIf (out string returnPreCondition)
+    public void OutReturnPreconditionConditionalWithReturnAfterIf (out string returnPreCondition)
     {
       string temp = "safe";
       returnPreCondition = UnsafeSource();
@@ -203,6 +196,62 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
       DummyMethod (returnPreCondition);
       
     }
+
+    public void RefReturnPreconditionCheckSafe (ref string returnPreCondition)
+    {
+      DummyMethod (returnPreCondition);
+      returnPreCondition = "safe";
+    }
     
+    public void RefReturnPreconditionCheckUnSafe (ref string returnPreCondition)
+    {
+      DummyMethod (returnPreCondition);
+      returnPreCondition = UnsafeSource();
+    }
+
+    public void RefReturnPreconditionCheckSafeLiteralAssignment (ref string returnPreCondition)
+    {
+      DummyMethod (returnPreCondition);
+      returnPreCondition = UnsafeSource();
+      DummyMethod (returnPreCondition);
+      returnPreCondition = "safe";
+    }
+    
+    public void RefReturnPreconditionConditional (ref string returnPreCondition)
+    {
+      DummyMethod (returnPreCondition);
+      string temp = "safe";
+      returnPreCondition = UnsafeSource();
+      if (returnPreCondition == "dummy")
+      {
+        returnPreCondition = temp;
+      }
+    }
+
+    public void RefReturnPreconditionConditionalWithReturnInsideIf (ref string returnPreCondition)
+    {
+      DummyMethod (returnPreCondition);
+      string temp = "safe";
+      returnPreCondition = UnsafeSource();
+      if (returnPreCondition == "dummy")
+      {
+        returnPreCondition = temp;
+        return;
+      }
+      DummyMethod (returnPreCondition);
+    }
+
+    public void RefReturnPreconditionConditionalWithReturnAfterIf (ref string returnPreCondition)
+    {
+      DummyMethod (returnPreCondition);
+      string temp = "safe";
+      returnPreCondition = UnsafeSource();
+      if (returnPreCondition == "dummy")
+      {
+        returnPreCondition = temp;
+        DummyMethod (returnPreCondition);
+      }
+      DummyMethod (returnPreCondition);
+    }
   }
 }

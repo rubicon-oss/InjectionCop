@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
 using NUnit.Framework;
 
@@ -65,6 +66,106 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Param
     public void Parse_RefParameterSafeVariableTurningUnsafe_ReturnsProblem ()
     {
       Method sample = TestHelper.GetSample<CallByReferenceSample> ("RefParameterSafeVariableTurningUnsafe");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
+
+    [Test]
+    public void Parse_FragmentRefParameterSafeReturn_NoProblem ()
+    {
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      Method sample = TestHelper.GetSample<CallByReferenceSample> ("FragmentRefParameterSafeReturn", stringTypeNode.GetReferenceType());
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
+    
+    [Test]
+    public void Parse_FragmentRefParameterUnsafeReturn_ReturnsProblem ()
+    {
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      Method sample = TestHelper.GetSample<CallByReferenceSample> ("FragmentRefParameterUnsafeReturn", stringTypeNode.GetReferenceType());
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
+
+    [Test]
+    public void Parse_FragmentRefParameterSafeReturnWithAssignment_NoProblem ()
+    {
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      Method sample = TestHelper.GetSample<CallByReferenceSample> ("FragmentRefParameterSafeReturnWithAssignment", stringTypeNode.GetReferenceType());
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
+    
+    [Test]
+    public void Parse_FragmentRefParameterUnsafeReturnWithAssignment_ReturnsProblem ()
+    {
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      Method sample = TestHelper.GetSample<CallByReferenceSample> ("FragmentRefParameterUnsafeReturnWithAssignment", stringTypeNode.GetReferenceType());
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
+    
+    [Test]
+    public void Parse_SafeFragmentRefParameterInsideCondition_NoProblem ()
+    {
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      Method sample = TestHelper.GetSample<CallByReferenceSample> ("SafeFragmentRefParameterInsideCondition", stringTypeNode.GetReferenceType());
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
+
+    [Test]
+    public void Parse_UnsafeFragmentRefParameterInsideCondition_ReturnsProblem ()
+    {
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      Method sample = TestHelper.GetSample<CallByReferenceSample> ("UnsafeFragmentRefParameterInsideCondition", stringTypeNode.GetReferenceType());
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
+    
+    [Test]
+    public void Parse_SafeFragmentRefParameterInsideWhile_NoProblem ()
+    {
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      Method sample = TestHelper.GetSample<CallByReferenceSample> ("SafeFragmentRefParameterInsideWhile", stringTypeNode.GetReferenceType());
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
+
+    [Test]
+    [Ignore("Möglicherweise Problem mit assignment")]
+    public void Parse_UnsafeFragmentRefParameterInsideWhile_ReturnsProblem ()
+    {
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      Method sample = TestHelper.GetSample<CallByReferenceSample> ("UnsafeFragmentRefParameterInsideWhile", stringTypeNode.GetReferenceType());
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
+
+    [Test]
+    public void Parse_UnsafeReturnWithAssignment_ReturnsProblem ()
+    {
+      TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
+      Method sample = TestHelper.GetSample<CallByReferenceSample> ("UnsafeReturnWithAssignment", stringTypeNode.GetReferenceType());
       _typeParser.Parse (sample);
       ProblemCollection result = _typeParser.Problems;
 

@@ -51,6 +51,96 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Param
       NonFragmentRefParameter (ref turnUnsafe, 0);
       RequiresSqlFragment (turnUnsafe);
     }
+    
+    public void FragmentRefParameterSafeReturn([Fragment("SqlFragment")] ref string fragmentParameter)
+    {
+      DummyMethod (fragmentParameter);
+      fragmentParameter = "safe";
+    }
+
+    public void FragmentRefParameterUnsafeReturn([Fragment("SqlFragment")] ref string fragmentParameter)
+    {
+      DummyMethod (fragmentParameter);
+      fragmentParameter = UnsafeSource();
+    }
+
+    public void FragmentRefParameterSafeReturnWithAssignment([Fragment("SqlFragment")] ref string fragmentRefParameter)
+    {
+      DummyMethod (fragmentRefParameter);
+      fragmentRefParameter = UnsafeSource();
+      DummyMethod (fragmentRefParameter);
+      string temp = SafeSource();
+      fragmentRefParameter = temp;
+    }
+
+    public void FragmentRefParameterUnsafeReturnWithAssignment([Fragment("SqlFragment")] ref string fragmentRefParameter)
+    {
+      DummyMethod (fragmentRefParameter);
+      fragmentRefParameter = SafeSource();
+      DummyMethod (fragmentRefParameter);
+      string temp = UnsafeSource();
+      fragmentRefParameter = temp;
+    }
+
+    public void SafeFragmentRefParameterInsideCondition ([Fragment ("SqlFragment")] ref string fragmentRefParameter)
+    {
+      DummyMethod (fragmentRefParameter);
+      fragmentRefParameter = "safe";
+      string temp = SafeSource();
+      if (SafeSource() == "dummy")
+      {
+        fragmentRefParameter = temp;
+      }
+    }
+
+    public void UnsafeFragmentRefParameterInsideCondition ([Fragment ("SqlFragment")] ref string fragmentRefParameter)
+    {
+      DummyMethod (fragmentRefParameter);
+      fragmentRefParameter = "safe";
+      string temp = UnsafeSource();
+      if (SafeSource() == "dummy")
+      {
+        fragmentRefParameter = temp;
+      }
+    }
+
+    public void SafeFragmentRefParameterInsideWhile ([Fragment ("SqlFragment")] ref string fragmentRefParameter)
+    {
+      DummyMethod (fragmentRefParameter);
+      fragmentRefParameter = "safe";
+      string temp = SafeSource();
+      int i = 0;
+      while(i < 5)
+      {
+        fragmentRefParameter = temp;
+        temp = SafeSource();
+        i++;
+      }
+    }
+
+    public void UnsafeFragmentRefParameterInsideWhile ([Fragment ("SqlFragment")] ref string fragmentRefParameter)
+    {
+      DummyMethod (fragmentRefParameter);
+      fragmentRefParameter = "safe";
+      string temp = SafeSource();
+      int i = 0;
+      while(i < 5)
+      {
+        fragmentRefParameter = temp;
+        temp = UnsafeSource();
+        i++;
+      }
+    }
+
+    [return: SqlFragment]
+    public string UnsafeReturnWithAssignment([Fragment("SqlFragment")] ref string unSafe)
+    {
+      DummyMethod (unSafe);
+      unSafe = UnsafeSource();
+      string temp = unSafe;
+      unSafe = SafeSource();
+      return temp;
+    }
 
     private void FragmentRefParameter([Fragment("SqlFragment")] ref string safe, int dummy)
     {
