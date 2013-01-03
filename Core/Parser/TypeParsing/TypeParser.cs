@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Diagnostics;
 using InjectionCop.Config;
 using InjectionCop.Parser.MethodParsing;
 using InjectionCop.Parser.ProblemPipe;
@@ -34,6 +35,7 @@ namespace InjectionCop.Parser.TypeParsing
     {
       _blacklistManager = ConfigLoader.LoadBlacklist();
       _problemFilter = new ProblemDuplicateFilter (this);
+      //Debugger.Launch();
     }
 
     public override ProblemCollection Check (TypeNode type)

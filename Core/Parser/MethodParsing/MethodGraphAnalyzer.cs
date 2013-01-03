@@ -37,7 +37,7 @@ namespace InjectionCop.Parser.MethodParsing
       IMethodGraph methodGraph = methodGraphBuilder.GetResult();
       ISymbolTable initialSymbolTable = initialSymbolTableBuilder.GetResult();
 
-      if (!methodGraph.IsEmpty() && initialSymbolTable != null)
+      if (methodGraph != null && !methodGraph.IsEmpty() && initialSymbolTable != null)
       {
         Parse (methodGraph, initialSymbolTable, methodGraph.InitialBlock, new Dictionary<int, int>());
       }

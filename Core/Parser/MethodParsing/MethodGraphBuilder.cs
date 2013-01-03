@@ -30,6 +30,7 @@ namespace InjectionCop.Parser.MethodParsing
     private readonly IBlacklistManager _blacklistManager;
     private readonly IProblemPipe _problemPipe;
     private readonly string _returnFragmentType;
+    private List<PreCondition> _referenceAndOutConditions;
     
 
     public MethodGraphBuilder (Method method, IBlacklistManager blacklistManager, IProblemPipe problemPipe)
@@ -37,10 +38,11 @@ namespace InjectionCop.Parser.MethodParsing
       ArgumentUtility.CheckNotNull ("method", method);
       _blacklistManager = ArgumentUtility.CheckNotNull ("blacklistManager", blacklistManager);
       _problemPipe = ArgumentUtility.CheckNotNull ("problemPipe", problemPipe);
-      bool isInterfaceMethod = method.Body.Statements.Count == 0;
+      bool isInterfaceMethod = method.Body.Statements == null;
       if (!isInterfaceMethod)
       {
         _methodBody = method.Body;
+        _referenceAndOutConditions = ReferenceAndOutConditions (method);
         _result = null;
       }
       else
@@ -66,7 +68,7 @@ namespace InjectionCop.Parser.MethodParsing
     {
       if (_result == null)
       {
-        BlockParser parser = new BlockParser (_blacklistManager, _problemPipe, _returnFragmentType, new List<PreCondition>());
+        BlockParser parser = new BlockParser (_blacklistManager, _problemPipe, _returnFragmentType, _referenceAndOutConditions);
         Dictionary<int, BasicBlock> graph = new Dictionary<int, BasicBlock>();
         int initialBlockId;
         List<Block> blockList = new List<Block> (_methodBody.Statements.OfType<Block>());
@@ -104,6 +106,25 @@ namespace InjectionCop.Parser.MethodParsing
 
         _result = new MethodGraph (initialBlockId, graph);
       }
+    }
+
+    private List<PreCondition> ReferenceAndOutConditions (Method method)
+    {
+      List<PreCondition> referenceAndOutConditions = new List<PreCondition>();
+      foreach (var parameter in method.Parameters)
+      {
+        if (parameter.Type is Reference && parameter.Attributes != null)
+        {
+          string parameterFragmentType = FragmentUtility.GetFragmentType (parameter.Attributes);
+          if (parameterFragmentType != SymbolTable.EMPTY_FRAGMENT)
+          {
+            string parameterName = IntrospectionUtility.GetVariableName (parameter);
+            PreCondition preCondition = new PreCondition (parameterName, parameterFragmentType);
+            referenceAndOutConditions.Add (preCondition);
+          }
+        }
+      }
+      return referenceAndOutConditions;
     }
 
     private bool ContainsUnconditionalBranch (Block currentBlock)

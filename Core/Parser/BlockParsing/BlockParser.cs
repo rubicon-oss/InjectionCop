@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using InjectionCop.Config;
 using InjectionCop.Parser.ProblemPipe;
 using InjectionCop.Parser.MethodParsing;
@@ -132,7 +133,7 @@ namespace InjectionCop.Parser.BlockParsing
 
           case NodeType.Return:
             ReturnNode returnNode = (ReturnNode) statement;
-            ReturnStatementHandler (returnNode, methodBodyBlock);
+            ReturnStatementHandler (returnNode);
             break;
 
           case NodeType.Branch:
@@ -183,6 +184,8 @@ namespace InjectionCop.Parser.BlockParsing
         }
         else
         {
+          if (targetSymbol == null)
+            Debugger.Launch();
           _symbolTableParser.InferSafeness (targetSymbol, assignmentStatement.Source);
         }
       }
@@ -215,7 +218,7 @@ namespace InjectionCop.Parser.BlockParsing
       _blockAssignments.Add (blockAssignment);
     }
 
-    private void ReturnStatementHandler (ReturnNode returnNode, Block methodBodyBlock)
+    private void ReturnStatementHandler (ReturnNode returnNode)
     {
       if (returnNode.Expression != null)
       {
@@ -225,10 +228,6 @@ namespace InjectionCop.Parser.BlockParsing
             returnNode.UniqueKey, returnNode.SourceContext, _returnFragmentType, _symbolTableParser.GetFragmentType (returnSymbol));
         PreCondition returnBlockCondition = new PreCondition (returnSymbol, _returnFragmentType, problemMetadata);
         _preConditions.Add (returnBlockCondition);
-        _preConditions.AddRange (_returnConditions);
-      }
-      else if (methodBodyBlock.Statements.Count == 1)
-      {
         _preConditions.AddRange (_returnConditions);
       }
       else{
@@ -244,12 +243,14 @@ namespace InjectionCop.Parser.BlockParsing
             returnNode.SourceContext,
             returnCondition.FragmentType,
             blockInternalFragmentType);
-            _problemPipe.AddProblem (problemMetadata);
-            if (blockInternalFragmentType == SymbolTable.EMPTY_FRAGMENT)
+            
+            if(!_assignmentTargetVariables.Contains (returnCondition.Symbol))
             {
-              //string sourceSymbol = returnCondition.Symbol;
-              //PreCondition preCondition = new PreCondition (sourceSymbol, targetFragmentType, problemMetadata);
               _preConditions.Add (returnCondition);
+            }
+            else
+            {
+              _problemPipe.AddProblem (problemMetadata);
             }
           }
         }
