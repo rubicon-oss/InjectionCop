@@ -85,7 +85,7 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
     [Test]
     public void Parse_SingleNodeNoPrecondition_NoProblems()
     {
-      PreCondition[] preConditions = (new List<PreCondition>()).ToArray();
+      AssignablePreCondition[] preConditions = (new List<AssignablePreCondition>()).ToArray();
       SymbolTable postConditions = new SymbolTable (_blacklistManager);
       int[] successors = (new List<int>()).ToArray();
       BasicBlock node = new BasicBlock (0, preConditions, postConditions, successors, c_EmptyAssignments);
@@ -110,7 +110,7 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
     [Test]
     public void Parse_SingleNodePreconditionViolated_ReturnsProblem()
     {
-      PreCondition[] preConditions = { new PreCondition("y", "SqlFragment") };
+      AssignablePreCondition[] preConditions = { new AssignablePreCondition("y", "SqlFragment") };
       SymbolTable postConditions = new SymbolTable (_blacklistManager);
       int[] successors = (new List<int>()).ToArray();
 
@@ -136,7 +136,7 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
     [Test]
     public void Parse_SingleNodePreconditionNotViolated_NoProblem ()
     {
-      PreCondition[] preConditions = { new PreCondition("x", "SqlFragment") };
+      AssignablePreCondition[] preConditions = { new AssignablePreCondition("x", "SqlFragment") };
       SymbolTable postConditions = new SymbolTable (_blacklistManager);
       int[] successors = (new List<int>()).ToArray();
       BasicBlock node = new BasicBlock (0, preConditions, postConditions, successors, c_EmptyAssignments);
@@ -161,7 +161,7 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
     [Test]
     public void Parse_SingleNodePreconditionNotViolatedBecauseOfLiteral_NoProblem ()
     {
-      PreCondition[] preConditions = { new PreCondition("l", "SqlFragment") };
+      AssignablePreCondition[] preConditions = { new AssignablePreCondition("l", "SqlFragment") };
       SymbolTable postConditions = new SymbolTable (_blacklistManager);
       int[] successors = (new List<int>()).ToArray();
       BasicBlock node = new BasicBlock (0, preConditions, postConditions, successors, c_EmptyAssignments);
@@ -186,7 +186,7 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
     [Test]
     public void Parse_SingleNodeNewPrecondition_ReturnsProblem ()
     {
-      PreCondition[] preConditions = { new PreCondition("z", "SqlFragment")  };
+      AssignablePreCondition[] preConditions = { new AssignablePreCondition("z", "SqlFragment")  };
       SymbolTable postConditions = new SymbolTable (_blacklistManager);
       int[] successors = (new List<int>()).ToArray();
       BasicBlock node = new BasicBlock (0, preConditions, postConditions, successors, c_EmptyAssignments);
@@ -211,12 +211,12 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
     [Test]
     public void Parse_SequencePreconditionsNotViolated_NoProblem ()
     {
-      List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
+      List<AssignablePreCondition> preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("x", "SqlFragment") };
       SymbolTable postConditions = new SymbolTable (_blacklistManager);
       List<int> successors = new List<int> { 1 };
       BasicBlock initialNode = new BasicBlock (0, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
 
-      preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
+      preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("x", "SqlFragment") };
       postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int>();
       BasicBlock terminatingNode = new BasicBlock (1, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
@@ -244,12 +244,12 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
     [Test]
     public void Parse_SequencePreconditionsViolated_ReturnsProblem ()
     {
-      List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragmen") };
+      List<AssignablePreCondition> preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("x", "SqlFragmen") };
       SymbolTable postConditions = new SymbolTable (_blacklistManager);
       List<int> successors = new List<int> { 1 };
       BasicBlock initialNode = new BasicBlock (0, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
 
-      preConditions = new List<PreCondition> { new PreCondition("y","SqlFragment") };
+      preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("y","SqlFragment") };
       postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int>();
       BasicBlock terminatingNode = new BasicBlock (1, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
@@ -277,13 +277,13 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
     [Test]
     public void Parse_SequencePreconditionViolatedInPrecedingBlock_ReturnsProblem ()
     {
-      List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
+      List<AssignablePreCondition> preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("x", "SqlFragment") };
       SymbolTable postConditions = new SymbolTable (_blacklistManager);
       postConditions.MakeUnsafe("x");
       List<int> successors = new List<int> { 1 };
       BasicBlock initialNode = new BasicBlock (0, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
 
-      preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
+      preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("x", "SqlFragment") };
       postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int>();
       BasicBlock terminatingNode = new BasicBlock (1, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
@@ -311,13 +311,13 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
     [Test]
     public void Parse_SequenceNewPrecondition_ReturnsProblem ()
     {
-      List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
+      List<AssignablePreCondition> preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("x", "SqlFragment") };
       SymbolTable postConditions = new SymbolTable (_blacklistManager);
       postConditions.MakeUnsafe("x");
       List<int> successors = new List<int> { 1 };
       BasicBlock initialNode = new BasicBlock (0, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
 
-      preConditions = new List<PreCondition> { new PreCondition("z", "SqlFragment") };
+      preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("z", "SqlFragment") };
       postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int>();
       BasicBlock terminatingNode = new BasicBlock (1, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
@@ -345,17 +345,17 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
     [Test]
     public void Parse_BranchPreconditionsNotViolated_NoProblem ()
     {
-      List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
+      List<AssignablePreCondition> preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("x", "SqlFragment") };
       SymbolTable postConditions = new SymbolTable (_blacklistManager);
       List<int> successors = new List<int> { 1, 2 };
       BasicBlock initialNode = new BasicBlock (0, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
 
-      preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
+      preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("x", "SqlFragment") };
       postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int>();
       BasicBlock firstBranch = new BasicBlock (1, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
 
-      preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
+      preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("x", "SqlFragment") };
       postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int>();
       BasicBlock secondBranch = new BasicBlock (2, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
@@ -386,17 +386,17 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
     [Test]
     public void Parse_BranchPreconditionsOneBranchViolated_ReturnsProblem ()
     {
-      List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
+      List<AssignablePreCondition> preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("x", "SqlFragment") };
       SymbolTable postConditions = new SymbolTable (_blacklistManager);
       List<int> successors = new List<int> { 1, 2 };
       BasicBlock initialNode = new BasicBlock (0, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
 
-      preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
+      preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("x", "SqlFragment") };
       postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int>();
       BasicBlock firstBranch = new BasicBlock (1, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
 
-      preConditions = new List<PreCondition> { new PreCondition("y", "SqlFragment") };
+      preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("y", "SqlFragment") };
       postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int>();
       BasicBlock secondBranch = new BasicBlock (2, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
@@ -427,18 +427,18 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
     [Test]
     public void Parse_BranchPreconditionsTwoBranchesViolated_ReturnsProblem ()
     {
-      List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
+      List<AssignablePreCondition> preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("x", "SqlFragment") };
       SymbolTable postConditions = new SymbolTable (_blacklistManager);
       postConditions.MakeUnsafe("x");
       List<int> successors = new List<int> { 1, 2 };
       BasicBlock initialNode = new BasicBlock (0, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
 
-      preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
+      preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("x", "SqlFragment") };
       postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int>();
       BasicBlock firstBranch = new BasicBlock (1, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
 
-      preConditions = new List<PreCondition> { new PreCondition("y", "SqlFragment") };
+      preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("y", "SqlFragment") };
       postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int>();
       BasicBlock secondBranch = new BasicBlock (2, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
@@ -470,22 +470,22 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
     [Test]
     public void Parse_SinkPreconditionsNotViolated_NoProblem ()
     {
-      List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
+      List<AssignablePreCondition> preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("x", "SqlFragment") };
       SymbolTable postConditions = new SymbolTable (_blacklistManager);
       List<int> successors = new List<int> { 1, 2 };
       BasicBlock initialNode = new BasicBlock (0, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
 
-      preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
+      preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("x", "SqlFragment") };
       postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int> { 3 };
       BasicBlock firstBranch = new BasicBlock (1, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
 
-      preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
+      preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("x", "SqlFragment") };
       postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int> { 3 };
       BasicBlock secondBranch = new BasicBlock (2, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
 
-      preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
+      preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("x", "SqlFragment") };
       postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int>();
       BasicBlock sink = new BasicBlock (3, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
@@ -520,22 +520,22 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
     [Test]
     public void Parse_SinkPreconditionsViolated_ReturnsProblem ()
     {
-      List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
+      List<AssignablePreCondition> preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("x", "SqlFragment") };
       SymbolTable postConditions = new SymbolTable (_blacklistManager);
       List<int> successors = new List<int> { 1, 2 };
       BasicBlock initialNode = new BasicBlock (0, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
 
-      preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
+      preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("x", "SqlFragment") };
       postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int> { 3 };
       BasicBlock firstBranch = new BasicBlock (1, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
 
-      preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
+      preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("x", "SqlFragment") };
       postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int> { 3 };
       BasicBlock secondBranch = new BasicBlock (2, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
 
-      preConditions = new List<PreCondition> { new PreCondition("y", "SqlFragment") };
+      preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("y", "SqlFragment") };
       postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int>();
       BasicBlock sink = new BasicBlock (3, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
@@ -569,23 +569,23 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
     [Test]
     public void Parse_SinkPreconditionsViolatedInBranch_ReturnsProblem ()
     {
-      List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
+      List<AssignablePreCondition> preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("x", "SqlFragment") };
       SymbolTable postConditions = new SymbolTable (_blacklistManager);
       List<int> successors = new List<int> { 1, 2 };
       BasicBlock initialNode = new BasicBlock (0, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
 
-      preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
+      preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("x", "SqlFragment") };
       postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int> { 3 };
       BasicBlock firstBranch = new BasicBlock (1, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
 
-      preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
+      preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("x", "SqlFragment") };
       postConditions = new SymbolTable (_blacklistManager);
       postConditions.MakeUnsafe("x");
       successors = new List<int> { 3 };
       BasicBlock secondBranch = new BasicBlock (2, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
 
-      preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
+      preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("x", "SqlFragment") };
       postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int>();
       BasicBlock sink = new BasicBlock (3, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
@@ -619,23 +619,23 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
     [Test]
     public void Parse_SinkPreconditionsViolatedInOtherBranch_ReturnsProblem ()
     {
-      List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
+      List<AssignablePreCondition> preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("x", "SqlFragment") };
       SymbolTable postConditions = new SymbolTable (_blacklistManager);
       List<int> successors = new List<int> { 1, 2 };
       BasicBlock initialNode = new BasicBlock (0, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
 
-      preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
+      preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("x", "SqlFragment") };
       postConditions = new SymbolTable (_blacklistManager);
       postConditions.MakeUnsafe("x");
       successors = new List<int> { 3 };
       BasicBlock firstBranch = new BasicBlock (1, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
 
-      preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
+      preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("x", "SqlFragment") };
       postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int> { 3 };
       BasicBlock secondBranch = new BasicBlock (2, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
 
-      preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
+      preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("x", "SqlFragment") };
       postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int>();
       BasicBlock sink = new BasicBlock (3, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
@@ -670,24 +670,24 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
     [Test]
     public void Parse_SinkPreconditionsViolatedInTwoBranches_ReturnsProblem ()
     {
-      List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
+      List<AssignablePreCondition> preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("x", "SqlFragment") };
       SymbolTable postConditions = new SymbolTable (_blacklistManager);
       List<int> successors = new List<int> { 1, 2 };
       BasicBlock initialNode = new BasicBlock (0, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
 
-      preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
+      preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("x", "SqlFragment") };
       postConditions = new SymbolTable (_blacklistManager);
       postConditions.MakeUnsafe("x");
       successors = new List<int> { 3 };
       BasicBlock firstBranch = new BasicBlock (1, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
 
-      preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
+      preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("x", "SqlFragment") };
       postConditions = new SymbolTable (_blacklistManager);
       postConditions.MakeUnsafe("x");
       successors = new List<int> { 3 };
       BasicBlock secondBranch = new BasicBlock (2, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
 
-      preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
+      preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("x", "SqlFragment") };
       postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int>();
       BasicBlock sink = new BasicBlock (3, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
@@ -721,12 +721,12 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
     [Test]
     public void Parse_LoopPreconditionsNotViolated_NoProblem ()
     {
-      List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
+      List<AssignablePreCondition> preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("x", "SqlFragment") };
       SymbolTable postConditions = new SymbolTable (_blacklistManager);
       List<int> successors = new List<int> { 1 };
       BasicBlock initialNode = new BasicBlock (0, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
 
-      preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
+      preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("x", "SqlFragment") };
       postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int> { 0 };
       BasicBlock firstNode = new BasicBlock (1, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
@@ -757,12 +757,12 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
     [Test]
     public void Parse_LoopPreconditionsViolated_ReturnsProblem ()
     {
-      List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
+      List<AssignablePreCondition> preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("x", "SqlFragment") };
       SymbolTable postConditions = new SymbolTable (_blacklistManager);
       List<int> successors = new List<int> { 1 };
       BasicBlock initialNode = new BasicBlock (0, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
 
-      preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
+      preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("x", "SqlFragment") };
       postConditions = new SymbolTable (_blacklistManager);
       postConditions.MakeUnsafe("x");
       successors = new List<int> { 0 };
@@ -796,17 +796,17 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
     {
       _methodPreConditions.MakeSafe ("z", "SqlFragment");
 
-      List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment"), new PreCondition("z", "SqlFragment") };
+      List<AssignablePreCondition> preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("x", "SqlFragment"), new AssignablePreCondition("z", "SqlFragment") };
       SymbolTable postConditions = new SymbolTable (_blacklistManager);
       List<int> successors = new List<int> { 1, 2 };
       BasicBlock initialNode = new BasicBlock (0, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
 
-      preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
+      preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("x", "SqlFragment") };
       postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int> { 0 };
       BasicBlock firstBranch = new BasicBlock (1, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
 
-      preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
+      preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("x", "SqlFragment") };
       postConditions = new SymbolTable (_blacklistManager);
       postConditions.MakeUnsafe("z");
       successors = new List<int> { 0 };
@@ -842,13 +842,13 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
     [Test]
     public void Parse_SequenceWithLocalAssignment_NoProblem ()
     {
-      List<PreCondition> preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment") };
+      List<AssignablePreCondition> preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("x", "SqlFragment") };
       SymbolTable postConditions = new SymbolTable (_blacklistManager);
       List<int> successors = new List<int> { 1 };
       List<BlockAssignment> localAssignments = new List<BlockAssignment> { new BlockAssignment ("x", "y") };
       BasicBlock initialNode = new BasicBlock (0, preConditions.ToArray(), postConditions, successors.ToArray(), localAssignments.ToArray());
 
-      preConditions = new List<PreCondition> { new PreCondition("x", "SqlFragment"), new PreCondition("y", "SqlFragment") };
+      preConditions = new List<AssignablePreCondition> { new AssignablePreCondition("x", "SqlFragment"), new AssignablePreCondition("y", "SqlFragment") };
       postConditions = new SymbolTable (_blacklistManager);
       successors = new List<int>();
       BasicBlock terminatingNode = new BasicBlock (1, preConditions.ToArray(), postConditions, successors.ToArray(), c_EmptyAssignments);
