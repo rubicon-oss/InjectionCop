@@ -206,7 +206,7 @@ namespace InjectionCop.Parser.BlockParsing
               assignmentStatement.SourceContext,
               targetFragmentType,
               "??");
-          PreCondition preCondition = new PreCondition (targetName, targetFragmentType, problemMetadata);
+          PreCondition preCondition = new PreCondition (targetName, "placeholder", problemMetadata);
           _preConditions.Add (preCondition);
         }
       }
