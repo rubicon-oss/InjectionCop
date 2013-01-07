@@ -31,15 +31,15 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
     private BlockParser _blockParser;
     private ProblemPipeStub _problemPipeStub;
     private IBlacklistManager _blacklist;
-    private PreCondition _returnPreCondition;
+    private ReturnCondition _returnPreCondition;
 
     [SetUp]
     public void SetUp()
     {
       _blacklist = new IDbCommandBlacklistManagerStub();
       _problemPipeStub = new ProblemPipeStub();
-      _returnPreCondition = new PreCondition ("returnPreCondition", "ReturnPreConditionFragmentType");
-      List<PreCondition> returnPreConditions = new List<PreCondition> { _returnPreCondition };
+      _returnPreCondition = new ReturnCondition ("returnPreCondition", "ReturnPreConditionFragmentType");
+      List<ReturnCondition> returnPreConditions = new List<ReturnCondition> { _returnPreCondition };
       _blockParser = new BlockParser (_blacklist, _problemPipeStub, c_returnFragmentType, returnPreConditions);
     }
 
@@ -173,7 +173,7 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
     [Test]
     public void Parse_ReturnFragmentRequiredUnsafeReturn_ReturnsCorrectReturnFragmentType ([Values("ReturnFragmentType1", "ReturnFragmentType2")] string returnFragmentType)
     {
-      _blockParser = new BlockParser (_blacklist, _problemPipeStub, returnFragmentType, new List<PreCondition>());
+      _blockParser = new BlockParser (_blacklist, _problemPipeStub, returnFragmentType, new List<ReturnCondition>());
       Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("UnsafeReturnWhenFragmentRequired");
       Block sample = sampleMethod.Body.Statements[1] as Block;
       BasicBlock returnedBlock = _blockParser.Parse (sample);
@@ -219,7 +219,7 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
     [Test]
     public void Parse_ValidReturnWithIf_ReturnsCorrectReturnFragmentType ()
     {
-      _blockParser = new BlockParser (_blacklist, _problemPipeStub, "DummyFragment", new List<PreCondition>());
+      _blockParser = new BlockParser (_blacklist, _problemPipeStub, "DummyFragment", new List<ReturnCondition>());
       TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
       Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("ValidReturnWithLiteralAssignmentInsideIf", stringTypeNode);
       Block sample = sampleMethod.Body.Statements[3] as Block;
