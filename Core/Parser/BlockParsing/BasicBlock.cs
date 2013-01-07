@@ -23,12 +23,12 @@ namespace InjectionCop.Parser.BlockParsing
   public class BasicBlock
   {
     private readonly int _id;
-    private readonly PreCondition[] _preConditions;
+    private readonly IPreCondition[] _preConditions;
     private readonly ISymbolTable _postConditionSymbolTable;
     private readonly int[] _successorKeys;
     private readonly BlockAssignment[] _blockAssignments;
 
-    public BasicBlock (int id, PreCondition[] preConditions, ISymbolTable postConditionSymbolTable, int[] successorKeys, BlockAssignment[] blockAssignments)
+    public BasicBlock (int id, IPreCondition[] preConditions, ISymbolTable postConditionSymbolTable, int[] successorKeys, BlockAssignment[] blockAssignments)
     {
       _preConditions = ArgumentUtility.CheckNotNull ("preConditions", preConditions);
       _postConditionSymbolTable = ArgumentUtility.CheckNotNull ("postConditionSymbolTable", postConditionSymbolTable);
@@ -37,7 +37,7 @@ namespace InjectionCop.Parser.BlockParsing
       _blockAssignments = blockAssignments;
     }
 
-    public PreCondition[] PreConditions
+    public IPreCondition[] PreConditions
     {
       get { return _preConditions; }
     }

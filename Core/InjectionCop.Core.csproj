@@ -55,7 +55,11 @@
     <Compile Include="Config\ConfigLoader.cs" />
     <Compile Include="Config\IBlacklistManager.cs" />
     <Compile Include="Config\IDbCommandBlacklistManagerStub.cs" />
+    <Compile Include="Parser\BlockParsing\ABCPreCondition.cs" />
     <Compile Include="Parser\BlockParsing\BlockAssignment.cs" />
+    <Compile Include="Parser\BlockParsing\EqualityPreCondition.cs" />
+    <Compile Include="Parser\BlockParsing\IPreCondition.cs" />
+    <Compile Include="Parser\BlockParsing\ReturnCondition.cs" />
     <Compile Include="Parser\ISymbolTable.cs" />
     <Compile Include="Parser\MethodParsing\EmbeddedInitialSymbolTableBuilder.cs" />
     <Compile Include="Parser\MethodParsing\IMethodGraph.cs" />
@@ -74,7 +78,7 @@
     <Compile Include="Parser\MethodParsing\MethodGraphBuilder.cs" />
     <Compile Include="Parser\MethodParsing\MethodGraphAnalyzer.cs" />
     <Compile Include="Parser\MethodParsing\InitialSymbolTableBuilder.cs" />
-    <Compile Include="Parser\BlockParsing\PreCondition.cs" />
+    <Compile Include="Parser\BlockParsing\AssignablePreCondition.cs" />
     <Compile Include="Parser\SymbolTable.cs" />
     <Compile Include="Parser\BlockParsing\BlockParser.cs" />
     <Compile Include="Parser\TypeParsing\TypeParser.cs" />

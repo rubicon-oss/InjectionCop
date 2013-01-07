@@ -22,37 +22,22 @@ namespace InjectionCop.Parser.BlockParsing
   /// <summary>
   /// Holds a symbol and the associated fragment type that needs to safe when entering a BasicBlock
   /// </summary>
-  public class PreCondition
+  public class AssignablePreCondition: ABCPreCondition
   {
-    private readonly string _symbol;
-    private readonly string _fragmentType;
-    private readonly ProblemMetadata _problemMetadata;
-    
-    public PreCondition (string symbol, string fragmentType)
-      : this(symbol, fragmentType, new ProblemMetadata (-1, new SourceContext(), "?", "?"))
+    public AssignablePreCondition(string symbol, string fragmentType)
+      : this(symbol, fragmentType, new ProblemMetadata(-1, new SourceContext(), "?", "?"))
     {
     }
 
-    public PreCondition (string symbol, string fragmentType, ProblemMetadata problemMetadata)
+    public AssignablePreCondition(string symbol, string fragmentType, ProblemMetadata problemMetadata)
+      : base (symbol, fragmentType, problemMetadata)
     {
-      _symbol = ArgumentUtility.CheckNotNullOrEmpty ("symbol", symbol);
-      _fragmentType = ArgumentUtility.CheckNotNullOrEmpty ("fragmentType", fragmentType);
-      _problemMetadata = ArgumentUtility.CheckNotNull("sourceContext", problemMetadata);
     }
 
-    public string Symbol
+    protected override bool CheckStrategy(ISymbolTable context)
     {
-      get { return _symbol; }
-    }
-
-    public string FragmentType
-    {
-      get { return _fragmentType; }
-    }
-
-    public ProblemMetadata ProblemMetadata
-    {
-      get { return _problemMetadata; }
+      return !context.Contains(_symbol)
+              || !context.IsAssignableTo(_symbol, _fragmentType);
     }
   }
 }

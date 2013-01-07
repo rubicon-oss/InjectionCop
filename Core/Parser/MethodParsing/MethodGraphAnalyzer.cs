@@ -67,11 +67,12 @@ namespace InjectionCop.Parser.MethodParsing
       }
     }
 
-    private void CheckPreCoditions (PreCondition[] preconditions, ISymbolTable context)
+    private void CheckPreCoditions (IPreCondition[] preconditions, ISymbolTable context)
     {
-      foreach (PreCondition precondition in preconditions)
+      foreach (IPreCondition precondition in preconditions)
       {
-        if (!context.Contains(precondition.Symbol) || !context.IsAssignableTo(precondition.Symbol, precondition.FragmentType))
+        if(precondition.IsViolated(context))
+        //if (!context.Contains(precondition.Symbol) || !context.IsAssignableTo(precondition.Symbol, precondition.FragmentType))
         {
           _problemPipe.AddProblem(precondition.ProblemMetadata);
         }

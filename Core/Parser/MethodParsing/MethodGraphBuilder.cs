@@ -30,7 +30,7 @@ namespace InjectionCop.Parser.MethodParsing
     private readonly IBlacklistManager _blacklistManager;
     private readonly IProblemPipe _problemPipe;
     private readonly string _returnFragmentType;
-    private List<PreCondition> _referenceAndOutConditions;
+    private List<ReturnCondition> _referenceAndOutConditions;
     
 
     public MethodGraphBuilder (Method method, IBlacklistManager blacklistManager, IProblemPipe problemPipe)
@@ -108,9 +108,9 @@ namespace InjectionCop.Parser.MethodParsing
       }
     }
 
-    private List<PreCondition> ReferenceAndOutConditions (Method method)
+    private List<ReturnCondition> ReferenceAndOutConditions (Method method)
     {
-      List<PreCondition> referenceAndOutConditions = new List<PreCondition>();
+      List<ReturnCondition> referenceAndOutConditions = new List<ReturnCondition>();
       foreach (var parameter in method.Parameters)
       {
         if (parameter.Type is Reference && parameter.Attributes != null)
@@ -119,8 +119,8 @@ namespace InjectionCop.Parser.MethodParsing
           if (parameterFragmentType != SymbolTable.EMPTY_FRAGMENT)
           {
             string parameterName = IntrospectionUtility.GetVariableName (parameter);
-            PreCondition preCondition = new PreCondition (parameterName, parameterFragmentType);
-            referenceAndOutConditions.Add (preCondition);
+            ReturnCondition returnCondition = new ReturnCondition (parameterName, parameterFragmentType);
+            referenceAndOutConditions.Add (returnCondition);
           }
         }
       }

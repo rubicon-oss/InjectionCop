@@ -28,21 +28,21 @@ namespace InjectionCop.Parser.BlockParsing
   public class BlockParser
   {
     private ISymbolTable _symbolTableParser;
-    private List<PreCondition> _preConditions;
+    private List<IPreCondition> _preConditions;
     private List<int> _successors;
     private List<BlockAssignment> _blockAssignments;
     private readonly IBlacklistManager _blacklistManager;
     private readonly IProblemPipe _problemPipe;
     private readonly string _returnFragmentType;
     private List<string> _assignmentTargetVariables;
-    private List<PreCondition> _returnConditions;
+    private List<ReturnCondition> _returnConditions;
 
-    public BlockParser (IBlacklistManager blacklistManager, IProblemPipe problemPipe, string returnFragmentType, List<PreCondition> returnConditions)
+    public BlockParser (IBlacklistManager blacklistManager, IProblemPipe problemPipe, string returnFragmentType, List<ReturnCondition> returnConditions)
     {
       _blacklistManager = ArgumentUtility.CheckNotNull ("blacklistManager", blacklistManager);
       _problemPipe = ArgumentUtility.CheckNotNull ("typeParser", problemPipe);
       _symbolTableParser = new SymbolTable (blacklistManager);
-      _preConditions = new List<PreCondition>();
+      _preConditions = new List<IPreCondition>();
       _successors = new List<int>();
       _blockAssignments = new List<BlockAssignment>();
       _returnFragmentType = ArgumentUtility.CheckNotNullOrEmpty("returnFragmentType", returnFragmentType);
@@ -72,7 +72,7 @@ namespace InjectionCop.Parser.BlockParsing
     private void Reset ()
     {
       _symbolTableParser = new SymbolTable (_blacklistManager);
-      _preConditions = new List<PreCondition>();
+      _preConditions = new List<IPreCondition>();
       _successors = new List<int>();
       _blockAssignments = new List<BlockAssignment>();
       _assignmentTargetVariables = new List<string>();
@@ -206,7 +206,7 @@ namespace InjectionCop.Parser.BlockParsing
               assignmentStatement.SourceContext,
               targetFragmentType,
               "??");
-          PreCondition preCondition = new PreCondition (targetName, "placeholder", problemMetadata);
+          var preCondition = new EqualityPreCondition(targetName, SymbolTable.EMPTY_FRAGMENT, problemMetadata);
           _preConditions.Add (preCondition);
         }
       }
@@ -225,7 +225,7 @@ namespace InjectionCop.Parser.BlockParsing
             targetFragmentType,
             "??");
         string sourceSymbol = IntrospectionUtility.GetVariableName (assignmentStatement.Source);
-        PreCondition preCondition = new PreCondition (sourceSymbol, targetFragmentType, problemMetadata);
+        AssignablePreCondition preCondition = new AssignablePreCondition (sourceSymbol, targetFragmentType, problemMetadata);
         _preConditions.Add (preCondition);
       }
     }
@@ -246,7 +246,7 @@ namespace InjectionCop.Parser.BlockParsing
         string returnSymbol = IntrospectionUtility.GetVariableName (returnNode.Expression);
         ProblemMetadata problemMetadata = new ProblemMetadata (
             returnNode.UniqueKey, returnNode.SourceContext, _returnFragmentType, _symbolTableParser.GetFragmentType (returnSymbol));
-        PreCondition returnBlockCondition = new PreCondition (returnSymbol, _returnFragmentType, problemMetadata);
+        AssignablePreCondition returnBlockCondition = new AssignablePreCondition (returnSymbol, _returnFragmentType, problemMetadata);
         _preConditions.Add (returnBlockCondition);
         _preConditions.AddRange (_returnConditions);
       }
@@ -330,7 +330,7 @@ namespace InjectionCop.Parser.BlockParsing
     
     private void CheckParameters (MethodCall methodCall)
     {
-      List<PreCondition> additionalPreConditions;
+      List<AssignablePreCondition> additionalPreConditions;
       List<ProblemMetadata> parameterProblems;
       _symbolTableParser.ParametersSafe (methodCall, out additionalPreConditions, out parameterProblems);
       parameterProblems.ForEach (parameterProblem => _problemPipe.AddProblem (parameterProblem));
