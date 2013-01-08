@@ -15,6 +15,7 @@
 using System;
 using InjectionCop.Config;
 using InjectionCop.Parser;
+using Microsoft.FxCop.Sdk;
 using NUnit.Framework;
 
 namespace InjectionCop.UnitTests.Parser

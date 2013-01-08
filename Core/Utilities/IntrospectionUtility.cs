@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Collections.Generic;
 using Microsoft.FxCop.Sdk;
@@ -125,6 +126,7 @@ namespace InjectionCop.Utilities
         Indexer indexer = (Indexer) expression;
         variableName = GetVariableName (indexer.Object);
       }
+      
       return variableName;
     }
 

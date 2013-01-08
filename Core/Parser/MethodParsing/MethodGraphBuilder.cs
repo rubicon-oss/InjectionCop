@@ -29,7 +29,7 @@ namespace InjectionCop.Parser.MethodParsing
     private readonly IBlacklistManager _blacklistManager;
     private readonly IProblemPipe _problemPipe;
     private readonly string _returnFragmentType;
-    private List<ReturnCondition> _referenceAndOutConditions;
+    private readonly List<ReturnCondition> _referenceAndOutConditions;
 
     public MethodGraphBuilder (Method method, IBlacklistManager blacklistManager, IProblemPipe problemPipe)
     {

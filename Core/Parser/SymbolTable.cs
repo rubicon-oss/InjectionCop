@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using InjectionCop.Config;
 using InjectionCop.Parser.BlockParsing;
@@ -185,25 +186,25 @@ namespace InjectionCop.Parser
     
     public void InferSafeness (string symbolName, Expression expression)
     {
-      ArgumentUtility.CheckNotNullOrEmpty ("symbolName", symbolName);
+      if(symbolName == null)
+        return;
       ArgumentUtility.CheckNotNull ("expression", expression);
-
+      
       string fragmentType = InferFragmentType (expression);
       _safenessMap[symbolName] = fragmentType;
     }
 
     public string GetFragmentType (string symbolName)
     {
-      ArgumentUtility.CheckNotNull ("symbolName", symbolName);
-
-      if (_safenessMap.ContainsKey (symbolName))
+      string fragmentType = EMPTY_FRAGMENT;
+      if (symbolName != null)
       {
-        return _safenessMap[symbolName];
+        if (_safenessMap.ContainsKey (symbolName))
+        {
+          fragmentType = _safenessMap[symbolName];
+        }
       }
-      else
-      {
-        return EMPTY_FRAGMENT;
-      }
+      return fragmentType;
     }
 
     public void MakeUnsafe (string symbolName)
@@ -214,6 +215,8 @@ namespace InjectionCop.Parser
 
     public void MakeSafe (string symbolName, string fragmentType)
     {
+      if (symbolName == null)
+        Debugger.Launch();
       ArgumentUtility.CheckNotNull ("symbolName", symbolName);
       ArgumentUtility.CheckNotNull ("fragmentType", fragmentType);
       _safenessMap[symbolName] = fragmentType;
