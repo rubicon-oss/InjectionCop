@@ -236,7 +236,7 @@ namespace InjectionCop.Utilities
     }
 
     public static Method[] InterfaceDeclarations (Method method)
-    {
+    { 
       TypeNode[] calleeMethodparameterTypes = method.Parameters.Select (parameter => parameter.Type).ToArray();
 
       return (from @interface in method.DeclaringType.Interfaces

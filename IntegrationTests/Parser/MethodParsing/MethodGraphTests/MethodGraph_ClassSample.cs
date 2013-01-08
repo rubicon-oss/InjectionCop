@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Globalization;
 using InjectionCop.Fragment;
 
 namespace InjectionCop.IntegrationTests.Parser.MethodParsing.MethodGraphTests
@@ -75,6 +76,33 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.MethodGraphTests
       {
         safe = temp;
       }
+    }
+
+    public void TryCatchFinally ()
+    {
+      try
+      {
+        RequiresSqlFragment (UnsafeSource());
+        ThrowsException (0);
+      }
+      catch (ArgumentNullException ex)
+      {
+        DummyMethod (ex.Message);
+      }
+      finally
+      {
+        DummyMethod ("");
+      }
+      DummyMethod ("dummy");
+    }
+
+    private void ThrowsException (int parameter)
+    {
+      if (parameter == 1)
+      {
+        throw new ArgumentNullException();
+      }
+      DummyMethod (parameter.ToString (CultureInfo.InvariantCulture));
     }
   }
 }

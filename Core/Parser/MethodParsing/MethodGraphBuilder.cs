@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using InjectionCop.Config;
 using InjectionCop.Parser.BlockParsing;
 using InjectionCop.Parser.ProblemPipe;
@@ -31,7 +30,6 @@ namespace InjectionCop.Parser.MethodParsing
     private readonly IProblemPipe _problemPipe;
     private readonly string _returnFragmentType;
     private List<ReturnCondition> _referenceAndOutConditions;
-    
 
     public MethodGraphBuilder (Method method, IBlacklistManager blacklistManager, IProblemPipe problemPipe)
     {
@@ -71,7 +69,7 @@ namespace InjectionCop.Parser.MethodParsing
         BlockParser parser = new BlockParser (_blacklistManager, _problemPipe, _returnFragmentType, _referenceAndOutConditions);
         Dictionary<int, BasicBlock> graph = new Dictionary<int, BasicBlock>();
         int initialBlockId;
-        List<Block> blockList = new List<Block> (_methodBody.Statements.OfType<Block>());
+        List<Block> blockList = GetBlocks(_methodBody.Statements);
 
         using (var blocksEnumerator = blockList.GetEnumerator())
         {
@@ -108,6 +106,29 @@ namespace InjectionCop.Parser.MethodParsing
       }
     }
 
+    private List<Block> GetBlocks (StatementCollection statements)
+    {
+      List<Block> blocks = new List<Block>();
+      foreach (var statement in statements)
+      {
+        if (statement is Block)
+        {
+          blocks.Add ((Block) statement);
+        }
+        else if (statement is TryNode)
+        {
+          TryNode tryNode = (TryNode) statement;
+          blocks.AddRange(GetTryNodeBlocks (tryNode));
+          blocks.AddRange (GetCatcherBlocks (tryNode.Catchers));
+          if (tryNode.Finally != null)
+          {
+            blocks.AddRange (GetFinallyBlocks (tryNode.Finally));
+          }
+        }
+      }
+      return blocks;
+    }
+    
     private List<ReturnCondition> ReferenceAndOutConditions (Method method)
     {
       List<ReturnCondition> referenceAndOutConditions = new List<ReturnCondition>();
@@ -138,6 +159,35 @@ namespace InjectionCop.Parser.MethodParsing
         }
       }
       return containsUnconditionalBranch;
+    }
+
+    private IEnumerable<Block> GetTryNodeBlocks (TryNode tryNode)
+    {
+      List<Block> blocks = new List<Block>();
+      blocks.Add (tryNode.Block);
+      List<Block> tryNodeBlocks = GetBlocks (tryNode.Block.Statements);
+      blocks.AddRange (tryNodeBlocks);
+      return blocks;
+    }
+
+    private IEnumerable<Block> GetCatcherBlocks (CatchNodeCollection catchers)
+    {
+      List<Block> blocks = new List<Block>();
+      foreach (var catcher in catchers)
+      {
+        blocks.Add (catcher.Block);
+        List<Block> catchNodeBlocks = GetBlocks (catcher.Block.Statements);
+        blocks.AddRange (catchNodeBlocks);
+      }
+      return blocks;
+    }
+
+    private IEnumerable<Block> GetFinallyBlocks (FinallyNode finallyNode)
+    {
+      List<Block> blocks = new List<Block>();
+      blocks.Add (finallyNode.Block);
+      blocks.AddRange (GetBlocks (finallyNode.Block.Statements));
+      return blocks;
     }
   }
 }

@@ -14,7 +14,6 @@
 
 using System;
 using InjectionCop.Parser.ProblemPipe;
-using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser.BlockParsing

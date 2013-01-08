@@ -416,5 +416,48 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.MethodGraphTests
       }   
     }
 
+    [Test]
+    public void MethodGraph_TryCatchFinally_TryBlockIsParsed ()
+    {
+      Method sampleMethod = TestHelper.GetSample<MethodGraph_ClassSample> ("TryCatchFinally");
+      TryNode outerTryNode = (TryNode) sampleMethod.Body.Statements[1];
+      TryNode innerTryNode = (TryNode) outerTryNode.Block.Statements[0];
+      int tryBlockUniqueKey = innerTryNode.Block.UniqueKey;
+
+      IMethodGraph methodGraph = BuildMethodGraph (sampleMethod);
+      BasicBlock tryBasicBlock = methodGraph.GetBasicBlockById (tryBlockUniqueKey);
+     
+      Assert.That (tryBasicBlock, Is.Not.Null);
+    }
+
+    [Test]
+    public void MethodGraph_TryCatchFinally_CatchBlockIsParsed ()
+    {
+      Method sampleMethod = TestHelper.GetSample<MethodGraph_ClassSample> ("TryCatchFinally");
+      TryNode outerTryNode = (TryNode) sampleMethod.Body.Statements[1];
+      TryNode innerTryNode = (TryNode) outerTryNode.Block.Statements[0];
+      CatchNode catchNode = innerTryNode.Catchers[0];
+      int catchBlockUniqueKey = catchNode.Block.UniqueKey;
+
+      IMethodGraph methodGraph = BuildMethodGraph (sampleMethod);
+      BasicBlock catchBasicBlock = methodGraph.GetBasicBlockById (catchBlockUniqueKey);
+     
+      Assert.That (catchBasicBlock, Is.Not.Null);
+    }
+
+    [Test]
+    public void MethodGraph_TryCatchFinally_FinallyBlockIsParsed ()
+    {
+      Method sampleMethod = TestHelper.GetSample<MethodGraph_ClassSample> ("TryCatchFinally");
+      TryNode outerTryNode = (TryNode) sampleMethod.Body.Statements[1];
+      Block finallyBlock = outerTryNode.Finally.Block;
+      int finallyBlockUniqueKey = finallyBlock.UniqueKey;
+
+      IMethodGraph methodGraph = BuildMethodGraph (sampleMethod);
+      BasicBlock finallyBasicBlock = methodGraph.GetBasicBlockById (finallyBlockUniqueKey);
+     
+      Assert.That (finallyBasicBlock, Is.Not.Null);
+    }
+
   }
 }

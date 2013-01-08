@@ -24,13 +24,13 @@ namespace InjectionCop.Parser.BlockParsing
     protected readonly string _symbol;
     protected readonly string _fragmentType;
     protected readonly ProblemMetadata _problemMetadata;
-    
-    public ABCPreCondition (string symbol, string fragmentType)
+
+    protected ABCPreCondition (string symbol, string fragmentType)
       : this(symbol, fragmentType, new ProblemMetadata (-1, new SourceContext(), "?", "?"))
     {
     }
 
-    public ABCPreCondition (string symbol, string fragmentType, ProblemMetadata problemMetadata)
+    protected ABCPreCondition (string symbol, string fragmentType, ProblemMetadata problemMetadata)
     {
       _symbol = ArgumentUtility.CheckNotNullOrEmpty ("symbol", symbol);
       _fragmentType = ArgumentUtility.CheckNotNullOrEmpty ("fragmentType", fragmentType);

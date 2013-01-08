@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using InjectionCop.Parser.BlockParsing;
 using InjectionCop.Utilities;
 
@@ -38,6 +39,7 @@ namespace InjectionCop.Parser.MethodParsing
       }
       catch (KeyNotFoundException ex)
       {
+        //Debugger.Launch();
         throw new InjectionCopException ("The given key was not present in the MethodGraph", ex);
       }
     }

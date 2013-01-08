@@ -111,6 +111,8 @@
     <Compile Include="Parser\TypeParsing\TypeParserTests\Parameter\CallByShare\CallByShare_TypeParserTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Parameter\Out\OutSample.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Parameter\Out\Out_TypeParserTest.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\TryCatchFinally\TryCatchFinallySample.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\TryCatchFinally\TryCatchFinally_TypeParserTest.cs" />
     <Compile Include="Utilities\FragmentUtilitySample.cs" />
     <Compile Include="Utilities\FragmentUtilityTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Concatenation\ConcatenationSample.cs" />

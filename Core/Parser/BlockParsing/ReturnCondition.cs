@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using InjectionCop.Parser.ProblemPipe;
 
 namespace InjectionCop.Parser.BlockParsing
 {
