@@ -47,13 +47,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config\Configuration.cs" />
+    <Compile Include="Config\ConfigurationFactory.cs" />
     <Compile Include="Config\FragmentSignature.cs" />
     <Compile Include="Fragment\Fragment.cs" />
     <Compile Include="Fragment\FragmentAttribute.cs" />
     <Compile Include="Fragment\SqlFragmentAttribute.cs" />
     <Compile Include="Fragment\TrustedSqlGeneration.cs" />
-    <Compile Include="Config\BlacklistManager.cs" />
-    <Compile Include="Config\ConfigLoader.cs" />
     <Compile Include="Config\IBlacklistManager.cs" />
     <Compile Include="Config\IDbCommandBlacklistManagerStub.cs" />
     <Compile Include="Parser\BlockParsing\ABCPreCondition.cs" />
@@ -72,6 +72,11 @@
     <Compile Include="Parser\ProblemPipe\ProblemMetadata.cs" />
     <Compile Include="Parser\ProblemPipe\IProblemPipe.cs" />
     <Compile Include="Parser\ProblemPipe\ProblemDuplicateFilter.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Utilities\FragmentUtility.cs" />
     <Compile Include="InjectionCopException.cs" />
     <Compile Include="Parser\TypeParsing\BaseFxCopRule.cs" />
@@ -100,8 +105,15 @@
     <EmbeddedResource Include="Parser\TypeParsing\RuleMetadata.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Config\Configuration.xsd">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="Core.licenseheader" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

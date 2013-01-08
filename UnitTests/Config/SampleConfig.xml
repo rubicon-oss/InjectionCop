@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Blacklist xmlns="http://injectioncop.codeplex.com/">
+  <Assembly name="mscorlib">
+    <Type name="System.IO.File">
+      <Method name="ReadAllText" returnFragmentType="FragmentType" >
+        <Parameter type="System.String" fragmentType="FragmentType" />
+      </Method>
+    </Type>
+  </Assembly>
+</Blacklist>

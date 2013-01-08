@@ -68,7 +68,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Config\BlacklistManagerTest.cs" />
+    <Compile Include="Config\ConfigurationTest.cs" />
     <Compile Include="Parser\MethodParsing\ProblemPipeStub.cs" />
     <Compile Include="Parser\ProblemPipe\ProblemDuplicateFilterTest.cs" />
     <Compile Include="Parser\SymbolTableTest.cs" />
@@ -86,7 +86,9 @@
       <Name>InjectionCop.IntegrationTests</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Config\SampleConfig.xml" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="UnitTests.licenseheader" />

@@ -33,13 +33,32 @@ namespace InjectionCop.Parser.TypeParsing
     public TypeParser ()
         : base ("TypeParser")
     {
-      _blacklistManager = ConfigLoader.LoadBlacklist();
+      _blacklistManager = null;
       _problemFilter = new ProblemDuplicateFilter (this);
       //Debugger.Launch();
     }
 
+
+    private void GetLocations (TypeNode node)
+    {
+      Debugger.Launch();
+
+      var assembly = GetType().Assembly;
+
+      var assemblyLocation = assembly.Location;
+      var codeBase = assembly.CodeBase;
+      var assemblyName = assembly.GetName (false);
+
+      var targetAssembly = node.DeclaringModule.ContainingAssembly;
+
+      var targetLocation = targetAssembly.Location;
+      var targetName = targetAssembly.GetAssemblyName();
+    }
+
     public override ProblemCollection Check (TypeNode type)
     {
+      GetLocations (type);
+
       ArgumentUtility.CheckNotNull ("type", type);
       foreach (Member member in type.Members)
       {

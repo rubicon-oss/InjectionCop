@@ -62,7 +62,6 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Config\ConfigLoaderTest.cs" />
     <Compile Include="Parser\BlockParsing\BlockParserSample.cs" />
     <Compile Include="Parser\MethodParsing\SymbolTableBuilderSample.cs" />
     <Compile Include="Parser\MethodParsing\EmbeddedInitialSymbolTableBuilderTest\EmbeddedInitialSymbolTableBuilderTest.cs" />
