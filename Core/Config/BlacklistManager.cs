@@ -67,6 +67,11 @@ namespace InjectionCop.Config
       return fragmentTypesArray;
     }
 
+    public FragmentSignature GetFragmentTypes (string assemblyName, string qualifiedTypeName, string methodName, IList<string> qualifiedParameterTypes)
+    {
+      throw new NotImplementedException();
+    }
+
     private IEnumerable<XElement> FilterMethods (string qualifiedTypeName, string methodName, IList<string> qualifiedParameterTypes)
     {
       return from type in FilterTypes (qualifiedTypeName)

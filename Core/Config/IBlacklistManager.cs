@@ -23,5 +23,7 @@ namespace InjectionCop.Config
   public interface IBlacklistManager
   {
     string[] GetFragmentTypes (string qualifiedTypeName, string methodName, IList<string> qualifiedParameterTypes);
+
+    FragmentSignature GetFragmentTypes (string assemblyName, string qualifiedTypeName, string methodName, IList<string> qualifiedParameterTypes);
   }
 }

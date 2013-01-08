@@ -38,5 +38,10 @@ namespace InjectionCop.Config
         return null;
       }
     }
+
+    public FragmentSignature GetFragmentTypes (string assemblyName, string qualifiedTypeName, string methodName, IList<string> qualifiedParameterTypes)
+    {
+      throw new NotImplementedException();
+    }
   }
 }
