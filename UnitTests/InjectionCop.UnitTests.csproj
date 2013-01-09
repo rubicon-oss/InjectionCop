@@ -68,7 +68,10 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Config\ConfigurationFactoryTest.cs" />
+    <Compile Include="Config\ConfigurationFileLocatorTest.cs" />
     <Compile Include="Config\ConfigurationTest.cs" />
+    <Compile Include="Config\LayeredConfigurationAdapterTest.cs" />
     <Compile Include="Parser\MethodParsing\ProblemPipeStub.cs" />
     <Compile Include="Parser\ProblemPipe\ProblemDuplicateFilterTest.cs" />
     <Compile Include="Parser\SymbolTableTest.cs" />
@@ -87,7 +90,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Config\SampleConfig.xml" />
+    <Content Include="Config\SampleConfig.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

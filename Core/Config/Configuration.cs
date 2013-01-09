@@ -96,19 +96,15 @@ namespace InjectionCop.Config
     private void AddFragmentSignature (
         string typeName, string key, string[] fragmentTypes, string returnFragmentType, string methodName, string[] parameterTypes)
     {
-      try
-      {
-        _fragmentSignatures.Add (key, new FragmentSignature (fragmentTypes, returnFragmentType, false));
-      }
-      catch (ArgumentException ex)
-      {
+      if (_fragmentSignatures.ContainsKey (key))
         throw new ArgumentException (
             string.Format (
                 "Method {0}.{1}({2}) is defined more than once.",
                 typeName,
                 methodName,
                 string.Join (", ", parameterTypes)));
-      }
+    
+      _fragmentSignatures.Add (key, new FragmentSignature (fragmentTypes, returnFragmentType, false));
     }
   }
 }

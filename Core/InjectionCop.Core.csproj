@@ -49,7 +49,10 @@
   <ItemGroup>
     <Compile Include="Config\Configuration.cs" />
     <Compile Include="Config\ConfigurationFactory.cs" />
+    <Compile Include="Config\ConfigurationFileLocator.cs" />
     <Compile Include="Config\FragmentSignature.cs" />
+    <Compile Include="Config\IConfigurationFileLocator.cs" />
+    <Compile Include="Config\LayeredConfigurationAdapter.cs" />
     <Compile Include="Fragment\Fragment.cs" />
     <Compile Include="Fragment\FragmentAttribute.cs" />
     <Compile Include="Fragment\SqlFragmentAttribute.cs" />
