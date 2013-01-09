@@ -139,13 +139,13 @@ namespace InjectionCop.Parser
       requireSafenessParameters = new List<AssignablePreCondition>();
       parameterProblems = new List<ProblemMetadata>();
       Method calleeMethod = IntrospectionUtility.ExtractMethod (methodCall);
-      string[] parameterFragmentTypes = InferParameterFragmentTypes (calleeMethod);
+      var fragmentSignature = InferParameterFragmentTypes (calleeMethod);
       
-      for (int i = 0; i < parameterFragmentTypes.Length; i++)
+      for (int i = 0; i < fragmentSignature.ParameterFragmentTypes.Length; i++)
       {
         Expression operand = methodCall.Operands[i];
         string operandFragmentType = InferFragmentType (operand);
-        string parameterFragmentType = parameterFragmentTypes[i];
+        string parameterFragmentType = fragmentSignature.ParameterFragmentTypes[i];
         
         if (operandFragmentType != LITERAL
             && parameterFragmentType != EMPTY_FRAGMENT
@@ -166,21 +166,18 @@ namespace InjectionCop.Parser
       }
     }
 
-    private string[] InferParameterFragmentTypes (Method calleeMethod)
+    private FragmentSignature InferParameterFragmentTypes (Method calleeMethod)
     {
-      string[] parameterFragmentTypes;
       Method[] interfaceDeclarations = IntrospectionUtility.InterfaceDeclarations (calleeMethod);
       
       if (interfaceDeclarations.Any())
       {
-        parameterFragmentTypes = GetParameterFragmentTypes (interfaceDeclarations.First());
+        return GetParameterFragmentTypes (interfaceDeclarations.First());
       }
       else
       {
-        parameterFragmentTypes = GetParameterFragmentTypes (calleeMethod);
+        return GetParameterFragmentTypes (calleeMethod);
       }
-      
-      return parameterFragmentTypes;
     }
     
     public void InferSafeness (string symbolName, Expression expression)
@@ -242,12 +239,16 @@ namespace InjectionCop.Parser
       return fragmentType;
     }
 
-    private string[] GetParameterFragmentTypes (Method calleeMethod)
+    private FragmentSignature GetParameterFragmentTypes (Method calleeMethod)
     {
       List<string> parameterTypes = IntrospectionUtility.GetParameterTypes (calleeMethod);
-      string[] parameterFragmentTypes = _blacklistManager.GetFragmentTypes (calleeMethod.DeclaringType.FullName, calleeMethod.Name.Name, parameterTypes);
+      var fragmentSignature = _blacklistManager.GetFragmentTypes (
+          calleeMethod.DeclaringType.DeclaringModule.ContainingAssembly.Name,
+          calleeMethod.DeclaringType.FullName,
+          calleeMethod.Name.Name,
+          parameterTypes);
       
-      if (parameterFragmentTypes == null)
+      if (fragmentSignature == null)
       {
         List<string> buffer = new List<string>();
 
@@ -259,11 +260,12 @@ namespace InjectionCop.Parser
         {
           buffer.Add (FragmentUtility.GetFragmentType (calleeMethod.DeclaringMember.Attributes));
         }
-        
-        parameterFragmentTypes = buffer.ToArray();
+
+        //TODO: review
+        return new FragmentSignature (buffer.ToArray(), null, false);
       }
 
-      return parameterFragmentTypes;
+      return fragmentSignature;
     }
 
     private bool IsAnnotatedPropertySetter (Method method)

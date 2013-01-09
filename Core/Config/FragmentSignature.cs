@@ -1,4 +1,5 @@
 ﻿using System;
+using InjectionCop.Utilities;
 
 namespace InjectionCop.Config
 {
@@ -10,6 +11,8 @@ namespace InjectionCop.Config
 
     public FragmentSignature (string[] parameterFragmentTypes, string returnFragmentType, bool isGenerator)
     {
+      ArgumentUtility.CheckNotNull ("parameterFragmentTypes", parameterFragmentTypes);
+      
       _parameterFragmentTypes = parameterFragmentTypes;
       _returnFragmentType = returnFragmentType;
       _isGenerator = isGenerator;

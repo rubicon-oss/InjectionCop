@@ -27,39 +27,22 @@ namespace InjectionCop.Parser.TypeParsing
   /// </summary>
   public class TypeParser : BaseFxCopRule, IProblemPipe
   {
-    private readonly IBlacklistManager _blacklistManager;
     private readonly IProblemPipe _problemFilter;
+    private IBlacklistManager _blacklistManager;
 
     public TypeParser ()
         : base ("TypeParser")
     {
-      _blacklistManager = null;
       _problemFilter = new ProblemDuplicateFilter (this);
       //Debugger.Launch();
     }
 
-
-    private void GetLocations (TypeNode node)
-    {
-      Debugger.Launch();
-
-      var assembly = GetType().Assembly;
-
-      var assemblyLocation = assembly.Location;
-      var codeBase = assembly.CodeBase;
-      var assemblyName = assembly.GetName (false);
-
-      var targetAssembly = node.DeclaringModule.ContainingAssembly;
-
-      var targetLocation = targetAssembly.Location;
-      var targetName = targetAssembly.GetAssemblyName();
-    }
-
     public override ProblemCollection Check (TypeNode type)
     {
-      GetLocations (type);
-
       ArgumentUtility.CheckNotNull ("type", type);
+
+      InitializeBlacklistManager(type);
+
       foreach (Member member in type.Members)
       {
         if (member is Method)
@@ -70,7 +53,13 @@ namespace InjectionCop.Parser.TypeParsing
       }
       return Problems;
     }
-    
+
+    public void InitializeBlacklistManager (TypeNode type)
+    {
+      if (_blacklistManager == null)
+        _blacklistManager = ConfigurationFactory.CreateFrom (type, new ConfigurationFileLocator());
+    }
+
     public void AddProblem (ProblemMetadata problemMetadata)
     {
       ArgumentUtility.CheckNotNull ("problemMetadata", problemMetadata);

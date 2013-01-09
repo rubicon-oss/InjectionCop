@@ -14,6 +14,7 @@
 
 using System;
 using InjectionCop.Parser.TypeParsing;
+using InjectionCop.Utilities;
 using NUnit.Framework;
 
 namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests
@@ -27,6 +28,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests
     public void SetUp()
     {
       _typeParser = new TypeParser ();
+      _typeParser.InitializeBlacklistManager (IntrospectionUtility.TypeNodeFactory<TypeParserTestBase>());
     }
   }
 }

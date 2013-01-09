@@ -7,7 +7,6 @@ using System.Xml.Linq;
 using System.Xml.Schema;
 using InjectionCop.Properties;
 using InjectionCop.Utilities;
-using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Config
 {
@@ -15,11 +14,6 @@ namespace InjectionCop.Config
   {
     private readonly XNamespace Namespace = "http://injectioncop.codeplex.com/";
     private readonly Dictionary<string, FragmentSignature> _fragmentSignatures = new Dictionary<string, FragmentSignature>();
-
-    public string[] GetFragmentTypes (string qualifiedTypeName, string methodName, IList<string> qualifiedParameterTypes)
-    {
-      throw new NotImplementedException();
-    }
 
     public FragmentSignature GetFragmentTypes (
         string assemblyName, string qualifiedTypeName, string methodName, IList<string> qualifiedParameterTypes)

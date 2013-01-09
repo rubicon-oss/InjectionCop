@@ -19,11 +19,6 @@ namespace InjectionCop.Config
       get { return _configurations; }
     }
 
-    public string[] GetFragmentTypes (string qualifiedTypeName, string methodName, IList<string> qualifiedParameterTypes)
-    {
-      throw new System.NotImplementedException();
-    }
-
     public FragmentSignature GetFragmentTypes (string assemblyName, string qualifiedTypeName, string methodName, IList<string> qualifiedParameterTypes)
     {
       foreach (var configurationLayer in _configurations)
