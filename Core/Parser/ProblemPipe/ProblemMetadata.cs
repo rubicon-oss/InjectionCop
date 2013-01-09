@@ -23,7 +23,7 @@ namespace InjectionCop.Parser.ProblemPipe
     private readonly int _sourceExpressionId;
     private readonly SourceContext _sourceContext;
     private readonly string _expectedFragment;
-    private readonly string _givenFragment;
+    private string _givenFragment;
 
     public ProblemMetadata (int sourceExpressionId, SourceContext sourceContext, string expectedFragment, string givenFragment)
     {
@@ -51,6 +51,7 @@ namespace InjectionCop.Parser.ProblemPipe
     public string GivenFragment
     {
       get { return _givenFragment; }
+      set { _givenFragment = value; }
     }
   }
 }

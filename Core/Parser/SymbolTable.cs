@@ -133,11 +133,11 @@ namespace InjectionCop.Parser
       return fragmentType;
     }
     
-    public void ParametersSafe (MethodCall methodCall, out List<AssignablePreCondition> requireSafenessParameters, out List<ProblemMetadata> parameterProblems)
+    public void ParametersSafe (MethodCall methodCall, out List<AssignabilityPreCondition> requireSafenessParameters, out List<ProblemMetadata> parameterProblems)
     {
       ArgumentUtility.CheckNotNull ("methodCall", methodCall);
       
-      requireSafenessParameters = new List<AssignablePreCondition>();
+      requireSafenessParameters = new List<AssignabilityPreCondition>();
       parameterProblems = new List<ProblemMetadata>();
       Method calleeMethod = IntrospectionUtility.ExtractMethod (methodCall);
       string[] parameterFragmentTypes = InferParameterFragmentTypes (calleeMethod);
@@ -157,7 +157,7 @@ namespace InjectionCop.Parser
           if (IntrospectionUtility.IsVariable (operand, out variableName)
               && !_safenessMap.ContainsKey (variableName))
           {
-            requireSafenessParameters.Add (new AssignablePreCondition (variableName, parameterFragmentType, problemMetadata));
+            requireSafenessParameters.Add (new AssignabilityPreCondition (variableName, parameterFragmentType, problemMetadata));
           }
           else
           {

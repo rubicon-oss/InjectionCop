@@ -16,7 +16,7 @@ using System;
 
 namespace InjectionCop.Parser.BlockParsing
 {
-  public class ReturnCondition: AssignablePreCondition
+  public class ReturnCondition: AssignabilityPreCondition
   {
     public ReturnCondition(string symbol, string fragmentType)
       : base(symbol, fragmentType)

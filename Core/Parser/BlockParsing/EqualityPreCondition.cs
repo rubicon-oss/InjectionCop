@@ -18,7 +18,7 @@ using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser.BlockParsing
 {
-  class EqualityPreCondition: ABCPreCondition
+  public class EqualityPreCondition: ABCPreCondition
   {
     public EqualityPreCondition(string symbol, string fragmentType)
       : this(symbol, fragmentType, new ProblemMetadata(-1, new SourceContext(), "?", "?"))
@@ -30,10 +30,9 @@ namespace InjectionCop.Parser.BlockParsing
     {
     }
 
-    protected override bool CheckStrategy(ISymbolTable context)
+    protected override bool ViolationCheckStrategy(ISymbolTable context)
     {
-      return !context.Contains(_symbol)
-              || context.GetFragmentType(_symbol) != _fragmentType;
+      return context.GetFragmentType(_symbol) != _fragmentType;
     }
   }
 }

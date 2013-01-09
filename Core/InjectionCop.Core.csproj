@@ -78,7 +78,7 @@
     <Compile Include="Parser\MethodParsing\MethodGraphBuilder.cs" />
     <Compile Include="Parser\MethodParsing\MethodGraphAnalyzer.cs" />
     <Compile Include="Parser\MethodParsing\InitialSymbolTableBuilder.cs" />
-    <Compile Include="Parser\BlockParsing\AssignablePreCondition.cs" />
+    <Compile Include="Parser\BlockParsing\AssignabilityPreCondition.cs" />
     <Compile Include="Parser\SymbolTable.cs" />
     <Compile Include="Parser\BlockParsing\BlockParser.cs" />
     <Compile Include="Parser\TypeParsing\TypeParser.cs" />

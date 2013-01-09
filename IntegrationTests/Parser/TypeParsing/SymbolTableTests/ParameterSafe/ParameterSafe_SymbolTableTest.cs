@@ -41,7 +41,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.SymbolTableTests.Para
       Block codeBlock = (Block) sampleMethod.Body.Statements[0];
       AssignmentStatement assignmentStatement = (AssignmentStatement) codeBlock.Statements[1];
       MethodCall sample = (MethodCall) assignmentStatement.Source;
-      List<AssignablePreCondition> preconditions;
+      List<AssignabilityPreCondition> preconditions;
       List<ProblemMetadata> parameterProblems;
       _symbolTable.ParametersSafe (sample, out preconditions, out parameterProblems);
 
@@ -56,7 +56,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.SymbolTableTests.Para
       ExpressionStatement expressionStatement = (ExpressionStatement) codeBlock.Statements[1];
       UnaryExpression unaryExpression = (UnaryExpression) expressionStatement.Expression;
       MethodCall sample = (MethodCall) unaryExpression.Operand;
-      List<AssignablePreCondition> preconditions;
+      List<AssignabilityPreCondition> preconditions;
       List<ProblemMetadata> parameterProblems;
       _symbolTable.ParametersSafe (sample, out preconditions, out parameterProblems);
 

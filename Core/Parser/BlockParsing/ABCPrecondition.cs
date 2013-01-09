@@ -54,9 +54,14 @@ namespace InjectionCop.Parser.BlockParsing
 
     public bool IsViolated(ISymbolTable context)
     {
-      return CheckStrategy(context);
+      bool preConditionViolated = ViolationCheckStrategy(context);
+      if (preConditionViolated)
+      {
+        _problemMetadata.GivenFragment = context.GetFragmentType(_symbol);
+      }
+      return preConditionViolated;
     }
 
-    protected abstract bool CheckStrategy(ISymbolTable context);
+    protected abstract bool ViolationCheckStrategy(ISymbolTable context);
   }
 }

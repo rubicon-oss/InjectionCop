@@ -230,7 +230,7 @@ namespace InjectionCop.Parser.BlockParsing
         string sourceSymbol = IntrospectionUtility.GetVariableName (assignmentStatement.Source);
         if (sourceSymbol != null)
         {
-          AssignablePreCondition preCondition = new AssignablePreCondition (sourceSymbol, targetFragmentType, problemMetadata);
+          AssignabilityPreCondition preCondition = new AssignabilityPreCondition (sourceSymbol, targetFragmentType, problemMetadata);
           _preConditions.Add (preCondition);
         }
       }
@@ -257,7 +257,7 @@ namespace InjectionCop.Parser.BlockParsing
         {
           ProblemMetadata problemMetadata = new ProblemMetadata (
               returnNode.UniqueKey, returnNode.SourceContext, _returnFragmentType, _symbolTableParser.GetFragmentType (returnSymbol));
-          AssignablePreCondition returnBlockCondition = new AssignablePreCondition (returnSymbol, _returnFragmentType, problemMetadata);
+          AssignabilityPreCondition returnBlockCondition = new AssignabilityPreCondition (returnSymbol, _returnFragmentType, problemMetadata);
           _preConditions.Add (returnBlockCondition);
           _preConditions.AddRange (_returnConditions);
         }
@@ -342,7 +342,7 @@ namespace InjectionCop.Parser.BlockParsing
     
     private void CheckParameters (MethodCall methodCall)
     {
-      List<AssignablePreCondition> additionalPreConditions;
+      List<AssignabilityPreCondition> additionalPreConditions;
       List<ProblemMetadata> parameterProblems;
       _symbolTableParser.ParametersSafe (methodCall, out additionalPreConditions, out parameterProblems);
       parameterProblems.ForEach (parameterProblem => _problemPipe.AddProblem (parameterProblem));
