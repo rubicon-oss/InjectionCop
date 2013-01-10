@@ -62,7 +62,6 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Config\ConfigLoaderTest.cs" />
     <Compile Include="Parser\BlockParsing\BlockParserSample.cs" />
     <Compile Include="Parser\MethodParsing\SymbolTableBuilderSample.cs" />
     <Compile Include="Parser\MethodParsing\EmbeddedInitialSymbolTableBuilderTest\EmbeddedInitialSymbolTableBuilderTest.cs" />
@@ -72,6 +71,15 @@
     <Compile Include="Parser\NonFragmentAttribute.cs" />
     <Compile Include="Parser\ProblemPipeStub.cs" />
     <Compile Include="Parser\TypeParsing\BlacklistManagerIntegrationSample.cs" />
+    <Compile Include="Parser\TypeParsing\FragmentUsageTests\BaseClass.cs" />
+    <Compile Include="Parser\TypeParsing\FragmentUsageTests\ImplementingClassWithoutFragmentUsage.cs" />
+    <Compile Include="Parser\TypeParsing\FragmentUsageTests\InterfaceImplementingMethodFragmentUsageRuleTest.cs" />
+    <Compile Include="Parser\TypeParsing\FragmentUsageTests\ImplementingClassWithInvalidFragmentUsage.cs" />
+    <Compile Include="Parser\TypeParsing\FragmentUsageTests\DerivedClassWithInvalidFragmentUsage.cs" />
+    <Compile Include="Parser\TypeParsing\FragmentUsageTests\DerivedClassWithoutFragmentUsage.cs" />
+    <Compile Include="Parser\TypeParsing\FragmentUsageTests\DerivedClassWithValidFragmentUsage.cs" />
+    <Compile Include="Parser\TypeParsing\FragmentUsageTests\OverridingMethodFragmentUsageRuleTest.cs" />
+    <Compile Include="Parser\TypeParsing\FragmentUsageTests\IBaseInterface.cs" />
     <Compile Include="Parser\TypeParsing\SymbolTableTests\InferFragment\InferFragmentSample.cs" />
     <Compile Include="Parser\TypeParsing\SymbolTableTests\BlacklistManagerIntegration\BlacklistManagerIntegration_SymbolTableTest.cs" />
     <Compile Include="Parser\TypeParsing\SymbolTableTests\InferSafeness\InferSafenessSample.cs" />

@@ -27,13 +27,12 @@ namespace InjectionCop.Parser.TypeParsing
   /// </summary>
   public class TypeParser : BaseFxCopRule, IProblemPipe
   {
-    private readonly IBlacklistManager _blacklistManager;
     private readonly IProblemPipe _problemFilter;
+    private IBlacklistManager _blacklistManager;
 
     public TypeParser ()
         : base ("TypeParser")
     {
-      _blacklistManager = ConfigLoader.LoadBlacklist();
       _problemFilter = new ProblemDuplicateFilter (this);
       //Debugger.Launch();
     }
@@ -41,6 +40,9 @@ namespace InjectionCop.Parser.TypeParsing
     public override ProblemCollection Check (TypeNode type)
     {
       ArgumentUtility.CheckNotNull ("type", type);
+
+      InitializeBlacklistManager(type);
+
       foreach (Member member in type.Members)
       {
         if (member is Method)
@@ -51,7 +53,13 @@ namespace InjectionCop.Parser.TypeParsing
       }
       return Problems;
     }
-    
+
+    public void InitializeBlacklistManager (TypeNode type)
+    {
+      if (_blacklistManager == null)
+        _blacklistManager = ConfigurationFactory.CreateFrom (type, new ConfigurationFileLocator());
+    }
+
     public void AddProblem (ProblemMetadata problemMetadata)
     {
       ArgumentUtility.CheckNotNull ("problemMetadata", problemMetadata);

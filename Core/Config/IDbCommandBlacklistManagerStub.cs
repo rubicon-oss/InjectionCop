@@ -27,16 +27,11 @@ namespace InjectionCop.Config
              && qualifiedParameterTypes[0] == "System.String";
     }
 
-    public string[] GetFragmentTypes (string qualifiedTypeName, string methodName, IList<string> qualifiedParameterTypes)
+    public FragmentSignature GetFragmentTypes (string assemblyName, string qualifiedTypeName, string methodName, IList<string> qualifiedParameterTypes)
     {
-      if (IsListed (qualifiedTypeName, methodName, qualifiedParameterTypes))
-      {
-        return new[] { "SqlFragment" };
-      }
-      else
-      {
-        return null;
-      }
+      if (IsListed(qualifiedTypeName, methodName, qualifiedParameterTypes))
+        return new FragmentSignature (new[] { "SqlFragment" }, null, false);
+      return null;
     }
   }
 }
