@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using InjectionCop.Config;
 using InjectionCop.Parser.ProblemPipe;
 using InjectionCop.Parser.MethodParsing;
+using InjectionCop.Parser.BlockParsing.StatementHandler;
 using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
 
@@ -80,6 +81,7 @@ namespace InjectionCop.Parser.BlockParsing
 
     private void Inspect (Block methodBodyBlock)
     {
+      ReturnStatementHandler returnStatementHandler = new ReturnStatementHandler(_problemPipe, _returnFragmentType, _returnConditions);
       foreach (Statement statement in methodBodyBlock.Statements)
       {
         switch (statement.NodeType)
@@ -132,7 +134,8 @@ namespace InjectionCop.Parser.BlockParsing
 
           case NodeType.Return:
             ReturnNode returnNode = (ReturnNode) statement;
-            ReturnStatementHandler (returnNode);
+            //ReturnStatementHandler (returnNode);
+            returnStatementHandler.Handle(returnNode, _symbolTableParser, _preConditions, _assignmentTargetVariables, Inspect);
             break;
 
           case NodeType.Branch:
@@ -247,47 +250,50 @@ namespace InjectionCop.Parser.BlockParsing
       }
     }
 
-    private void ReturnStatementHandler (ReturnNode returnNode)
+    /*
+    private void ReturnStatementHandler(ReturnNode returnNode)
     {
       if (returnNode.Expression != null)
       {
-        Inspect (returnNode.Expression);
-        string returnSymbol = IntrospectionUtility.GetVariableName (returnNode.Expression);
+        Inspect(returnNode.Expression);
+        string returnSymbol = IntrospectionUtility.GetVariableName(returnNode.Expression);
         if (returnSymbol != null)
         {
-          ProblemMetadata problemMetadata = new ProblemMetadata (
-              returnNode.UniqueKey, returnNode.SourceContext, _returnFragmentType, _symbolTableParser.GetFragmentType (returnSymbol));
-          AssignabilityPreCondition returnBlockCondition = new AssignabilityPreCondition (returnSymbol, _returnFragmentType, problemMetadata);
-          _preConditions.Add (returnBlockCondition);
-          _preConditions.AddRange (_returnConditions);
+          ProblemMetadata problemMetadata = new ProblemMetadata(
+              returnNode.UniqueKey, returnNode.SourceContext, _returnFragmentType, _symbolTableParser.GetFragmentType(returnSymbol));
+          AssignabilityPreCondition returnBlockCondition = new AssignabilityPreCondition(returnSymbol, _returnFragmentType, problemMetadata);
+          _preConditions.Add(returnBlockCondition);
+          _preConditions.AddRange(_returnConditions);
         }
       }
-      else{
+      else
+      {
         foreach (var returnCondition in _returnConditions)
         {
-          string blockInternalFragmentType = _symbolTableParser.GetFragmentType (returnCondition.Symbol);
+          string blockInternalFragmentType = _symbolTableParser.GetFragmentType(returnCondition.Symbol);
           if (blockInternalFragmentType != SymbolTable.LITERAL
               && returnCondition.FragmentType != SymbolTable.EMPTY_FRAGMENT
               && returnCondition.FragmentType != blockInternalFragmentType)
           {
-            ProblemMetadata problemMetadata = new ProblemMetadata (
+            ProblemMetadata problemMetadata = new ProblemMetadata(
             returnNode.UniqueKey,
             returnNode.SourceContext,
             returnCondition.FragmentType,
             blockInternalFragmentType);
-            
-            if(!_assignmentTargetVariables.Contains (returnCondition.Symbol))
+            returnCondition.ProblemMetadata = problemMetadata;
+
+            if (!_assignmentTargetVariables.Contains(returnCondition.Symbol))
             {
-              _preConditions.Add (returnCondition);
+              _preConditions.Add(returnCondition);
             }
             else
             {
-              _problemPipe.AddProblem (problemMetadata);
+              _problemPipe.AddProblem(problemMetadata);
             }
           }
         }
       }
-    }
+    }*/
 
     private void ValidateAssignmentOnField (AssignmentStatement assignmentStatement)
     {

@@ -23,17 +23,17 @@ namespace InjectionCop.Parser.BlockParsing
   {
     protected readonly string _symbol;
     protected readonly string _fragmentType;
-    protected readonly ProblemMetadata _problemMetadata;
+    protected ProblemMetadata _problemMetadata;
 
     protected ABCPreCondition (string symbol, string fragmentType)
-      : this(symbol, fragmentType, new ProblemMetadata (-1, new SourceContext(), "?", "?"))
     {
+      _symbol = ArgumentUtility.CheckNotNullOrEmpty("symbol", symbol);
+      _fragmentType = ArgumentUtility.CheckNotNullOrEmpty("fragmentType", fragmentType);
     }
 
     protected ABCPreCondition (string symbol, string fragmentType, ProblemMetadata problemMetadata)
-    {
-      _symbol = ArgumentUtility.CheckNotNullOrEmpty ("symbol", symbol);
-      _fragmentType = ArgumentUtility.CheckNotNullOrEmpty ("fragmentType", fragmentType);
+      : this(symbol, fragmentType)
+    {   
       _problemMetadata = ArgumentUtility.CheckNotNull("sourceContext", problemMetadata);
     }
 
@@ -50,6 +50,7 @@ namespace InjectionCop.Parser.BlockParsing
     public ProblemMetadata ProblemMetadata
     {
       get { return _problemMetadata; }
+      set { _problemMetadata = value; }
     }
 
     public bool IsViolated(ISymbolTable context)
