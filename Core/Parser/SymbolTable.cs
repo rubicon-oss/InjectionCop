@@ -44,22 +44,6 @@ namespace InjectionCop.Parser
       get { return new List<string> (_safenessMap.Keys).ToArray(); }
     }
 
-    public bool IsAssignableTo (string symbolName, string fragmentType)
-    {
-      ArgumentUtility.CheckNotNull ("symbolName", symbolName);
-      ArgumentUtility.CheckNotNull ("fragmentType", fragmentType);
-
-      bool isFragment = false;
-      bool isLiteral = false;
-      bool assignmentOnEmptyFragment = fragmentType == EMPTY_FRAGMENT;
-      if (_safenessMap.ContainsKey (symbolName))
-      {
-        isFragment = _safenessMap[symbolName] == fragmentType;
-        isLiteral = _safenessMap[symbolName] == LITERAL;
-      }
-      return isFragment || isLiteral || assignmentOnEmptyFragment;
-    }
-
     public string InferFragmentType (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
@@ -82,16 +66,12 @@ namespace InjectionCop.Parser
       else if (expression is MemberBinding)
       {
         MemberBinding memberBinding = (MemberBinding) expression;
-        if (memberBinding.BoundMember is Field)
-        {
-          Field field = (Field) memberBinding.BoundMember;
-          fragmentType = FragmentUtility.GetFragmentType (field.Attributes);
-        }
+        fragmentType = FragmentUtility.GetMemberBindingFragmentType(memberBinding);
       }
       else if (expression is MethodCall)
       {
         Method calleeMethod = IntrospectionUtility.ExtractMethod ((MethodCall) expression);
-        fragmentType = InferFragmentType (calleeMethod);
+        fragmentType = FragmentUtility.InferReturnFragmentType (calleeMethod);
       }
       else if (expression is UnaryExpression)
       {
@@ -107,70 +87,26 @@ namespace InjectionCop.Parser
       return fragmentType;
     }
 
-    private string InferFragmentType (Method method)
+    public bool IsAssignableTo(string symbolName, string fragmentType)
     {
-      string fragmentType = EMPTY_FRAGMENT;
-      AttributeNodeCollection candidateAttributes;
-      Method[] interfaceDeclarations = IntrospectionUtility.InterfaceDeclarations (method);
-      if (interfaceDeclarations.Any())
-      {
-        candidateAttributes = interfaceDeclarations.First().ReturnAttributes;
-      }
-      else if (IsAnnotatedPropertyGetter(method))
-      {
-        candidateAttributes = method.DeclaringMember.Attributes;
-      }
-      else
-      {
-        candidateAttributes = method.ReturnAttributes;
-      }
+      ArgumentUtility.CheckNotNull("symbolName", symbolName);
+      ArgumentUtility.CheckNotNull("fragmentType", fragmentType);
 
-      if (candidateAttributes != null)
+      bool fragmentsMatch = false;
+      bool sourceIsLiteral = false;
+      bool assignmentOnEmptyFragment = fragmentType == EMPTY_FRAGMENT;
+      if (_safenessMap.ContainsKey(symbolName))
       {
-        fragmentType = FragmentUtility.GetFragmentType (candidateAttributes);
+        fragmentsMatch = _safenessMap[symbolName] == fragmentType;
+        sourceIsLiteral = _safenessMap[symbolName] == LITERAL;
       }
-      
-      return fragmentType;
-    }
-    
-    public void ParametersSafe (MethodCall methodCall, out List<AssignabilityPreCondition> requireSafenessParameters, out List<ProblemMetadata> parameterProblems)
-    {
-      ArgumentUtility.CheckNotNull ("methodCall", methodCall);
-      
-      requireSafenessParameters = new List<AssignabilityPreCondition>();
-      parameterProblems = new List<ProblemMetadata>();
-      Method calleeMethod = IntrospectionUtility.ExtractMethod (methodCall);
-      string[] parameterFragmentTypes = InferParameterFragmentTypes (calleeMethod);
-      
-      for (int i = 0; i < parameterFragmentTypes.Length; i++)
-      {
-        Expression operand = methodCall.Operands[i];
-        string operandFragmentType = InferFragmentType (operand);
-        string parameterFragmentType = parameterFragmentTypes[i];
-        
-        if (operandFragmentType != LITERAL
-            && parameterFragmentType != EMPTY_FRAGMENT
-            && operandFragmentType != parameterFragmentType)
-        {
-          string variableName;
-          ProblemMetadata problemMetadata = new ProblemMetadata (operand.UniqueKey, operand.SourceContext, parameterFragmentType, operandFragmentType);
-          if (IntrospectionUtility.IsVariable (operand, out variableName)
-              && !_safenessMap.ContainsKey (variableName))
-          {
-            requireSafenessParameters.Add (new AssignabilityPreCondition (variableName, parameterFragmentType, problemMetadata));
-          }
-          else
-          {
-            parameterProblems.Add (problemMetadata);
-          }
-        }
-      }
+      return fragmentsMatch || sourceIsLiteral || assignmentOnEmptyFragment;
     }
 
-    private string[] InferParameterFragmentTypes (Method calleeMethod)
+    public string[] InferParameterFragmentTypes (Method method)
     {
       string[] parameterFragmentTypes;
-      Method[] interfaceDeclarations = IntrospectionUtility.InterfaceDeclarations (calleeMethod);
+      Method[] interfaceDeclarations = IntrospectionUtility.InterfaceDeclarations (method);
       
       if (interfaceDeclarations.Any())
       {
@@ -178,7 +114,7 @@ namespace InjectionCop.Parser
       }
       else
       {
-        parameterFragmentTypes = GetParameterFragmentTypes (calleeMethod);
+        parameterFragmentTypes = GetParameterFragmentTypes (method);
       }
       
       return parameterFragmentTypes;
@@ -186,12 +122,12 @@ namespace InjectionCop.Parser
     
     public void InferSafeness (string symbolName, Expression expression)
     {
-      if(symbolName == null)
-        return;
-      ArgumentUtility.CheckNotNull ("expression", expression);
-      
-      string fragmentType = InferFragmentType (expression);
-      _safenessMap[symbolName] = fragmentType;
+      if (symbolName != null)
+      {
+        ArgumentUtility.CheckNotNull("expression", expression);
+        string fragmentType = InferFragmentType(expression);
+        _safenessMap[symbolName] = fragmentType;
+      }
     }
 
     public string GetFragmentType (string symbolName)
@@ -215,8 +151,6 @@ namespace InjectionCop.Parser
 
     public void MakeSafe (string symbolName, string fragmentType)
     {
-      if (symbolName == null)
-        Debugger.Launch();
       ArgumentUtility.CheckNotNull ("symbolName", symbolName);
       ArgumentUtility.CheckNotNull ("fragmentType", fragmentType);
       _safenessMap[symbolName] = fragmentType;
@@ -244,50 +178,16 @@ namespace InjectionCop.Parser
       }
       return fragmentType;
     }
-
-    private string[] GetParameterFragmentTypes (Method calleeMethod)
+    
+    private string[] GetParameterFragmentTypes(Method calleeMethod)
     {
-      List<string> parameterTypes = IntrospectionUtility.GetParameterTypes (calleeMethod);
-      string[] parameterFragmentTypes = _blacklistManager.GetFragmentTypes (calleeMethod.DeclaringType.FullName, calleeMethod.Name.Name, parameterTypes);
-      
+      List<string> parameterTypes = IntrospectionUtility.GetParameterTypes(calleeMethod);
+      string[] parameterFragmentTypes = _blacklistManager.GetFragmentTypes(calleeMethod.DeclaringType.FullName, calleeMethod.Name.Name, parameterTypes);
       if (parameterFragmentTypes == null)
       {
-        List<string> buffer = new List<string>();
-
-        if (!IsAnnotatedPropertySetter (calleeMethod))
-        {
-          buffer.AddRange (calleeMethod.Parameters.Select (parameter => FragmentUtility.GetFragmentType (parameter.Attributes)));
-        }
-        else
-        {
-          buffer.Add (FragmentUtility.GetFragmentType (calleeMethod.DeclaringMember.Attributes));
-        }
-        
-        parameterFragmentTypes = buffer.ToArray();
+        parameterFragmentTypes = FragmentUtility.GetAnnotatedParameterFragmentTypes(calleeMethod);
       }
-
       return parameterFragmentTypes;
     }
-
-    private bool IsAnnotatedPropertySetter (Method method)
-    {
-      bool isAnnotatedPropertySetter = false;
-      if (IntrospectionUtility.IsPropertySetter (method))
-      {
-        isAnnotatedPropertySetter = FragmentUtility.ContainsFragment (method.DeclaringMember.Attributes);
-      }
-      return isAnnotatedPropertySetter;
-    }
-
-    private bool IsAnnotatedPropertyGetter (Method method)
-    {
-      bool isAnnotatedPropertyGetter = false;
-      if (IntrospectionUtility.IsPropertyGetter (method))
-      {
-        isAnnotatedPropertyGetter = FragmentUtility.ContainsFragment (method.DeclaringMember.Attributes);
-      }
-      return isAnnotatedPropertyGetter;
-    }
-    
   }
 }

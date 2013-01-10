@@ -342,11 +342,45 @@ namespace InjectionCop.Parser.BlockParsing
     
     private void CheckParameters (MethodCall methodCall)
     {
-      List<AssignabilityPreCondition> additionalPreConditions;
+      List<IPreCondition> additionalPreConditions;
       List<ProblemMetadata> parameterProblems;
-      _symbolTableParser.ParametersSafe (methodCall, out additionalPreConditions, out parameterProblems);
+      ParametersSafe (methodCall, out additionalPreConditions, out parameterProblems);
       parameterProblems.ForEach (parameterProblem => _problemPipe.AddProblem (parameterProblem));
       _preConditions.AddRange (additionalPreConditions);
+    }
+
+    private void ParametersSafe(MethodCall methodCall, out List<IPreCondition> requireSafenessParameters, out List<ProblemMetadata> parameterProblems)
+    {
+      ArgumentUtility.CheckNotNull("methodCall", methodCall);
+
+      requireSafenessParameters = new List<IPreCondition>();
+      parameterProblems = new List<ProblemMetadata>();
+      Method calleeMethod = IntrospectionUtility.ExtractMethod(methodCall);
+      string[] parameterFragmentTypes = _symbolTableParser.InferParameterFragmentTypes(calleeMethod);
+
+      for (int i = 0; i < parameterFragmentTypes.Length; i++)
+      {
+        Expression operand = methodCall.Operands[i];
+        string operandFragmentType = _symbolTableParser.InferFragmentType(operand);
+        string parameterFragmentType = parameterFragmentTypes[i];
+
+        if (operandFragmentType != SymbolTable.LITERAL
+            && parameterFragmentType != SymbolTable.EMPTY_FRAGMENT
+            && operandFragmentType != parameterFragmentType)
+        {
+          string variableName;
+          ProblemMetadata problemMetadata = new ProblemMetadata(operand.UniqueKey, operand.SourceContext, parameterFragmentType, operandFragmentType);
+          if (IntrospectionUtility.IsVariable(operand, out variableName)
+              && !_symbolTableParser.Contains(variableName))
+          {
+            requireSafenessParameters.Add(new AssignabilityPreCondition(variableName, parameterFragmentType, problemMetadata));
+          }
+          else
+          {
+            parameterProblems.Add(problemMetadata);
+          }
+        }
+      }
     }
 
     private void UpdateOutAndRefSymbols (MethodCall methodCall)

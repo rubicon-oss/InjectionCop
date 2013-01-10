@@ -14,6 +14,7 @@
 
 using System;
 using System.Linq;
+using System.Collections.Generic;
 using InjectionCop.Fragment;
 using InjectionCop.Parser;
 using Microsoft.FxCop.Sdk;
@@ -94,6 +95,89 @@ namespace InjectionCop.Utilities
         returnFragment = GetFragmentType (determiningMethod.ReturnAttributes);
       }
       return returnFragment;
+    }
+
+    public static string[] GetAnnotatedParameterFragmentTypes(Method method)
+    {
+      List<string> buffer = new List<string>();
+      if (!IsAnnotatedPropertySetter(method))
+      {
+        buffer.AddRange(method.Parameters.Select(parameter => FragmentUtility.GetFragmentType(parameter.Attributes)));
+      }
+      else
+      {
+        buffer.Add(FragmentUtility.GetFragmentType(method.DeclaringMember.Attributes));
+      }
+      return buffer.ToArray();
+    }
+
+    public static bool IsAnnotatedPropertySetter(Method method)
+    {
+      bool isAnnotatedPropertySetter = false;
+      if (IntrospectionUtility.IsPropertySetter(method))
+      {
+        isAnnotatedPropertySetter = FragmentUtility.ContainsFragment(method.DeclaringMember.Attributes);
+      }
+      return isAnnotatedPropertySetter;
+    }
+
+    public static bool IsAnnotatedPropertyGetter(Method method)
+    {
+      bool isAnnotatedPropertyGetter = false;
+      if (IntrospectionUtility.IsPropertyGetter(method))
+      {
+        isAnnotatedPropertyGetter = FragmentUtility.ContainsFragment(method.DeclaringMember.Attributes);
+      }
+      return isAnnotatedPropertyGetter;
+    }
+
+    public static string InferReturnFragmentType(Method method)
+    {
+      string fragmentType;
+      AttributeNodeCollection definingAttributes = GetDefiningAttributes(method);
+
+      if (definingAttributes != null)
+      {
+        fragmentType = FragmentUtility.GetFragmentType(definingAttributes);
+      }
+      else
+      {
+        fragmentType = SymbolTable.EMPTY_FRAGMENT;
+      }
+
+      return fragmentType;
+    }
+
+    public static string GetMemberBindingFragmentType(MemberBinding memberBinding)
+    {
+      string fragmentType = SymbolTable.EMPTY_FRAGMENT;
+      if (memberBinding.BoundMember is Field)
+      {
+        Field field = (Field)memberBinding.BoundMember;
+        fragmentType = FragmentUtility.GetFragmentType(field.Attributes);
+      }
+      return fragmentType;
+    }
+
+    private static AttributeNodeCollection GetDefiningAttributes(Method method)
+    {
+      AttributeNodeCollection definingAttributes;
+      Method[] interfaceDeclarations = IntrospectionUtility.InterfaceDeclarations(method);
+
+      if (interfaceDeclarations.Any())
+      {
+        definingAttributes = interfaceDeclarations.First().ReturnAttributes;
+      }
+      else if (FragmentUtility.IsAnnotatedPropertyGetter(method))
+      {
+        definingAttributes = method.DeclaringMember.Attributes;
+      }
+      else
+      {
+        definingAttributes = method.ReturnAttributes;
+      }
+
+      return definingAttributes;
     }
   }
 }
