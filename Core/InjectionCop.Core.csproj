@@ -57,8 +57,6 @@
     <Compile Include="Fragment\FragmentAttribute.cs" />
     <Compile Include="Fragment\SqlFragmentAttribute.cs" />
     <Compile Include="Fragment\TrustedSqlGeneration.cs" />
-    <Compile Include="Config\BlacklistManager.cs" />
-    <Compile Include="Config\ConfigLoader.cs" />
     <Compile Include="Config\IBlacklistManager.cs" />
     <Compile Include="Config\IDbCommandBlacklistManagerStub.cs" />
     <Compile Include="Parser\BlockParsing\ABCPreCondition.cs" />
