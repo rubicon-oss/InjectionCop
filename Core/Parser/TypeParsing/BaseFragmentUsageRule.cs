@@ -1,31 +1,15 @@
-﻿using System;
-using InjectionCop.Parser.ProblemPipe;
+﻿using InjectionCop.Parser.ProblemPipe;
 using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser.TypeParsing
 {
-  public class FragmentUsageRule : BaseFxCopRule, IProblemPipe
+  public abstract class BaseFragmentUsageRule : BaseFxCopRule, IProblemPipe
   {
-    public FragmentUsageRule ()
-        : base ("FragmentUsageRule")
+    protected BaseFragmentUsageRule (string ruleName)
+        : base(ruleName)
     {
     }
-
-    //public override ProblemCollection Check (TypeNode type)
-    //{
-    //  ArgumentUtility.CheckNotNull ("type", type);
-
-    //  foreach (Member member in type.Members)
-    //  {
-    //    if (member is Method)
-    //    {
-    //      Method method = (Method) member;
-    //      Parse (method);
-    //    }
-    //  }
-    //  return Problems;
-    //}
 
     public override ProblemCollection Check (Member member)
     {
@@ -37,27 +21,9 @@ namespace InjectionCop.Parser.TypeParsing
       return Problems;
     }
 
-    public void Parse (Method method)
-    {
-      ArgumentUtility.CheckNotNull ("method", method);
+    public abstract void Parse (Method method);
 
-      var overriddenMethod = method;
-      while (overriddenMethod.OverriddenMethod != null)
-        overriddenMethod = overriddenMethod.OverriddenMethod;
-
-      if (overriddenMethod != method)
-        MatchFragments(overriddenMethod, method);
-
-      //var interfaceCollection = method.DeclaringType.Interfaces;
-      //var interfaces = overriddenMethod.DeclaringType.Interfaces;
-
-
-      //if (method.ImplementedInterfaceMethods != null)
-      //  foreach (var interfaceMethod in method.ImplementedInterfaceMethods)
-      //    MatchFragments (method, interfaceMethod);
-    }
-
-    private void MatchFragments (Method baseMethod, Method overridingMethod)
+    protected void MatchFragments (Method baseMethod, Method overridingMethod)
     {
       foreach (var parameter in baseMethod.Parameters)
       {
