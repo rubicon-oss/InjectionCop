@@ -68,11 +68,10 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Config\ConfigurationFactoryTest.cs" /> 
+    <Compile Include="Config\ConfigurationFactoryTest.cs" />
     <Compile Include="Config\ConfigurationFileLocatorTest.cs" />
     <Compile Include="Config\ConfigurationTest.cs" />
     <Compile Include="Config\LayeredConfigurationAdapterTest.cs" />
-    <Compile Include="Config\BlacklistManagerTest.cs" />
     <Compile Include="Parser\BlockParsing\AssignabilityPreConditionTest.cs" />
     <Compile Include="Parser\BlockParsing\EqualityPreConditionTest.cs" />
     <Compile Include="Parser\MethodParsing\ProblemPipeStub.cs" />

@@ -34,6 +34,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Black
 
     [Test]
     [Category("BlackMethod")]
+    [Ignore]
     public void Parse_BlackMethodCallUnsafeSourceNoParameter_ReturnsProblem()
     {
       Method sample = TestHelper.GetSample<BlackMethodSample>("BlackMethodCallUnsafeSourceNoParameter");
@@ -56,6 +57,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Black
 
     [Test]
     [Category("BlackMethod")]
+    [Ignore]
     public void Parse_BlackMethodCallUnsafeSourceWithSafeParameter_ReturnsProblem()
     {
       Method sample = TestHelper.GetSample<BlackMethodSample>("BlackMethodCallUnsafeSourceWithSafeParameter");

@@ -182,10 +182,18 @@ namespace InjectionCop.Parser
     private string[] GetParameterFragmentTypes(Method calleeMethod)
     {
       List<string> parameterTypes = IntrospectionUtility.GetParameterTypes(calleeMethod);
-      string[] parameterFragmentTypes = _blacklistManager.GetFragmentTypes(calleeMethod.DeclaringType.FullName, calleeMethod.Name.Name, parameterTypes);
-      if (parameterFragmentTypes == null)
+      string assemblyName = calleeMethod.ContainingAssembly().Name;
+      
+      FragmentSignature signature = _blacklistManager.GetFragmentTypes(assemblyName, calleeMethod.DeclaringType.FullName, calleeMethod.Name.Name, parameterTypes);
+      string[] parameterFragmentTypes;
+      //string[] parameterFragmentTypes = _blacklistManager.GetFragmentTypes(calleeMethod.DeclaringType.FullName, calleeMethod.Name.Name, parameterTypes);
+      if (signature == null)
       {
         parameterFragmentTypes = FragmentUtility.GetAnnotatedParameterFragmentTypes(calleeMethod);
+      }
+      else
+      {
+        parameterFragmentTypes = signature.ParameterFragmentTypes;
       }
       return parameterFragmentTypes;
     }
