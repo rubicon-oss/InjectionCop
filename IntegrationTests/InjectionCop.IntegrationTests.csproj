@@ -73,6 +73,8 @@
     <Compile Include="Parser\TypeParsing\BlacklistManagerIntegrationSample.cs" />
     <Compile Include="Parser\TypeParsing\SymbolTableTests\InferFragment\InferFragmentSample.cs" />
     <Compile Include="Parser\TypeParsing\SymbolTableTests\BlacklistManagerIntegration\BlacklistManagerIntegration_SymbolTableTest.cs" />
+    <Compile Include="Parser\TypeParsing\SymbolTableTests\InferSafeness\InferSafenessSample.cs" />
+    <Compile Include="Parser\TypeParsing\SymbolTableTests\InferSafeness\InferSafeness_SymbolTableTest.cs" />
     <Compile Include="Parser\TypeParsing\SymbolTableTests\ParameterSafe\ParameterSafeSample.cs" />
     <Compile Include="Parser\TypeParsing\SymbolTableTests\ParameterSafe\ParameterSafe_SymbolTableTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\AddProblem\AddProblemSample.cs" />
@@ -110,6 +112,8 @@
     <Compile Include="Parser\TypeParsing\TypeParserTests\Parameter\CallByShare\CallByShare_TypeParserTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Parameter\Out\OutSample.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Parameter\Out\Out_TypeParserTest.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\TryCatchFinally\TryCatchFinallySample.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\TryCatchFinally\TryCatchFinally_TypeParserTest.cs" />
     <Compile Include="Utilities\FragmentUtilitySample.cs" />
     <Compile Include="Utilities\FragmentUtilityTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Concatenation\ConcatenationSample.cs" />

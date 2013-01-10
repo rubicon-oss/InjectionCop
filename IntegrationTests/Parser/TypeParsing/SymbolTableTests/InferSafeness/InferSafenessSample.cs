@@ -1,4 +1,4 @@
-﻿// Copyright 2013 rubicon informationstechnologie gmbh
+﻿// Copyright 2012 rubicon informationstechnologie gmbh
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,13 +14,14 @@
 
 using System;
 
-namespace InjectionCop.Parser.BlockParsing
+namespace InjectionCop.IntegrationTests.Parser.TypeParsing.SymbolTableTests.InferSafeness
 {
-  public class ReturnCondition: AssignablePreCondition
+  class InferSafenessSample
   {
-    public ReturnCondition(string symbol, string fragmentType)
-      : base(symbol, fragmentType)
+    public int Foo ()
     {
+      int i = 0;
+      return i;
     }
   }
 }

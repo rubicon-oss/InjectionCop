@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Collections.Generic;
 using Microsoft.FxCop.Sdk;
@@ -125,6 +126,7 @@ namespace InjectionCop.Utilities
         Indexer indexer = (Indexer) expression;
         variableName = GetVariableName (indexer.Object);
       }
+      
       return variableName;
     }
 
@@ -236,7 +238,7 @@ namespace InjectionCop.Utilities
     }
 
     public static Method[] InterfaceDeclarations (Method method)
-    {
+    { 
       TypeNode[] calleeMethodparameterTypes = method.Parameters.Select (parameter => parameter.Type).ToArray();
 
       return (from @interface in method.DeclaringType.Interfaces

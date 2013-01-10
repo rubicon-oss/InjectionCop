@@ -201,13 +201,16 @@ namespace InjectionCop.Parser.BlockParsing
         }
         else
         {
-          ProblemMetadata problemMetadata = new ProblemMetadata (
-              assignmentStatement.UniqueKey,
-              assignmentStatement.SourceContext,
-              targetFragmentType,
-              "??");
-          var preCondition = new EqualityPreCondition(targetName, SymbolTable.EMPTY_FRAGMENT, problemMetadata);
-          _preConditions.Add (preCondition);
+          if (targetName != null)
+          {
+            ProblemMetadata problemMetadata = new ProblemMetadata (
+                assignmentStatement.UniqueKey,
+                assignmentStatement.SourceContext,
+                targetFragmentType,
+                "??");
+            var preCondition = new EqualityPreCondition (targetName, SymbolTable.EMPTY_FRAGMENT, problemMetadata);
+            _preConditions.Add (preCondition);
+          }
         }
       }
       Inspect (assignmentStatement.Source);
@@ -225,8 +228,11 @@ namespace InjectionCop.Parser.BlockParsing
             targetFragmentType,
             "??");
         string sourceSymbol = IntrospectionUtility.GetVariableName (assignmentStatement.Source);
-        AssignablePreCondition preCondition = new AssignablePreCondition (sourceSymbol, targetFragmentType, problemMetadata);
-        _preConditions.Add (preCondition);
+        if (sourceSymbol != null)
+        {
+          AssignablePreCondition preCondition = new AssignablePreCondition (sourceSymbol, targetFragmentType, problemMetadata);
+          _preConditions.Add (preCondition);
+        }
       }
     }
 
@@ -234,8 +240,11 @@ namespace InjectionCop.Parser.BlockParsing
     {
       string targetSymbol = IntrospectionUtility.GetVariableName (assignmentStatement.Target);
       string sourceSymbol = IntrospectionUtility.GetVariableName (assignmentStatement.Source);
-      BlockAssignment blockAssignment = new BlockAssignment (sourceSymbol, targetSymbol);
-      _blockAssignments.Add (blockAssignment);
+      if (targetSymbol != null && sourceSymbol != null)
+      {
+        BlockAssignment blockAssignment = new BlockAssignment (sourceSymbol, targetSymbol);
+        _blockAssignments.Add (blockAssignment);
+      }
     }
 
     private void ReturnStatementHandler (ReturnNode returnNode)
@@ -244,11 +253,14 @@ namespace InjectionCop.Parser.BlockParsing
       {
         Inspect (returnNode.Expression);
         string returnSymbol = IntrospectionUtility.GetVariableName (returnNode.Expression);
-        ProblemMetadata problemMetadata = new ProblemMetadata (
-            returnNode.UniqueKey, returnNode.SourceContext, _returnFragmentType, _symbolTableParser.GetFragmentType (returnSymbol));
-        AssignablePreCondition returnBlockCondition = new AssignablePreCondition (returnSymbol, _returnFragmentType, problemMetadata);
-        _preConditions.Add (returnBlockCondition);
-        _preConditions.AddRange (_returnConditions);
+        if (returnSymbol != null)
+        {
+          ProblemMetadata problemMetadata = new ProblemMetadata (
+              returnNode.UniqueKey, returnNode.SourceContext, _returnFragmentType, _symbolTableParser.GetFragmentType (returnSymbol));
+          AssignablePreCondition returnBlockCondition = new AssignablePreCondition (returnSymbol, _returnFragmentType, problemMetadata);
+          _preConditions.Add (returnBlockCondition);
+          _preConditions.AddRange (_returnConditions);
+        }
       }
       else{
         foreach (var returnCondition in _returnConditions)
