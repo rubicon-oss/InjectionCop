@@ -75,6 +75,7 @@
     <Compile Include="Parser\ProblemPipe\ProblemMetadata.cs" />
     <Compile Include="Parser\ProblemPipe\IProblemPipe.cs" />
     <Compile Include="Parser\ProblemPipe\ProblemDuplicateFilter.cs" />
+    <Compile Include="Parser\TypeParsing\FragmentUsageRule.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
