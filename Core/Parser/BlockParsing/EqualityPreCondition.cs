@@ -18,7 +18,7 @@ using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser.BlockParsing
 {
-  public class EqualityPreCondition: ABCPreCondition
+  public class EqualityPreCondition: PreConditionBase
   {
     public EqualityPreCondition(string symbol, string fragmentType)
       : this(symbol, fragmentType, new ProblemMetadata(-1, new SourceContext(), "?", "?"))

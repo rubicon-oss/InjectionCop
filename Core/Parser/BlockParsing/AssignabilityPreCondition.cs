@@ -21,7 +21,7 @@ namespace InjectionCop.Parser.BlockParsing
   /// <summary>
   /// Holds a symbol and the associated fragment type that needs to safe when entering a BasicBlock
   /// </summary>
-  public class AssignabilityPreCondition: ABCPreCondition
+  public class AssignabilityPreCondition: PreConditionBase
   {
     public AssignabilityPreCondition(string symbol, string fragmentType)
       : this(symbol, fragmentType, new ProblemMetadata(-1, new SourceContext(), "?", "?"))

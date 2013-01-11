@@ -59,7 +59,7 @@
     <Compile Include="Fragment\TrustedSqlGeneration.cs" />
     <Compile Include="Config\IBlacklistManager.cs" />
     <Compile Include="Config\IDbCommandBlacklistManagerStub.cs" />
-    <Compile Include="Parser\BlockParsing\ABCPreCondition.cs" />
+    <Compile Include="Parser\BlockParsing\PreConditionBase.cs" />
     <Compile Include="Parser\BlockParsing\BlockAssignment.cs" />
     <Compile Include="Parser\BlockParsing\EqualityPreCondition.cs" />
     <Compile Include="Parser\BlockParsing\IPreCondition.cs" />

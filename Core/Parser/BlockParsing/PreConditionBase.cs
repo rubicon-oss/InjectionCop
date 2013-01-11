@@ -19,19 +19,19 @@ using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser.BlockParsing
 {
-  public abstract class ABCPreCondition: IPreCondition
+  public abstract class PreConditionBase: IPreCondition
   {
     protected readonly string _symbol;
     protected readonly string _fragmentType;
     protected ProblemMetadata _problemMetadata;
 
-    protected ABCPreCondition (string symbol, string fragmentType)
+    protected PreConditionBase (string symbol, string fragmentType)
     {
       _symbol = ArgumentUtility.CheckNotNullOrEmpty("symbol", symbol);
       _fragmentType = ArgumentUtility.CheckNotNullOrEmpty("fragmentType", fragmentType);
     }
 
-    protected ABCPreCondition (string symbol, string fragmentType, ProblemMetadata problemMetadata)
+    protected PreConditionBase (string symbol, string fragmentType, ProblemMetadata problemMetadata)
       : this(symbol, fragmentType)
     {   
       _problemMetadata = ArgumentUtility.CheckNotNull("sourceContext", problemMetadata);
