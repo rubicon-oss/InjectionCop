@@ -72,12 +72,14 @@
     <Compile Include="Parser\ProblemPipeStub.cs" />
     <Compile Include="Parser\TypeParsing\BlacklistManagerIntegrationSample.cs" />
     <Compile Include="Parser\TypeParsing\FragmentUsageTests\BaseClass.cs" />
+    <Compile Include="Parser\TypeParsing\FragmentUsageTests\ClassWithMultipleFragments.cs" />
     <Compile Include="Parser\TypeParsing\FragmentUsageTests\ImplementingClassWithoutFragmentUsage.cs" />
     <Compile Include="Parser\TypeParsing\FragmentUsageTests\InterfaceImplementingMethodFragmentUsageRuleTest.cs" />
     <Compile Include="Parser\TypeParsing\FragmentUsageTests\ImplementingClassWithInvalidFragmentUsage.cs" />
     <Compile Include="Parser\TypeParsing\FragmentUsageTests\DerivedClassWithInvalidFragmentUsage.cs" />
     <Compile Include="Parser\TypeParsing\FragmentUsageTests\DerivedClassWithoutFragmentUsage.cs" />
     <Compile Include="Parser\TypeParsing\FragmentUsageTests\DerivedClassWithValidFragmentUsage.cs" />
+    <Compile Include="Parser\TypeParsing\FragmentUsageTests\MulitpleFragmentUsageRuleTest.cs" />
     <Compile Include="Parser\TypeParsing\FragmentUsageTests\OverridingMethodFragmentUsageRuleTest.cs" />
     <Compile Include="Parser\TypeParsing\FragmentUsageTests\IBaseInterface.cs" />
     <Compile Include="Parser\TypeParsing\SymbolTableTests\InferFragment\InferFragmentSample.cs" />
