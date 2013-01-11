@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Diagnostics;
 using InjectionCop.Config;
 using InjectionCop.Parser.MethodParsing;
 using InjectionCop.Parser.ProblemPipe;
@@ -28,11 +29,13 @@ namespace InjectionCop.Parser.TypeParsing
   {
     private readonly IProblemPipe _problemFilter;
     private IBlacklistManager _blacklistManager;
+    private MethodProfilingResults _methodProfilingResults;
 
     public TypeParser ()
         : base ("TypeParser")
     {
       _problemFilter = new ProblemDuplicateFilter (this);
+      _methodProfilingResults = new MethodProfilingResults (20);
     }
 
     public override ProblemCollection Check (TypeNode type)
@@ -45,8 +48,12 @@ namespace InjectionCop.Parser.TypeParsing
         {
           if (member is Method)
           {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
             Method method = (Method) member;
             Parse (method);
+            stopwatch.Stop();
+            _methodProfilingResults.Add (method.FullName, stopwatch.Elapsed);
           }
         }
       }
@@ -74,6 +81,21 @@ namespace InjectionCop.Parser.TypeParsing
       IMethodGraphBuilder methodGraphBuilder = new MethodGraphBuilder (method, _blacklistManager, _problemFilter);
       IInitialSymbolTableBuilder parameterSymbolTableBuilder = new InitialSymbolTableBuilder (method, _blacklistManager);
       methodParser.Parse (methodGraphBuilder, parameterSymbolTableBuilder);
+    }
+
+    public override void AfterAnalysis ()
+    {
+      base.AfterAnalysis ();
+      try
+      {
+        _methodProfilingResults.Write();
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine ("afteranalysis failed");
+        Console.WriteLine (ex.StackTrace);
+      }
+      
     }
   }
 }
