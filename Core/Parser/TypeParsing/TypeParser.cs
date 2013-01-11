@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Diagnostics;
 using InjectionCop.Config;
 using InjectionCop.Parser.MethodParsing;
 using InjectionCop.Parser.ProblemPipe;
@@ -34,21 +33,21 @@ namespace InjectionCop.Parser.TypeParsing
         : base ("TypeParser")
     {
       _problemFilter = new ProblemDuplicateFilter (this);
-      //Debugger.Launch();
     }
 
     public override ProblemCollection Check (TypeNode type)
     {
       ArgumentUtility.CheckNotNull ("type", type);
-
-      InitializeBlacklistManager(type);
-
-      foreach (Member member in type.Members)
+      if (!IntrospectionUtility.IsCompilerGenerated (type))
       {
-        if (member is Method)
+        InitializeBlacklistManager (type);
+        foreach (Member member in type.Members)
         {
-          Method method = (Method) member;
-          Parse (method);
+          if (member is Method)
+          {
+            Method method = (Method) member;
+            Parse (method);
+          }
         }
       }
       return Problems;

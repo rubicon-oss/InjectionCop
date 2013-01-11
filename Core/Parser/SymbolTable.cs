@@ -14,11 +14,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using InjectionCop.Config;
-using InjectionCop.Parser.BlockParsing;
-using InjectionCop.Parser.ProblemPipe;
 using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
 
@@ -186,7 +183,6 @@ namespace InjectionCop.Parser
       
       FragmentSignature signature = _blacklistManager.GetFragmentTypes(assemblyName, calleeMethod.DeclaringType.FullName, calleeMethod.Name.Name, parameterTypes);
       string[] parameterFragmentTypes;
-      //string[] parameterFragmentTypes = _blacklistManager.GetFragmentTypes(calleeMethod.DeclaringType.FullName, calleeMethod.Name.Name, parameterTypes);
       if (signature == null)
       {
         parameterFragmentTypes = FragmentUtility.GetAnnotatedParameterFragmentTypes(calleeMethod);

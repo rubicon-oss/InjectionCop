@@ -13,9 +13,9 @@
 // limitations under the License.
 
 using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Utilities
@@ -259,6 +259,27 @@ namespace InjectionCop.Utilities
     public static List<string> GetParameterTypes (Method method)
     {
       return method.Parameters.Select (parameter => parameter.Type.FullName).ToList();
+    }
+
+    public static bool IsCompilerGenerated (TypeNode typeNode)
+    {
+      ArgumentUtility.CheckNotNull ("typeNode", typeNode);
+      return ContainsCompilerGeneratedAttribute(typeNode.Attributes);
+    }
+
+    private static bool ContainsCompilerGeneratedAttribute (AttributeNodeCollection attributes)
+    {
+      bool containsCompilerGeneratedAttribute = false;
+      if (attributes != null)
+      {
+        containsCompilerGeneratedAttribute = attributes.Any (attribute => IsCompilerGeneratedAttribute (attribute));
+      }
+      return containsCompilerGeneratedAttribute;
+    }
+
+    private static bool IsCompilerGeneratedAttribute (AttributeNode attribute)
+    {
+      return attribute.Type.FullName == typeof (CompilerGeneratedAttribute).FullName;
     }
   }
 }

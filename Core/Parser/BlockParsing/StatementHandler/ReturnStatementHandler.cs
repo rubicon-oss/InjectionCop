@@ -35,11 +35,11 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
       _returnConditions = returnConditions;
     }
 
-    public void Handle(ReturnNode returnNode, ISymbolTable symbolTable, List<IPreCondition> preConditions, List<string> assignmentTargetVariables, InspectCallback Inspect)
+    public void Handle(ReturnNode returnNode, ISymbolTable symbolTable, List<IPreCondition> preConditions, List<string> assignmentTargetVariables, InspectCallback inspect)
     {
       if (returnNode.Expression != null)
       {
-        Inspect(returnNode.Expression);
+        inspect(returnNode.Expression);
         string returnSymbol = IntrospectionUtility.GetVariableName(returnNode.Expression);
         if (returnSymbol != null)
         {

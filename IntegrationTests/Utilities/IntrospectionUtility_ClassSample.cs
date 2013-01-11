@@ -68,6 +68,15 @@ namespace InjectionCop.IntegrationTests.Utilities
       objectArray[0] = new object();
       return objectArray;
     }
+
+    public delegate string Closure ();
+    
+    public string UsingClosure ()
+    {
+      string environmentVariable = "environment";
+      Closure closure = () => environmentVariable;
+      return closure();
+    }
   }
 
 }

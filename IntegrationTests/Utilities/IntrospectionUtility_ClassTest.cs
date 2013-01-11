@@ -288,5 +288,22 @@ namespace InjectionCop.IntegrationTests.Utilities
 
       Assert.That (IntrospectionUtility.GetVariableName (sample), Is.EqualTo("local$0"));
     }
+
+    [Test]
+    public void IsCompilerGenerated_UserGeneratedTypeNode_ReturnsFalse ()
+    {
+      TypeNode sampleTypeNode = IntrospectionUtility.TypeNodeFactory<IntrospectionUtility_ClassSample>();
+      Assert.That (IntrospectionUtility.IsCompilerGenerated (sampleTypeNode), Is.False);
+    }
+
+    [Test]
+    public void IsCompilerGenerated_CompilerGeneratedTypeNode_ReturnsTrue ()
+    {
+      Method sampleMethod = TestHelper.GetSample<IntrospectionUtility_ClassSample> ("UsingClosure");
+      Block sampleBlock = (Block) sampleMethod.Body.Statements[0];
+      AssignmentStatement sampleAssignment = (AssignmentStatement) sampleBlock.Statements[0];
+      TypeNode compilerGeneratedTypeNode = sampleAssignment.Source.Type;
+      Assert.That (IntrospectionUtility.IsCompilerGenerated (compilerGeneratedTypeNode), Is.True);
+    }
   }
 }

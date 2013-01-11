@@ -37,6 +37,8 @@ namespace InjectionCop.Parser.BlockParsing
       _problemMetadata = ArgumentUtility.CheckNotNull("sourceContext", problemMetadata);
     }
 
+    protected abstract bool ViolationCheckStrategy(ISymbolTable context);
+
     public string Symbol
     {
       get { return _symbol; }
@@ -62,7 +64,5 @@ namespace InjectionCop.Parser.BlockParsing
       }
       return preConditionViolated;
     }
-
-    protected abstract bool ViolationCheckStrategy(ISymbolTable context);
   }
 }

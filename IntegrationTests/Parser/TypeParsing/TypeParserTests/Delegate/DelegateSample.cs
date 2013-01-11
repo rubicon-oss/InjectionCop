@@ -102,5 +102,24 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Deleg
       FragmentParameterAndReturnDelegate sampleDelegate = MatchingFragmentParameterAndReturnDelegateUnsafeReturn;
       sampleDelegate("safe", "safe");
     }
+
+    public void Foo ()
+    {
+      FragmentParameterDelegate f = ReturnsDelegate();
+      f ("", ""); //??
+    }
+
+    private FragmentParameterDelegate ReturnsDelegate ()
+    {
+      if (true)
+      {
+        FragmentParameterDelegate b = MatchingFragmentParameterAndReturnDelegateSafeReturn; // ...
+        return b;
+      }
+      else
+      {
+        // return delegate a
+      }
+    }
   }
 }
