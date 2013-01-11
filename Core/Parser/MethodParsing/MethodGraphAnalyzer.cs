@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using InjectionCop.Parser.BlockParsing;
 using InjectionCop.Parser.ProblemPipe;
 using InjectionCop.Utilities;
+using System.Linq;
 
 namespace InjectionCop.Parser.MethodParsing
 {
@@ -34,11 +35,19 @@ namespace InjectionCop.Parser.MethodParsing
       ArgumentUtility.CheckNotNull ("methodGraphBuilder", methodGraphBuilder);
       ArgumentUtility.CheckNotNull ("parameterSymbolTableBuilder", initialSymbolTableBuilder);
 
-      IMethodGraph methodGraph = methodGraphBuilder.GetResult();
-      ISymbolTable initialSymbolTable = initialSymbolTableBuilder.GetResult();
+      var methodGraph = methodGraphBuilder.GetResult();
+      var initialSymbolTable = initialSymbolTableBuilder.GetResult();
 
       if (methodGraph != null && !methodGraph.IsEmpty() && initialSymbolTable != null)
       {
+        var analysisRequired =
+            methodGraph.Blocks.Any (
+                block =>
+                block.PreConditions.Any (
+                    preCondition => preCondition.FragmentType != SymbolTable.EMPTY_FRAGMENT && preCondition.FragmentType != SymbolTable.LITERAL));
+        if (!analysisRequired)
+          return;
+        
         Parse (methodGraph, initialSymbolTable, methodGraph.InitialBlock, new Dictionary<int, int>());
       }
     }
@@ -54,7 +63,7 @@ namespace InjectionCop.Parser.MethodParsing
         ParseSuccessors (currentBlock.SuccessorKeys, visits, methodGraph, adjustedContext);
       }
     }
-
+    
     private void UpdateVisits (int id, Dictionary<int, int> visits)
     {
       if (!visits.ContainsKey (id))

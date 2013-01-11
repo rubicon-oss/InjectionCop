@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using InjectionCop.Parser.BlockParsing;
 
 namespace InjectionCop.Parser.MethodParsing
@@ -23,6 +24,7 @@ namespace InjectionCop.Parser.MethodParsing
   public interface IMethodGraph
   {
     BasicBlock InitialBlock { get; }
+    IEnumerable<BasicBlock> Blocks { get; }
     BasicBlock GetBasicBlockById(int id);
     bool IsEmpty ();
   }

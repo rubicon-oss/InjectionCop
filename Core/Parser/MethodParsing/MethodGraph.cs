@@ -23,19 +23,24 @@ namespace InjectionCop.Parser.MethodParsing
   public class MethodGraph : IMethodGraph
   {
     private readonly int _initialBlockId;
-    private readonly Dictionary<int, BasicBlock> _graph;
+    private readonly Dictionary<int, BasicBlock> _blocks;
 
     public MethodGraph (int initialBlockId, Dictionary<int, BasicBlock> graph)
     {
       _initialBlockId = initialBlockId;
-      _graph = ArgumentUtility.CheckNotNull ("graph", graph);
+      _blocks = ArgumentUtility.CheckNotNull ("graph", graph);
+    }
+
+    public IEnumerable<BasicBlock> Blocks
+    {
+      get { return _blocks.Values; }
     }
 
     public BasicBlock GetBasicBlockById (int uniqueKey)
     {
       try
       {
-        return _graph[uniqueKey];
+        return _blocks[uniqueKey];
       }
       catch (KeyNotFoundException ex)
       {
@@ -46,7 +51,7 @@ namespace InjectionCop.Parser.MethodParsing
 
     public bool IsEmpty ()
     {
-      return _graph.Keys.Count == 0;
+      return _blocks.Keys.Count == 0;
     }
 
     public BasicBlock InitialBlock
