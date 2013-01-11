@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Web;
 using InjectionCop.Config;
 using InjectionCop.Utilities;
 using NUnit.Framework;
@@ -13,7 +14,7 @@ namespace InjectionCop.UnitTests.Config
     [Test]
     public void GetFilesFromParsedType ()
     {
-      var orignialAssemblyLocation = Path.GetDirectoryName (new Uri(GetType().Assembly.CodeBase).AbsolutePath);
+      var orignialAssemblyLocation = GetOrignialAssemblyLocation();
       var sampleConfigLocation = Path.Combine (orignialAssemblyLocation, "Config\\SampleConfig.xml");
       var expectedConfigLocation = Path.Combine (Path.GetDirectoryName(GetType().Assembly.Location), "config.injectioncop");
       var typeNode = IntrospectionUtility.TypeNodeFactory<ConfigurationFileLocatorTest>();
@@ -49,7 +50,7 @@ namespace InjectionCop.UnitTests.Config
     {
       var configurationFileLocator = new ConfigurationFileLocator();
    
-      var orignialAssemblyLocation = Path.GetDirectoryName (new Uri(GetType().Assembly.CodeBase).AbsolutePath);
+      var orignialAssemblyLocation = GetOrignialAssemblyLocation();
       var sampleConfigLocation = Path.Combine (orignialAssemblyLocation, "Config\\SampleConfig.xml");
       var expectedConfigLocation = Path.Combine (Path.GetDirectoryName(configurationFileLocator.GetType().Assembly.Location), "config.injectioncop");
 
@@ -66,7 +67,7 @@ namespace InjectionCop.UnitTests.Config
         File.Delete (expectedConfigLocation);
       }
     }
-    
+
     [Test]
     public void GetFilesFromCurrentAssembly_NoConfigFilesFound ()
     {
@@ -74,6 +75,13 @@ namespace InjectionCop.UnitTests.Config
       var files = configurationFileLocator.GetFilesFromCurrentAssembly ();
 
       Assert.That (files, Is.Empty);
+    }
+
+    private string GetOrignialAssemblyLocation ()
+    {
+      var absolutePath = new Uri (GetType().Assembly.CodeBase).AbsolutePath;
+      var orignialAssemblyLocation = Path.GetDirectoryName (HttpUtility.UrlDecode (absolutePath));
+      return orignialAssemblyLocation;
     }
   }
 }
