@@ -98,6 +98,9 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
         SetupResult.For(_methodGraph.InitialBlock)
           .Return(node);
 
+        SetupResult.For(_methodGraph.Blocks)
+                    .Return(new BasicBlock[] { node });
+
         _methodGraphBuilder.GetResult();
         LastCall.Return (_methodGraph);
         _parameterSymbolTableBuilder.GetResult();
@@ -124,6 +127,9 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
         SetupResult.For(_methodGraph.InitialBlock)
           .Return(node);
 
+        SetupResult.For(_methodGraph.Blocks)
+                    .Return(new BasicBlock[] { node });
+
         _methodGraphBuilder.GetResult();
         LastCall.Return (_methodGraph);
         _parameterSymbolTableBuilder.GetResult();
@@ -148,6 +154,9 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
 
         SetupResult.For (_methodGraph.InitialBlock)
                    .Return (node);
+
+        SetupResult.For(_methodGraph.Blocks)
+                    .Return(new BasicBlock[] { node });
 
         _methodGraphBuilder.GetResult();
         LastCall.Return (_methodGraph);
@@ -174,6 +183,9 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
         SetupResult.For (_methodGraph.InitialBlock)
                    .Return (node);
 
+        SetupResult.For(_methodGraph.Blocks)
+                    .Return(new BasicBlock[] { node });
+
         _methodGraphBuilder.GetResult();
         LastCall.Return (_methodGraph);
         _parameterSymbolTableBuilder.GetResult();
@@ -198,6 +210,9 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
 
         SetupResult.For (_methodGraph.InitialBlock)
                    .Return (node);
+
+        SetupResult.For(_methodGraph.Blocks)
+                    .Return(new BasicBlock[] { node });
 
         _methodGraphBuilder.GetResult();
         LastCall.Return (_methodGraph);
@@ -228,6 +243,9 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
 
         SetupResult.For (_methodGraph.InitialBlock)
                    .Return (initialNode);
+
+        SetupResult.For(_methodGraph.Blocks)
+                    .Return(new BasicBlock[] { initialNode, terminatingNode });
 
         _methodGraph.GetBasicBlockById (1);
         LastCall.Return (terminatingNode);
@@ -261,6 +279,9 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
 
         SetupResult.For (_methodGraph.InitialBlock)
                    .Return (initialNode);
+
+        SetupResult.For(_methodGraph.Blocks)
+                    .Return(new BasicBlock[] { initialNode, terminatingNode });
 
         _methodGraph.GetBasicBlockById (1);
         LastCall.Return (terminatingNode);
@@ -296,6 +317,9 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
         SetupResult.For (_methodGraph.InitialBlock)
                    .Return (initialNode);
 
+        SetupResult.For(_methodGraph.Blocks)
+                    .Return(new BasicBlock[] { initialNode, terminatingNode });
+
         _methodGraph.GetBasicBlockById (1);
         LastCall.Return (terminatingNode);
 
@@ -329,6 +353,9 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
 
         SetupResult.For (_methodGraph.InitialBlock)
                    .Return (initialNode);
+
+        SetupResult.For(_methodGraph.Blocks)
+                    .Return(new BasicBlock[] { initialNode, terminatingNode });
 
         _methodGraph.GetBasicBlockById (1);
         LastCall.Return (terminatingNode);
@@ -367,6 +394,9 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
 
         SetupResult.For (_methodGraph.InitialBlock)
                    .Return (initialNode);
+
+        SetupResult.For (_methodGraph.Blocks)
+                    .Return(new BasicBlock[] {initialNode, firstBranch, secondBranch});
 
         _methodGraph.GetBasicBlockById (1);
         LastCall.Return (firstBranch);
@@ -409,6 +439,9 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
         SetupResult.For (_methodGraph.InitialBlock)
                    .Return (initialNode);
 
+        SetupResult.For(_methodGraph.Blocks)
+                    .Return(new BasicBlock[] { initialNode, firstBranch, secondBranch });
+
         _methodGraph.GetBasicBlockById (1);
         LastCall.Return (firstBranch);
 
@@ -450,6 +483,9 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
 
         SetupResult.For (_methodGraph.InitialBlock)
                    .Return (initialNode);
+
+        SetupResult.For(_methodGraph.Blocks)
+                    .Return(new BasicBlock[] { initialNode, firstBranch, secondBranch });
 
         _methodGraph.GetBasicBlockById (1);
         LastCall.Return (firstBranch);
@@ -497,6 +533,9 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
 
         SetupResult.For (_methodGraph.InitialBlock)
                    .Return (initialNode);
+
+        SetupResult.For(_methodGraph.Blocks)
+                    .Return(new BasicBlock[] { initialNode, firstBranch, secondBranch, sink });
 
         _methodGraph.GetBasicBlockById (1);
         LastCall.Return (firstBranch);
@@ -548,6 +587,9 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
         SetupResult.For (_methodGraph.InitialBlock)
                    .Return (initialNode);
 
+        SetupResult.For(_methodGraph.Blocks)
+                    .Return(new BasicBlock[] { initialNode, firstBranch, secondBranch, sink });
+
         _methodGraph.GetBasicBlockById (1);
         LastCall.Return (firstBranch);
 
@@ -598,6 +640,9 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
         SetupResult.For (_methodGraph.InitialBlock)
                    .Return (initialNode);
 
+        SetupResult.For(_methodGraph.Blocks)
+                    .Return(new BasicBlock[] { initialNode, firstBranch, secondBranch, sink });
+
         _methodGraph.GetBasicBlockById (1);
         LastCall.Return (firstBranch);
 
@@ -647,6 +692,9 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
 
         SetupResult.For (_methodGraph.InitialBlock)
                    .Return (initialNode);
+
+        SetupResult.For(_methodGraph.Blocks)
+                    .Return(new BasicBlock[] { initialNode, firstBranch, secondBranch, sink });
 
         _methodGraph.GetBasicBlockById (1);
         LastCall.Return (firstBranch);
@@ -700,6 +748,9 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
         SetupResult.For (_methodGraph.InitialBlock)
                    .Return (initialNode);
 
+        SetupResult.For(_methodGraph.Blocks)
+                    .Return(new BasicBlock[] { initialNode, firstBranch, secondBranch, sink });
+
         _methodGraph.GetBasicBlockById (1);
         LastCall.Return (firstBranch);
 
@@ -739,6 +790,9 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
         SetupResult.For (_methodGraph.InitialBlock)
                    .Return (initialNode);
 
+        SetupResult.For(_methodGraph.Blocks)
+                    .Return(new BasicBlock[] { initialNode, firstNode });
+
         SetupResult.For (_methodGraph.GetBasicBlockById (1))
                    .Return (firstNode);
 
@@ -775,6 +829,9 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
 
         SetupResult.For (_methodGraph.InitialBlock)
                    .Return (initialNode);
+
+        SetupResult.For(_methodGraph.Blocks)
+                    .Return(new BasicBlock[] { initialNode, firstNode });
 
         SetupResult.For (_methodGraph.GetBasicBlockById (1))
                    .Return (firstNode);
@@ -820,6 +877,9 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
         SetupResult.For (_methodGraph.InitialBlock)
                    .Return (initialNode);
 
+        SetupResult.For(_methodGraph.Blocks)
+                    .Return(new BasicBlock[] { initialNode, firstBranch, secondBranch });
+
         SetupResult.For (_methodGraph.GetBasicBlockById (0))
                    .Return (initialNode);
 
@@ -860,6 +920,9 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
 
         SetupResult.For (_methodGraph.InitialBlock)
                    .Return (initialNode);
+
+        SetupResult.For(_methodGraph.Blocks)
+                    .Return(new BasicBlock[] { initialNode, terminatingNode });
 
         _methodGraph.GetBasicBlockById (1);
         LastCall.Return (terminatingNode);
