@@ -82,6 +82,9 @@ namespace InjectionCop.Parser.BlockParsing
     private void Inspect (Block methodBodyBlock)
     {
       ReturnStatementHandler returnStatementHandler = new ReturnStatementHandler(_problemPipe, _returnFragmentType, _returnConditions);
+      AssignmentStatementHandler assignmentStatementHandler = new AssignmentStatementHandler(_problemPipe);
+      DelegateStatementHandler delegateStatementHandler = new DelegateStatementHandler(_problemPipe, _returnFragmentType, _blacklistManager);
+
       foreach (Statement statement in methodBodyBlock.Statements)
       {
         switch (statement.NodeType)
@@ -96,45 +99,16 @@ namespace InjectionCop.Parser.BlockParsing
             if (assignmentStatement.Source.NodeType == NodeType.Construct
                 && assignmentStatement.Source.Type.NodeType == NodeType.DelegateNode)
             {
-              Construct construct = (Construct)assignmentStatement.Source;
-              UnaryExpression methodWrapper = (UnaryExpression) construct.Operands[1];
-              MemberBinding methodBinding = (MemberBinding) methodWrapper.Operand;
-              Method assignedMethod = (Method) methodBinding.BoundMember;
-              
-              DelegateNode sourceDelegate = (DelegateNode)assignmentStatement.Source.Type;
-              string returnFragment = SymbolTable.EMPTY_FRAGMENT;
-              foreach (Member member in sourceDelegate.Members)
-              {
-                if (member.Name.Name == "Invoke")
-                {
-                  Method invoke = (Method) member;
-                  returnFragment = FragmentUtility.ReturnFragmentType(invoke);
-                }
-              }
-
-              ISymbolTable environment = new SymbolTable(_blacklistManager);
-              foreach (Parameter parameter in sourceDelegate.Parameters)
-              {
-                if (parameter.Attributes != null)
-                {
-                  environment.MakeSafe(parameter.Name.Name, FragmentUtility.GetFragmentType(parameter.Attributes));
-                }
-              }
-
-              IMethodGraphAnalyzer methodParser = new MethodGraphAnalyzer(_problemPipe);
-              IMethodGraphBuilder methodGraphBuilder = new MethodGraphBuilder(assignedMethod, _blacklistManager, _problemPipe, returnFragment);
-              IInitialSymbolTableBuilder parameterSymbolTableBuilder = new  EmbeddedInitialSymbolTableBuilder(assignedMethod, _blacklistManager, environment);
-              methodParser.Parse(methodGraphBuilder, parameterSymbolTableBuilder);
+              delegateStatementHandler.Handle(assignmentStatement, _symbolTableParser, _preConditions, _assignmentTargetVariables, Inspect, _blockAssignments);
             }
             else
             {
-              AssignmentStatementHandler(assignmentStatement);
+              assignmentStatementHandler.Handle(assignmentStatement, _symbolTableParser, _preConditions, _assignmentTargetVariables, Inspect, _blockAssignments);
             }
             break;
 
           case NodeType.Return:
             ReturnNode returnNode = (ReturnNode) statement;
-            //ReturnStatementHandler (returnNode);
             returnStatementHandler.Handle(returnNode, _symbolTableParser, _preConditions, _assignmentTargetVariables, Inspect);
             break;
 
@@ -153,171 +127,6 @@ namespace InjectionCop.Parser.BlockParsing
           //default:
             // exception werfen + logging
         }
-      }
-    }
-
-    private void AssignmentStatementHandler (AssignmentStatement assignmentStatement)
-    {
-      if (!(assignmentStatement.Target is Indexer))
-      {
-        string targetSymbol = IntrospectionUtility.GetVariableName (assignmentStatement.Target);
-        _assignmentTargetVariables.Add (targetSymbol);
-        string sourceSymbol = IntrospectionUtility.GetVariableName (assignmentStatement.Source);
-        bool localSourceVariableNotAssignedInsideCurrentBlock =
-            sourceSymbol != null
-            && !_assignmentTargetVariables.Contains (sourceSymbol)
-            && !IntrospectionUtility.IsField (assignmentStatement.Source);
-        bool targetIsField = IntrospectionUtility.IsField (assignmentStatement.Target);
-
-        if (localSourceVariableNotAssignedInsideCurrentBlock)
-        {
-          if (targetIsField)
-          {
-            AddAssignmentPreCondition (assignmentStatement);
-          }
-          else
-          {
-            AddBlockAssignment (assignmentStatement);
-          }
-        }
-        else
-        {
-          if (targetIsField)
-          {
-            ValidateAssignmentOnField (assignmentStatement);
-          }
-          else
-          {
-            _symbolTableParser.InferSafeness (targetSymbol, assignmentStatement.Source);
-          }
-        }
-      }
-      else
-      {
-        Indexer targetIndexer = (Indexer) assignmentStatement.Target;
-        string targetName = IntrospectionUtility.GetVariableName (targetIndexer.Object);
-        string targetFragmentType = _symbolTableParser.GetFragmentType (targetName);
-        string sourceFragmentType = _symbolTableParser.InferFragmentType (assignmentStatement.Source);
-        if (targetFragmentType != sourceFragmentType )
-        {
-          _symbolTableParser.MakeUnsafe (targetName);
-        }
-        else
-        {
-          if (targetName != null)
-          {
-            ProblemMetadata problemMetadata = new ProblemMetadata (
-                assignmentStatement.UniqueKey,
-                assignmentStatement.SourceContext,
-                targetFragmentType,
-                "??");
-            var preCondition = new EqualityPreCondition (targetName, SymbolTable.EMPTY_FRAGMENT, problemMetadata);
-            _preConditions.Add (preCondition);
-          }
-        }
-      }
-      Inspect (assignmentStatement.Source);
-    }
-    
-    private void AddAssignmentPreCondition (AssignmentStatement assignmentStatement)
-    {
-      Field targetField = IntrospectionUtility.GetField (assignmentStatement.Target);
-      string targetFragmentType = FragmentUtility.GetFragmentType (targetField.Attributes);
-      if (targetFragmentType != SymbolTable.EMPTY_FRAGMENT)
-      {
-        ProblemMetadata problemMetadata = new ProblemMetadata (
-            assignmentStatement.UniqueKey,
-            assignmentStatement.SourceContext,
-            targetFragmentType,
-            "??");
-        string sourceSymbol = IntrospectionUtility.GetVariableName (assignmentStatement.Source);
-        if (sourceSymbol != null)
-        {
-          AssignabilityPreCondition preCondition = new AssignabilityPreCondition (sourceSymbol, targetFragmentType, problemMetadata);
-          _preConditions.Add (preCondition);
-        }
-      }
-    }
-
-    private void AddBlockAssignment (AssignmentStatement assignmentStatement)
-    {
-      string targetSymbol = IntrospectionUtility.GetVariableName (assignmentStatement.Target);
-      string sourceSymbol = IntrospectionUtility.GetVariableName (assignmentStatement.Source);
-      if (targetSymbol != null && sourceSymbol != null)
-      {
-        BlockAssignment blockAssignment = new BlockAssignment (sourceSymbol, targetSymbol);
-        _blockAssignments.Add (blockAssignment);
-      }
-    }
-
-    /*
-    private void ReturnStatementHandler(ReturnNode returnNode)
-    {
-      if (returnNode.Expression != null)
-      {
-        Inspect(returnNode.Expression);
-        string returnSymbol = IntrospectionUtility.GetVariableName(returnNode.Expression);
-        if (returnSymbol != null)
-        {
-          ProblemMetadata problemMetadata = new ProblemMetadata(
-              returnNode.UniqueKey, returnNode.SourceContext, _returnFragmentType, _symbolTableParser.GetFragmentType(returnSymbol));
-          AssignabilityPreCondition returnBlockCondition = new AssignabilityPreCondition(returnSymbol, _returnFragmentType, problemMetadata);
-          _preConditions.Add(returnBlockCondition);
-          _preConditions.AddRange(_returnConditions);
-        }
-      }
-      else
-      {
-        foreach (var returnCondition in _returnConditions)
-        {
-          string blockInternalFragmentType = _symbolTableParser.GetFragmentType(returnCondition.Symbol);
-          if (blockInternalFragmentType != SymbolTable.LITERAL
-              && returnCondition.FragmentType != SymbolTable.EMPTY_FRAGMENT
-              && returnCondition.FragmentType != blockInternalFragmentType)
-          {
-            ProblemMetadata problemMetadata = new ProblemMetadata(
-            returnNode.UniqueKey,
-            returnNode.SourceContext,
-            returnCondition.FragmentType,
-            blockInternalFragmentType);
-            returnCondition.ProblemMetadata = problemMetadata;
-
-            if (!_assignmentTargetVariables.Contains(returnCondition.Symbol))
-            {
-              _preConditions.Add(returnCondition);
-            }
-            else
-            {
-              _problemPipe.AddProblem(problemMetadata);
-            }
-          }
-        }
-      }
-    }*/
-
-    private void ValidateAssignmentOnField (AssignmentStatement assignmentStatement)
-    {
-      Field targetField = IntrospectionUtility.GetField (assignmentStatement.Target);
-      string targetFragmentType = FragmentUtility.GetFragmentType (targetField.Attributes);
-      string givenFragmentType;
-      if (IntrospectionUtility.IsField (assignmentStatement.Source))
-      {
-        Field source = IntrospectionUtility.GetField (assignmentStatement.Source);
-        givenFragmentType = FragmentUtility.GetFragmentType (source.Attributes);
-      }
-      else
-      {
-        givenFragmentType = _symbolTableParser.InferFragmentType (assignmentStatement.Source);
-      }
-
-      if (targetFragmentType != givenFragmentType && givenFragmentType != SymbolTable.LITERAL)
-      {
-        ProblemMetadata problemMetadata = new ProblemMetadata (
-            targetField.UniqueKey,
-            targetField.SourceContext,
-            targetFragmentType,
-            givenFragmentType);
-        _problemPipe.AddProblem (problemMetadata);
       }
     }
 

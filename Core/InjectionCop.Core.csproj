@@ -64,6 +64,8 @@
     <Compile Include="Parser\BlockParsing\EqualityPreCondition.cs" />
     <Compile Include="Parser\BlockParsing\IPreCondition.cs" />
     <Compile Include="Parser\BlockParsing\ReturnCondition.cs" />
+    <Compile Include="Parser\BlockParsing\StatementHandler\AssignmentStatementHandler.cs" />
+    <Compile Include="Parser\BlockParsing\StatementHandler\DelegateStatementHandler.cs" />
     <Compile Include="Parser\BlockParsing\StatementHandler\ReturnStatementHandler.cs" />
     <Compile Include="Parser\ISymbolTable.cs" />
     <Compile Include="Parser\MethodParsing\EmbeddedInitialSymbolTableBuilder.cs" />
