@@ -140,5 +140,26 @@ namespace InjectionCop.IntegrationTests.Utilities
 
       Assert.That (returnFragment, Is.EqualTo ("ReturnFragmentType"));
     }
+
+    [Test]
+    public void IsFragmentGenerator_ReturnFragment_False()
+    {
+      Method sampleMethod = TestHelper.GetSample<FragmentUtilitySample>("ReturnFragment");
+      Assert.That(FragmentUtility.IsFragmentGenerator(sampleMethod), Is.False);
+    }
+
+    [Test]
+    public void IsFragmentGenerator_FragmentGenerator_True()
+    {
+      Method sampleMethod = TestHelper.GetSample<FragmentUtilitySample>("FragmentGenerator");
+      Assert.That(FragmentUtility.IsFragmentGenerator(sampleMethod), Is.True);
+    }
+
+    [Test]
+    public void IsFragmentGenerator_CustomFragmentGenerator_True()
+    {
+      Method sampleMethod = TestHelper.GetSample<FragmentUtilitySample>("CustomFragmentGenerator");
+      Assert.That(FragmentUtility.IsFragmentGenerator(sampleMethod), Is.True);
+    }
   }
 }

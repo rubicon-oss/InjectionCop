@@ -13,10 +13,11 @@
 // limitations under the License.
 
 using System;
+using InjectionCop.Fragment;
 
 namespace InjectionCop.IntegrationTests.Utilities
 {
-  internal class IntrospectionUtility_ClassSample
+  public class IntrospectionUtility_ClassSample
   {
     private string _field = "dummy";
 
@@ -77,6 +78,7 @@ namespace InjectionCop.IntegrationTests.Utilities
       Closure closure = () => environmentVariable;
       return closure();
     }
+
   }
 
 }

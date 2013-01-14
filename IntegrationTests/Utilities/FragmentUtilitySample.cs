@@ -50,6 +50,20 @@ namespace InjectionCop.IntegrationTests.Utilities
     {
       return 3;
     }
+
+    [FragmentGenerator]
+    public void FragmentGenerator()
+    {
+    }
+
+    public class CustomFragmentGeneratorAttribute : FragmentGeneratorAttribute
+    {
+    }
+
+    [CustomFragmentGenerator]
+    public void CustomFragmentGenerator()
+    {
+    }
   }
 
   public interface InterfaceWithReturnFragment
