@@ -1,3 +1,4 @@
+extensions: .vb
 ' Copyright 2013 rubicon informationstechnologie gmbh
 '
 ' Licensed under the Apache License, Version 2.0 (the "License");
@@ -11,14 +12,3 @@
 ' WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 ' See the License for the specific language governing permissions and
 ' limitations under the License.
-Imports InjectionCop.Fragment
-Imports System
-
-Namespace Parser.TypeParsing.FragmentUsageTests
-	Public Class DerivedClassWithValidFragmentUsage
-		Inherits BaseClass
-
-    Public Overrides Sub Foo(<Fragment("ValidFragmentType")> parameter1 As Integer, parameter2 As String)
-    End Sub
-	End Class
-End Namespace
