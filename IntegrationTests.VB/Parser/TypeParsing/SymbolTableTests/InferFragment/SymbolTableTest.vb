@@ -54,7 +54,7 @@ Namespace Parser.TypeParsing.SymbolTableTests.InferFragment
 
     <Test()>
     Public Sub InferFragmentType_AssignmentWithLocalFragmentSetToTrue_ReturnsTrue()
-      Me._symbolTable.MakeSafe("local$0", "DummyType")
+      Me._symbolTable.MakeSafe("local$1", "DummyType")
       Dim sample As Method = TestHelper.GetSample(Of InferFragmentSample)("AssignmentWithLocal", New TypeNode() {})
       Dim assignmentBlock As Block = CType(sample.Body.Statements(0), Block)
       Dim assignment As AssignmentStatement = CType(assignmentBlock.Statements(4), AssignmentStatement)
@@ -86,7 +86,7 @@ Namespace Parser.TypeParsing.SymbolTableTests.InferFragment
 
     <Test()>
     Public Sub InferFragmentType_AssignmentWithLocalFragmentSetToTrue_InfersFragmentType()
-      Me._symbolTable.MakeSafe("local$0", "DummyType")
+      Me._symbolTable.MakeSafe("local$1", "DummyType")
       Dim sample As Method = TestHelper.GetSample(Of InferFragmentSample)("AssignmentWithLocal", New TypeNode() {})
       Dim assignmentBlock As Block = CType(sample.Body.Statements(0), Block)
       Dim assignment As AssignmentStatement = CType(assignmentBlock.Statements(4), AssignmentStatement)

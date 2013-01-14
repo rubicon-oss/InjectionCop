@@ -282,8 +282,8 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.MethodGraphTests
         BasicBlock conditionBasicBlock = methodGraph.GetBasicBlockById (conditionBlock.UniqueKey);
         bool conditionBasicBlockSuccessorsCorrect =
             conditionBasicBlock.SuccessorKeys.Length == 2
-            && conditionBasicBlock.SuccessorKeys.Any (key => key == innerForBlock.UniqueKey)
-            && conditionBasicBlock.SuccessorKeys.Any (key => key == preReturnBlock.UniqueKey);
+            && conditionBasicBlock.SuccessorKeys.Contains (innerForBlock.UniqueKey)
+            && conditionBasicBlock.SuccessorKeys.Contains (preReturnBlock.UniqueKey);
 
         Assert.That (conditionBasicBlockSuccessorsCorrect, Is.True);
       }

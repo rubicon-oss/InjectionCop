@@ -173,11 +173,13 @@ Namespace Parser.MethodParsing.MethodGraphTests
     Public Sub MethodGraph_ForLoop_ReturnsCorrectPreForSuccessors()
       Dim sampleMethod As Method = TestHelper.GetSample(Of MethodGraph_ClassSample)("ForLoop", New TypeNode() {})
       Dim preForBlock As Block = TryCast(sampleMethod.Body.Statements(0), Block)
-      Dim conditionBlock As Block = TryCast(sampleMethod.Body.Statements(2), Block)
+      Dim conditionBlock As Block = TryCast(sampleMethod.Body.Statements(1), Block)
+
       If preForBlock IsNot Nothing AndAlso conditionBlock IsNot Nothing Then
         Dim methodGraph As IMethodGraph = MyBase.BuildMethodGraph(sampleMethod)
         Dim preForBasicBlock As BasicBlock = methodGraph.GetBasicBlockById(preForBlock.UniqueKey)
         Dim preForBasicBlockSuccessorsCorrect As Boolean = preForBasicBlock.SuccessorKeys.Length = 1 AndAlso preForBasicBlock.SuccessorKeys(0) = conditionBlock.UniqueKey
+
         Assert.That(preForBasicBlockSuccessorsCorrect, [Is].[True])
       Else
         Assert.Ignore("Bad Sample")
@@ -189,10 +191,12 @@ Namespace Parser.MethodParsing.MethodGraphTests
       Dim sampleMethod As Method = TestHelper.GetSample(Of MethodGraph_ClassSample)("ForLoop", New TypeNode() {})
       Dim innerForBlock As Block = TryCast(sampleMethod.Body.Statements(1), Block)
       Dim conditionBlock As Block = TryCast(sampleMethod.Body.Statements(2), Block)
+
       If innerForBlock IsNot Nothing AndAlso conditionBlock IsNot Nothing Then
         Dim methodGraph As IMethodGraph = MyBase.BuildMethodGraph(sampleMethod)
         Dim innerForBasicBlock As BasicBlock = methodGraph.GetBasicBlockById(innerForBlock.UniqueKey)
-        Dim innerForBasicBlockSuccessorsCorrect As Boolean = innerForBasicBlock.SuccessorKeys.Length = 1 AndAlso innerForBasicBlock.SuccessorKeys(0) = conditionBlock.UniqueKey
+        Dim innerForBasicBlockSuccessorsCorrect As Boolean = innerForBasicBlock.SuccessorKeys.Length = 2 AndAlso innerForBasicBlock.SuccessorKeys.Contains(conditionBlock.UniqueKey)
+
         Assert.That(innerForBasicBlockSuccessorsCorrect, [Is].[True])
       Else
         Assert.Ignore("Bad Sample")
@@ -202,24 +206,16 @@ Namespace Parser.MethodParsing.MethodGraphTests
     <Test()>
     Public Sub MethodGraph_ForLoop_ReturnsCorrectConditionSuccessors()
       Dim sampleMethod As Method = TestHelper.GetSample(Of MethodGraph_ClassSample)("ForLoop", New TypeNode() {})
-      Dim innerForBlock As Block = TryCast(sampleMethod.Body.Statements(0), Block)
-      Dim conditionBlock As Block = TryCast(sampleMethod.Body.Statements(1), Block)
+      Dim innerLoopBlock As Block = TryCast(sampleMethod.Body.Statements(1), Block)
       Dim preReturnBlock As Block = TryCast(sampleMethod.Body.Statements(2), Block)
 
-      If innerForBlock IsNot Nothing AndAlso conditionBlock IsNot Nothing AndAlso preReturnBlock IsNot Nothing Then
-
+      If innerLoopBlock IsNot Nothing AndAlso preReturnBlock IsNot Nothing Then
         Dim methodGraph As IMethodGraph = MyBase.BuildMethodGraph(sampleMethod)
-        Dim conditionBasicBlock As BasicBlock = methodGraph.GetBasicBlockById(conditionBlock.UniqueKey)
+        Dim conditionBasicBlock As BasicBlock = methodGraph.GetBasicBlockById(innerLoopBlock.UniqueKey)
 
-        'Dim basicBlocks = sampleMethod.Body.Statements.OfType(Of Block).Select(Function(s) methodGraph.GetBasicBlockById(s.UniqueKey)).ToArray()
-
-        Dim conditionBasicBlockSuccessorsCorrect As Boolean = False
-
-        If conditionBasicBlock.SuccessorKeys.Length = 2 Then
-          If conditionBasicBlock.SuccessorKeys.Any(Function(key As Integer) key = innerForBlock.UniqueKey) Then
-            conditionBasicBlockSuccessorsCorrect = conditionBasicBlock.SuccessorKeys.Any(Function(key As Integer) key = preReturnBlock.UniqueKey)
-          End If
-        End If
+        Dim conditionBasicBlockSuccessorsCorrect As Boolean = conditionBasicBlock.SuccessorKeys.Length = 2 AndAlso
+          conditionBasicBlock.SuccessorKeys.Contains(innerLoopBlock.UniqueKey) AndAlso
+          conditionBasicBlock.SuccessorKeys.Contains(preReturnBlock.UniqueKey)
 
         Assert.That(conditionBasicBlockSuccessorsCorrect, [Is].[True])
       Else
@@ -230,8 +226,9 @@ Namespace Parser.MethodParsing.MethodGraphTests
     <Test()>
     Public Sub MethodGraph_ForLoop_ReturnsCorrectPreReturnSuccessors()
       Dim sampleMethod As Method = TestHelper.GetSample(Of MethodGraph_ClassSample)("ForLoop", New TypeNode() {})
-      Dim preReturnBlock As Block = TryCast(sampleMethod.Body.Statements(3), Block)
-      Dim returnBlock As Block = TryCast(sampleMethod.Body.Statements(4), Block)
+      Dim preReturnBlock As Block = TryCast(sampleMethod.Body.Statements(2), Block)
+      Dim returnBlock As Block = TryCast(sampleMethod.Body.Statements(3), Block)
+
       If preReturnBlock IsNot Nothing AndAlso returnBlock IsNot Nothing Then
         Dim methodGraph As IMethodGraph = MyBase.BuildMethodGraph(sampleMethod)
         Dim preReturnBasicBlock As BasicBlock = methodGraph.GetBasicBlockById(preReturnBlock.UniqueKey)
@@ -245,7 +242,7 @@ Namespace Parser.MethodParsing.MethodGraphTests
     <Test()>
     Public Sub MethodGraph_ForLoop_ReturnsCorrectReturnSuccessors()
       Dim sampleMethod As Method = TestHelper.GetSample(Of MethodGraph_ClassSample)("ForLoop", New TypeNode() {})
-      Dim returnBlock As Block = TryCast(sampleMethod.Body.Statements(4), Block)
+      Dim returnBlock As Block = TryCast(sampleMethod.Body.Statements(3), Block)
       If returnBlock IsNot Nothing Then
         Dim methodGraph As IMethodGraph = MyBase.BuildMethodGraph(sampleMethod)
         Dim returnBasicBlock As BasicBlock = methodGraph.GetBasicBlockById(returnBlock.UniqueKey)
