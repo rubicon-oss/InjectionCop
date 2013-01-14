@@ -71,3 +71,5 @@ Core/obj/
 UnitTests/bin/
 IntegrationTests/bin/
 packages/
+IntegrationTests.VB/bin/
+IntegrationTests.VB/obj/
