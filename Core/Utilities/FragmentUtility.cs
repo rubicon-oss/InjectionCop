@@ -179,5 +179,29 @@ namespace InjectionCop.Utilities
 
       return definingAttributes;
     }
+
+    public static bool IsFragmentGenerator(Method method)
+    {
+      ArgumentUtility.CheckNotNull("method", method);
+      bool isFragmentGenerator;
+      isFragmentGenerator = ContainsFragmentGeneratorAttribute(method.Attributes);
+      return isFragmentGenerator;
+    }
+
+    private static bool ContainsFragmentGeneratorAttribute(AttributeNodeCollection attributes)
+    {
+      bool containsFragmentGeneratorAttribute = false;
+      if (attributes != null)
+      {
+        containsFragmentGeneratorAttribute = attributes.Any(attribute => IsFragmentGeneratorAttribute(attribute));
+      }
+      return containsFragmentGeneratorAttribute;
+    }
+
+    private static bool IsFragmentGeneratorAttribute(AttributeNode attribute)
+    {
+      return attribute.Type.FullName == typeof(FragmentGeneratorAttribute).FullName
+              || attribute.Type.BaseType.FullName == typeof(FragmentGeneratorAttribute).FullName;
+    }
   }
 }

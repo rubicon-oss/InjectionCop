@@ -46,7 +46,7 @@ namespace InjectionCop.Parser.TypeParsing
         InitializeBlacklistManager (type);
         foreach (Member member in type.Members)
         {
-          if (member is Method)
+          if (member is Method && !FragmentUtility.IsFragmentGenerator((Method)member))
           {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
