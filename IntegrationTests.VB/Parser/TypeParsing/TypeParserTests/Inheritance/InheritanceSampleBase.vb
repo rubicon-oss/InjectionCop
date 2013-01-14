@@ -6,7 +6,7 @@ Namespace Parser.TypeParsing.TypeParserTests.Inheritance
     Inherits ParserSampleBase
 
     <Fragment("InheritanceFragment")>
-    Protected _fragmentField As String
+    Protected Shadows _fragmentField As String
 
     <Fragment("InheritanceFragment")>
     Protected _initialFragmentField As String

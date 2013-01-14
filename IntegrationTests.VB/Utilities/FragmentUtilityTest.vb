@@ -103,7 +103,7 @@ Namespace Utilities
 
     <Test()>
     Public Sub ReturnFragmentType_ExplicitlyImplementedInterfaceMethod_ReturnsFragment()
-      Dim sample As Method = TestHelper.GetSample(Of ClassWithExplicitlyDeclaredMethodReturningFragment)("InjectionCop.IntegrationTests.Utilities.InterfaceWithReturnFragment.MethodWithReturnFragment", New TypeNode() {})
+      Dim sample As Method = TestHelper.GetSample(Of ClassWithExplicitlyDeclaredMethodReturningFragment)("MethodWithReturnFragment", New TypeNode() {})
       Dim returnFragment As String = FragmentUtility.ReturnFragmentType(sample)
       Assert.That(returnFragment, [Is].EqualTo("ReturnFragmentType"))
     End Sub

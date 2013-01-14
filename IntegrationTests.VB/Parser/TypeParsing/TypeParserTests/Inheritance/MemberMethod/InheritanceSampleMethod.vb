@@ -27,16 +27,16 @@ Namespace Parser.TypeParsing.TypeParserTests.Inheritance.MemberMethod
       Return "dummy"
     End Function
 
-    Public Function NonVirtualMethod(<Fragment("InheritanceFragment")> annotatedParameter As String, <Fragment("InheritanceFragment")> nonAnnotatedParameter As String) As String
+    Public Shadows Function NonVirtualMethod(<Fragment("InheritanceFragment")> annotatedParameter As String, <Fragment("InheritanceFragment")> nonAnnotatedParameter As String) As String
       Return "dummy"
     End Function
 
     Public Sub SafeCallOnInheritedMethod()
-      MyBase.InvariantMethod("safe", "safe")
+      InvariantMethod("safe", "safe")
     End Sub
 
     Public Sub UnsafeCallOnInheritedMethod()
-      MyBase.InvariantMethod(InheritanceSampleBase.UnsafeInheritanceFragmentSource(), "safe")
+      InvariantMethod(InheritanceSampleBase.UnsafeInheritanceFragmentSource(), "safe")
     End Sub
 
     Public Sub SafeCallOnMethodInheritedFromSuperiorClass()

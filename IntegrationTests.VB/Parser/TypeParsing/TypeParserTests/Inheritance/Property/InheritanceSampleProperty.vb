@@ -86,27 +86,27 @@ Namespace Parser.TypeParsing.TypeParserTests.Inheritance.[Property]
 		End Sub
 
 		Protected Sub SafeAssignmentOnBaseProperty()
-			MyBase.InitialFragmentProperty = MyBase.SafeInheritanceFragmentSource()
+      MyBase.InitialFragmentProperty = SafeInheritanceFragmentSource()
 		End Sub
 
 		Protected Sub UnsafeAssignmentOnBaseProperty()
-			MyBase.InitialFragmentProperty = InheritanceSampleBase.UnsafeInheritanceFragmentSource()
+      MyBase.InitialFragmentProperty = UnsafeInheritanceFragmentSource()
 		End Sub
 
 		Protected Sub SafeAssignmentOfBaseProperty()
-			MyBase.FragmentProperty = MyBase.InitialFragmentProperty
+      FragmentProperty = MyBase.InitialFragmentProperty
 		End Sub
 
 		Protected Sub UnsafeAssignmentOfBaseProperty()
-			MyBase.FragmentProperty = MyBase.InitialNonFragmentProperty
+      FragmentProperty = MyBase.InitialNonFragmentProperty
 		End Sub
 
 		Public Sub SafeMethodCallUsingBaseProperty()
-			MyBase.RequiresInheritanceFragment(MyBase.InitialFragmentProperty)
+      RequiresInheritanceFragment(MyBase.InitialFragmentProperty)
 		End Sub
 
 		Public Sub UnsafeMethodCallUsingBaseProperty()
-			MyBase.RequiresInheritanceFragment(MyBase.InitialNonFragmentProperty)
+      RequiresInheritanceFragment(MyBase.InitialNonFragmentProperty)
 		End Sub
 	End Class
 End Namespace

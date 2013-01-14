@@ -110,7 +110,7 @@ Namespace Parser.TypeParsing.TypeParserTests.Inheritance.[Interface]
 		<Test()>
 		Public Sub Parse_ValidReturnOnExplicitInterfaceMethod_NoProblem()
 			Dim sampleTypeNode As TypeNode = IntrospectionUtility.TypeNodeFactory(GetType(InterfaceSampleExplicitDeclarations))
-			Dim sample As Method = IntrospectionUtility.MethodFactory(sampleTypeNode, "InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Inheritance.Interface.IInheritanceSample.MethodWithReturnFragment", New TypeNode() {})
+      Dim sample As Method = IntrospectionUtility.MethodFactory(sampleTypeNode, "MethodWithReturnFragment", New TypeNode() {})
 			Me._typeParser.Parse(sample)
 			Dim result As ProblemCollection = Me._typeParser.Problems
 			Assert.That(TestHelper.ContainsProblemID(Me.c_InjectionCopRuleId, result), [Is].[False])
@@ -119,7 +119,7 @@ Namespace Parser.TypeParsing.TypeParserTests.Inheritance.[Interface]
 		<Test()>
 		Public Sub Parse_InvalidReturnOnExplicitInterfaceMethod_ReturnsProblem()
 			Dim sampleTypeNode As TypeNode = IntrospectionUtility.TypeNodeFactory(GetType(InterfaceSampleExplicitDeclarationsInvalidReturn))
-			Dim sample As Method = IntrospectionUtility.MethodFactory(sampleTypeNode, "InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Inheritance.Interface.IInheritanceSample.MethodWithReturnFragment", New TypeNode() {})
+      Dim sample As Method = IntrospectionUtility.MethodFactory(sampleTypeNode, "MethodWithReturnFragment", New TypeNode() {})
 			Me._typeParser.Parse(sample)
 			Dim result As ProblemCollection = Me._typeParser.Problems
 			Assert.That(TestHelper.ContainsProblemID(Me.c_InjectionCopRuleId, result), [Is].[True])

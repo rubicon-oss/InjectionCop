@@ -51,27 +51,27 @@ Namespace Parser.TypeParsing.TypeParserTests.Inheritance.Field
 		End Sub
 
 		Protected Sub SafeAssignmentOnBaseField()
-			Me._initialFragmentField = MyBase.SafeInheritanceFragmentSource()
+      MyBase._initialFragmentField = MyBase.SafeInheritanceFragmentSource()
 		End Sub
 
 		Protected Sub UnsafeAssignmentOnBaseField()
-			Me._initialFragmentField = InheritanceSampleBase.UnsafeInheritanceFragmentSource()
+      MyBase._initialFragmentField = InheritanceSampleBase.UnsafeInheritanceFragmentSource()
 		End Sub
 
 		Protected Sub SafeAssignmentOfBaseField()
-			Me._fragmentField = Me._initialFragmentField
+      Me._fragmentField = MyBase._initialFragmentField
 		End Sub
 
 		Protected Sub UnsafeAssignmentOfBaseField()
-			Me._fragmentField = Me._initialNonFragmentField
+      Me._fragmentField = MyBase._initialNonFragmentField
 		End Sub
 
 		Public Sub SafeMethodCallUsingBaseField()
-			MyBase.RequiresInheritanceFragment(Me._initialFragmentField)
+      MyBase.RequiresInheritanceFragment(MyBase._initialFragmentField)
 		End Sub
 
 		Public Sub UnsafeMethodCallUsingBaseField()
-			MyBase.RequiresInheritanceFragment(Me._initialNonFragmentField)
+      MyBase.RequiresInheritanceFragment(MyBase._initialNonFragmentField)
 		End Sub
 	End Class
 End Namespace

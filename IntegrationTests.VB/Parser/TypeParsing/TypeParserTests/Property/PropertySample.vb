@@ -5,7 +5,15 @@ Namespace Parser.TypeParsing.TypeParserTests.[Property]
 	Public Class PropertySample
 		Inherits ParserSampleBase
 
-		Public Property SafePropertyVerboseAnnotation() As String
+    Private _safePropertyVerboseAnnotation As String
+    Public Property SafePropertyVerboseAnnotation() As <Fragment("SqlFragment")> String
+      Get
+        Return _safePropertyVerboseAnnotation
+      End Get
+      Set(<Fragment("SqlFragment")> value As String)
+        _safePropertyVerboseAnnotation = value
+      End Set
+    End Property
 
 		<Fragment("SqlFragment")>
 		Public Property SafeProperty() As String

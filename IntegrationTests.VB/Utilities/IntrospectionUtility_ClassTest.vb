@@ -213,7 +213,7 @@ Namespace Utilities
       Dim sampleBlock As Block = CType(sampleMethod.Body.Statements(0), Block)
       Dim sampleAssignment As AssignmentStatement = CType(sampleBlock.Statements(1), AssignmentStatement)
       Dim sample As Expression = sampleAssignment.Target
-      Assert.That(IntrospectionUtility.GetVariableName(sample), [Is].EqualTo("local$0"))
+      Assert.That(IntrospectionUtility.GetVariableName(sample), [Is].EqualTo("local$2"))
     End Sub
 
     <Test()>
@@ -231,7 +231,7 @@ Namespace Utilities
       Dim sampleBlock As Block = CType(sampleMethod.Body.Statements(0), Block)
       Dim sampleAssignment As AssignmentStatement = CType(sampleBlock.Statements(2), AssignmentStatement)
       Dim sample As Expression = sampleAssignment.Target
-      Assert.That(IntrospectionUtility.GetVariableName(sample), [Is].EqualTo("local$0"))
+      Assert.That(IntrospectionUtility.GetVariableName(sample), [Is].EqualTo("local$2"))
     End Sub
 
     <Test()>
@@ -244,7 +244,7 @@ Namespace Utilities
     Public Sub IsCompilerGenerated_CompilerGeneratedTypeNode_ReturnsTrue()
       Dim sampleMethod As Method = TestHelper.GetSample(Of IntrospectionUtility_ClassSample)("UsingClosure", New TypeNode() {})
       Dim sampleBlock As Block = CType(sampleMethod.Body.Statements(0), Block)
-      Dim sampleAssignment As AssignmentStatement = CType(sampleBlock.Statements(0), AssignmentStatement)
+      Dim sampleAssignment As AssignmentStatement = CType(sampleBlock.Statements(1), AssignmentStatement)
       Dim compilerGeneratedTypeNode As TypeNode = sampleAssignment.Source.Type
       Assert.That(IntrospectionUtility.IsCompilerGenerated(compilerGeneratedTypeNode), [Is].[True])
     End Sub

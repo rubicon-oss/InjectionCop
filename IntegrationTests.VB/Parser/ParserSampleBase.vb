@@ -7,7 +7,7 @@ Namespace Parser
 		Protected _fragmentField As String = "safe"
 
 		Protected Function UnsafeSource() As String
-			Return"unsafe command"
+      Return "unsafe command"
 		End Function
 
 		Protected Function UnsafeSource(param As String) As String
