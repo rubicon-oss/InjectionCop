@@ -41,8 +41,17 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
     public void Handle(AssignmentStatement assignmentStatement, ISymbolTable symbolTable, List<IPreCondition> preConditions, List<string> assignmentTargetVariables, InspectCallback inspect, List<BlockAssignment> blockAssignments)
     {
       Construct construct = (Construct)assignmentStatement.Source;
-      UnaryExpression methodWrapper = (UnaryExpression)construct.Operands[1];
-      MemberBinding methodBinding = (MemberBinding)methodWrapper.Operand;
+      var expression = construct.Operands[1];
+      MemberBinding methodBinding;
+    
+      if (expression is UnaryExpression)
+        methodBinding = (MemberBinding)((UnaryExpression)expression).Operand;
+      else if (expression is BinaryExpression) 
+        //vb.net generates binaryExpressions instead of unary
+        methodBinding = (MemberBinding) ((BinaryExpression) expression).Operand2;
+      else
+        throw new InvalidOperationException ("Could not fetch member binding from delegate statement.");
+        
       Method assignedMethod = (Method)methodBinding.BoundMember;
 
       DelegateNode sourceDelegate = (DelegateNode)assignmentStatement.Source.Type;

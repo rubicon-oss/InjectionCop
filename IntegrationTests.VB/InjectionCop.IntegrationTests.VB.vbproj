@@ -1,0 +1,202 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{5AB89C75-A44C-45A1-AA7C-F8C93FA3F3B1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>InjectionCop.IntegrationTests.VB</RootNamespace>
+    <AssemblyName>InjectionCop.IntegrationTests.VB</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MyType>Windows</MyType>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>InjectionCop.IntegrationTests.VB.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>InjectionCop.IntegrationTests.VB.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <Prefer32Bit>false</Prefer32Bit>
+    <PlatformTarget>x86</PlatformTarget>
+    <NoWarn>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</NoWarn>
+    <OutputPath>bin\Debug\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <Prefer32Bit>false</Prefer32Bit>
+    <NoWarn>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="FxCopSdk">
+      <HintPath>$(CodeAnalysisPath)\FxCopSdk.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Cci">
+      <HintPath>$(CodeAnalysisPath)\Microsoft.Cci.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+  </ItemGroup>
+  <Choose>
+    <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Diagnostics" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="My Project\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Parser\BlockParsing\BlockParserSample.vb" />
+    <Compile Include="Parser\BlockParsing\BlockParserTest.vb" />
+    <Compile Include="Parser\MethodParsing\EmbeddedInitialSymbolTableBuilderTest\EmbeddedInitialSymbolTableBuilderTest.vb" />
+    <Compile Include="Parser\MethodParsing\InitialSymbolTableBuilderTests\InitialSymbolTableBuilderTest.vb" />
+    <Compile Include="Parser\MethodParsing\MethodGraphTests\InterfaceSample.vb" />
+    <Compile Include="Parser\MethodParsing\MethodGraphTests\Interface_TypeParserTest.vb" />
+    <Compile Include="Parser\MethodParsing\MethodGraphTests\MethodGraph_ClassSample.vb" />
+    <Compile Include="Parser\MethodParsing\MethodGraphTests\MethodGraph_ClassTest.vb" />
+    <Compile Include="Parser\MethodParsing\MethodGraphTests\MethodGraph_TestBase.vb" />
+    <Compile Include="Parser\MethodParsing\SymbolTableBuilderSample.vb" />
+    <Compile Include="Parser\NonFragmentAttribute.vb" />
+    <Compile Include="Parser\ParserSampleBase.vb" />
+    <Compile Include="Parser\ProblemPipeStub.vb" />
+    <Compile Include="Parser\TestHelper.vb" />
+    <Compile Include="Parser\TypeParsing\BlacklistManagerIntegrationSample.vb" />
+    <Compile Include="Parser\TypeParsing\FragmentUsageTests\BaseClass.vb" />
+    <Compile Include="Parser\TypeParsing\FragmentUsageTests\ClassWithMultipleFragments.vb" />
+    <Compile Include="Parser\TypeParsing\FragmentUsageTests\DerivedClassWithInvalidFragmentUsage.vb" />
+    <Compile Include="Parser\TypeParsing\FragmentUsageTests\DerivedClassWithoutFragmentUsage.vb" />
+    <Compile Include="Parser\TypeParsing\FragmentUsageTests\DerivedClassWithValidFragmentUsage.vb" />
+    <Compile Include="Parser\TypeParsing\FragmentUsageTests\IBaseInterface.vb" />
+    <Compile Include="Parser\TypeParsing\FragmentUsageTests\ImplementingClassWithInvalidFragmentUsage.vb" />
+    <Compile Include="Parser\TypeParsing\FragmentUsageTests\ImplementingClassWithoutFragmentUsage.vb" />
+    <Compile Include="Parser\TypeParsing\FragmentUsageTests\InterfaceImplementingMethodFragmentUsageRuleTest.vb" />
+    <Compile Include="Parser\TypeParsing\FragmentUsageTests\MulitpleFragmentUsageRuleTest.vb" />
+    <Compile Include="Parser\TypeParsing\FragmentUsageTests\OverridingMethodFragmentUsageRuleTest.vb" />
+    <Compile Include="Parser\TypeParsing\SymbolTableTests\BlacklistManagerIntegration\BlacklistManagerIntegration_SymbolTableTest.vb" />
+    <Compile Include="Parser\TypeParsing\SymbolTableTests\InferFragment\InferFragmentSample.vb" />
+    <Compile Include="Parser\TypeParsing\SymbolTableTests\InferFragment\SymbolTableTest.vb" />
+    <Compile Include="Parser\TypeParsing\SymbolTableTests\InferSafeness\InferSafenessSample.vb" />
+    <Compile Include="Parser\TypeParsing\SymbolTableTests\InferSafeness\InferSafeness_SymbolTableTest.vb" />
+    <Compile Include="Parser\TypeParsing\SymbolTableTests\ParameterSafe\ParameterSafeSample.vb" />
+    <Compile Include="Parser\TypeParsing\SymbolTableTests\ParameterSafe\ParameterSafe_SymbolTableTest.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\AddProblem\AddProblemSample.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\AddProblem\AddProblem_TypeParserTest.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\AnonymousMethod\AnonymousMethodSample.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\AnonymousMethod\AnonymousMethod_TypeParserTest.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\AssignmentPropagation\AssignmentPropagationSample.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\AssignmentPropagation\AssignmentPropagation_TypeParserTest.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\AttributePropagation\AttributePropagationSample.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\AttributePropagation\AttributePropagation_TypeParserTest.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Attribute\Attribute_TypeParserTest.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Attribute\SampleAttribute.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\BlacklistManagerIntegration\BlacklistManagerIntegration_TypeParserTest.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\BlackMethod\BlackMethodSample.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\BlackMethod\BlackMethod_BlockParserTest.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Closure\ClosureSample.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Closure\Closure_TypeParserTest.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Concatenation\ConcatenationSample.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Constructor\ConstructorSample.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Constructor\Constructor_TypeParserTest.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Delegate\DelegateSample.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Delegate\Delegate_TypeParserTest.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Field\FieldSample.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Field\Field_TypeParserTest.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Goto\GotoSample.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Goto\Goto_TypeParserTest.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\If\IfSample.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\If\If_TypeParserTest.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Indexer\IndexerSample.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Indexer\Indexer_TypeParserTest.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\Constructor\InheritanceConstructor_TypeParserTest.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\Constructor\InheritanceSampleConstructor.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\Field\InheritanceField_TypeParserTest.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\Field\InheritanceSampleField.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\InheritanceSampleBase.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\Interface\ExtendedInterfaceSampleImplicitDeclarations.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\Interface\ExtendedInterfaceSampleImplicitDeclarationsInvalidReturn.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\Interface\IExtendedInheritanceSample.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\Interface\IInheritanceSample.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\Interface\IInheritanceSampleDuplicate.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\Interface\InheritanceInterface_TypeParserTest.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\Interface\InheritanceSampleInterface.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\Interface\InterfaceSampleExplicitDeclarations.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\Interface\InterfaceSampleExplicitDeclarationsInvalidReturn.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\Interface\InterfaceSampleImplicitDeclarations.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\Interface\InterfaceSampleImplicitDeclarationsInvalidReturn.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\Interface\InterfaceSampleImplicitDeclarationsMultipleInheritance.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\MemberMethod\InheritanceMethod_TypeParserTest.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\MemberMethod\InheritanceSampleMethod.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\Property\InheritanceProperty_TypeParserTest.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\Property\InheritanceSampleProperty.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Interface\InterfaceSample.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Interface\Interface_TypeParserTest.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Lambda\LambdaSample.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Lambda\Lambda_TypeParserTest.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\NestedCall\NestedCallSample.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\NestedCall\NestedCall_TypeParserTest.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Parameter\CallByReference\CallByReferenceSample.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Parameter\CallByReference\CallByReference_TypeParserTest.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Parameter\CallByShare\CallByShareSample.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Parameter\CallByShare\CallByShare_TypeParserTest.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Parameter\Out\OutSample.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Parameter\Out\Out_TypeParserTest.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Property\PropertySample.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Property\Property_BlockParserTest.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Return\ReturnSample.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Return\Return_TypeParserTest.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Switch\SwitchSample.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\Switch\Switch_TypeParserTest.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\TryCatchFinally\TryCatchFinallySample.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\TryCatchFinally\TryCatchFinally_TypeParserTest.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\TypeParserTestBase.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\While_loop\WhileLoopSample.vb" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\While_loop\WhileLoop_TypeParserTest.vb" />
+    <Compile Include="Utilities\ClassWithExplicitlyDeclaredMethodReturningFragment.vb" />
+    <Compile Include="Utilities\ClassWithMethodReturningFragment.vb" />
+    <Compile Include="Utilities\FragmentUtilitySample.vb" />
+    <Compile Include="Utilities\FragmentUtilityTest.vb" />
+    <Compile Include="Utilities\InterfaceWithReturnFragment.vb" />
+    <Compile Include="Utilities\IntrospectionUtility_ClassSample.vb" />
+    <Compile Include="Utilities\IntrospectionUtility_ClassTest.vb" />
+    <Compile Include="Utilities\IntrospectionUtility_InterfaceSample.vb" />
+    <Compile Include="Utilities\IntrospectionUtility_InterfaceTest.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Core\InjectionCop.Core.csproj">
+      <Project>{c5a8dd38-1385-4b39-985c-02e5255c3dd3}</Project>
+      <Name>InjectionCop.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+</Project>
