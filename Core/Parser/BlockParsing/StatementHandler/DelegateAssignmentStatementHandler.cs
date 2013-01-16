@@ -23,23 +23,21 @@ using InjectionCop.Config;
 
 namespace InjectionCop.Parser.BlockParsing.StatementHandler
 {
-  public class DelegateStatementHandler
+  public class DelegateAssignmentStatementHandler: StatementHandlerBase<AssignmentStatement>
   {
-    public delegate void InspectCallback(Expression expression);
-
-    private IProblemPipe _problemPipe;
-    private string _returnFragmentType;
-    private IBlacklistManager _blacklistManager;
-
-    public DelegateStatementHandler(IProblemPipe problemPipe, string returnFragmentType, IBlacklistManager blacklistManager)
+    public DelegateAssignmentStatementHandler (
+        IProblemPipe problemPipe,
+        string returnFragmentType,
+        List<ReturnCondition> returnConditions,
+        IBlacklistManager blacklistManager,
+        InspectCallback inspect)
+        : base (problemPipe, returnFragmentType, returnConditions, blacklistManager, inspect)
     {
-      _problemPipe = problemPipe;
-      _returnFragmentType = returnFragmentType;
-      _blacklistManager = blacklistManager;
     }
 
-    public void Handle(AssignmentStatement assignmentStatement, ISymbolTable symbolTable, List<IPreCondition> preConditions, List<string> assignmentTargetVariables, InspectCallback inspect, List<BlockAssignment> blockAssignments)
+    protected override void HandleStatement(Statement statement, ISymbolTable symbolTable, List<IPreCondition> preConditions, List<string> assignmentTargetVariables, List<BlockAssignment> blockAssignments, List<int> successors)
     {
+      AssignmentStatement assignmentStatement = (AssignmentStatement) statement;
       Construct construct = (Construct)assignmentStatement.Source;
       var expression = construct.Operands[1];
       MemberBinding methodBinding;

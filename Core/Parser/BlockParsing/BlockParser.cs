@@ -81,51 +81,35 @@ namespace InjectionCop.Parser.BlockParsing
 
     private void Inspect (Block methodBodyBlock)
     {
-      ReturnStatementHandler returnStatementHandler = new ReturnStatementHandler(_problemPipe, _returnFragmentType, _returnConditions);
-      AssignmentStatementHandler assignmentStatementHandler = new AssignmentStatementHandler(_problemPipe);
-      DelegateStatementHandler delegateStatementHandler = new DelegateStatementHandler(_problemPipe, _returnFragmentType, _blacklistManager);
+      ReturnStatementHandler returnStatementHandler = new ReturnStatementHandler(_problemPipe, _returnFragmentType, _returnConditions, _blacklistManager, Inspect);
+      AssignmentStatementHandler assignmentStatementHandler = new AssignmentStatementHandler(_problemPipe, _returnFragmentType, _returnConditions, _blacklistManager, Inspect);
+      ExpressionStatementHandler expressionStatementHandler = new ExpressionStatementHandler(_problemPipe, _returnFragmentType, _returnConditions, _blacklistManager, Inspect);
+      BranchStatementHandler branchStatementHandler = new BranchStatementHandler(_problemPipe, _returnFragmentType, _returnConditions, _blacklistManager, Inspect);
+      SwitchStatementHandler switchStatementHandler = new SwitchStatementHandler(_problemPipe, _returnFragmentType, _returnConditions, _blacklistManager, Inspect);
 
       foreach (Statement statement in methodBodyBlock.Statements)
       {
         switch (statement.NodeType)
         {
           case NodeType.ExpressionStatement:
-            ExpressionStatement expressionStatement = (ExpressionStatement) statement;
-            Inspect (expressionStatement.Expression);
+            expressionStatementHandler.Handle (statement, _symbolTableParser, _preConditions, _assignmentTargetVariables, _blockAssignments, _successors);
             break;
 
           case NodeType.AssignmentStatement:
-            AssignmentStatement assignmentStatement = (AssignmentStatement) statement;
-            if (assignmentStatement.Source.NodeType == NodeType.Construct
-                && assignmentStatement.Source.Type.NodeType == NodeType.DelegateNode)
-            {
-              delegateStatementHandler.Handle(assignmentStatement, _symbolTableParser, _preConditions, _assignmentTargetVariables, Inspect, _blockAssignments);
-            }
-            else
-            {
-              assignmentStatementHandler.Handle(assignmentStatement, _symbolTableParser, _preConditions, _assignmentTargetVariables, Inspect, _blockAssignments);
-            }
+            assignmentStatementHandler.Handle  (statement, _symbolTableParser, _preConditions, _assignmentTargetVariables, _blockAssignments, _successors);
             break;
 
           case NodeType.Return:
-            ReturnNode returnNode = (ReturnNode) statement;
-            returnStatementHandler.Handle(returnNode, _symbolTableParser, _preConditions, _assignmentTargetVariables, Inspect);
+            returnStatementHandler.Handle(statement, _symbolTableParser, _preConditions, _assignmentTargetVariables, _blockAssignments, _successors);
             break;
 
           case NodeType.Branch:
-            Branch branch = (Branch) statement;
-            _successors.Add (branch.Target.UniqueKey);
+            branchStatementHandler.Handle(statement, _symbolTableParser, _preConditions, _assignmentTargetVariables, _blockAssignments, _successors);
             break;
 
           case NodeType.SwitchInstruction:
-            SwitchInstruction switchInstruction = (SwitchInstruction) statement;
-            foreach (Block caseBlock in switchInstruction.Targets)
-            {
-              _successors.Add (caseBlock.UniqueKey);
-            }
+            switchStatementHandler.Handle(statement, _symbolTableParser, _preConditions, _assignmentTargetVariables, _blockAssignments, _successors);
             break;
-          //default:
-            // exception werfen + logging
         }
       }
     }

@@ -42,6 +42,7 @@ namespace InjectionCop.Parser.TypeParsing
       ArgumentUtility.CheckNotNull ("type", type);
       if (!IntrospectionUtility.IsCompilerGenerated (type))
       {
+        InitializeBlacklistManager (type);
         CheckMembers (type);
       }
       return Problems;
@@ -49,7 +50,6 @@ namespace InjectionCop.Parser.TypeParsing
 
     private void CheckMembers (TypeNode type)
     {
-      InitializeBlacklistManager (type);
       foreach (Member member in type.Members)
       {
         if (member is Method && !FragmentUtility.IsFragmentGenerator ((Method) member))

@@ -14,32 +14,31 @@
 
 using System;
 using System.Collections.Generic;
+using InjectionCop.Config;
 using Microsoft.FxCop.Sdk;
 using InjectionCop.Parser.ProblemPipe;
 using InjectionCop.Utilities;
 
 namespace InjectionCop.Parser.BlockParsing.StatementHandler
 {
-  public class ReturnStatementHandler
+  public class ReturnStatementHandler: StatementHandlerBase<ReturnNode>
   {
-    public delegate void InspectCallback(Expression expression);
-
-    private IProblemPipe _problemPipe;
-    private string _returnFragmentType;
-    private List<ReturnCondition> _returnConditions;
-
-    public ReturnStatementHandler(IProblemPipe problemPipe, string returnFragmentType, List<ReturnCondition> returnConditions)
+    public ReturnStatementHandler (
+        IProblemPipe problemPipe,
+        string returnFragmentType,
+        List<ReturnCondition> returnConditions,
+        IBlacklistManager blacklistManager,
+        InspectCallback inspect)
+        : base (problemPipe, returnFragmentType, returnConditions, blacklistManager, inspect)
     {
-      _problemPipe = problemPipe;
-      _returnFragmentType = returnFragmentType;
-      _returnConditions = returnConditions;
     }
 
-    public void Handle(ReturnNode returnNode, ISymbolTable symbolTable, List<IPreCondition> preConditions, List<string> assignmentTargetVariables, InspectCallback inspect)
+    protected override void HandleStatement(Statement statement, ISymbolTable symbolTable, List<IPreCondition> preConditions, List<string> assignmentTargetVariables, List<BlockAssignment> blockAssignments, List<int> successors)
     {
+      ReturnNode returnNode = (ReturnNode) statement;
       if (returnNode.Expression != null)
       {
-        inspect(returnNode.Expression);
+        _inspect(returnNode.Expression);
         string returnSymbol = IntrospectionUtility.GetVariableName(returnNode.Expression);
         if (returnSymbol != null)
         {

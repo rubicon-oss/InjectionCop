@@ -20,24 +20,37 @@ using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser.BlockParsing.StatementHandler
 {
-  public class AssignmentStatementHandler: StatementHandlerBase<AssignmentStatement>
+  public abstract class StatementHandlerBase<T> : IStatementHandler
+      where T : Statement
   {
-    private readonly DefaultAssignmentStatementHandler _defaultAssignmentStatementHandler;
-    private readonly DelegateAssignmentStatementHandler _delegateAssignmentStatementHandler;
+    public delegate void InspectCallback (Expression expression);
 
-    public AssignmentStatementHandler (
+    protected readonly IProblemPipe _problemPipe;
+    protected readonly string _returnFragmentType;
+    protected readonly List<ReturnCondition> _returnConditions;
+    protected readonly IBlacklistManager _blacklistManager;
+    protected InspectCallback _inspect;
+
+    protected StatementHandlerBase (
         IProblemPipe problemPipe,
         string returnFragmentType,
         List<ReturnCondition> returnConditions,
         IBlacklistManager blacklistManager,
         InspectCallback inspect)
-        : base (problemPipe, returnFragmentType, returnConditions, blacklistManager, inspect)
     {
-      _defaultAssignmentStatementHandler = new DefaultAssignmentStatementHandler(_problemPipe, _returnFragmentType, _returnConditions, _blacklistManager, inspect);
-      _delegateAssignmentStatementHandler = new DelegateAssignmentStatementHandler(_problemPipe, _returnFragmentType, _returnConditions, _blacklistManager, inspect);
+      _problemPipe = problemPipe;
+      _returnFragmentType = returnFragmentType;
+      _returnConditions = returnConditions;
+      _blacklistManager = blacklistManager;
+      _inspect = inspect;
     }
 
-    protected override void HandleStatement (
+    public Type HandledStatementType
+    {
+      get { return typeof (T); }
+    }
+
+    public void Handle (
         Statement statement,
         ISymbolTable symbolTable,
         List<IPreCondition> preConditions,
@@ -45,16 +58,24 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
         List<BlockAssignment> blockAssignments,
         List<int> successors)
     {
-      AssignmentStatement assignmentStatement = (AssignmentStatement) statement;
-      if (assignmentStatement.Source.NodeType == NodeType.Construct
-          && assignmentStatement.Source.Type.NodeType == NodeType.DelegateNode)
+      if (statement is T)
       {
-        _delegateAssignmentStatementHandler.Handle (statement, symbolTable, preConditions, assignmentTargetVariables, blockAssignments, successors);
+        HandleStatement (statement, symbolTable, preConditions, assignmentTargetVariables, blockAssignments, successors);
       }
       else
       {
-        _defaultAssignmentStatementHandler.Handle (statement, symbolTable, preConditions, assignmentTargetVariables, blockAssignments, successors);
+        throw new InjectionCopException ("Expected to handle " + typeof (T).Name + " but got " + statement.GetType().Name);
       }
     }
+
+    protected abstract void HandleStatement (
+        Statement statement,
+        ISymbolTable symbolTable,
+        List<IPreCondition> preConditions,
+        List<string> assignmentTargetVariables,
+        List<BlockAssignment> blockAssignments,
+        List<int> successors);
   }
 }
+
+
