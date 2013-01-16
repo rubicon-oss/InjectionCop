@@ -60,6 +60,7 @@
     <Compile Include="Fragment\TrustedSqlGeneration.cs" />
     <Compile Include="Config\IBlacklistManager.cs" />
     <Compile Include="Config\IDbCommandBlacklistManagerStub.cs" />
+    <Compile Include="Parser\BlockParsing\MethodCallAnalyzer.cs" />
     <Compile Include="Parser\BlockParsing\PreConditionBase.cs" />
     <Compile Include="Parser\BlockParsing\BlockAssignment.cs" />
     <Compile Include="Parser\BlockParsing\EqualityPreCondition.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="Parser\BlockParsing\StatementHandler\IStatementHandler.cs" />
     <Compile Include="Parser\BlockParsing\StatementHandler\ReturnStatementHandler.cs" />
     <Compile Include="Parser\BlockParsing\StatementHandler\StatementHandlerBase.cs" />
+    <Compile Include="Parser\BlockParsing\StatementHandler\StatementHandlerDictionaryBuilder.cs" />
     <Compile Include="Parser\BlockParsing\StatementHandler\SwitchStatementHandler.cs" />
     <Compile Include="Parser\ISymbolTable.cs" />
     <Compile Include="Parser\MethodParsing\EmbeddedInitialSymbolTableBuilder.cs" />

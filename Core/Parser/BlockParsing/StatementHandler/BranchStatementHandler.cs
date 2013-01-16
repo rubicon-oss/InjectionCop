@@ -22,7 +22,7 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
 {
   public class BranchStatementHandler: StatementHandlerBase<Branch>
   {
-    public BranchStatementHandler (IProblemPipe problemPipe, string returnFragmentType, List<ReturnCondition> returnConditions, IBlacklistManager blacklistManager, InspectCallback inspect)
+    public BranchStatementHandler (IProblemPipe problemPipe, string returnFragmentType, List<ReturnCondition> returnConditions, IBlacklistManager blacklistManager, BlockParser.InspectCallback inspect)
         : base(problemPipe, returnFragmentType, returnConditions, blacklistManager, inspect)
     {
     }

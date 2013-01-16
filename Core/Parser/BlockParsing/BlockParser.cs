@@ -16,7 +16,6 @@ using System;
 using System.Collections.Generic;
 using InjectionCop.Config;
 using InjectionCop.Parser.ProblemPipe;
-using InjectionCop.Parser.MethodParsing;
 using InjectionCop.Parser.BlockParsing.StatementHandler;
 using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
@@ -28,27 +27,30 @@ namespace InjectionCop.Parser.BlockParsing
   /// </summary>
   public class BlockParser
   {
+    public delegate void InspectCallback (Expression expression);
+
+    private readonly IBlacklistManager _blacklistManager;
+    private readonly IProblemPipe _problemPipe;
+    private readonly string _returnFragmentType;
+    private readonly List<ReturnCondition> _returnConditions;
+    private readonly Dictionary<Type, IStatementHandler> _statementHandlers;
+    private readonly MethodCallAnalyzer _methodCallAnalyzer;
+
     private ISymbolTable _symbolTableParser;
     private List<IPreCondition> _preConditions;
     private List<int> _successors;
     private List<BlockAssignment> _blockAssignments;
-    private readonly IBlacklistManager _blacklistManager;
-    private readonly IProblemPipe _problemPipe;
-    private readonly string _returnFragmentType;
     private List<string> _assignmentTargetVariables;
-    private List<ReturnCondition> _returnConditions;
-
+    
     public BlockParser (IBlacklistManager blacklistManager, IProblemPipe problemPipe, string returnFragmentType, List<ReturnCondition> returnConditions)
     {
       _blacklistManager = ArgumentUtility.CheckNotNull ("blacklistManager", blacklistManager);
       _problemPipe = ArgumentUtility.CheckNotNull ("typeParser", problemPipe);
-      _symbolTableParser = new SymbolTable (blacklistManager);
-      _preConditions = new List<IPreCondition>();
-      _successors = new List<int>();
-      _blockAssignments = new List<BlockAssignment>();
       _returnFragmentType = ArgumentUtility.CheckNotNullOrEmpty("returnFragmentType", returnFragmentType);
-      _assignmentTargetVariables = new List<string>();
       _returnConditions = returnConditions;
+      StatementHandlerDictionaryBuilder handlerBuilder = new StatementHandlerDictionaryBuilder(_blacklistManager, _problemPipe, _returnFragmentType, _returnConditions, Inspect);
+      _statementHandlers = handlerBuilder.Build();
+      _methodCallAnalyzer = new MethodCallAnalyzer (_problemPipe);
     }
 
     public BasicBlock Parse (Block block)
@@ -81,35 +83,12 @@ namespace InjectionCop.Parser.BlockParsing
 
     private void Inspect (Block methodBodyBlock)
     {
-      ReturnStatementHandler returnStatementHandler = new ReturnStatementHandler(_problemPipe, _returnFragmentType, _returnConditions, _blacklistManager, Inspect);
-      AssignmentStatementHandler assignmentStatementHandler = new AssignmentStatementHandler(_problemPipe, _returnFragmentType, _returnConditions, _blacklistManager, Inspect);
-      ExpressionStatementHandler expressionStatementHandler = new ExpressionStatementHandler(_problemPipe, _returnFragmentType, _returnConditions, _blacklistManager, Inspect);
-      BranchStatementHandler branchStatementHandler = new BranchStatementHandler(_problemPipe, _returnFragmentType, _returnConditions, _blacklistManager, Inspect);
-      SwitchStatementHandler switchStatementHandler = new SwitchStatementHandler(_problemPipe, _returnFragmentType, _returnConditions, _blacklistManager, Inspect);
-
       foreach (Statement statement in methodBodyBlock.Statements)
       {
-        switch (statement.NodeType)
+        if (_statementHandlers.ContainsKey (statement.GetType()))
         {
-          case NodeType.ExpressionStatement:
-            expressionStatementHandler.Handle (statement, _symbolTableParser, _preConditions, _assignmentTargetVariables, _blockAssignments, _successors);
-            break;
-
-          case NodeType.AssignmentStatement:
-            assignmentStatementHandler.Handle  (statement, _symbolTableParser, _preConditions, _assignmentTargetVariables, _blockAssignments, _successors);
-            break;
-
-          case NodeType.Return:
-            returnStatementHandler.Handle(statement, _symbolTableParser, _preConditions, _assignmentTargetVariables, _blockAssignments, _successors);
-            break;
-
-          case NodeType.Branch:
-            branchStatementHandler.Handle(statement, _symbolTableParser, _preConditions, _assignmentTargetVariables, _blockAssignments, _successors);
-            break;
-
-          case NodeType.SwitchInstruction:
-            switchStatementHandler.Handle(statement, _symbolTableParser, _preConditions, _assignmentTargetVariables, _blockAssignments, _successors);
-            break;
+          _statementHandlers[statement.GetType()].Handle (
+              statement, _symbolTableParser, _preConditions, _assignmentTargetVariables, _blockAssignments, _successors);
         }
       }
     }
@@ -118,13 +97,8 @@ namespace InjectionCop.Parser.BlockParsing
     {
       if (expression is MethodCall)
       {
-        MethodCall methodCall = (MethodCall) expression;
-        CheckParameters (methodCall);
-        UpdateOutAndRefSymbols (methodCall);
-        foreach (Expression operand in methodCall.Operands)
-        {
-          Inspect (operand);
-        }
+        var methodCall = (MethodCall) expression;
+        Inspect (methodCall);
       }
       else if (expression is UnaryExpression)
       {
@@ -138,70 +112,14 @@ namespace InjectionCop.Parser.BlockParsing
         Inspect (binaryExpression.Operand2);
       }
     }
-    
-    private void CheckParameters (MethodCall methodCall)
+
+    private void Inspect (MethodCall methodCall)
     {
-      List<IPreCondition> additionalPreConditions;
-      List<ProblemMetadata> parameterProblems;
-      ParametersSafe (methodCall, out additionalPreConditions, out parameterProblems);
-      parameterProblems.ForEach (parameterProblem => _problemPipe.AddProblem (parameterProblem));
-      _preConditions.AddRange (additionalPreConditions);
-    }
-
-    private void ParametersSafe(MethodCall methodCall, out List<IPreCondition> requireSafenessParameters, out List<ProblemMetadata> parameterProblems)
-    {
-      ArgumentUtility.CheckNotNull("methodCall", methodCall);
-
-      requireSafenessParameters = new List<IPreCondition>();
-      parameterProblems = new List<ProblemMetadata>();
-      Method calleeMethod = IntrospectionUtility.ExtractMethod(methodCall);
-      string[] parameterFragmentTypes = _symbolTableParser.InferParameterFragmentTypes(calleeMethod);
-
-      for (int i = 0; i < parameterFragmentTypes.Length; i++)
+      _methodCallAnalyzer.Analyze (methodCall, _symbolTableParser, _preConditions);
+      foreach (Expression operand in methodCall.Operands)
       {
-        Expression operand = methodCall.Operands[i];
-        string operandFragmentType = _symbolTableParser.InferFragmentType(operand);
-        string parameterFragmentType = parameterFragmentTypes[i];
-
-        if (operandFragmentType != SymbolTable.LITERAL
-            && parameterFragmentType != SymbolTable.EMPTY_FRAGMENT
-            && operandFragmentType != parameterFragmentType)
-        {
-          string variableName;
-          ProblemMetadata problemMetadata = new ProblemMetadata(operand.UniqueKey, operand.SourceContext, parameterFragmentType, operandFragmentType);
-          if (IntrospectionUtility.IsVariable(operand, out variableName)
-              && !_symbolTableParser.Contains(variableName))
-          {
-            requireSafenessParameters.Add(new AssignabilityPreCondition(variableName, parameterFragmentType, problemMetadata));
-          }
-          else
-          {
-            parameterProblems.Add(problemMetadata);
-          }
-        }
+        Inspect (operand);
       }
-    }
-
-    private void UpdateOutAndRefSymbols (MethodCall methodCall)
-    {
-      Method method = IntrospectionUtility.ExtractMethod (methodCall);
-      for (int i = 0; i < methodCall.Operands.Count; i++)
-      {
-        if (IntrospectionUtility.IsVariable (methodCall.Operands[i])
-            && (method.Parameters[i].IsOut || method.Parameters[i].Type is Reference))
-        {
-          string symbol = IntrospectionUtility.GetVariableName (methodCall.Operands[i]);
-          if (FragmentUtility.ContainsFragment (method.Parameters[i].Attributes))
-          {
-            string fragmentType = FragmentUtility.GetFragmentType (method.Parameters[i].Attributes);
-            _symbolTableParser.MakeSafe (symbol, fragmentType);
-          }
-          else
-          {
-            _symbolTableParser.MakeUnsafe (symbol);
-          }
-        }
-      }    
     }
   }
 }

@@ -77,6 +77,7 @@
     <Compile Include="Config\LayeredConfigurationAdapterTest.cs" />
     <Compile Include="Parser\BlockParsing\AssignabilityPreConditionTest.cs" />
     <Compile Include="Parser\BlockParsing\EqualityPreConditionTest.cs" />
+    <Compile Include="Parser\BlockParsing\StatementHandler\StatementHandlerDictionaryBuilderTest.cs" />
     <Compile Include="Parser\MethodParsing\ProblemPipeStub.cs" />
     <Compile Include="Parser\ProblemPipe\ProblemDuplicateFilterTest.cs" />
     <Compile Include="Parser\SymbolTableTest.cs" />

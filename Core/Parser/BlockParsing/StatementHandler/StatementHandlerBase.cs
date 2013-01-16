@@ -23,20 +23,20 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
   public abstract class StatementHandlerBase<T> : IStatementHandler
       where T : Statement
   {
-    public delegate void InspectCallback (Expression expression);
+    
 
     protected readonly IProblemPipe _problemPipe;
     protected readonly string _returnFragmentType;
     protected readonly List<ReturnCondition> _returnConditions;
     protected readonly IBlacklistManager _blacklistManager;
-    protected InspectCallback _inspect;
+    protected BlockParser.InspectCallback _inspect;
 
     protected StatementHandlerBase (
         IProblemPipe problemPipe,
         string returnFragmentType,
         List<ReturnCondition> returnConditions,
         IBlacklistManager blacklistManager,
-        InspectCallback inspect)
+        BlockParser.InspectCallback inspect)
     {
       _problemPipe = problemPipe;
       _returnFragmentType = returnFragmentType;

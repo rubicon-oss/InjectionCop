@@ -30,7 +30,7 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
         string returnFragmentType,
         List<ReturnCondition> returnConditions,
         IBlacklistManager blacklistManager,
-        InspectCallback inspect)
+        BlockParser.InspectCallback inspect)
         : base (problemPipe, returnFragmentType, returnConditions, blacklistManager, inspect)
     {
       _defaultAssignmentStatementHandler = new DefaultAssignmentStatementHandler(_problemPipe, _returnFragmentType, _returnConditions, _blacklistManager, inspect);
