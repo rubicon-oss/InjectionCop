@@ -14,41 +14,47 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace InjectionCop.Utilities
 {
   public class MethodProfilingResults
   {
-    private List<KeyValuePair<string, TimeSpan>> _results;
-    private int _outputEntries;
+    private const int c_MaxEntries = 10;
+    private const double c_Epsilon = 1.0;
+    
+    private readonly List<KeyValuePair<string, TimeSpan>> _results;
+    
 
-    public MethodProfilingResults (int outputEntries)
+    public MethodProfilingResults ()
     {
-      _outputEntries = outputEntries;
       _results = new List<KeyValuePair<string, TimeSpan>>();
     }
 
     public void Add (string fullName, TimeSpan elapsed)
     {
-      _results.Add (new KeyValuePair<string, TimeSpan> (fullName, elapsed));
-    }
-
-    public void Write ()
-    {
-      SortResults();
-      Console.WriteLine ("### BEGIN PROFILING RESULTS ###");
-      for (int i = 0; i < _outputEntries && i < _results.Count; i++)
+      if (elapsed.TotalMilliseconds > c_Epsilon)
       {
-        Console.WriteLine (Convert (_results[i]));
+        _results.Add (new KeyValuePair<string, TimeSpan>(fullName, elapsed));
+        SortResults();
+        TrimResults();
       }
-      Console.WriteLine ("### END PROFILING RESULTS ###");
     }
-
-    private string Convert (KeyValuePair<string, TimeSpan> entry)
+    
+    public override string ToString ()
     {
-      return entry.Value.TotalSeconds + "s: " + entry.Key;
+      StringBuilder profilingResults = new StringBuilder ("--- PROFILING RESULTS ---");
+      profilingResults.Append (System.Environment.NewLine);
+      foreach (var entry in _results)
+      {
+        profilingResults.Append (Convert(entry));
+          profilingResults.Append (System.Environment.NewLine);
+      }
+      profilingResults.Append ("--- END PROFILING RESULTS ---");
+      profilingResults.Append (System.Environment.NewLine);
+      return profilingResults.ToString();
     }
-
+    
     private void SortResults ()
     {
       _results.Sort (
@@ -57,6 +63,19 @@ namespace InjectionCop.Utilities
                                 : pairA.Value == pairB.Value
                                       ? 0
                                       : -1);
+    }
+
+    private void TrimResults ()
+    {
+      if (_results.Count > c_MaxEntries)
+      {
+        _results.RemoveRange (c_MaxEntries, _results.Count - c_MaxEntries);
+      }
+    }
+
+    private string Convert (KeyValuePair<string, TimeSpan> entry)
+    {
+      return entry.Value.TotalSeconds + " s: " + entry.Key;
     }
   }
 }

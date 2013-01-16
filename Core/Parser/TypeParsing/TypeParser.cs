@@ -35,7 +35,6 @@ namespace InjectionCop.Parser.TypeParsing
         : base ("TypeParser")
     {
       _problemFilter = new ProblemDuplicateFilter (this);
-      _methodProfilingResults = new MethodProfilingResults (20);
     }
 
     public override ProblemCollection Check (TypeNode type)
@@ -43,21 +42,26 @@ namespace InjectionCop.Parser.TypeParsing
       ArgumentUtility.CheckNotNull ("type", type);
       if (!IntrospectionUtility.IsCompilerGenerated (type))
       {
-        InitializeBlacklistManager (type);
-        foreach (Member member in type.Members)
-        {
-          if (member is Method && !FragmentUtility.IsFragmentGenerator((Method)member))
-          {
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-            Method method = (Method) member;
-            Parse (method);
-            stopwatch.Stop();
-            _methodProfilingResults.Add (method.FullName, stopwatch.Elapsed);
-          }
-        }
+        CheckMembers (type);
       }
       return Problems;
+    }
+
+    private void CheckMembers (TypeNode type)
+    {
+      InitializeBlacklistManager (type);
+      foreach (Member member in type.Members)
+      {
+        if (member is Method && !FragmentUtility.IsFragmentGenerator ((Method) member))
+        {
+          Stopwatch stopwatch = new Stopwatch();
+          stopwatch.Start();
+          Method method = (Method) member;
+          Parse (method);
+          stopwatch.Stop();
+          _methodProfilingResults.Add (method.FullName, stopwatch.Elapsed);
+        }
+      }
     }
 
     public void InitializeBlacklistManager (TypeNode type)
@@ -83,19 +87,16 @@ namespace InjectionCop.Parser.TypeParsing
       methodParser.Parse (methodGraphBuilder, parameterSymbolTableBuilder);
     }
 
+    public override void BeforeAnalysis ()
+    {
+      base.BeforeAnalysis ();
+      _methodProfilingResults = new MethodProfilingResults ();
+    }
+
     public override void AfterAnalysis ()
     {
-      base.AfterAnalysis ();
-      try
-      {
-        _methodProfilingResults.Write();
-      }
-      catch (Exception ex)
-      {
-        Console.WriteLine ("afteranalysis failed");
-        Console.WriteLine (ex.StackTrace);
-      }
-      
+      base.AfterAnalysis();
+      Console.WriteLine(_methodProfilingResults.ToString());
     }
   }
 }

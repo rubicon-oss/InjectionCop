@@ -29,6 +29,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests
     {
       _typeParser = new TypeParser ();
       _typeParser.InitializeBlacklistManager (IntrospectionUtility.TypeNodeFactory<TypeParserTestBase>());
+      _typeParser.BeforeAnalysis();
     }
   }
 }
