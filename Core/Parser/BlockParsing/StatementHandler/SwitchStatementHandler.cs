@@ -14,16 +14,22 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using InjectionCop.Config;
 using InjectionCop.Parser.ProblemPipe;
 using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser.BlockParsing.StatementHandler
 {
-  public class SwitchStatementHandler: StatementHandlerBase<SwitchInstruction>
+  public class SwitchStatementHandler : StatementHandlerBase<SwitchInstruction>
   {
-    public SwitchStatementHandler (IProblemPipe problemPipe, string returnFragmentType, List<ReturnCondition> returnConditions, IBlacklistManager blacklistManager, BlockParser.InspectCallback inspect)
-        : base(problemPipe, returnFragmentType, returnConditions, blacklistManager, inspect)
+    public SwitchStatementHandler (
+        IProblemPipe problemPipe,
+        string returnFragmentType,
+        List<ReturnCondition> returnConditions,
+        IBlacklistManager blacklistManager,
+        BlockParser.InspectCallback inspect)
+        : base (problemPipe, returnFragmentType, returnConditions, blacklistManager, inspect)
     {
     }
 
@@ -36,10 +42,7 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
         List<int> successors)
     {
       SwitchInstruction switchInstruction = (SwitchInstruction) statement;
-      foreach (Block caseBlock in switchInstruction.Targets)
-      {
-        successors.Add (caseBlock.UniqueKey);
-      }
+      successors.AddRange (switchInstruction.Targets.Select (caseBlock => caseBlock.UniqueKey));
     }
   }
 }

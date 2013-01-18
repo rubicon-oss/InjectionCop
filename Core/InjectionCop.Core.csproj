@@ -66,10 +66,11 @@
     <Compile Include="Parser\BlockParsing\EqualityPreCondition.cs" />
     <Compile Include="Parser\BlockParsing\IPreCondition.cs" />
     <Compile Include="Parser\BlockParsing\ReturnCondition.cs" />
-    <Compile Include="Parser\BlockParsing\StatementHandler\AssignmentStatementHandler.cs" />
-    <Compile Include="Parser\BlockParsing\StatementHandler\DefaultAssignmentStatementHandler.cs" />
+    <Compile Include="Parser\BlockParsing\StatementHandler\AssignmentStatementHandler\AssignmentStatementHandlerController.cs" />
+    <Compile Include="Parser\BlockParsing\StatementHandler\AssignmentStatementHandler\DefaultAssignmentStatementHandler.cs" />
+    <Compile Include="Parser\BlockParsing\StatementHandler\AssignmentStatementHandler\IndexerAssignmentStatementHandler.cs" />
     <Compile Include="Parser\BlockParsing\StatementHandler\BranchStatementHandler.cs" />
-    <Compile Include="Parser\BlockParsing\StatementHandler\DelegateAssignmentStatementHandler.cs" />
+    <Compile Include="Parser\BlockParsing\StatementHandler\AssignmentStatementHandler\DelegateAssignmentStatementHandler.cs" />
     <Compile Include="Parser\BlockParsing\StatementHandler\ExpressionStatementHandler.cs" />
     <Compile Include="Parser\BlockParsing\StatementHandler\IStatementHandler.cs" />
     <Compile Include="Parser\BlockParsing\StatementHandler\ReturnStatementHandler.cs" />

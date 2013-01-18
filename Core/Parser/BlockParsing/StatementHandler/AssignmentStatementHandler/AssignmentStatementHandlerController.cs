@@ -18,14 +18,15 @@ using InjectionCop.Config;
 using InjectionCop.Parser.ProblemPipe;
 using Microsoft.FxCop.Sdk;
 
-namespace InjectionCop.Parser.BlockParsing.StatementHandler
+namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementHandler
 {
-  public class AssignmentStatementHandler: StatementHandlerBase<AssignmentStatement>
+  public class AssignmentStatementHandlerController : StatementHandlerBase<AssignmentStatement>
   {
     private readonly DefaultAssignmentStatementHandler _defaultAssignmentStatementHandler;
     private readonly DelegateAssignmentStatementHandler _delegateAssignmentStatementHandler;
+    private readonly IndexerAssignmentStatementHandler _indexerAssignmentStatementHandler;
 
-    public AssignmentStatementHandler (
+    public AssignmentStatementHandlerController (
         IProblemPipe problemPipe,
         string returnFragmentType,
         List<ReturnCondition> returnConditions,
@@ -33,8 +34,12 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
         BlockParser.InspectCallback inspect)
         : base (problemPipe, returnFragmentType, returnConditions, blacklistManager, inspect)
     {
-      _defaultAssignmentStatementHandler = new DefaultAssignmentStatementHandler(_problemPipe, _returnFragmentType, _returnConditions, _blacklistManager, inspect);
-      _delegateAssignmentStatementHandler = new DelegateAssignmentStatementHandler(_problemPipe, _returnFragmentType, _returnConditions, _blacklistManager, inspect);
+      _defaultAssignmentStatementHandler = new DefaultAssignmentStatementHandler (
+          _problemPipe, _returnFragmentType, _returnConditions, _blacklistManager, inspect);
+      _delegateAssignmentStatementHandler = new DelegateAssignmentStatementHandler (
+          _problemPipe, _returnFragmentType, _returnConditions, _blacklistManager, inspect);
+      _indexerAssignmentStatementHandler = new IndexerAssignmentStatementHandler (
+          _problemPipe, _returnFragmentType, _returnConditions, _blacklistManager, inspect);
     }
 
     protected override void HandleStatement (
@@ -46,10 +51,16 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
         List<int> successors)
     {
       AssignmentStatement assignmentStatement = (AssignmentStatement) statement;
-      if (assignmentStatement.Source.NodeType == NodeType.Construct
-          && assignmentStatement.Source.Type.NodeType == NodeType.DelegateNode)
+      bool sourceIsDelegate = assignmentStatement.Source.NodeType == NodeType.Construct
+                              && assignmentStatement.Source.Type.NodeType == NodeType.DelegateNode;
+
+      if (sourceIsDelegate)
       {
         _delegateAssignmentStatementHandler.Handle (statement, symbolTable, preConditions, assignmentTargetVariables, blockAssignments, successors);
+      }
+      else if (assignmentStatement.Target is Indexer)
+      {
+        _indexerAssignmentStatementHandler.Handle (statement, symbolTable, preConditions, assignmentTargetVariables, blockAssignments, successors);
       }
       else
       {

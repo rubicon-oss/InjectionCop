@@ -18,6 +18,7 @@ using InjectionCop.Config;
 using InjectionCop.Parser;
 using InjectionCop.Parser.BlockParsing;
 using InjectionCop.Parser.BlockParsing.StatementHandler;
+using InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementHandler;
 using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
 using NUnit.Framework;
@@ -34,7 +35,7 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing.StatementHandler
     {
       MockRepository mocks = new MockRepository();
       IBlacklistManager blacklistManager = mocks.Stub<IBlacklistManager>();
-      StatementHandlerBase<AssignmentStatement> handler = new AssignmentStatementHandler (
+      StatementHandlerBase<AssignmentStatement> handler = new AssignmentStatementHandlerController (
           new ProblemPipeStub(), "returnFragmentType", new List<ReturnCondition>(), blacklistManager, delegate { });
       Method sampleMethod = IntrospectionUtility.MethodFactory<StatementHandlerBaseSample> ("ContainsReturnStatement");
       Block sampleBlock = (Block) sampleMethod.Body.Statements[1];

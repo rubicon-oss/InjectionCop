@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using InjectionCop.Config;
+using InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementHandler;
 using InjectionCop.Parser.ProblemPipe;
 using InjectionCop.Utilities;
 
@@ -44,13 +45,19 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
 
     public Dictionary<Type, IStatementHandler> Build ()
     {
-      ReturnStatementHandler returnStatementHandler = new ReturnStatementHandler(_problemPipe, _returnFragmentType, _returnConditions, _blacklistManager, _inspect);
-      AssignmentStatementHandler assignmentStatementHandler = new AssignmentStatementHandler(_problemPipe, _returnFragmentType, _returnConditions, _blacklistManager, _inspect);
-      ExpressionStatementHandler expressionStatementHandler = new ExpressionStatementHandler(_problemPipe, _returnFragmentType, _returnConditions, _blacklistManager, _inspect);
-      BranchStatementHandler branchStatementHandler = new BranchStatementHandler(_problemPipe, _returnFragmentType, _returnConditions, _blacklistManager, _inspect);
-      SwitchStatementHandler switchStatementHandler = new SwitchStatementHandler(_problemPipe, _returnFragmentType, _returnConditions, _blacklistManager, _inspect);
-
       Dictionary<Type, IStatementHandler> statementHandlers = new Dictionary<Type, IStatementHandler>();
+
+      ReturnStatementHandler returnStatementHandler = new ReturnStatementHandler (
+          _problemPipe, _returnFragmentType, _returnConditions, _blacklistManager, _inspect);
+      AssignmentStatementHandlerController assignmentStatementHandler = new AssignmentStatementHandlerController (
+          _problemPipe, _returnFragmentType, _returnConditions, _blacklistManager, _inspect);
+      ExpressionStatementHandler expressionStatementHandler = new ExpressionStatementHandler (
+          _problemPipe, _returnFragmentType, _returnConditions, _blacklistManager, _inspect);
+      BranchStatementHandler branchStatementHandler = new BranchStatementHandler (
+          _problemPipe, _returnFragmentType, _returnConditions, _blacklistManager, _inspect);
+      SwitchStatementHandler switchStatementHandler = new SwitchStatementHandler (
+          _problemPipe, _returnFragmentType, _returnConditions, _blacklistManager, _inspect);
+
       statementHandlers[returnStatementHandler.HandledStatementType] = returnStatementHandler;
       statementHandlers[assignmentStatementHandler.HandledStatementType] = assignmentStatementHandler;
       statementHandlers[expressionStatementHandler.HandledStatementType] = expressionStatementHandler;

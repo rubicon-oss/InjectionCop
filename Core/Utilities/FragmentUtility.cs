@@ -43,7 +43,6 @@ namespace InjectionCop.Utilities
 
     public static string GetFragmentType (AttributeNodeCollection attributes)
     {
-      //ArgumentUtility.CheckNotNull ("attributes", attributes);
       string fragmentType = SymbolTable.EMPTY_FRAGMENT;
       if (attributes != null && ContainsFragment (attributes))
       {
@@ -183,9 +182,15 @@ namespace InjectionCop.Utilities
     public static bool IsFragmentGenerator(Method method)
     {
       ArgumentUtility.CheckNotNull("method", method);
-      bool isFragmentGenerator;
-      isFragmentGenerator = ContainsFragmentGeneratorAttribute(method.Attributes);
+      bool isFragmentGenerator = ContainsFragmentGeneratorAttribute(method.Attributes);
       return isFragmentGenerator;
+    }
+
+    public static bool FragmentTypesAssignable (string givenFragmentType, string targetFragmentType)
+    {
+      return targetFragmentType == givenFragmentType
+             || givenFragmentType == SymbolTable.LITERAL
+             || targetFragmentType == SymbolTable.EMPTY_FRAGMENT;
     }
 
     private static bool ContainsFragmentGeneratorAttribute(AttributeNodeCollection attributes)
@@ -193,7 +198,7 @@ namespace InjectionCop.Utilities
       bool containsFragmentGeneratorAttribute = false;
       if (attributes != null)
       {
-        containsFragmentGeneratorAttribute = attributes.Any(attribute => IsFragmentGeneratorAttribute(attribute));
+        containsFragmentGeneratorAttribute = attributes.Any(IsFragmentGeneratorAttribute);
       }
       return containsFragmentGeneratorAttribute;
     }

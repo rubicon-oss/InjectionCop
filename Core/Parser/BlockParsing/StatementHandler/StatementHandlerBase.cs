@@ -23,8 +23,6 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
   public abstract class StatementHandlerBase<T> : IStatementHandler
       where T : Statement
   {
-    
-
     protected readonly IProblemPipe _problemPipe;
     protected readonly string _returnFragmentType;
     protected readonly List<ReturnCondition> _returnConditions;

@@ -80,7 +80,7 @@ namespace InjectionCop.Parser
         Indexer indexer = (Indexer) expression;
         fragmentType = InferFragmentType (indexer.Object);
       }
-
+     
       return fragmentType;
     }
 
@@ -89,15 +89,7 @@ namespace InjectionCop.Parser
       ArgumentUtility.CheckNotNull("symbolName", symbolName);
       ArgumentUtility.CheckNotNull("fragmentType", fragmentType);
 
-      bool fragmentsMatch = false;
-      bool sourceIsLiteral = false;
-      bool assignmentOnEmptyFragment = fragmentType == EMPTY_FRAGMENT;
-      if (_safenessMap.ContainsKey(symbolName))
-      {
-        fragmentsMatch = _safenessMap[symbolName] == fragmentType;
-        sourceIsLiteral = _safenessMap[symbolName] == LITERAL;
-      }
-      return fragmentsMatch || sourceIsLiteral || assignmentOnEmptyFragment;
+      return FragmentUtility.FragmentTypesAssignable (GetFragmentType(symbolName), fragmentType);
     }
 
     public string[] InferParameterFragmentTypes (Method method)

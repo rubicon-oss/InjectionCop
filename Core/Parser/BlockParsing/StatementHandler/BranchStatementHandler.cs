@@ -20,10 +20,15 @@ using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser.BlockParsing.StatementHandler
 {
-  public class BranchStatementHandler: StatementHandlerBase<Branch>
+  public class BranchStatementHandler : StatementHandlerBase<Branch>
   {
-    public BranchStatementHandler (IProblemPipe problemPipe, string returnFragmentType, List<ReturnCondition> returnConditions, IBlacklistManager blacklistManager, BlockParser.InspectCallback inspect)
-        : base(problemPipe, returnFragmentType, returnConditions, blacklistManager, inspect)
+    public BranchStatementHandler (
+        IProblemPipe problemPipe,
+        string returnFragmentType,
+        List<ReturnCondition> returnConditions,
+        IBlacklistManager blacklistManager,
+        BlockParser.InspectCallback inspect)
+        : base (problemPipe, returnFragmentType, returnConditions, blacklistManager, inspect)
     {
     }
 
@@ -31,7 +36,6 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
         Statement statement,
         ISymbolTable symbolTable,
         List<IPreCondition> preConditions,
-
         List<string> assignmentTargetVariables,
         List<BlockAssignment> blockAssignments,
         List<int> successors)

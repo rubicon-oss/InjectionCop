@@ -20,7 +20,7 @@ using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser.BlockParsing.StatementHandler
 {
-  public class ExpressionStatementHandler: StatementHandlerBase<ExpressionStatement>
+  public class ExpressionStatementHandler : StatementHandlerBase<ExpressionStatement>
   {
     public ExpressionStatementHandler (
         IProblemPipe problemPipe,
@@ -32,11 +32,16 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
     {
     }
 
-    protected override void HandleStatement(Statement statement, ISymbolTable symbolTable, List<IPreCondition> preConditions, List<string> assignmentTargetVariables, List<BlockAssignment> blockAssignments, List<int> successors)
+    protected override void HandleStatement (
+        Statement statement,
+        ISymbolTable symbolTable,
+        List<IPreCondition> preConditions,
+        List<string> assignmentTargetVariables,
+        List<BlockAssignment> blockAssignments,
+        List<int> successors)
     {
       ExpressionStatement expressionStatement = (ExpressionStatement) statement;
       _inspect (expressionStatement.Expression);
     }
-
   }
 }
