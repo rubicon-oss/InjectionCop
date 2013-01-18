@@ -126,6 +126,8 @@
     <Compile Include="Parser\TypeParsing\TypeParserTests\Inheritance\Property\InheritanceProperty_TypeParserTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Lambda\LambdaSample.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Lambda\Lambda_TypeParserTest.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\LostAndFound\LostAndFoundSample.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\LostAndFound\LostAndFound_TypeParserTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Parameter\CallByReference\CallByReferenceSample.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Parameter\CallByReference\CallByReference_TypeParserTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\Parameter\CallByShare\CallByShareSample.cs" />

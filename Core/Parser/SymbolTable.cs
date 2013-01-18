@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using InjectionCop.Config;
 using InjectionCop.Utilities;
@@ -143,6 +144,7 @@ namespace InjectionCop.Parser
       ArgumentUtility.CheckNotNull ("symbolName", symbolName);
       ArgumentUtility.CheckNotNull ("fragmentType", fragmentType);
       _safenessMap[symbolName] = fragmentType;
+      
     }
     
     public bool Contains (string symbolName)

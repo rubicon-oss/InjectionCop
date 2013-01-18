@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using InjectionCop.Parser.BlockParsing;
 using InjectionCop.Parser.BlockParsing.PreCondition;
 using InjectionCop.Parser.ProblemPipe;
@@ -25,6 +26,8 @@ namespace InjectionCop.Parser.MethodParsing
   public class MethodGraphAnalyzer : IMethodGraphAnalyzer
   {
     private readonly IProblemPipe _problemPipe;
+
+    private Dictionary<int,int> recursioncalls;
 
     public MethodGraphAnalyzer (IProblemPipe problemPipe)
     {
@@ -39,22 +42,36 @@ namespace InjectionCop.Parser.MethodParsing
       var methodGraph = methodGraphBuilder.GetResult();
       var initialSymbolTable = initialSymbolTableBuilder.GetResult();
 
+      //Debugger.Launch();
+
       if (methodGraph != null && !methodGraph.IsEmpty() && initialSymbolTable != null)
       {
+        /*
         var analysisRequired =
             methodGraph.Blocks.Any (
                 block =>
                 block.PreConditions.Any (
                     preCondition => preCondition.FragmentType != SymbolTable.EMPTY_FRAGMENT && preCondition.FragmentType != SymbolTable.LITERAL));
+        */
+        var analysisRequired = true;
         if (!analysisRequired)
           return;
-        
+
+        recursioncalls = new Dictionary<int, int>();
         Parse (methodGraph, initialSymbolTable, methodGraph.InitialBlock, new Dictionary<int, int>());
       }
     }
 
     private void Parse (IMethodGraph methodGraph, ISymbolTable context, BasicBlock currentBlock, Dictionary<int, int> visits)
     {
+      if (!recursioncalls.ContainsKey (currentBlock.Id))
+      {
+        recursioncalls[currentBlock.Id] = 1;
+      }
+      else
+      {
+        recursioncalls[currentBlock.Id]++;
+      }
       UpdateVisits (currentBlock.Id, visits);
       bool loopIterationsExceeded = visits[currentBlock.Id] > 1;
       if(!loopIterationsExceeded)

@@ -68,7 +68,7 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
             assignmentStatement.SourceContext,
             sourceFragmentType,
             "??");
-
+        
         var preCondition = new EqualityPreCondition (targetName, sourceFragmentType, problemMetadata);
         preConditions.Add (preCondition);
       }

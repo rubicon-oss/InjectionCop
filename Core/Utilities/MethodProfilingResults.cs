@@ -40,18 +40,18 @@ namespace InjectionCop.Utilities
         TrimResults();
       }
     }
-    
+
     public override string ToString ()
     {
       StringBuilder profilingResults = new StringBuilder ("--- PROFILING RESULTS ---");
-      profilingResults.Append (System.Environment.NewLine);
+      profilingResults.Append (Environment.NewLine);
       foreach (var entry in _results)
       {
-        profilingResults.Append (Convert(entry));
-          profilingResults.Append (System.Environment.NewLine);
+        profilingResults.Append (Convert (entry));
+        profilingResults.Append (Environment.NewLine);
       }
       profilingResults.Append ("--- END PROFILING RESULTS ---");
-      profilingResults.Append (System.Environment.NewLine);
+      profilingResults.Append (Environment.NewLine);
       return profilingResults.ToString();
     }
     
