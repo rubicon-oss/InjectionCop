@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using InjectionCop.Config;
+using InjectionCop.Parser.BlockParsing.PreCondition;
 using InjectionCop.Parser.ProblemPipe;
 using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;

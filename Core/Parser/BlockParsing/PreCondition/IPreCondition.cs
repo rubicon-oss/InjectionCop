@@ -15,13 +15,16 @@
 using System;
 using InjectionCop.Parser.ProblemPipe;
 
-namespace InjectionCop.Parser.BlockParsing
+namespace InjectionCop.Parser.BlockParsing.PreCondition
 {
-  public class ReturnCondition: AssignabilityPreCondition
+  public interface IPreCondition
   {
-    public ReturnCondition(string symbol, string fragmentType)
-      : base(symbol, fragmentType)
-    {
-    }
+    string Symbol { get; }
+
+    string FragmentType { get; }
+
+    ProblemMetadata ProblemMetadata { get; }
+
+    bool IsViolated (ISymbolTable context);
   }
 }

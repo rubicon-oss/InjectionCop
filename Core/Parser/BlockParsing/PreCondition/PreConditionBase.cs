@@ -15,11 +15,10 @@
 using System;
 using InjectionCop.Parser.ProblemPipe;
 using InjectionCop.Utilities;
-using Microsoft.FxCop.Sdk;
 
-namespace InjectionCop.Parser.BlockParsing
+namespace InjectionCop.Parser.BlockParsing.PreCondition
 {
-  public abstract class PreConditionBase: IPreCondition
+  public abstract class PreConditionBase : IPreCondition
   {
     protected readonly string _symbol;
     protected readonly string _fragmentType;
@@ -27,17 +26,17 @@ namespace InjectionCop.Parser.BlockParsing
 
     protected PreConditionBase (string symbol, string fragmentType)
     {
-      _symbol = ArgumentUtility.CheckNotNullOrEmpty("symbol", symbol);
-      _fragmentType = ArgumentUtility.CheckNotNullOrEmpty("fragmentType", fragmentType);
+      _symbol = ArgumentUtility.CheckNotNullOrEmpty ("symbol", symbol);
+      _fragmentType = ArgumentUtility.CheckNotNullOrEmpty ("fragmentType", fragmentType);
     }
 
     protected PreConditionBase (string symbol, string fragmentType, ProblemMetadata problemMetadata)
-      : this(symbol, fragmentType)
-    {   
-      _problemMetadata = ArgumentUtility.CheckNotNull("sourceContext", problemMetadata);
+        : this (symbol, fragmentType)
+    {
+      _problemMetadata = ArgumentUtility.CheckNotNull ("sourceContext", problemMetadata);
     }
 
-    protected abstract bool ViolationCheckStrategy(ISymbolTable context);
+    protected abstract bool ViolationCheckStrategy (ISymbolTable context);
 
     public string Symbol
     {
@@ -55,12 +54,12 @@ namespace InjectionCop.Parser.BlockParsing
       set { _problemMetadata = value; }
     }
 
-    public bool IsViolated(ISymbolTable context)
+    public bool IsViolated (ISymbolTable context)
     {
-      bool preConditionViolated = ViolationCheckStrategy(context);
+      bool preConditionViolated = ViolationCheckStrategy (context);
       if (preConditionViolated)
       {
-        _problemMetadata.GivenFragment = context.GetFragmentType(_symbol);
+        _problemMetadata.GivenFragment = context.GetFragmentType (_symbol);
       }
       return preConditionViolated;
     }

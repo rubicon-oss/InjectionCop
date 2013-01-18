@@ -16,23 +16,23 @@ using System;
 using InjectionCop.Parser.ProblemPipe;
 using Microsoft.FxCop.Sdk;
 
-namespace InjectionCop.Parser.BlockParsing
+namespace InjectionCop.Parser.BlockParsing.PreCondition
 {
-  public class EqualityPreCondition: PreConditionBase
+  public class EqualityPreCondition : PreConditionBase
   {
-    public EqualityPreCondition(string symbol, string fragmentType)
-      : this(symbol, fragmentType, new ProblemMetadata(-1, new SourceContext(), "?", "?"))
+    public EqualityPreCondition (string symbol, string fragmentType)
+        : this (symbol, fragmentType, new ProblemMetadata (-1, new SourceContext(), "?", "?"))
     {
     }
 
-    public EqualityPreCondition(string symbol, string fragmentType, ProblemMetadata problemMetadata)
-      : base (symbol, fragmentType, problemMetadata)
+    public EqualityPreCondition (string symbol, string fragmentType, ProblemMetadata problemMetadata)
+        : base (symbol, fragmentType, problemMetadata)
     {
     }
 
-    protected override bool ViolationCheckStrategy(ISymbolTable context)
+    protected override bool ViolationCheckStrategy (ISymbolTable context)
     {
-      return context.GetFragmentType(_symbol) != _fragmentType;
+      return context.GetFragmentType (_symbol) != _fragmentType;
     }
   }
 }

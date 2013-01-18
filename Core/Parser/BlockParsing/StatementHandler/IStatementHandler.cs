@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using InjectionCop.Parser.BlockParsing.PreCondition;
 using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser.BlockParsing.StatementHandler

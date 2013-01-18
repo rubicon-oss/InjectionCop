@@ -16,26 +16,26 @@ using System;
 using InjectionCop.Parser.ProblemPipe;
 using Microsoft.FxCop.Sdk;
 
-namespace InjectionCop.Parser.BlockParsing
+namespace InjectionCop.Parser.BlockParsing.PreCondition
 {
   /// <summary>
   /// Holds a symbol and the associated fragment type that needs to safe when entering a BasicBlock
   /// </summary>
-  public class AssignabilityPreCondition: PreConditionBase
+  public class AssignabilityPreCondition : PreConditionBase
   {
-    public AssignabilityPreCondition(string symbol, string fragmentType)
-      : this(symbol, fragmentType, new ProblemMetadata(-1, new SourceContext(), "?", "?"))
+    public AssignabilityPreCondition (string symbol, string fragmentType)
+        : this (symbol, fragmentType, new ProblemMetadata (-1, new SourceContext(), "?", "?"))
     {
     }
 
-    public AssignabilityPreCondition(string symbol, string fragmentType, ProblemMetadata problemMetadata)
-      : base (symbol, fragmentType, problemMetadata)
+    public AssignabilityPreCondition (string symbol, string fragmentType, ProblemMetadata problemMetadata)
+        : base (symbol, fragmentType, problemMetadata)
     {
     }
 
-    protected override bool ViolationCheckStrategy(ISymbolTable context)
+    protected override bool ViolationCheckStrategy (ISymbolTable context)
     {
-      return !context.IsAssignableTo(_symbol, _fragmentType);
+      return !context.IsAssignableTo (_symbol, _fragmentType);
     }
   }
 }

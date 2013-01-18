@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using InjectionCop.Parser.BlockParsing.PreCondition;
 using NUnit.Framework;
 using InjectionCop.Parser.ProblemPipe;
 using InjectionCop.Parser;

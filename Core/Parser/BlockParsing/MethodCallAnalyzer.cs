@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using InjectionCop.Parser.BlockParsing.PreCondition;
 using InjectionCop.Parser.ProblemPipe;
 using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
@@ -23,7 +24,7 @@ namespace InjectionCop.Parser.BlockParsing
   public class MethodCallAnalyzer
   {
     private readonly IProblemPipe _problemPipe;
-   
+
     private ISymbolTable _symbolTable;
     private List<IPreCondition> _preConditions;
 
@@ -49,19 +50,20 @@ namespace InjectionCop.Parser.BlockParsing
       _preConditions.AddRange (additionalPreConditions);
     }
 
-    private void ParametersSafe(MethodCall methodCall, out List<IPreCondition> requireSafenessParameters, out List<ProblemMetadata> parameterProblems)
+    private void ParametersSafe (
+        MethodCall methodCall, out List<IPreCondition> requireSafenessParameters, out List<ProblemMetadata> parameterProblems)
     {
-      ArgumentUtility.CheckNotNull("methodCall", methodCall);
+      ArgumentUtility.CheckNotNull ("methodCall", methodCall);
 
       requireSafenessParameters = new List<IPreCondition>();
       parameterProblems = new List<ProblemMetadata>();
-      Method calleeMethod = IntrospectionUtility.ExtractMethod(methodCall);
-      string[] parameterFragmentTypes = _symbolTable.InferParameterFragmentTypes(calleeMethod);
+      Method calleeMethod = IntrospectionUtility.ExtractMethod (methodCall);
+      string[] parameterFragmentTypes = _symbolTable.InferParameterFragmentTypes (calleeMethod);
 
       for (int i = 0; i < parameterFragmentTypes.Length; i++)
       {
         Expression operand = methodCall.Operands[i];
-        string operandFragmentType = _symbolTable.InferFragmentType(operand);
+        string operandFragmentType = _symbolTable.InferFragmentType (operand);
         string parameterFragmentType = parameterFragmentTypes[i];
 
         if (operandFragmentType != SymbolTable.LITERAL
@@ -69,15 +71,15 @@ namespace InjectionCop.Parser.BlockParsing
             && operandFragmentType != parameterFragmentType)
         {
           string variableName;
-          ProblemMetadata problemMetadata = new ProblemMetadata(operand.UniqueKey, operand.SourceContext, parameterFragmentType, operandFragmentType);
-          if (IntrospectionUtility.IsVariable(operand, out variableName)
-              && !_symbolTable.Contains(variableName))
+          ProblemMetadata problemMetadata = new ProblemMetadata (operand.UniqueKey, operand.SourceContext, parameterFragmentType, operandFragmentType);
+          if (IntrospectionUtility.IsVariable (operand, out variableName)
+              && !_symbolTable.Contains (variableName))
           {
-            requireSafenessParameters.Add(new AssignabilityPreCondition(variableName, parameterFragmentType, problemMetadata));
+            requireSafenessParameters.Add (new AssignabilityPreCondition (variableName, parameterFragmentType, problemMetadata));
           }
           else
           {
-            parameterProblems.Add(problemMetadata);
+            parameterProblems.Add (problemMetadata);
           }
         }
       }
@@ -102,7 +104,7 @@ namespace InjectionCop.Parser.BlockParsing
             _symbolTable.MakeUnsafe (symbol);
           }
         }
-      }    
+      }
     }
   }
 }

@@ -13,27 +13,14 @@
 // limitations under the License.
 
 using System;
-using InjectionCop.Parser.ProblemPipe;
 
-namespace InjectionCop.Parser.BlockParsing
+namespace InjectionCop.Parser.BlockParsing.PreCondition
 {
-  public interface IPreCondition
+  public class ReturnCondition : AssignabilityPreCondition
   {
-    string Symbol
+    public ReturnCondition (string symbol, string fragmentType)
+        : base (symbol, fragmentType)
     {
-      get;
     }
-
-    string FragmentType
-    {
-      get;
-    }
-
-    ProblemMetadata ProblemMetadata
-    {
-      get;
-    }
-
-    bool IsViolated(ISymbolTable context);
   }
 }

@@ -18,6 +18,7 @@ using InjectionCop.Config;
 using InjectionCop.IntegrationTests.Parser;
 using InjectionCop.Parser;
 using InjectionCop.Parser.BlockParsing;
+using InjectionCop.Parser.BlockParsing.PreCondition;
 using InjectionCop.Parser.MethodParsing;
 using Microsoft.FxCop.Sdk;
 using NUnit.Framework;

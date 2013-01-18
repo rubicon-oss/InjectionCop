@@ -61,11 +61,11 @@
     <Compile Include="Config\IBlacklistManager.cs" />
     <Compile Include="Config\IDbCommandBlacklistManagerStub.cs" />
     <Compile Include="Parser\BlockParsing\MethodCallAnalyzer.cs" />
-    <Compile Include="Parser\BlockParsing\PreConditionBase.cs" />
+    <Compile Include="Parser\BlockParsing\PreCondition\PreConditionBase.cs" />
     <Compile Include="Parser\BlockParsing\BlockAssignment.cs" />
-    <Compile Include="Parser\BlockParsing\EqualityPreCondition.cs" />
-    <Compile Include="Parser\BlockParsing\IPreCondition.cs" />
-    <Compile Include="Parser\BlockParsing\ReturnCondition.cs" />
+    <Compile Include="Parser\BlockParsing\PreCondition\EqualityPreCondition.cs" />
+    <Compile Include="Parser\BlockParsing\PreCondition\IPreCondition.cs" />
+    <Compile Include="Parser\BlockParsing\PreCondition\ReturnCondition.cs" />
     <Compile Include="Parser\BlockParsing\StatementHandler\AssignmentStatementHandler\AssignmentStatementHandlerController.cs" />
     <Compile Include="Parser\BlockParsing\StatementHandler\AssignmentStatementHandler\DefaultAssignmentStatementHandler.cs" />
     <Compile Include="Parser\BlockParsing\StatementHandler\AssignmentStatementHandler\IndexerAssignmentStatementHandler.cs" />
@@ -104,7 +104,7 @@
     <Compile Include="Parser\MethodParsing\MethodGraphBuilder.cs" />
     <Compile Include="Parser\MethodParsing\MethodGraphAnalyzer.cs" />
     <Compile Include="Parser\MethodParsing\InitialSymbolTableBuilder.cs" />
-    <Compile Include="Parser\BlockParsing\AssignabilityPreCondition.cs" />
+    <Compile Include="Parser\BlockParsing\PreCondition\AssignabilityPreCondition.cs" />
     <Compile Include="Parser\SymbolTable.cs" />
     <Compile Include="Parser\BlockParsing\BlockParser.cs" />
     <Compile Include="Parser\TypeParsing\TypeParser.cs" />

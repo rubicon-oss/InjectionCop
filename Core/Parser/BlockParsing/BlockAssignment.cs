@@ -27,8 +27,8 @@ namespace InjectionCop.Parser.BlockParsing
 
     public BlockAssignment (string sourceSymbol, string targetSymbol)
     {
-      _sourceSymbol = ArgumentUtility.CheckNotNullOrEmpty("sourceSymbol", sourceSymbol);
-      _targetSymbol = ArgumentUtility.CheckNotNullOrEmpty("targetSymbol", targetSymbol);
+      _sourceSymbol = ArgumentUtility.CheckNotNullOrEmpty ("sourceSymbol", sourceSymbol);
+      _targetSymbol = ArgumentUtility.CheckNotNullOrEmpty ("targetSymbol", targetSymbol);
     }
 
     public string SourceSymbol

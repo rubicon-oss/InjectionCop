@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using InjectionCop.Config;
 using InjectionCop.Parser;
 using InjectionCop.Parser.BlockParsing;
+using InjectionCop.Parser.BlockParsing.PreCondition;
 using InjectionCop.Parser.BlockParsing.StatementHandler;
 using InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementHandler;
 using InjectionCop.Utilities;

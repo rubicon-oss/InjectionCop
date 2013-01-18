@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using InjectionCop.Config;
+using InjectionCop.Parser.BlockParsing.PreCondition;
 using InjectionCop.Parser.ProblemPipe;
 using InjectionCop.Parser.BlockParsing.StatementHandler;
 using InjectionCop.Utilities;
@@ -41,14 +42,16 @@ namespace InjectionCop.Parser.BlockParsing
     private List<int> _successors;
     private List<BlockAssignment> _blockAssignments;
     private List<string> _assignmentTargetVariables;
-    
-    public BlockParser (IBlacklistManager blacklistManager, IProblemPipe problemPipe, string returnFragmentType, List<ReturnCondition> returnConditions)
+
+    public BlockParser (
+        IBlacklistManager blacklistManager, IProblemPipe problemPipe, string returnFragmentType, List<ReturnCondition> returnConditions)
     {
       _blacklistManager = ArgumentUtility.CheckNotNull ("blacklistManager", blacklistManager);
       _problemPipe = ArgumentUtility.CheckNotNull ("typeParser", problemPipe);
-      _returnFragmentType = ArgumentUtility.CheckNotNullOrEmpty("returnFragmentType", returnFragmentType);
+      _returnFragmentType = ArgumentUtility.CheckNotNullOrEmpty ("returnFragmentType", returnFragmentType);
       _returnConditions = returnConditions;
-      StatementHandlerDictionaryBuilder handlerBuilder = new StatementHandlerDictionaryBuilder(_blacklistManager, _problemPipe, _returnFragmentType, _returnConditions, Inspect);
+      StatementHandlerDictionaryBuilder handlerBuilder = new StatementHandlerDictionaryBuilder (
+          _blacklistManager, _problemPipe, _returnFragmentType, _returnConditions, Inspect);
       _statementHandlers = handlerBuilder.Build();
       _methodCallAnalyzer = new MethodCallAnalyzer (_problemPipe);
     }
@@ -58,7 +61,8 @@ namespace InjectionCop.Parser.BlockParsing
       ArgumentUtility.CheckNotNull ("block", block);
       Reset();
       Inspect (block);
-      BasicBlock basicBlock = new BasicBlock (block.UniqueKey, _preConditions.ToArray(), _symbolTableParser, _successors.ToArray(), _blockAssignments.ToArray());
+      BasicBlock basicBlock = new BasicBlock (
+          block.UniqueKey, _preConditions.ToArray(), _symbolTableParser, _successors.ToArray(), _blockAssignments.ToArray());
       return basicBlock;
     }
 
@@ -68,7 +72,8 @@ namespace InjectionCop.Parser.BlockParsing
       Reset();
       _successors.Add (directSuccessorKey);
       Inspect (block);
-      BasicBlock basicBlock = new BasicBlock (block.UniqueKey, _preConditions.ToArray(), _symbolTableParser, _successors.ToArray(), _blockAssignments.ToArray());
+      BasicBlock basicBlock = new BasicBlock (
+          block.UniqueKey, _preConditions.ToArray(), _symbolTableParser, _successors.ToArray(), _blockAssignments.ToArray());
       return basicBlock;
     }
 
