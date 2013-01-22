@@ -28,13 +28,13 @@ namespace InjectionCop.Parser
   public interface ISymbolTable
   {
     IEnumerable<string> Symbols { get; }
-    string[] InferParameterFragmentTypes(Method method);
+    Fragment[] InferParameterFragmentTypes(Method method);
     void InferSafeness (string symbolName, Expression expression);
-    void MakeSafe (string symbolName, string fragmentType);
+    void MakeSafe (string symbolName, Fragment fragmentType);
     void MakeUnsafe (string symbolName);
-    string GetFragmentType (string symbolName);
-    bool IsAssignableTo(string symbolName, string fragmentType);
-    string InferFragmentType (Expression expression);
+    Fragment GetFragmentType (string symbolName);
+    bool IsAssignableTo(string symbolName, Fragment fragmentType);
+    Fragment InferFragmentType (Expression expression);
     bool Contains (string symbolName);
     ISymbolTable Copy ();
   }

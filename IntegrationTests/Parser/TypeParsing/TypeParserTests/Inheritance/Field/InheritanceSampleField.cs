@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System;
-using InjectionCop.Fragment;
+using InjectionCop.Attributes;
 
 namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Inheritance.Field
 {

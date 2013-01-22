@@ -20,7 +20,9 @@ namespace InjectionCop.Attributes
   /// Declares parameter or returnvalue of a method as fragment
   /// </summary>
   [AttributeUsage (AttributeTargets.Parameter
-                   | AttributeTargets.ReturnValue)]
+                   | AttributeTargets.ReturnValue
+                   | AttributeTargets.Field
+                   | AttributeTargets.Property)]
   public class FragmentAttribute : Attribute
   {
     private readonly string _fragmentType;

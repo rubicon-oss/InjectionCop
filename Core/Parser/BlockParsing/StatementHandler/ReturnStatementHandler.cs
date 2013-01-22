@@ -26,7 +26,7 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
   {
     public ReturnStatementHandler (
         IProblemPipe problemPipe,
-        string returnFragmentType,
+        Fragment returnFragmentType,
         List<ReturnCondition> returnConditions,
         IBlacklistManager blacklistManager,
         BlockParser.InspectCallback inspect)
@@ -73,9 +73,9 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
     {
       foreach (var returnCondition in _returnConditions)
       {
-        string blockInternalFragmentType = symbolTable.GetFragmentType (returnCondition.Symbol);
+        Fragment blockInternalFragmentType = symbolTable.GetFragmentType (returnCondition.Symbol);
 
-        if (!FragmentUtility.FragmentTypesAssignable (blockInternalFragmentType, returnCondition.FragmentType))
+        if (!FragmentUtility.FragmentTypesAssignable (blockInternalFragmentType, returnCondition.Fragment))
         {
           ProcessBlockInternalPreConditionViolation (returnNode, returnCondition, blockInternalFragmentType, assignmentTargetVariables, preConditions);
         }
@@ -85,14 +85,14 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
     private void ProcessBlockInternalPreConditionViolation (
         ReturnNode returnNode,
         ReturnCondition returnCondition,
-        string blockInternalFragmentType,
+        Fragment blockInternalFragmentType,
         List<string> assignmentTargetVariables,
         List<IPreCondition> preConditions)
     {
       ProblemMetadata problemMetadata = new ProblemMetadata (
           returnNode.UniqueKey,
           returnNode.SourceContext,
-          returnCondition.FragmentType,
+          returnCondition.Fragment,
           blockInternalFragmentType);
       returnCondition.ProblemMetadata = problemMetadata;
 

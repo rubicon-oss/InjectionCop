@@ -25,14 +25,14 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
       where T : Statement
   {
     protected readonly IProblemPipe _problemPipe;
-    protected readonly string _returnFragmentType;
+    protected readonly Fragment _returnFragmentType;
     protected readonly List<ReturnCondition> _returnConditions;
     protected readonly IBlacklistManager _blacklistManager;
     protected BlockParser.InspectCallback _inspect;
 
     protected StatementHandlerBase (
         IProblemPipe problemPipe,
-        string returnFragmentType,
+        Fragment returnFragmentType,
         List<ReturnCondition> returnConditions,
         IBlacklistManager blacklistManager,
         BlockParser.InspectCallback inspect)

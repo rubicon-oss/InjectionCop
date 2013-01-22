@@ -58,13 +58,13 @@ namespace InjectionCop.Parser.BlockParsing
       requireSafenessParameters = new List<IPreCondition>();
       parameterProblems = new List<ProblemMetadata>();
       Method calleeMethod = IntrospectionUtility.ExtractMethod (methodCall);
-      string[] parameterFragmentTypes = _symbolTable.InferParameterFragmentTypes (calleeMethod);
+      Fragment[] parameterFragmentTypes = _symbolTable.InferParameterFragmentTypes (calleeMethod);
 
       for (int i = 0; i < parameterFragmentTypes.Length; i++)
       {
         Expression operand = methodCall.Operands[i];
-        string operandFragmentType = _symbolTable.InferFragmentType (operand);
-        string parameterFragmentType = parameterFragmentTypes[i];
+        Fragment operandFragmentType = _symbolTable.InferFragmentType (operand);
+        Fragment parameterFragmentType = parameterFragmentTypes[i];
 
         if (operandFragmentType != SymbolTable.LITERAL
             && parameterFragmentType != SymbolTable.EMPTY_FRAGMENT
@@ -96,7 +96,7 @@ namespace InjectionCop.Parser.BlockParsing
           string symbol = IntrospectionUtility.GetVariableName (methodCall.Operands[i]);
           if (FragmentUtility.ContainsFragment (method.Parameters[i].Attributes))
           {
-            string fragmentType = FragmentUtility.GetFragmentType (method.Parameters[i].Attributes);
+            Fragment fragmentType = FragmentUtility.GetFragmentType (method.Parameters[i].Attributes);
             _symbolTable.MakeSafe (symbol, fragmentType);
           }
           else

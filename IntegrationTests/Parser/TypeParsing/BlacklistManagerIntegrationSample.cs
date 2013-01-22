@@ -15,7 +15,7 @@
 using System;
 using System.Data;
 using System.Data.SqlClient;
-using InjectionCop.Fragment;
+using InjectionCop.Attributes;
 
 namespace InjectionCop.IntegrationTests.Parser.TypeParsing
 {

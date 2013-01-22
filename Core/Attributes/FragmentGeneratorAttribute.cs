@@ -1,4 +1,4 @@
-﻿// Copyright 2012 rubicon informationstechnologie gmbh
+﻿// Copyright 2013 rubicon informationstechnologie gmbh
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,16 +14,10 @@
 
 using System;
 
-namespace InjectionCop.Fragment
+namespace InjectionCop.Attributes
 {
-  /// <summary>
-  /// Declares parameter or returnvalue of a method as fragment 
-  /// </summary>
-  public class SqlFragmentAttribute : FragmentAttribute
+  [AttributeUsage(AttributeTargets.Method)]
+  public class FragmentGeneratorAttribute: Attribute
   {
-    public SqlFragmentAttribute ()
-        : base ("SqlFragment")
-    {
-    }
   }
 }

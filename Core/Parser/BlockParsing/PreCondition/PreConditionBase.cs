@@ -21,17 +21,17 @@ namespace InjectionCop.Parser.BlockParsing.PreCondition
   public abstract class PreConditionBase : IPreCondition
   {
     protected readonly string _symbol;
-    protected readonly string _fragmentType;
+    protected readonly Fragment _fragment;
     protected ProblemMetadata _problemMetadata;
 
-    protected PreConditionBase (string symbol, string fragmentType)
+    protected PreConditionBase (string symbol, Fragment fragment)
     {
       _symbol = ArgumentUtility.CheckNotNullOrEmpty ("symbol", symbol);
-      _fragmentType = ArgumentUtility.CheckNotNullOrEmpty ("fragmentType", fragmentType);
+      _fragment =  fragment;
     }
 
-    protected PreConditionBase (string symbol, string fragmentType, ProblemMetadata problemMetadata)
-        : this (symbol, fragmentType)
+    protected PreConditionBase (string symbol, Fragment fragment, ProblemMetadata problemMetadata)
+        : this (symbol, fragment)
     {
       _problemMetadata = ArgumentUtility.CheckNotNull ("sourceContext", problemMetadata);
     }
@@ -43,9 +43,9 @@ namespace InjectionCop.Parser.BlockParsing.PreCondition
       get { return _symbol; }
     }
 
-    public string FragmentType
+    public Fragment Fragment
     {
-      get { return _fragmentType; }
+      get { return _fragment; }
     }
 
     public ProblemMetadata ProblemMetadata

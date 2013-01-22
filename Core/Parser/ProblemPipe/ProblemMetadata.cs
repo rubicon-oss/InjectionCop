@@ -1,4 +1,4 @@
-﻿// Copyright 2012 rubicon informationstechnologie gmbh
+﻿// Copyright 2013 rubicon informationstechnologie gmbh
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,15 +22,15 @@ namespace InjectionCop.Parser.ProblemPipe
   {
     private readonly int _sourceExpressionId;
     private readonly SourceContext _sourceContext;
-    private readonly string _expectedFragment;
-    private string _givenFragment;
+    private readonly Fragment _expectedFragment;
+    private Fragment _givenFragment;
 
-    public ProblemMetadata (int sourceExpressionId, SourceContext sourceContext, string expectedFragment, string givenFragment)
+    public ProblemMetadata (int sourceExpressionId, SourceContext sourceContext, Fragment expectedFragment, Fragment givenFragment)
     {
       _sourceExpressionId = sourceExpressionId;
       _sourceContext = ArgumentUtility.CheckNotNull ("sourceContext", sourceContext);
-      _expectedFragment = ArgumentUtility.CheckNotNullOrEmpty ("expectedFragment", expectedFragment);
-      _givenFragment = ArgumentUtility.CheckNotNullOrEmpty ("givenFragment", givenFragment);
+      _expectedFragment = ArgumentUtility.CheckNotNull ("expectedFragment", expectedFragment);
+      _givenFragment = givenFragment;
     }
 
     public int SourceExpressionId
@@ -43,12 +43,12 @@ namespace InjectionCop.Parser.ProblemPipe
       get { return _sourceContext; }
     }
 
-    public string ExpectedFragment
+    public Fragment ExpectedFragment
     {
       get { return _expectedFragment; }
     }
 
-    public string GivenFragment
+    public Fragment GivenFragment
     {
       get { return _givenFragment; }
       set { _givenFragment = value; }

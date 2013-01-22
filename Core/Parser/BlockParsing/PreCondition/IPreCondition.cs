@@ -21,7 +21,7 @@ namespace InjectionCop.Parser.BlockParsing.PreCondition
   {
     string Symbol { get; }
 
-    string FragmentType { get; }
+    Fragment Fragment { get; }
 
     ProblemMetadata ProblemMetadata { get; }
 

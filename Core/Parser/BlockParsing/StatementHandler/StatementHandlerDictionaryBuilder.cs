@@ -26,20 +26,20 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
   {
     private readonly IBlacklistManager _blacklistManager;
     private readonly IProblemPipe _problemPipe;
-    private readonly string _returnFragmentType;
+    private readonly Fragment _returnFragmentType;
     private readonly List<ReturnCondition> _returnConditions;
     private readonly BlockParser.InspectCallback _inspect;
 
     public StatementHandlerDictionaryBuilder (
         IBlacklistManager blacklistManager,
         IProblemPipe problemPipe,
-        string returnFragmentType,
+        Fragment returnFragmentType,
         List<ReturnCondition> returnConditions,
         BlockParser.InspectCallback inspect)
     {
       _blacklistManager = ArgumentUtility.CheckNotNull ("blacklistManager", blacklistManager);
       _problemPipe = ArgumentUtility.CheckNotNull ("typeParser", problemPipe);
-      _returnFragmentType = ArgumentUtility.CheckNotNullOrEmpty ("returnFragmentType", returnFragmentType);
+      _returnFragmentType =  returnFragmentType;
       _returnConditions = returnConditions;
       _inspect = inspect;
     }
