@@ -27,7 +27,7 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
   [TestFixture]
   public class BlockParserTest
   {
-    private const string c_returnFragmentType = "ReturnFragmentType";
+    private readonly Fragment c_returnFragmentType = Fragment.CreateNamed("ReturnFragmentType");
 
     private BlockParser _blockParser;
     private ProblemPipeStub _problemPipeStub;
@@ -39,7 +39,7 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
     {
       _blacklist = new IDbCommandBlacklistManagerStub();
       _problemPipeStub = new ProblemPipeStub();
-      _returnPreCondition = new ReturnCondition ("returnPreCondition", "ReturnPreConditionFragmentType");
+      _returnPreCondition = new ReturnCondition ("returnPreCondition", Fragment.CreateNamed("ReturnPreConditionFragmentType"));
       List<ReturnCondition> returnPreConditions = new List<ReturnCondition> { _returnPreCondition };
       _blockParser = new BlockParser (_blacklist, _problemPipeStub, c_returnFragmentType, returnPreConditions);
     }
@@ -50,8 +50,8 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
       Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("PostConditionOnlySafeSymbols");
       Block sample = sampleMethod.Body.Statements[0] as Block;
       BasicBlock basicBlock = _blockParser.Parse(sample);
-      bool correctPostCondition = basicBlock.PostConditionSymbolTable.IsAssignableTo ("local$0", "SqlFragment")
-                                  && basicBlock.PostConditionSymbolTable.IsAssignableTo ("local$1", "SqlFragment");
+      bool correctPostCondition = basicBlock.PostConditionSymbolTable.IsAssignableTo ("local$0", Fragment.CreateNamed("SqlFragment"))
+                                  && basicBlock.PostConditionSymbolTable.IsAssignableTo ("local$1", Fragment.CreateNamed("SqlFragment"));
 
       Assert.That (correctPostCondition, Is.True);
     }
@@ -62,8 +62,8 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
       Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("PostConditionSafeAndUnsafeSymbols");
       Block sample = sampleMethod.Body.Statements[0] as Block;
       BasicBlock basicBlock = _blockParser.Parse(sample);
-      bool correctPostCondition = basicBlock.PostConditionSymbolTable.IsAssignableTo ("local$0", "SqlFragment")
-                                  && !basicBlock.PostConditionSymbolTable.IsAssignableTo ("local$1", "SqlFragment");
+      bool correctPostCondition = basicBlock.PostConditionSymbolTable.IsAssignableTo ("local$0", Fragment.CreateNamed("SqlFragment"))
+                                  && !basicBlock.PostConditionSymbolTable.IsAssignableTo ("local$1", Fragment.CreateNamed("SqlFragment"));
 
       Assert.That (correctPostCondition, Is.True);
     }
@@ -76,7 +76,7 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
       Block sample = sampleMethod.Body.Statements[0] as Block;
       BasicBlock basicBlock = _blockParser.Parse(sample);
       bool correctPreCondition = basicBlock.PreConditions[0].Symbol == "unSafe"
-                                 && basicBlock.PreConditions[0].Fragment == "SqlFragment";
+                                 && basicBlock.PreConditions[0].Fragment == Fragment.CreateNamed("SqlFragment");
 
       Assert.That (correctPreCondition, Is.True);
     }
@@ -103,10 +103,10 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
       BasicBlock basicBlock = _blockParser.Parse (sample);
       
       bool correctPreCondition0 = basicBlock.PreConditions[0].Symbol == "unSafe1"
-                                 && basicBlock.PreConditions[0].Fragment == "SqlFragment";
+                                 && basicBlock.PreConditions[0].Fragment == Fragment.CreateNamed("SqlFragment");
 
       bool correctPreCondition1 = basicBlock.PreConditions[1].Symbol == "unSafe2"
-                                 && basicBlock.PreConditions[1].Fragment == "SqlFragment";
+                                 && basicBlock.PreConditions[1].Fragment == Fragment.CreateNamed("SqlFragment");
 
       Assert.That (correctPreCondition0 && correctPreCondition1, Is.True);
     }
@@ -121,7 +121,7 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
       BasicBlock basicBlock = _blockParser.Parse (sample);
       
       bool correctPreCondition = basicBlock.PreConditions[0].Symbol == "x"
-                                 && basicBlock.PreConditions[0].Fragment == "SqlFragment";
+                                 && basicBlock.PreConditions[0].Fragment == Fragment.CreateNamed("SqlFragment");
 
       Assert.That (correctPreCondition, Is.True);
     }
@@ -172,13 +172,29 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
     }
 
     [Test]
-    public void Parse_ReturnFragmentRequiredUnsafeReturn_ReturnsCorrectReturnFragmentType ([Values("ReturnFragmentType1", "ReturnFragmentType2")] string returnFragmentType)
+    public void Parse_ReturnFragmentRequiredUnsafeReturn_ReturnsCorrectReturnFragmentType1 ()
     {
+      var returnFragmentType = Fragment.CreateNamed ("ReturnFragmentType1");
+
       _blockParser = new BlockParser (_blacklist, _problemPipeStub, returnFragmentType, new List<ReturnCondition>());
       Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("UnsafeReturnWhenFragmentRequired");
       Block sample = sampleMethod.Body.Statements[1] as Block;
       BasicBlock returnedBlock = _blockParser.Parse (sample);
-      string preConditionFragment = returnedBlock.PreConditions[0].Fragment;
+      var preConditionFragment = returnedBlock.PreConditions[0].Fragment;
+
+      Assert.That (preConditionFragment, Is.EqualTo (returnFragmentType));
+    }
+
+    [Test]
+    public void Parse_ReturnFragmentRequiredUnsafeReturn_ReturnsCorrectReturnFragmentType2 ()
+    {
+      var returnFragmentType = Fragment.CreateNamed ("ReturnFragmentType2");
+     
+      _blockParser = new BlockParser (_blacklist, _problemPipeStub, returnFragmentType, new List<ReturnCondition>());
+      Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("UnsafeReturnWhenFragmentRequired");
+      Block sample = sampleMethod.Body.Statements[1] as Block;
+      BasicBlock returnedBlock = _blockParser.Parse (sample);
+      var preConditionFragment = returnedBlock.PreConditions[0].Fragment;
       
       Assert.That (preConditionFragment, Is.EqualTo (returnFragmentType));
     }
@@ -220,12 +236,12 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
     [Test]
     public void Parse_ValidReturnWithIf_ReturnsCorrectReturnFragmentType ()
     {
-      _blockParser = new BlockParser (_blacklist, _problemPipeStub, "DummyFragment", new List<ReturnCondition>());
+      _blockParser = new BlockParser (_blacklist, _problemPipeStub,Fragment.CreateNamed( "DummyFragment"), new List<ReturnCondition>());
       TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
       Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("ValidReturnWithLiteralAssignmentInsideIf", stringTypeNode);
       Block sample = sampleMethod.Body.Statements[3] as Block;
       BasicBlock returnedBlock = _blockParser.Parse (sample);
-      string preConditionFragmentType = returnedBlock.PreConditions[0].Fragment;
+      var preConditionFragmentType = returnedBlock.PreConditions[0].Fragment;
       
       Assert.That (preConditionFragmentType, Is.EqualTo ("DummyFragment"));
     }
@@ -273,7 +289,7 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
       Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("ValidReturnWithLiteralAssignmentInsideIf", stringTypeNode);
       Block ifBlock = sampleMethod.Body.Statements[1] as Block;
       BasicBlock ifBasicBlock = _blockParser.Parse (ifBlock);
-      string postConditionFragmentType = ifBasicBlock.PostConditionSymbolTable.GetFragmentType("local$0");
+      var postConditionFragmentType = ifBasicBlock.PostConditionSymbolTable.GetFragmentType("local$0");
 
       Assert.That (postConditionFragmentType, Is.EqualTo("__Literal__"));
     }
@@ -284,9 +300,9 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
       Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("DeclarationWithReturn");
       Block initialBlock = sampleMethod.Body.Statements[0] as Block;
       BasicBlock initialBasicBlock = _blockParser.Parse (initialBlock);
-      string local0FragmentType = initialBasicBlock.PostConditionSymbolTable.GetFragmentType ("local$0");
-      string local1FragmentType = initialBasicBlock.PostConditionSymbolTable.GetFragmentType ("local$1");
-      bool correctPostConditions = local0FragmentType == local1FragmentType && local0FragmentType == "__Literal__";
+      var local0FragmentType = initialBasicBlock.PostConditionSymbolTable.GetFragmentType ("local$0");
+      var local1FragmentType = initialBasicBlock.PostConditionSymbolTable.GetFragmentType ("local$1");
+      bool correctPostConditions = local0FragmentType == local1FragmentType && local0FragmentType == Fragment.CreateLiteral();
 
       Assert.That (correctPostConditions, Is.True);
     }
@@ -309,7 +325,7 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
       Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("ValidReturnWithParameterAssignmentInsideIf", stringTypeNode);
       Block ifBlock = sampleMethod.Body.Statements[1] as Block;
       BasicBlock ifBasicBlock = _blockParser.Parse (ifBlock);
-      string postConditionFragmentType = ifBasicBlock.PostConditionSymbolTable.GetFragmentType("local$0");
+      var postConditionFragmentType = ifBasicBlock.PostConditionSymbolTable.GetFragmentType("local$0");
 
       Assert.That (postConditionFragmentType, Is.EqualTo(SymbolTable.EMPTY_FRAGMENT));
     }
@@ -332,7 +348,7 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
       Method sampleMethod = TestHelper.GetSample<BlockParserSample> ("ValidReturnWithParameterResetAndAssignmentInsideIf", stringTypeNode);
       Block ifBlock = sampleMethod.Body.Statements[1] as Block;
       BasicBlock ifBasicBlock = _blockParser.Parse (ifBlock);
-      string postConditionFragmentType = ifBasicBlock.PostConditionSymbolTable.GetFragmentType("local$0");
+      var postConditionFragmentType = ifBasicBlock.PostConditionSymbolTable.GetFragmentType("local$0");
 
       Assert.That (postConditionFragmentType, Is.EqualTo("__Literal__"));
     }
@@ -344,7 +360,7 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
       Block returnBlock = sampleMethod.Body.Statements[1] as Block;
       BasicBlock returnBasicBlock = _blockParser.Parse (returnBlock);
       string preConditionSymbol = returnBasicBlock.PreConditions[1].Symbol;
-      string preConditionFragmentType = returnBasicBlock.PreConditions[1].Fragment;
+      var preConditionFragmentType = returnBasicBlock.PreConditions[1].Fragment;
       bool correctPrecondition = preConditionSymbol == _returnPreCondition.Symbol
                                  && preConditionFragmentType == _returnPreCondition.Fragment;
 
@@ -395,7 +411,7 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
       Block returnBlock = sampleMethod.Body.Statements[2] as Block;
       BasicBlock returnBasicBlock = _blockParser.Parse (returnBlock);
       string preConditionSymbol = returnBasicBlock.PreConditions[0].Symbol;
-      string preConditionFragmentType = returnBasicBlock.PreConditions[0].Fragment;
+      var preConditionFragmentType = returnBasicBlock.PreConditions[0].Fragment;
       bool correctPrecondition = preConditionSymbol == _returnPreCondition.Symbol
                                  && preConditionFragmentType == _returnPreCondition.Fragment;
 
@@ -410,7 +426,7 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
       Block returnBlock = sampleMethod.Body.Statements[3] as Block;
       BasicBlock returnBasicBlock = _blockParser.Parse (returnBlock);
       string preConditionSymbol = returnBasicBlock.PreConditions[0].Symbol;
-      string preConditionFragmentType = returnBasicBlock.PreConditions[0].Fragment;
+      var preConditionFragmentType = returnBasicBlock.PreConditions[0].Fragment;
       bool correctPrecondition = preConditionSymbol == _returnPreCondition.Symbol
                                  && preConditionFragmentType == _returnPreCondition.Fragment;
 
@@ -425,7 +441,7 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
       Block returnBlock = sampleMethod.Body.Statements[2] as Block;
       BasicBlock returnBasicBlock = _blockParser.Parse (returnBlock);
       string preConditionSymbol = returnBasicBlock.PreConditions[0].Symbol;
-      string preConditionFragmentType = returnBasicBlock.PreConditions[0].Fragment;
+      var preConditionFragmentType = returnBasicBlock.PreConditions[0].Fragment;
       bool correctPrecondition = preConditionSymbol == _returnPreCondition.Symbol
                                  && preConditionFragmentType == _returnPreCondition.Fragment;
 
@@ -476,7 +492,7 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
       Block returnBlock = sampleMethod.Body.Statements[2] as Block;
       BasicBlock returnBasicBlock = _blockParser.Parse (returnBlock);
       string preConditionSymbol = returnBasicBlock.PreConditions[0].Symbol;
-      string preConditionFragmentType = returnBasicBlock.PreConditions[0].Fragment;
+      var preConditionFragmentType = returnBasicBlock.PreConditions[0].Fragment;
       bool correctPrecondition = preConditionSymbol == _returnPreCondition.Symbol
                                  && preConditionFragmentType == _returnPreCondition.Fragment;
 
@@ -491,7 +507,7 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
       Block returnBlock = sampleMethod.Body.Statements[3] as Block;
       BasicBlock returnBasicBlock = _blockParser.Parse (returnBlock);
       string preConditionSymbol = returnBasicBlock.PreConditions[0].Symbol;
-      string preConditionFragmentType = returnBasicBlock.PreConditions[0].Fragment;
+      var preConditionFragmentType = returnBasicBlock.PreConditions[0].Fragment;
       bool correctPrecondition = preConditionSymbol == _returnPreCondition.Symbol
                                  && preConditionFragmentType == _returnPreCondition.Fragment;
 
@@ -506,7 +522,7 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
       Block returnBlock = sampleMethod.Body.Statements[2] as Block;
       BasicBlock returnBasicBlock = _blockParser.Parse (returnBlock);
       string preConditionSymbol = returnBasicBlock.PreConditions[0].Symbol;
-      string preConditionFragmentType = returnBasicBlock.PreConditions[0].Fragment;
+      var preConditionFragmentType = returnBasicBlock.PreConditions[0].Fragment;
       bool correctPrecondition = preConditionSymbol == _returnPreCondition.Symbol
                                  && preConditionFragmentType == _returnPreCondition.Fragment;
 

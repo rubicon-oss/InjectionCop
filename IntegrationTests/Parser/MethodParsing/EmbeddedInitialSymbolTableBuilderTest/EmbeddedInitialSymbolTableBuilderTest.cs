@@ -55,7 +55,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.EmbeddedInitialSymb
     {
       Method sampleMethod = TestHelper.GetSample<SymbolTableBuilderSample>("ParameterizedMethod", _floatType, _objectType);
       EmbeddedInitialSymbolTableBuilder embeddedInitialSymbolTableBuilder = new EmbeddedInitialSymbolTableBuilder(sampleMethod, _blacklistManager, _environment);
-      _environment.MakeSafe("_fragmentField", "ThisShouldBeIgnored");
+      _environment.MakeSafe("_fragmentField", Fragment.CreateNamed("ThisShouldBeIgnored"));
       ISymbolTable resultSymbolTable = embeddedInitialSymbolTableBuilder.GetResult();
 
       Assert.That(resultSymbolTable.GetFragmentType("_fragmentField"), Is.EqualTo(SymbolTable.EMPTY_FRAGMENT));
@@ -66,7 +66,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.EmbeddedInitialSymb
     {
       Method sampleMethod = TestHelper.GetSample<SymbolTableBuilderSample>("ParameterizedMethod", _floatType, _objectType);
       EmbeddedInitialSymbolTableBuilder embeddedInitialSymbolTableBuilder = new EmbeddedInitialSymbolTableBuilder(sampleMethod, _blacklistManager, _environment);
-      _environment.MakeSafe("_nonFragmentField", "ThisShouldBeIgnored");
+      _environment.MakeSafe("_nonFragmentField", Fragment.CreateNamed("ThisShouldBeIgnored"));
       ISymbolTable resultSymbolTable = embeddedInitialSymbolTableBuilder.GetResult();
 
       Assert.That(resultSymbolTable.GetFragmentType("_fragmentField"), Is.EqualTo(SymbolTable.EMPTY_FRAGMENT));
@@ -87,7 +87,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.EmbeddedInitialSymb
     {
       Method sampleMethod = TestHelper.GetSample<SymbolTableBuilderSample>("ParameterizedMethod", _floatType, _objectType);
       EmbeddedInitialSymbolTableBuilder embeddedInitialSymbolTableBuilder = new EmbeddedInitialSymbolTableBuilder(sampleMethod, _blacklistManager, _environment);
-      _environment.MakeSafe("environmentSymbol", "DummyType");
+      _environment.MakeSafe("environmentSymbol",Fragment.CreateNamed( "DummyType"));
       ISymbolTable resultSymbolTable = embeddedInitialSymbolTableBuilder.GetResult();
 
       Assert.That(resultSymbolTable.GetFragmentType("environmentSymbol"), Is.EqualTo("DummyType"));
@@ -98,7 +98,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.EmbeddedInitialSymb
     {
       Method sampleMethod = TestHelper.GetSample<SymbolTableBuilderSample>("ParameterizedMethod", _floatType, _objectType);
       EmbeddedInitialSymbolTableBuilder embeddedInitialSymbolTableBuilder = new EmbeddedInitialSymbolTableBuilder(sampleMethod, _blacklistManager, _environment);
-      _environment.MakeSafe("_nonFragmentField", "OverlappingType");
+      _environment.MakeSafe("_nonFragmentField", Fragment.CreateNamed("OverlappingType"));
       ISymbolTable resultSymbolTable = embeddedInitialSymbolTableBuilder.GetResult();
 
       Assert.That(resultSymbolTable.GetFragmentType("_nonFragmentField"), Is.EqualTo("OverlappingType"));
@@ -138,7 +138,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.EmbeddedInitialSymb
     public void GetResult_ParameterizedMethodSymbolTableBuiltWithParameterOverlappingEnvironment_FragmentParameterIsOfPropagatedFragmentType()
     {
       Method sampleMethod = TestHelper.GetSample<SymbolTableBuilderSample>("ParameterizedMethod", _floatType, _objectType);
-      _environment.MakeSafe("fragmentParameter", "OverlappingType");
+      _environment.MakeSafe("fragmentParameter", Fragment.CreateNamed("OverlappingType"));
       EmbeddedInitialSymbolTableBuilder embeddedInitialSymbolTableBuilder = new EmbeddedInitialSymbolTableBuilder(sampleMethod, _blacklistManager, _environment);
       ISymbolTable resultSymbolTable = embeddedInitialSymbolTableBuilder.GetResult();
 

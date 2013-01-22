@@ -132,7 +132,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.MethodGraphTests
       {
         IMethodGraph methodGraph = BuildMethodGraph(sampleMethod);
         BasicBlock returnBasicBlock = methodGraph.GetBasicBlockById (returnBlock.UniqueKey);
-        string preConditionFragmentType = returnBasicBlock.PreConditions[0].Fragment;
+        var preConditionFragmentType = returnBasicBlock.PreConditions[0].Fragment;
 
         Assert.That (preConditionFragmentType, Is.EqualTo("ReturnFragmentType"));
       }
@@ -342,7 +342,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.MethodGraphTests
       {
         IMethodGraph methodGraph = BuildMethodGraph(sampleMethod);
         BasicBlock initialBasicBlock = methodGraph.GetBasicBlockById (initialBlock.UniqueKey);
-        string postConditionFragmentType = initialBasicBlock.PostConditionSymbolTable.GetFragmentType("local$0");
+        var postConditionFragmentType = initialBasicBlock.PostConditionSymbolTable.GetFragmentType("local$0");
 
         Assert.That (postConditionFragmentType, Is.EqualTo("__Literal__"));
       }
@@ -362,7 +362,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.MethodGraphTests
       {
         IMethodGraph methodGraph = BuildMethodGraph(sampleMethod);
         BasicBlock preReturnBasicBlock = methodGraph.GetBasicBlockById (preReturnBlock.UniqueKey);
-        string postConditionFragmentType = preReturnBasicBlock.PostConditionSymbolTable.GetFragmentType("local$1");
+        var postConditionFragmentType = preReturnBasicBlock.PostConditionSymbolTable.GetFragmentType("local$1");
 
         Assert.That (postConditionFragmentType, Is.EqualTo(SymbolTable.EMPTY_FRAGMENT));
       }
@@ -383,8 +383,8 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.MethodGraphTests
         IMethodGraph methodGraph = BuildMethodGraph(sampleMethod);
         BasicBlock returnBasicBlock = methodGraph.GetBasicBlockById (returnBlock.UniqueKey);
         string preConditionSymbolName = returnBasicBlock.PreConditions[0].Symbol;
-        string preConditionFragmentType = returnBasicBlock.PreConditions[0].Fragment;
-        bool correctPreCondition = preConditionSymbolName == "safe" && preConditionFragmentType == "SqlFragment";
+        var preConditionFragmentType = returnBasicBlock.PreConditions[0].Fragment;
+        bool correctPreCondition = preConditionSymbolName == "safe" && preConditionFragmentType == Fragment.CreateNamed("SqlFragment");
 
         Assert.That (correctPreCondition, Is.True);
       }
@@ -405,8 +405,8 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.MethodGraphTests
         IMethodGraph methodGraph = BuildMethodGraph(sampleMethod);
         BasicBlock returnBasicBlock = methodGraph.GetBasicBlockById (returnBlock.UniqueKey);
         string preConditionSymbolName = returnBasicBlock.PreConditions[0].Symbol;
-        string preConditionFragmentType = returnBasicBlock.PreConditions[0].Fragment;
-        bool correctPreCondition = preConditionSymbolName == "safe" && preConditionFragmentType == "SqlFragment";
+        var preConditionFragmentType = returnBasicBlock.PreConditions[0].Fragment;
+        bool correctPreCondition = preConditionSymbolName == "safe" && preConditionFragmentType == Fragment.CreateNamed( "SqlFragment");
 
         Assert.That (correctPreCondition, Is.True);
       }

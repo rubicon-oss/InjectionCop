@@ -83,7 +83,7 @@ namespace InjectionCop.IntegrationTests.Utilities
     {
       TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
       Method sample = TestHelper.GetSample<FragmentUtilitySample>("ContainsFragmentParameter", stringTypeNode);
-      string fragmentType = FragmentUtility.GetFragmentType(sample.Parameters[0].Attributes);
+      var fragmentType = FragmentUtility.GetFragmentType(sample.Parameters[0].Attributes);
       Assert.That(fragmentType, Is.EqualTo("FragmentType"));
     }
 
@@ -92,7 +92,7 @@ namespace InjectionCop.IntegrationTests.Utilities
     {
       TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
       Method sample = TestHelper.GetSample<FragmentUtilitySample>("ContainsStronglyTypedSqlFragmentParameter", stringTypeNode);
-      string fragmentType = FragmentUtility.GetFragmentType(sample.Parameters[0].Attributes);
+      var fragmentType = FragmentUtility.GetFragmentType(sample.Parameters[0].Attributes);
       Assert.That(fragmentType, Is.EqualTo("SqlFragment"));
     }
 
@@ -101,7 +101,7 @@ namespace InjectionCop.IntegrationTests.Utilities
     {
       TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
       Method sample = TestHelper.GetSample<FragmentUtilitySample>("ContainsNonFragmentParameter", stringTypeNode);
-      string returnedFragment = FragmentUtility.GetFragmentType(sample.Parameters[0].Attributes);
+      var returnedFragment = FragmentUtility.GetFragmentType(sample.Parameters[0].Attributes);
       Assert.That (returnedFragment, Is.EqualTo (SymbolTable.EMPTY_FRAGMENT));
     }
 
@@ -109,7 +109,7 @@ namespace InjectionCop.IntegrationTests.Utilities
     public void ReturnFragmentType_NonAnnotatedMethod_ReturnsEmptyFragment ()
     {
       Method sample = TestHelper.GetSample<FragmentUtilitySample> ("NoReturnFragment");
-      string returnFragment = FragmentUtility.ReturnFragmentType (sample);
+      var returnFragment = FragmentUtility.ReturnFragmentType (sample);
 
       Assert.That (returnFragment, Is.EqualTo(SymbolTable.EMPTY_FRAGMENT));
     }
@@ -118,7 +118,7 @@ namespace InjectionCop.IntegrationTests.Utilities
     public void ReturnFragmentType_MethodWithAnnotatedReturn_ReturnsNull ()
     {
       Method sample = TestHelper.GetSample<FragmentUtilitySample> ("ReturnFragment");
-      string returnFragment = FragmentUtility.ReturnFragmentType (sample);
+      var returnFragment = FragmentUtility.ReturnFragmentType (sample);
 
       Assert.That (returnFragment, Is.EqualTo("ReturnFragmentType"));
     }
@@ -127,7 +127,7 @@ namespace InjectionCop.IntegrationTests.Utilities
     public void ReturnFragmentType_ImplementedInterfaceMethod_ReturnsFragment ()
     {
       Method sample = TestHelper.GetSample<ClassWithMethodReturningFragment> ("MethodWithReturnFragment");
-      string returnFragment = FragmentUtility.ReturnFragmentType (sample);
+      var returnFragment = FragmentUtility.ReturnFragmentType (sample);
 
       Assert.That (returnFragment, Is.EqualTo("ReturnFragmentType"));
     }
@@ -136,7 +136,7 @@ namespace InjectionCop.IntegrationTests.Utilities
     public void ReturnFragmentType_ExplicitlyImplementedInterfaceMethod_ReturnsFragment ()
     {
       Method sample = TestHelper.GetSample<ClassWithExplicitlyDeclaredMethodReturningFragment> ("InjectionCop.IntegrationTests.Utilities.InterfaceWithReturnFragment.MethodWithReturnFragment");
-      string returnFragment = FragmentUtility.ReturnFragmentType (sample);
+      var returnFragment = FragmentUtility.ReturnFragmentType (sample);
 
       Assert.That (returnFragment, Is.EqualTo ("ReturnFragmentType"));
     }

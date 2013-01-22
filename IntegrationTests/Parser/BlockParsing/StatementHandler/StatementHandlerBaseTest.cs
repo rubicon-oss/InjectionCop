@@ -37,7 +37,7 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing.StatementHandler
       MockRepository mocks = new MockRepository();
       IBlacklistManager blacklistManager = mocks.Stub<IBlacklistManager>();
       StatementHandlerBase<AssignmentStatement> handler = new AssignmentStatementHandlerController (
-          new ProblemPipeStub(), "returnFragmentType", new List<ReturnCondition>(), blacklistManager, delegate { });
+          new ProblemPipeStub(), Fragment.CreateNamed( "returnFragmentType"), new List<ReturnCondition>(), blacklistManager, delegate { });
       Method sampleMethod = IntrospectionUtility.MethodFactory<StatementHandlerBaseSample> ("ContainsReturnStatement");
       Block sampleBlock = (Block) sampleMethod.Body.Statements[1];
       Statement sample = sampleBlock.Statements[0];
