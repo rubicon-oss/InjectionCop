@@ -243,7 +243,7 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
       BasicBlock returnedBlock = _blockParser.Parse (sample);
       var preConditionFragmentType = returnedBlock.PreConditions[0].Fragment;
       
-      Assert.That (preConditionFragmentType, Is.EqualTo ("DummyFragment"));
+      Assert.That (preConditionFragmentType, Is.EqualTo (Fragment.CreateNamed("DummyFragment")));
     }
 
     [Test]
@@ -291,7 +291,7 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
       BasicBlock ifBasicBlock = _blockParser.Parse (ifBlock);
       var postConditionFragmentType = ifBasicBlock.PostConditionSymbolTable.GetFragmentType("local$0");
 
-      Assert.That (postConditionFragmentType, Is.EqualTo("__Literal__"));
+      Assert.That (postConditionFragmentType, Is.EqualTo(Fragment.CreateLiteral()));
     }
 
     [Test]
@@ -350,7 +350,7 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
       BasicBlock ifBasicBlock = _blockParser.Parse (ifBlock);
       var postConditionFragmentType = ifBasicBlock.PostConditionSymbolTable.GetFragmentType("local$0");
 
-      Assert.That (postConditionFragmentType, Is.EqualTo("__Literal__"));
+      Assert.That (postConditionFragmentType, Is.EqualTo(Fragment.CreateLiteral()));
     }
 
     [Test]

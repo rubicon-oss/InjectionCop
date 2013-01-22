@@ -87,7 +87,7 @@ Namespace Parser.MethodParsing.EmbeddedInitialSymbolTableBuilderTest
 			Dim embeddedInitialSymbolTableBuilder As EmbeddedInitialSymbolTableBuilder = New EmbeddedInitialSymbolTableBuilder(sampleMethod, Me._blacklistManager, Me._environment)
       Me._environment.MakeSafe("_nonFragmentField", Fragment.CreateNamed("OverlappingType"))
 			Dim resultSymbolTable As ISymbolTable = embeddedInitialSymbolTableBuilder.GetResult()
-			Assert.That(resultSymbolTable.GetFragmentType("_nonFragmentField"), [Is].EqualTo("OverlappingType"))
+      Assert.That(resultSymbolTable.GetFragmentType("_nonFragmentField"), [Is].EqualTo(Fragment.CreateNamed("OverlappingType")))
 		End Sub
 
 		<Test()>

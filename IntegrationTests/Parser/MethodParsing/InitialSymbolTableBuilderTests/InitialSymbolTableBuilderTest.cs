@@ -85,7 +85,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.InitialSymbolTableB
       InitialSymbolTableBuilder initialSymbolTableBuilder = new InitialSymbolTableBuilder(sampleMethod, _blacklistManager);
       ISymbolTable resultSymbolTable = initialSymbolTableBuilder.GetResult();
 
-      Assert.That(resultSymbolTable.GetFragmentType("fragmentParameter"), Is.EqualTo("FragmentType"));
+      Assert.That(resultSymbolTable.GetFragmentType("fragmentParameter"), Is.EqualTo(Fragment.CreateNamed("FragmentType")));
     }
   }
 }

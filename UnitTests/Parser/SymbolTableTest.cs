@@ -15,7 +15,6 @@
 using System;
 using InjectionCop.Config;
 using InjectionCop.Parser;
-using Microsoft.FxCop.Sdk;
 using NUnit.Framework;
 
 namespace InjectionCop.UnitTests.Parser
@@ -35,27 +34,27 @@ namespace InjectionCop.UnitTests.Parser
     [Test]
     public void Clone_ReturnsDeepCopy_True ()
     {
-      _symbolTable.MakeSafe ("key", "FragmentType");
+      _symbolTable.MakeSafe ("key", Fragment.CreateNamed( "FragmentType"));
       ISymbolTable clone = _symbolTable.Copy();
       clone.MakeUnsafe ("key");
       ISymbolTable result = _symbolTable.Copy();
       
-      Assert.That (result.IsAssignableTo("key", "FragmentType"), Is.True);
+      Assert.That (result.IsAssignableTo("key", Fragment.CreateNamed( "FragmentType")), Is.True);
     }
 
     [Test]
     public void GetSafenessMap_ExistingEntry_ReturnsEntry ()
     {
-      _symbolTable.MakeSafe ("key", "FragmentType");
-      string fragmentType = _symbolTable.GetFragmentType ("key");
+      _symbolTable.MakeSafe ("key", Fragment.CreateNamed ("FragmentType"));
+      var fragmentType = _symbolTable.GetFragmentType ("key");
 
-      Assert.That (fragmentType, Is.EqualTo("FragmentType"));
+      Assert.That (fragmentType, Is.EqualTo (Fragment.CreateNamed ("FragmentType")));
     }
 
     [Test]
     public void GetSafenessMap_NonExistingEntry_ReturnsEmptyString ()
     {
-      Assert.That(_symbolTable.GetFragmentType ("key"), Is.EqualTo("__EmptyFragment__"));
+      Assert.That(_symbolTable.GetFragmentType ("key"), Is.Null);
     }
   }
 }

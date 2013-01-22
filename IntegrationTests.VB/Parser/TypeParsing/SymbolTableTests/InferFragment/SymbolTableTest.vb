@@ -25,7 +25,7 @@ Namespace Parser.TypeParsing.SymbolTableTests.InferFragment
 
     Private Shared _emptyFragment As Fragment = Nothing
 
-    Private Shared _literal = Fragment.CreateLiteral()
+    Private Shared _literal As Fragment = Fragment.CreateLiteral()
 
     Public Shared ReadOnly Property EmptyFragment() As Fragment
       Get
@@ -33,7 +33,7 @@ Namespace Parser.TypeParsing.SymbolTableTests.InferFragment
       End Get
     End Property
 
-    Public Shared ReadOnly Property Literal() As String
+    Public Shared ReadOnly Property Literal() As Fragment
       Get
         Return SymbolTableTest._literal
       End Get
@@ -105,7 +105,7 @@ Namespace Parser.TypeParsing.SymbolTableTests.InferFragment
       Dim assignment As AssignmentStatement = CType(assignmentBlock.Statements(4), AssignmentStatement)
       Dim sampleExpression As Expression = assignment.Source
       Dim fragmentType = Me._symbolTable.InferFragmentType(sampleExpression)
-      Assert.That(fragmentType, [Is].EqualTo("DummyType"))
+      Assert.That(fragmentType, [Is].EqualTo(Fragment.CreateNamed("DummyType")))
     End Sub
 
     <Test()>
@@ -173,7 +173,7 @@ Namespace Parser.TypeParsing.SymbolTableTests.InferFragment
       Dim assignment As AssignmentStatement = CType(assignmentBlock.Statements(1), AssignmentStatement)
       Dim sampleExpression As Expression = assignment.Source
       Dim fragmentType = Me._symbolTable.InferFragmentType(sampleExpression)
-      Assert.That(fragmentType, [Is].EqualTo("DummyType"))
+      Assert.That(fragmentType, [Is].EqualTo(Fragment.CreateNamed("DummyType")))
     End Sub
 
     <Test()>
@@ -226,7 +226,7 @@ Namespace Parser.TypeParsing.SymbolTableTests.InferFragment
       Dim assignment As AssignmentStatement = CType(assignmentBlock.Statements(1), AssignmentStatement)
       Dim sampleExpression As Expression = assignment.Source
       Dim fragmentType = Me._symbolTable.InferFragmentType(sampleExpression)
-      Assert.That(fragmentType, [Is].EqualTo("SqlFragment"))
+      Assert.That(fragmentType, [Is].EqualTo(Fragment.CreateNamed("SqlFragment")))
     End Sub
 
     <Test()>
@@ -246,7 +246,7 @@ Namespace Parser.TypeParsing.SymbolTableTests.InferFragment
       Dim assignment As AssignmentStatement = CType(assignmentBlock.Statements(1), AssignmentStatement)
       Dim sampleExpression As Expression = assignment.Source
       Dim fragmentType = Me._symbolTable.InferFragmentType(sampleExpression)
-      Assert.That(fragmentType, [Is].EqualTo("SampleFragment"))
+      Assert.That(fragmentType, [Is].EqualTo(Fragment.CreateNamed("SampleFragment")))
     End Sub
 
     <Test()>
@@ -266,7 +266,7 @@ Namespace Parser.TypeParsing.SymbolTableTests.InferFragment
       Dim assignment As AssignmentStatement = CType(assignmentBlock.Statements(1), AssignmentStatement)
       Dim sampleExpression As Expression = assignment.Source
       Dim fragmentType = Me._symbolTable.InferFragmentType(sampleExpression)
-      Assert.That(fragmentType, [Is].EqualTo("PropertyFragmentType"))
+      Assert.That(fragmentType, [Is].EqualTo(Fragment.CreateNamed("PropertyFragmentType")))
     End Sub
   End Class
 End Namespace

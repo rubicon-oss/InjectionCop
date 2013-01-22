@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using InjectionCop.Config;
+using InjectionCop.Parser;
 using InjectionCop.Parser.BlockParsing;
 using InjectionCop.Parser.BlockParsing.PreCondition;
 using InjectionCop.Parser.BlockParsing.StatementHandler;
@@ -35,7 +36,7 @@ namespace InjectionCop.UnitTests.Parser.BlockParsing.StatementHandler
       IBlacklistManager blacklistManager = mocks.Stub<IBlacklistManager>();
       IProblemPipe problemPipe = mocks.Stub<IProblemPipe>();
       StatementHandlerDictionaryBuilder builder = new StatementHandlerDictionaryBuilder (
-          blacklistManager, problemPipe, "returnFragmentType", new List<ReturnCondition>(), delegate (Expression expression) { });
+          blacklistManager, problemPipe, Fragment.CreateNamed( "returnFragmentType"), new List<ReturnCondition>(), delegate (Expression expression) { });
 
       Dictionary<Type, IStatementHandler> handlers = builder.Build();
       bool assignmentStatementSupported = handlers.ContainsKey (typeof (AssignmentStatement));

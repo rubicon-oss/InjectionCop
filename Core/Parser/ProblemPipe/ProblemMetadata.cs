@@ -29,7 +29,7 @@ namespace InjectionCop.Parser.ProblemPipe
     {
       _sourceExpressionId = sourceExpressionId;
       _sourceContext = ArgumentUtility.CheckNotNull ("sourceContext", sourceContext);
-      _expectedFragment = ArgumentUtility.CheckNotNull ("expectedFragment", expectedFragment);
+      _expectedFragment = expectedFragment;
       _givenFragment = givenFragment;
     }
 

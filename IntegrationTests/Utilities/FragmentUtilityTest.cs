@@ -84,7 +84,7 @@ namespace InjectionCop.IntegrationTests.Utilities
       TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
       Method sample = TestHelper.GetSample<FragmentUtilitySample>("ContainsFragmentParameter", stringTypeNode);
       var fragmentType = FragmentUtility.GetFragmentType(sample.Parameters[0].Attributes);
-      Assert.That(fragmentType, Is.EqualTo("FragmentType"));
+      Assert.That(fragmentType, Is.EqualTo(Fragment.CreateNamed("FragmentType")));
     }
 
     [Test]
@@ -93,7 +93,7 @@ namespace InjectionCop.IntegrationTests.Utilities
       TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
       Method sample = TestHelper.GetSample<FragmentUtilitySample>("ContainsStronglyTypedSqlFragmentParameter", stringTypeNode);
       var fragmentType = FragmentUtility.GetFragmentType(sample.Parameters[0].Attributes);
-      Assert.That(fragmentType, Is.EqualTo("SqlFragment"));
+      Assert.That(fragmentType, Is.EqualTo(Fragment.CreateNamed("SqlFragment")));
     }
 
     [Test]
@@ -120,7 +120,7 @@ namespace InjectionCop.IntegrationTests.Utilities
       Method sample = TestHelper.GetSample<FragmentUtilitySample> ("ReturnFragment");
       var returnFragment = FragmentUtility.ReturnFragmentType (sample);
 
-      Assert.That (returnFragment, Is.EqualTo("ReturnFragmentType"));
+      Assert.That (returnFragment, Is.EqualTo(Fragment.CreateNamed("ReturnFragmentType")));
     }
 
     [Test]
@@ -129,7 +129,7 @@ namespace InjectionCop.IntegrationTests.Utilities
       Method sample = TestHelper.GetSample<ClassWithMethodReturningFragment> ("MethodWithReturnFragment");
       var returnFragment = FragmentUtility.ReturnFragmentType (sample);
 
-      Assert.That (returnFragment, Is.EqualTo("ReturnFragmentType"));
+      Assert.That (returnFragment, Is.EqualTo(Fragment.CreateNamed("ReturnFragmentType")));
     }
     
     [Test]
@@ -138,7 +138,7 @@ namespace InjectionCop.IntegrationTests.Utilities
       Method sample = TestHelper.GetSample<ClassWithExplicitlyDeclaredMethodReturningFragment> ("InjectionCop.IntegrationTests.Utilities.InterfaceWithReturnFragment.MethodWithReturnFragment");
       var returnFragment = FragmentUtility.ReturnFragmentType (sample);
 
-      Assert.That (returnFragment, Is.EqualTo ("ReturnFragmentType"));
+      Assert.That (returnFragment, Is.EqualTo (Fragment.CreateNamed("ReturnFragmentType")));
     }
 
     [Test]

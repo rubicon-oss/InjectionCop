@@ -72,5 +72,11 @@ namespace InjectionCop.Parser
     {
       return !object.Equals (a, b);
     }
+
+    public override string ToString ()
+    {
+      return _type == Type.Literal ? "Literal" : _fragmentName;
+    }
+
   }
 }

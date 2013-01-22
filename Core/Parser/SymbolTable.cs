@@ -89,7 +89,6 @@ namespace InjectionCop.Parser
     public bool IsAssignableTo(string symbolName, Fragment fragmentType)
     {
       ArgumentUtility.CheckNotNull("symbolName", symbolName);
-      ArgumentUtility.CheckNotNull("fragmentType", fragmentType);
 
       return FragmentUtility.FragmentTypesAssignable (GetFragmentType(symbolName), fragmentType);
     }
@@ -143,9 +142,7 @@ namespace InjectionCop.Parser
     public void MakeSafe (string symbolName, Fragment fragmentType)
     {
       ArgumentUtility.CheckNotNull ("symbolName", symbolName);
-      ArgumentUtility.CheckNotNull ("fragmentType", fragmentType);
       _safenessMap[symbolName] = fragmentType;
-      
     }
     
     public bool Contains (string symbolName)

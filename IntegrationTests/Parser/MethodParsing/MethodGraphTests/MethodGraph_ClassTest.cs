@@ -134,7 +134,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.MethodGraphTests
         BasicBlock returnBasicBlock = methodGraph.GetBasicBlockById (returnBlock.UniqueKey);
         var preConditionFragmentType = returnBasicBlock.PreConditions[0].Fragment;
 
-        Assert.That (preConditionFragmentType, Is.EqualTo("ReturnFragmentType"));
+        Assert.That (preConditionFragmentType, Is.EqualTo(Fragment.CreateNamed("ReturnFragmentType")));
       }
       else
       {
@@ -344,7 +344,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.MethodGraphTests
         BasicBlock initialBasicBlock = methodGraph.GetBasicBlockById (initialBlock.UniqueKey);
         var postConditionFragmentType = initialBasicBlock.PostConditionSymbolTable.GetFragmentType("local$0");
 
-        Assert.That (postConditionFragmentType, Is.EqualTo("__Literal__"));
+        Assert.That (postConditionFragmentType, Is.EqualTo(Fragment.CreateLiteral()));
       }
       else
       {

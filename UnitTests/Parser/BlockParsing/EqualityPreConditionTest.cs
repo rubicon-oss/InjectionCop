@@ -38,9 +38,9 @@ namespace InjectionCop.UnitTests.Parser.BlockParsing
     [Test]
     public void IsViolated_ViolatingContext_ChangesProblemMetadatasGivenType()
     {
-      string expectedFragment = "expectedFragment";
-      string unexpectedFragment = "unexpectedFragment";
-      ProblemMetadata problemMetaData = new ProblemMetadata(0, new SourceContext(), expectedFragment, "dummy");
+      var expectedFragment = Fragment.CreateNamed( "expectedFragment");
+      var unexpectedFragment = Fragment.CreateNamed( "unexpectedFragment");
+      ProblemMetadata problemMetaData = new ProblemMetadata(0, new SourceContext(), expectedFragment, Fragment.CreateNamed( "dummy"));
       IBlacklistManager blackListManager = _mocks.Stub<IBlacklistManager>();
       EqualityPreCondition preCondition = new EqualityPreCondition("testSymbol", expectedFragment, problemMetaData);
       SymbolTable context = new SymbolTable(blackListManager);

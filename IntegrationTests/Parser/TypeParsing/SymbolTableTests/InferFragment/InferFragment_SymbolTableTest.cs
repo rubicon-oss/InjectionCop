@@ -25,15 +25,15 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.SymbolTableTests.Infe
   public class SymbolTableTest
   {
     private SymbolTable _symbolTable;
-    private static readonly string _emptyFragment = "__EmptyFragment__";
-    private static readonly string _literal = "__Literal__";
+    private static readonly Fragment _emptyFragment = null;
+    private static readonly Fragment _literal = Fragment.CreateLiteral();
 
-    public static string EmptyFragment
+    public static Fragment EmptyFragment
     {
       get { return _emptyFragment; }
     }
 
-    public static string Literal
+    public static Fragment Literal
     {
       get { return _literal; }
     }
@@ -111,7 +111,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.SymbolTableTests.Infe
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[4];
       Expression sampleExpression = assignment.Source;
       var fragmentType = _symbolTable.InferFragmentType(sampleExpression);
-      Assert.That(fragmentType, Is.EqualTo("DummyType"));
+      Assert.That(fragmentType, Is.EqualTo(Fragment.CreateNamed("DummyType")));
     }
 
     [Test]
@@ -185,7 +185,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.SymbolTableTests.Infe
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[1];
       Expression sampleExpression = assignment.Source;
       var fragmentType = _symbolTable.InferFragmentType(sampleExpression);
-      Assert.That(fragmentType, Is.EqualTo("DummyType"));
+      Assert.That(fragmentType, Is.EqualTo(Fragment.CreateNamed("DummyType")));
     }
 
     
@@ -245,7 +245,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.SymbolTableTests.Infe
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[1];
       Expression sampleExpression = assignment.Source;
       var fragmentType = _symbolTable.InferFragmentType(sampleExpression);
-      Assert.That(fragmentType, Is.EqualTo("SqlFragment"));
+      Assert.That(fragmentType, Is.EqualTo(Fragment.CreateNamed("SqlFragment")));
     }
 
     [Test]
@@ -268,7 +268,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.SymbolTableTests.Infe
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[1];
       Expression sampleExpression = assignment.Source;
       var fragmentType = _symbolTable.InferFragmentType(sampleExpression);
-      Assert.That(fragmentType, Is.EqualTo("SampleFragment"));
+      Assert.That(fragmentType, Is.EqualTo(Fragment.CreateNamed("SampleFragment")));
     }
 
     [Test]
@@ -290,7 +290,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.SymbolTableTests.Infe
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[1];
       Expression sampleExpression = assignment.Source;
       var fragmentType = _symbolTable.InferFragmentType(sampleExpression);
-      Assert.That(fragmentType, Is.EqualTo("PropertyFragmentType"));
+      Assert.That(fragmentType, Is.EqualTo(Fragment.CreateNamed("PropertyFragmentType")));
     }
   }
 }

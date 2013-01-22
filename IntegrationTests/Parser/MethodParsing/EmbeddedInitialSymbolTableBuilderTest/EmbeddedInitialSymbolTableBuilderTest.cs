@@ -90,7 +90,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.EmbeddedInitialSymb
       _environment.MakeSafe("environmentSymbol",Fragment.CreateNamed( "DummyType"));
       ISymbolTable resultSymbolTable = embeddedInitialSymbolTableBuilder.GetResult();
 
-      Assert.That(resultSymbolTable.GetFragmentType("environmentSymbol"), Is.EqualTo("DummyType"));
+      Assert.That(resultSymbolTable.GetFragmentType("environmentSymbol"), Is.EqualTo(Fragment.CreateNamed("DummyType")));
     }
 
     [Test]
@@ -101,7 +101,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.EmbeddedInitialSymb
       _environment.MakeSafe("_nonFragmentField", Fragment.CreateNamed("OverlappingType"));
       ISymbolTable resultSymbolTable = embeddedInitialSymbolTableBuilder.GetResult();
 
-      Assert.That(resultSymbolTable.GetFragmentType("_nonFragmentField"), Is.EqualTo("OverlappingType"));
+      Assert.That(resultSymbolTable.GetFragmentType("_nonFragmentField"), Is.EqualTo(Fragment.CreateNamed("OverlappingType")));
     }
 
     [Test]
@@ -131,7 +131,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.EmbeddedInitialSymb
       EmbeddedInitialSymbolTableBuilder embeddedInitialSymbolTableBuilder = new EmbeddedInitialSymbolTableBuilder(sampleMethod, _blacklistManager, _environment);
       ISymbolTable resultSymbolTable = embeddedInitialSymbolTableBuilder.GetResult();
 
-      Assert.That(resultSymbolTable.GetFragmentType("fragmentParameter"), Is.EqualTo("FragmentType"));
+      Assert.That(resultSymbolTable.GetFragmentType("fragmentParameter"), Is.EqualTo(Fragment.CreateNamed("FragmentType")));
     }
 
     [Test]
@@ -142,7 +142,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.EmbeddedInitialSymb
       EmbeddedInitialSymbolTableBuilder embeddedInitialSymbolTableBuilder = new EmbeddedInitialSymbolTableBuilder(sampleMethod, _blacklistManager, _environment);
       ISymbolTable resultSymbolTable = embeddedInitialSymbolTableBuilder.GetResult();
 
-      Assert.That(resultSymbolTable.GetFragmentType("fragmentParameter"), Is.EqualTo("OverlappingType"));
+      Assert.That(resultSymbolTable.GetFragmentType("fragmentParameter"), Is.EqualTo(Fragment.CreateNamed("OverlappingType")));
     }
   }
 }

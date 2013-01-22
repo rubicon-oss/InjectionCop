@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using InjectionCop.Parser;
 using Microsoft.FxCop.Sdk;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -39,8 +40,8 @@ namespace InjectionCop.UnitTests.Parser.ProblemPipe
     [Test]
     public void AddProblem_MultipleProblemMetadataObjectsWithDifferentSourceExpressionIds_PassesObjects_ ()
     {
-      ProblemMetadata problem1 = new ProblemMetadata(c_sourceExpressionId1, new SourceContext(), "dummy", "dummy");
-      ProblemMetadata problem2 = new ProblemMetadata(c_sourceExpressionId2, new SourceContext(), "dummy", "dummy");
+      ProblemMetadata problem1 = new ProblemMetadata(c_sourceExpressionId1, new SourceContext(), Fragment.CreateNamed("dummy"), Fragment.CreateNamed("dummy"));
+      ProblemMetadata problem2 = new ProblemMetadata(c_sourceExpressionId2, new SourceContext(), Fragment.CreateNamed("dummy"), Fragment.CreateNamed("dummy"));
 
       using (_mocks.Record())
       {
@@ -58,9 +59,9 @@ namespace InjectionCop.UnitTests.Parser.ProblemPipe
     [Test]
     public void AddProblem_MultipleProblemMetadataObjectsWithDuplicate_PassesObjectsWithoutDuplicates_ ()
     {
-      ProblemMetadata problem1 = new ProblemMetadata(c_sourceExpressionId1, new SourceContext(), "dummy", "dummy");
-      ProblemMetadata problem2 = new ProblemMetadata(c_sourceExpressionId2, new SourceContext(), "dummy", "dummy");
-      ProblemMetadata problem3 = new ProblemMetadata(c_sourceExpressionId2, new SourceContext(), "dummy", "dummy");
+      ProblemMetadata problem1 = new ProblemMetadata(c_sourceExpressionId1, new SourceContext(), Fragment.CreateNamed("dummy"), Fragment.CreateNamed("dummy"));
+      ProblemMetadata problem2 = new ProblemMetadata(c_sourceExpressionId2, new SourceContext(), Fragment.CreateNamed("dummy"), Fragment.CreateNamed("dummy"));
+      ProblemMetadata problem3 = new ProblemMetadata(c_sourceExpressionId2, new SourceContext(), Fragment.CreateNamed("dummy"), Fragment.CreateNamed("dummy"));
 
       using (_mocks.Record())
       {
