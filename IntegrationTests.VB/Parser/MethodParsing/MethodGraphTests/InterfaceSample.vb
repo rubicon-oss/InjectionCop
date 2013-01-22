@@ -11,13 +11,13 @@
 ' WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 ' See the License for the specific language governing permissions and
 ' limitations under the License.
-Imports InjectionCop.Fragment
 Imports System
+Imports InjectionCop.Attributes
 
 Namespace Parser.MethodParsing.MethodGraphTests
-	Public Interface InterfaceSample
-		Sub MethodNonAnnotated(param1 As Object, param2 As String)
+  Public Interface InterfaceSample
+    Sub MethodNonAnnotated(param1 As Object, param2 As String)
 
-		Sub MethodAnnotated(<Fragment("fragmentType")> param1 As Object, <SqlFragment()> fragment2 As Object)
-	End Interface
+    Sub MethodAnnotated(<Fragment("fragmentType")> param1 As Object, <SqlFragment()> fragment2 As Object)
+  End Interface
 End Namespace

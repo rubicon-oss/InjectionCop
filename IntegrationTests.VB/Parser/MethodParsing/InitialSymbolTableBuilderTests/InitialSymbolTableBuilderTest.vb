@@ -72,7 +72,7 @@ Namespace Parser.MethodParsing.InitialSymbolTableBuilderTests
 			Dim sampleMethod As Method = TestHelper.GetSample(Of SymbolTableBuilderSample)("ParameterizedMethod", New TypeNode() { Me._floatType, Me._objectType })
 			Dim initialSymbolTableBuilder As InitialSymbolTableBuilder = New InitialSymbolTableBuilder(sampleMethod, Me._blacklistManager)
 			Dim resultSymbolTable As ISymbolTable = initialSymbolTableBuilder.GetResult()
-			Assert.That(resultSymbolTable.GetFragmentType("fragmentParameter"), [Is].EqualTo("FragmentType"))
+      Assert.That(resultSymbolTable.GetFragmentType("fragmentParameter"), [Is].EqualTo(Fragment.CreateNamed("FragmentType")))
 		End Sub
 	End Class
 End Namespace

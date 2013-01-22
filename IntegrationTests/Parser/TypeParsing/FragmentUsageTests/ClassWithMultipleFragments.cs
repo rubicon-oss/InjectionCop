@@ -1,5 +1,5 @@
 ﻿using System;
-using InjectionCop.Fragment;
+using InjectionCop.Attributes;
 
 namespace InjectionCop.IntegrationTests.Parser.TypeParsing.FragmentUsageTests
 {

@@ -23,19 +23,19 @@ namespace InjectionCop.Parser.BlockParsing.PreCondition
   /// </summary>
   public class AssignabilityPreCondition : PreConditionBase
   {
-    public AssignabilityPreCondition (string symbol, string fragmentType)
-        : this (symbol, fragmentType, new ProblemMetadata (-1, new SourceContext(), "?", "?"))
+    public AssignabilityPreCondition (string symbol, Fragment fragment)
+        : this (symbol, fragment, new ProblemMetadata (-1, new SourceContext(),Fragment.CreateNamed("?"), Fragment.CreateNamed("?")))
     {
     }
 
-    public AssignabilityPreCondition (string symbol, string fragmentType, ProblemMetadata problemMetadata)
-        : base (symbol, fragmentType, problemMetadata)
+    public AssignabilityPreCondition (string symbol, Fragment fragment, ProblemMetadata problemMetadata)
+        : base (symbol, fragment, problemMetadata)
     {
     }
 
     protected override bool ViolationCheckStrategy (ISymbolTable context)
     {
-      return !context.IsAssignableTo (_symbol, _fragmentType);
+      return !context.IsAssignableTo (_symbol, _fragment);
     }
   }
 }

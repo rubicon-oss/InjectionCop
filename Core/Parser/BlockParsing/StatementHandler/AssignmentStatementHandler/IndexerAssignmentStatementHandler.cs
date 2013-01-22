@@ -26,7 +26,7 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
   {
     public IndexerAssignmentStatementHandler (
         IProblemPipe problemPipe,
-        string returnFragmentType,
+        Fragment returnFragmentType,
         List<ReturnCondition> returnConditions,
         IBlacklistManager blacklistManager,
         BlockParser.InspectCallback inspect)
@@ -45,8 +45,8 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
       AssignmentStatement assignmentStatement = (AssignmentStatement) statement;
       Indexer targetIndexer = (Indexer) assignmentStatement.Target;
       string targetName = IntrospectionUtility.GetVariableName (targetIndexer.Object);
-      string targetFragmentType = symbolTable.GetFragmentType (targetName);
-      string sourceFragmentType = symbolTable.InferFragmentType (assignmentStatement.Source);
+      Fragment targetFragmentType = symbolTable.GetFragmentType (targetName);
+      Fragment sourceFragmentType = symbolTable.InferFragmentType (assignmentStatement.Source);
       if (targetFragmentType != sourceFragmentType)
       {
         symbolTable.MakeUnsafe (targetName);
@@ -59,7 +59,7 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
     }
 
     private void SetPreConditionForIndexerObject (
-        AssignmentStatement assignmentStatement, string targetName, string sourceFragmentType, List<IPreCondition> preConditions)
+        AssignmentStatement assignmentStatement, string targetName, Fragment sourceFragmentType, List<IPreCondition> preConditions)
     {
       if (targetName != null)
       {
@@ -67,7 +67,7 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
             assignmentStatement.UniqueKey,
             assignmentStatement.SourceContext,
             sourceFragmentType,
-            "??");
+            Fragment.CreateNamed("??"));
         
         var preCondition = new EqualityPreCondition (targetName, sourceFragmentType, problemMetadata);
         preConditions.Add (preCondition);

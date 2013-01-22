@@ -27,7 +27,7 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
   {
     public DelegateAssignmentStatementHandler (
         IProblemPipe problemPipe,
-        string returnFragmentType,
+        Fragment returnFragmentType,
         List<ReturnCondition> returnConditions,
         IBlacklistManager blacklistManager,
         BlockParser.InspectCallback inspect)
@@ -46,7 +46,7 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
       AssignmentStatement assignmentStatement = (AssignmentStatement) statement;
       Method assignedMethod = GetAssignedDelegateMethod (assignmentStatement);
       DelegateNode sourceDelegateType = (DelegateNode) assignmentStatement.Source.Type;
-      string returnFragment = GetDelegateTypesReturnFragment (sourceDelegateType);
+      Fragment returnFragment = GetDelegateTypesReturnFragment (sourceDelegateType);
       ISymbolTable environment = GetDelegatesEnvironment (sourceDelegateType);
 
       IMethodGraphAnalyzer methodParser = new MethodGraphAnalyzer (_problemPipe);
@@ -72,9 +72,9 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
       return (Method) methodBinding.BoundMember;
     }
 
-    private string GetDelegateTypesReturnFragment (DelegateNode sourceDelegateType)
+    private Fragment GetDelegateTypesReturnFragment (DelegateNode sourceDelegateType)
     {
-      string returnFragment = SymbolTable.EMPTY_FRAGMENT;
+      Fragment returnFragment = null;
       foreach (Member member in sourceDelegateType.Members)
       {
         if (member.Name.Name == "Invoke")

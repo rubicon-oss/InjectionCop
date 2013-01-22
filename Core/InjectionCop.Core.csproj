@@ -53,11 +53,11 @@
     <Compile Include="Config\FragmentSignature.cs" />
     <Compile Include="Config\IConfigurationFileLocator.cs" />
     <Compile Include="Config\LayeredConfigurationAdapter.cs" />
-    <Compile Include="Fragment\Fragment.cs" />
-    <Compile Include="Fragment\FragmentAttribute.cs" />
-    <Compile Include="Fragment\FragmentGeneratorAttribute.cs" />
-    <Compile Include="Fragment\SqlFragmentAttribute.cs" />
-    <Compile Include="Fragment\TrustedSqlGeneration.cs" />
+    <Compile Include="Parser\Fragment.cs" />
+    <Compile Include="Attributes\FragmentAttribute.cs" />
+    <Compile Include="Attributes\FragmentGeneratorAttribute.cs" />
+    <Compile Include="Attributes\SqlFragmentAttribute.cs" />
+    <Compile Include="Attributes\TrustedSqlGeneration.cs" />
     <Compile Include="Config\IBlacklistManager.cs" />
     <Compile Include="Config\IDbCommandBlacklistManagerStub.cs" />
     <Compile Include="Parser\BlockParsing\MethodCallAnalyzer.cs" />

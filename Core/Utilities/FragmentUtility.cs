@@ -15,7 +15,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using InjectionCop.Fragment;
+using InjectionCop.Attributes;
 using InjectionCop.Parser;
 using Microsoft.FxCop.Sdk;
 
@@ -41,9 +41,9 @@ namespace InjectionCop.Utilities
       return attributes.Any (IsFragment);
     }
 
-    public static string GetFragmentType (AttributeNodeCollection attributes)
+    public static Fragment GetFragmentType (AttributeNodeCollection attributes)
     {
-      string fragmentType = SymbolTable.EMPTY_FRAGMENT;
+      Fragment fragmentType = null;
       if (attributes != null && ContainsFragment (attributes))
       {
         string fragmentFullName = typeof (FragmentAttribute).FullName;
@@ -59,13 +59,13 @@ namespace InjectionCop.Utilities
                 string value = literal.Value as string;
                 if (value != null)
                 {
-                  fragmentType = value;
+                  fragmentType = Fragment.CreateNamed(value);
                 }
               }
             }
             else
             {
-              fragmentType = attributeNode.Type.Name.Name.Replace ("Attribute", "");
+              fragmentType = Fragment.CreateNamed (attributeNode.Type.Name.Name.Replace ("Attribute", ""));
             }
           }
         }
@@ -73,10 +73,10 @@ namespace InjectionCop.Utilities
       return fragmentType;
     }
 
-    public static string ReturnFragmentType (Method method)
+    public static Fragment ReturnFragmentType (Method method)
     {
       ArgumentUtility.CheckNotNull ("method", method);
-      string returnFragment = SymbolTable.EMPTY_FRAGMENT;
+      Fragment returnFragment = null;
       Method determiningMethod;
 
       Method[] interfaceDeclarations = IntrospectionUtility.InterfaceDeclarations (method);
@@ -96,9 +96,9 @@ namespace InjectionCop.Utilities
       return returnFragment;
     }
 
-    public static string[] GetAnnotatedParameterFragmentTypes(Method method)
+    public static Fragment[] GetAnnotatedParameterFragmentTypes(Method method)
     {
-      List<string> buffer = new List<string>();
+      var buffer = new List<Fragment>();
       if (!IsAnnotatedPropertySetter(method))
       {
         buffer.AddRange(method.Parameters.Select(parameter => FragmentUtility.GetFragmentType(parameter.Attributes)));
@@ -130,9 +130,9 @@ namespace InjectionCop.Utilities
       return isAnnotatedPropertyGetter;
     }
 
-    public static string InferReturnFragmentType(Method method)
+    public static Fragment InferReturnFragmentType(Method method)
     {
-      string fragmentType;
+      Fragment fragmentType;
       AttributeNodeCollection definingAttributes = GetDefiningAttributes(method);
 
       if (definingAttributes != null)
@@ -141,15 +141,15 @@ namespace InjectionCop.Utilities
       }
       else
       {
-        fragmentType = SymbolTable.EMPTY_FRAGMENT;
+        fragmentType = null;
       }
 
       return fragmentType;
     }
 
-    public static string GetMemberBindingFragmentType(MemberBinding memberBinding)
+    public static Fragment GetMemberBindingFragmentType(MemberBinding memberBinding)
     {
-      string fragmentType = SymbolTable.EMPTY_FRAGMENT;
+      Fragment fragmentType = null;
       if (memberBinding.BoundMember is Field)
       {
         Field field = (Field)memberBinding.BoundMember;
@@ -186,11 +186,11 @@ namespace InjectionCop.Utilities
       return isFragmentGenerator;
     }
 
-    public static bool FragmentTypesAssignable (string givenFragmentType, string targetFragmentType)
+    public static bool FragmentTypesAssignable (Fragment givenFragmentType, Fragment targetFragmentType)
     {
       return targetFragmentType == givenFragmentType
-             || givenFragmentType == SymbolTable.LITERAL
-             || targetFragmentType == SymbolTable.EMPTY_FRAGMENT;
+             || targetFragmentType == null
+             || givenFragmentType == SymbolTable.LITERAL;
     }
 
     private static bool ContainsFragmentGeneratorAttribute(AttributeNodeCollection attributes)

@@ -14,7 +14,7 @@
 
 using System;
 using System.Globalization;
-using InjectionCop.Fragment;
+using InjectionCop.Attributes;
 
 namespace InjectionCop.IntegrationTests.Parser.MethodParsing.MethodGraphTests
 {

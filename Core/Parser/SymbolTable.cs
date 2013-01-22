@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using InjectionCop.Config;
 using InjectionCop.Utilities;
@@ -24,17 +23,19 @@ namespace InjectionCop.Parser
 {
   public class SymbolTable : ISymbolTable
   {
-    public static readonly string LITERAL = "__Literal__";
-    public static readonly string EMPTY_FRAGMENT = "__EmptyFragment__";
+    [Obsolete]
+    public static readonly Fragment LITERAL = Fragment.CreateLiteral();
+    [Obsolete]
+    public static readonly Fragment EMPTY_FRAGMENT = null;
 
     private readonly IBlacklistManager _blacklistManager;
 
-    private Dictionary<string, string> _safenessMap;
+    private Dictionary<string, Fragment> _safenessMap;
     
     public SymbolTable (IBlacklistManager blacklistManager)
     {
       _blacklistManager = ArgumentUtility.CheckNotNull("blacklistManager", blacklistManager);
-      _safenessMap = new Dictionary<string, string>();
+      _safenessMap = new Dictionary<string, Fragment>();
     }
 
     public IEnumerable<string> Symbols
@@ -42,11 +43,11 @@ namespace InjectionCop.Parser
       get { return new List<string> (_safenessMap.Keys).ToArray(); }
     }
 
-    public string InferFragmentType (Expression expression)
+    public Fragment InferFragmentType (Expression expression)
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      string fragmentType = EMPTY_FRAGMENT;
+      Fragment fragmentType = EMPTY_FRAGMENT;
       if (expression is Literal)
       {
         fragmentType = LITERAL;
@@ -85,7 +86,7 @@ namespace InjectionCop.Parser
       return fragmentType;
     }
 
-    public bool IsAssignableTo(string symbolName, string fragmentType)
+    public bool IsAssignableTo(string symbolName, Fragment fragmentType)
     {
       ArgumentUtility.CheckNotNull("symbolName", symbolName);
       ArgumentUtility.CheckNotNull("fragmentType", fragmentType);
@@ -93,9 +94,9 @@ namespace InjectionCop.Parser
       return FragmentUtility.FragmentTypesAssignable (GetFragmentType(symbolName), fragmentType);
     }
 
-    public string[] InferParameterFragmentTypes (Method method)
+    public Fragment[] InferParameterFragmentTypes (Method method)
     {
-      string[] parameterFragmentTypes;
+      Fragment[] parameterFragmentTypes;
       Method[] interfaceDeclarations = IntrospectionUtility.InterfaceDeclarations (method);
       
       if (interfaceDeclarations.Any())
@@ -115,14 +116,14 @@ namespace InjectionCop.Parser
       if (symbolName != null)
       {
         ArgumentUtility.CheckNotNull("expression", expression);
-        string fragmentType = InferFragmentType(expression);
+        Fragment fragmentType = InferFragmentType(expression);
         _safenessMap[symbolName] = fragmentType;
       }
     }
 
-    public string GetFragmentType (string symbolName)
+    public Fragment GetFragmentType (string symbolName)
     {
-      string fragmentType = EMPTY_FRAGMENT;
+      Fragment fragmentType = EMPTY_FRAGMENT;
       if (symbolName != null)
       {
         if (_safenessMap.ContainsKey (symbolName))
@@ -139,7 +140,7 @@ namespace InjectionCop.Parser
       _safenessMap[symbolName] = EMPTY_FRAGMENT;
     }
 
-    public void MakeSafe (string symbolName, string fragmentType)
+    public void MakeSafe (string symbolName, Fragment fragmentType)
     {
       ArgumentUtility.CheckNotNull ("symbolName", symbolName);
       ArgumentUtility.CheckNotNull ("fragmentType", fragmentType);
@@ -156,13 +157,13 @@ namespace InjectionCop.Parser
     public ISymbolTable Copy ()
     {
       SymbolTable clone = new SymbolTable (_blacklistManager);
-      clone._safenessMap = new Dictionary<string, string> (_safenessMap);
+      clone._safenessMap = new Dictionary<string, Fragment> (_safenessMap);
       return clone;
     }
 
-    private string Lookup (string name)
+    private Fragment Lookup (string name)
     {
-      string fragmentType = EMPTY_FRAGMENT;
+      Fragment fragmentType = EMPTY_FRAGMENT;
       if (_safenessMap.ContainsKey (name))
       {
         fragmentType = _safenessMap[name];
@@ -170,20 +171,20 @@ namespace InjectionCop.Parser
       return fragmentType;
     }
     
-    private string[] GetParameterFragmentTypes(Method calleeMethod)
+    private Fragment[] GetParameterFragmentTypes(Method calleeMethod)
     {
       List<string> parameterTypes = IntrospectionUtility.GetParameterTypes(calleeMethod);
       string assemblyName = calleeMethod.ContainingAssembly().Name;
       
       FragmentSignature signature = _blacklistManager.GetFragmentTypes(assemblyName, calleeMethod.DeclaringType.FullName, calleeMethod.Name.Name, parameterTypes);
-      string[] parameterFragmentTypes;
+      Fragment[] parameterFragmentTypes;
       if (signature == null)
       {
         parameterFragmentTypes = FragmentUtility.GetAnnotatedParameterFragmentTypes(calleeMethod);
       }
       else
       {
-        parameterFragmentTypes = signature.ParameterFragmentTypes;
+        parameterFragmentTypes = signature.ParameterFragmentTypes.Select(name => name != null ? Fragment.CreateNamed(name) : null).ToArray();
       }
       return parameterFragmentTypes;
     }

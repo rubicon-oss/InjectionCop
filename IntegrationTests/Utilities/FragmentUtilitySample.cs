@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System;
-using InjectionCop.Fragment;
+using InjectionCop.Attributes;
 using InjectionCop.IntegrationTests.Parser;
 
 namespace InjectionCop.IntegrationTests.Utilities

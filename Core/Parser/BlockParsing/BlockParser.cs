@@ -32,7 +32,7 @@ namespace InjectionCop.Parser.BlockParsing
 
     private readonly IBlacklistManager _blacklistManager;
     private readonly IProblemPipe _problemPipe;
-    private readonly string _returnFragmentType;
+    private readonly Fragment _returnFragmentType;
     private readonly List<ReturnCondition> _returnConditions;
     private readonly Dictionary<Type, IStatementHandler> _statementHandlers;
     private readonly MethodCallAnalyzer _methodCallAnalyzer;
@@ -44,11 +44,11 @@ namespace InjectionCop.Parser.BlockParsing
     private List<string> _assignmentTargetVariables;
 
     public BlockParser (
-        IBlacklistManager blacklistManager, IProblemPipe problemPipe, string returnFragmentType, List<ReturnCondition> returnConditions)
+        IBlacklistManager blacklistManager, IProblemPipe problemPipe, Fragment returnFragmentType, List<ReturnCondition> returnConditions)
     {
       _blacklistManager = ArgumentUtility.CheckNotNull ("blacklistManager", blacklistManager);
       _problemPipe = ArgumentUtility.CheckNotNull ("typeParser", problemPipe);
-      _returnFragmentType = ArgumentUtility.CheckNotNullOrEmpty ("returnFragmentType", returnFragmentType);
+      _returnFragmentType = returnFragmentType;
       _returnConditions = returnConditions;
       StatementHandlerDictionaryBuilder handlerBuilder = new StatementHandlerDictionaryBuilder (
           _blacklistManager, _problemPipe, _returnFragmentType, _returnConditions, Inspect);

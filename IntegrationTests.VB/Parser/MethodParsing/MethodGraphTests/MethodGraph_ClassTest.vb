@@ -106,8 +106,8 @@ Namespace Parser.MethodParsing.MethodGraphTests
       If returnBlock IsNot Nothing Then
         Dim methodGraph As IMethodGraph = MyBase.BuildMethodGraph(sampleMethod)
         Dim returnBasicBlock As BasicBlock = methodGraph.GetBasicBlockById(returnBlock.UniqueKey)
-        Dim preConditionFragmentType As String = returnBasicBlock.PreConditions(0).FragmentType
-        Assert.That(preConditionFragmentType, [Is].EqualTo("ReturnFragmentType"))
+        Dim preConditionFragmentType = returnBasicBlock.PreConditions(0).Fragment
+        Assert.That(preConditionFragmentType, [Is].EqualTo(Fragment.CreateNamed("ReturnFragmentType")))
       Else
         Assert.Ignore("Bad Sample")
       End If
@@ -272,8 +272,8 @@ Namespace Parser.MethodParsing.MethodGraphTests
       If initialBlock IsNot Nothing Then
         Dim methodGraph As IMethodGraph = MyBase.BuildMethodGraph(sampleMethod)
         Dim initialBasicBlock As BasicBlock = methodGraph.GetBasicBlockById(initialBlock.UniqueKey)
-        Dim postConditionFragmentType As String = initialBasicBlock.PostConditionSymbolTable.GetFragmentType("local$0")
-        Assert.That(postConditionFragmentType, [Is].EqualTo("__Literal__"))
+        Dim postConditionFragmentType = initialBasicBlock.PostConditionSymbolTable.GetFragmentType("local$0")
+        Assert.That(postConditionFragmentType, [Is].EqualTo(Fragment.CreateLiteral()))
       Else
         Assert.Ignore("Bad Sample")
       End If
@@ -287,7 +287,7 @@ Namespace Parser.MethodParsing.MethodGraphTests
       If preReturnBlock IsNot Nothing Then
         Dim methodGraph As IMethodGraph = MyBase.BuildMethodGraph(sampleMethod)
         Dim preReturnBasicBlock As BasicBlock = methodGraph.GetBasicBlockById(preReturnBlock.UniqueKey)
-        Dim postConditionFragmentType As String = preReturnBasicBlock.PostConditionSymbolTable.GetFragmentType("local$1")
+        Dim postConditionFragmentType = preReturnBasicBlock.PostConditionSymbolTable.GetFragmentType("local$1")
         Assert.That(postConditionFragmentType, [Is].EqualTo(SymbolTable.EMPTY_FRAGMENT))
       Else
         Assert.Ignore("Bad Sample")
@@ -303,8 +303,8 @@ Namespace Parser.MethodParsing.MethodGraphTests
         Dim methodGraph As IMethodGraph = MyBase.BuildMethodGraph(sampleMethod)
         Dim returnBasicBlock As BasicBlock = methodGraph.GetBasicBlockById(returnBlock.UniqueKey)
         Dim preConditionSymbolName As String = returnBasicBlock.PreConditions(0).Symbol
-        Dim preConditionFragmentType As String = returnBasicBlock.PreConditions(0).FragmentType
-        Dim correctPreCondition As Boolean = preConditionSymbolName = "safe" AndAlso preConditionFragmentType = "SqlFragment"
+        Dim preConditionFragmentType = returnBasicBlock.PreConditions(0).Fragment
+        Dim correctPreCondition As Boolean = preConditionSymbolName = "safe" AndAlso preConditionFragmentType = Fragment.CreateNamed("SqlFragment")
         Assert.That(correctPreCondition, [Is].[True])
       Else
         Assert.Ignore("Bad Sample")
@@ -320,8 +320,8 @@ Namespace Parser.MethodParsing.MethodGraphTests
         Dim methodGraph As IMethodGraph = MyBase.BuildMethodGraph(sampleMethod)
         Dim returnBasicBlock As BasicBlock = methodGraph.GetBasicBlockById(returnBlock.UniqueKey)
         Dim preConditionSymbolName As String = returnBasicBlock.PreConditions(0).Symbol
-        Dim preConditionFragmentType As String = returnBasicBlock.PreConditions(0).FragmentType
-        Dim correctPreCondition As Boolean = preConditionSymbolName = "safe" AndAlso preConditionFragmentType = "SqlFragment"
+        Dim preConditionFragmentType = returnBasicBlock.PreConditions(0).Fragment
+        Dim correctPreCondition As Boolean = preConditionSymbolName = "safe" AndAlso preConditionFragmentType = Fragment.CreateNamed("SqlFragment")
         Assert.That(correctPreCondition, [Is].[True])
       Else
         Assert.Ignore("Bad Sample")

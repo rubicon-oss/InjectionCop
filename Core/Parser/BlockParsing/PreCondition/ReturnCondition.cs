@@ -18,8 +18,8 @@ namespace InjectionCop.Parser.BlockParsing.PreCondition
 {
   public class ReturnCondition : AssignabilityPreCondition
   {
-    public ReturnCondition (string symbol, string fragmentType)
-        : base (symbol, fragmentType)
+    public ReturnCondition (string symbol, Fragment fragment)
+        : base (symbol, fragment)
     {
     }
   }

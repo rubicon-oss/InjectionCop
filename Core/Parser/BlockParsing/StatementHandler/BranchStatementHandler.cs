@@ -25,7 +25,7 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
   {
     public BranchStatementHandler (
         IProblemPipe problemPipe,
-        string returnFragmentType,
+        Fragment returnFragmentType,
         List<ReturnCondition> returnConditions,
         IBlacklistManager blacklistManager,
         BlockParser.InspectCallback inspect)

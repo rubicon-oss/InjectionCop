@@ -26,7 +26,7 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
   {
     public DefaultAssignmentStatementHandler (
         IProblemPipe problemPipe,
-        string returnFragmentType,
+        Fragment returnFragmentType,
         List<ReturnCondition> returnConditions,
         IBlacklistManager blacklistManager,
         BlockParser.InspectCallback inspect)
@@ -81,14 +81,14 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
     private void AddAssignmentPreCondition (AssignmentStatement assignmentStatement, List<IPreCondition> preConditions)
     {
       Field targetField = IntrospectionUtility.GetField (assignmentStatement.Target);
-      string targetFragmentType = FragmentUtility.GetFragmentType (targetField.Attributes);
+      Fragment targetFragmentType = FragmentUtility.GetFragmentType (targetField.Attributes);
       if (targetFragmentType != SymbolTable.EMPTY_FRAGMENT)
       {
         ProblemMetadata problemMetadata = new ProblemMetadata (
             assignmentStatement.UniqueKey,
             assignmentStatement.SourceContext,
             targetFragmentType,
-            "??");
+            Fragment.CreateNamed("??"));
         string sourceSymbol = IntrospectionUtility.GetVariableName (assignmentStatement.Source);
         if (sourceSymbol != null)
         {
@@ -112,8 +112,8 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
     private void ValidateAssignmentOnField (AssignmentStatement assignmentStatement, ISymbolTable symbolTable)
     {
       Field targetField = IntrospectionUtility.GetField (assignmentStatement.Target);
-      string targetFragmentType = FragmentUtility.GetFragmentType (targetField.Attributes);
-      string givenFragmentType = symbolTable.InferFragmentType (assignmentStatement.Source);
+      Fragment targetFragmentType = FragmentUtility.GetFragmentType (targetField.Attributes);
+      Fragment givenFragmentType = symbolTable.InferFragmentType (assignmentStatement.Source);
 
       if (!FragmentUtility.FragmentTypesAssignable (givenFragmentType, targetFragmentType))
       {

@@ -61,7 +61,7 @@ namespace InjectionCop.Parser.MethodParsing
       {
         if (FragmentUtility.ContainsFragment (attributes))
         {
-          string fragmentType = FragmentUtility.GetFragmentType (attributes);
+          Fragment fragmentType = FragmentUtility.GetFragmentType (attributes);
           _result.MakeSafe (name, fragmentType);
         }
         else

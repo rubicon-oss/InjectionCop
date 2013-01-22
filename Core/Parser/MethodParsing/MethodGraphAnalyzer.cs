@@ -125,7 +125,7 @@ namespace InjectionCop.Parser.MethodParsing
     {
       foreach (var blockAssignment in blockAssignments)
       {
-        string propagatedFragmentType = context.GetFragmentType (blockAssignment.SourceSymbol);
+        Fragment propagatedFragmentType = context.GetFragmentType (blockAssignment.SourceSymbol);
         adjustedContext.MakeSafe (blockAssignment.TargetSymbol, propagatedFragmentType);
       }
     }

@@ -38,9 +38,9 @@ Namespace Parser.BlockParsing
     Public Sub SetUp()
       Me._blacklist = New IDbCommandBlacklistManagerStub()
       Me._problemPipeStub = New ProblemPipeStub()
-      Me._returnPreCondition = New ReturnCondition("returnPreCondition", "ReturnPreConditionFragmentType")
+      Me._returnPreCondition = New ReturnCondition("returnPreCondition", Fragment.CreateNamed("ReturnPreConditionFragmentType"))
       Dim returnPreConditions As System.Collections.Generic.List(Of ReturnCondition) = New System.Collections.Generic.List(Of ReturnCondition)() From {Me._returnPreCondition}
-      Me._blockParser = New BlockParser(Me._blacklist, Me._problemPipeStub, "ReturnFragmentType", returnPreConditions)
+      Me._blockParser = New BlockParser(Me._blacklist, Me._problemPipeStub, Fragment.CreateNamed("ReturnFragmentType"), returnPreConditions)
     End Sub
 
     <Test()>
@@ -48,7 +48,8 @@ Namespace Parser.BlockParsing
       Dim sampleMethod As Method = TestHelper.GetSample(Of BlockParserSample)("PostConditionOnlySafeSymbols", New TypeNode() {})
       Dim sample As Block = TryCast(sampleMethod.Body.Statements(0), Block)
       Dim basicBlock As BasicBlock = Me._blockParser.Parse(sample)
-      Dim correctPostCondition As Boolean = basicBlock.PostConditionSymbolTable.IsAssignableTo("local$0", "SqlFragment") AndAlso basicBlock.PostConditionSymbolTable.IsAssignableTo("local$1", "SqlFragment")
+      Dim correctPostCondition As Boolean = basicBlock.PostConditionSymbolTable.IsAssignableTo("local$0", Fragment.CreateNamed("SqlFragment")) AndAlso
+        basicBlock.PostConditionSymbolTable.IsAssignableTo("local$1", Fragment.CreateNamed("SqlFragment"))
       Assert.That(correctPostCondition, [Is].[True])
     End Sub
 
@@ -57,7 +58,8 @@ Namespace Parser.BlockParsing
       Dim sampleMethod As Method = TestHelper.GetSample(Of BlockParserSample)("PostConditionSafeAndUnsafeSymbols", New TypeNode() {})
       Dim sample As Block = TryCast(sampleMethod.Body.Statements(0), Block)
       Dim basicBlock As BasicBlock = Me._blockParser.Parse(sample)
-      Dim correctPostCondition As Boolean = basicBlock.PostConditionSymbolTable.IsAssignableTo("local$0", "SqlFragment") AndAlso Not basicBlock.PostConditionSymbolTable.IsAssignableTo("local$1", "SqlFragment")
+      Dim correctPostCondition As Boolean = basicBlock.PostConditionSymbolTable.IsAssignableTo("local$0", Fragment.CreateNamed("SqlFragment")) AndAlso
+        Not basicBlock.PostConditionSymbolTable.IsAssignableTo("local$1", Fragment.CreateNamed("SqlFragment"))
       Assert.That(correctPostCondition, [Is].[True])
     End Sub
 
@@ -67,7 +69,7 @@ Namespace Parser.BlockParsing
       Dim sampleMethod As Method = TestHelper.GetSample(Of BlockParserSample)("UnsafePreCondition", New TypeNode() {stringTypeNode})
       Dim sample As Block = TryCast(sampleMethod.Body.Statements(0), Block)
       Dim basicBlock As BasicBlock = Me._blockParser.Parse(sample)
-      Dim correctPreCondition As Boolean = basicBlock.PreConditions(0).Symbol = "unSafe" AndAlso basicBlock.PreConditions(0).FragmentType = "SqlFragment"
+      Dim correctPreCondition As Boolean = basicBlock.PreConditions(0).Symbol = "unSafe" AndAlso basicBlock.PreConditions(0).Fragment = Fragment.CreateNamed("SqlFragment")
       Assert.That(correctPreCondition, [Is].[True])
     End Sub
 
@@ -87,8 +89,8 @@ Namespace Parser.BlockParsing
       Dim sampleMethod As Method = TestHelper.GetSample(Of BlockParserSample)("MultipleUnsafePreCondition", New TypeNode() {stringTypeNode, stringTypeNode})
       Dim sample As Block = TryCast(sampleMethod.Body.Statements(0), Block)
       Dim basicBlock As BasicBlock = Me._blockParser.Parse(sample)
-      Dim correctPreCondition0 As Boolean = basicBlock.PreConditions(0).Symbol = "unSafe1" AndAlso basicBlock.PreConditions(0).FragmentType = "SqlFragment"
-      Dim correctPreCondition As Boolean = basicBlock.PreConditions(1).Symbol = "unSafe2" AndAlso basicBlock.PreConditions(1).FragmentType = "SqlFragment"
+      Dim correctPreCondition0 As Boolean = basicBlock.PreConditions(0).Symbol = "unSafe1" AndAlso basicBlock.PreConditions(0).Fragment = Fragment.CreateNamed("SqlFragment")
+      Dim correctPreCondition As Boolean = basicBlock.PreConditions(1).Symbol = "unSafe2" AndAlso basicBlock.PreConditions(1).Fragment = Fragment.CreateNamed("SqlFragment")
       Assert.That(correctPreCondition0 AndAlso correctPreCondition, [Is].[True])
     End Sub
 
@@ -98,7 +100,7 @@ Namespace Parser.BlockParsing
       Dim sampleMethod As Method = TestHelper.GetSample(Of BlockParserSample)("BlockInternalSafenessCondition", New TypeNode() {stringTypeNode})
       Dim sample As Block = TryCast(sampleMethod.Body.Statements(0), Block)
       Dim basicBlock As BasicBlock = Me._blockParser.Parse(sample)
-      Dim correctPreCondition As Boolean = basicBlock.PreConditions(0).Symbol = "x" AndAlso basicBlock.PreConditions(0).FragmentType = "SqlFragment"
+      Dim correctPreCondition As Boolean = basicBlock.PreConditions(0).Symbol = "x" AndAlso basicBlock.PreConditions(0).Fragment = Fragment.CreateNamed("SqlFragment")
       Assert.That(correctPreCondition, [Is].[True])
     End Sub
 
@@ -140,12 +142,24 @@ Namespace Parser.BlockParsing
     End Sub
 
     <Test()>
-    Public Sub Parse_ReturnFragmentRequiredUnsafeReturn_ReturnsCorrectReturnFragmentType(<Values("ReturnFragmentType1", "ReturnFragmentType2")> returnFragmentType As String)
+    Public Sub Parse_ReturnFragmentRequiredUnsafeReturn_ReturnsCorrectReturnFragmentType1()
+      Dim returnFragmentType = Fragment.CreateNamed("ReturnFragmentType1")
       Me._blockParser = New BlockParser(Me._blacklist, Me._problemPipeStub, returnFragmentType, New System.Collections.Generic.List(Of ReturnCondition)())
       Dim sampleMethod As Method = TestHelper.GetSample(Of BlockParserSample)("UnsafeReturnWhenFragmentRequired", New TypeNode() {})
       Dim sample As Block = TryCast(sampleMethod.Body.Statements(1), Block)
       Dim returnedBlock As BasicBlock = Me._blockParser.Parse(sample)
-      Dim preConditionFragment As String = returnedBlock.PreConditions(0).FragmentType
+      Dim preConditionFragment = returnedBlock.PreConditions(0).Fragment
+      Assert.That(preConditionFragment, [Is].EqualTo(returnFragmentType))
+    End Sub
+
+    <Test()>
+    Public Sub Parse_ReturnFragmentRequiredUnsafeReturn_ReturnsCorrectReturnFragmentType2()
+      Dim returnFragmentType = Fragment.CreateNamed("ReturnFragmentType2")
+      Me._blockParser = New BlockParser(Me._blacklist, Me._problemPipeStub, returnFragmentType, New System.Collections.Generic.List(Of ReturnCondition)())
+      Dim sampleMethod As Method = TestHelper.GetSample(Of BlockParserSample)("UnsafeReturnWhenFragmentRequired", New TypeNode() {})
+      Dim sample As Block = TryCast(sampleMethod.Body.Statements(1), Block)
+      Dim returnedBlock As BasicBlock = Me._blockParser.Parse(sample)
+      Dim preConditionFragment = returnedBlock.PreConditions(0).Fragment
       Assert.That(preConditionFragment, [Is].EqualTo(returnFragmentType))
     End Sub
 
@@ -179,13 +193,13 @@ Namespace Parser.BlockParsing
 
     <Test()>
     Public Sub Parse_ValidReturnWithIf_ReturnsCorrectReturnFragmentType()
-      Me._blockParser = New BlockParser(Me._blacklist, Me._problemPipeStub, "DummyFragment", New System.Collections.Generic.List(Of ReturnCondition)())
+      Me._blockParser = New BlockParser(Me._blacklist, Me._problemPipeStub, Fragment.CreateNamed("DummyFragment"), New System.Collections.Generic.List(Of ReturnCondition)())
       Dim stringTypeNode As TypeNode = IntrospectionUtility.TypeNodeFactory(Of String)()
       Dim sampleMethod As Method = TestHelper.GetSample(Of BlockParserSample)("ValidReturnWithLiteralAssignmentInsideIf", New TypeNode() {stringTypeNode})
       Dim sample As Block = TryCast(sampleMethod.Body.Statements(3), Block)
       Dim returnedBlock As BasicBlock = Me._blockParser.Parse(sample)
-      Dim preConditionFragmentType As String = returnedBlock.PreConditions(0).FragmentType
-      Assert.That(preConditionFragmentType, [Is].EqualTo("DummyFragment"))
+      Dim preConditionFragmentType = returnedBlock.PreConditions(0).Fragment
+      Assert.That(preConditionFragmentType, [Is].EqualTo(Fragment.CreateNamed("DummyFragment")))
     End Sub
 
     <Test()>
@@ -224,8 +238,8 @@ Namespace Parser.BlockParsing
       Dim sampleMethod As Method = TestHelper.GetSample(Of BlockParserSample)("ValidReturnWithLiteralAssignmentInsideIf", New TypeNode() {stringTypeNode})
       Dim ifBlock As Block = TryCast(sampleMethod.Body.Statements(1), Block)
       Dim ifBasicBlock As BasicBlock = Me._blockParser.Parse(ifBlock)
-      Dim postConditionFragmentType As String = ifBasicBlock.PostConditionSymbolTable.GetFragmentType("local$0")
-      Assert.That(postConditionFragmentType, [Is].EqualTo("__Literal__"))
+      Dim postConditionFragmentType = ifBasicBlock.PostConditionSymbolTable.GetFragmentType("local$0")
+      Assert.That(postConditionFragmentType, [Is].EqualTo(Fragment.CreateLiteral()))
     End Sub
 
     <Test()>
@@ -233,9 +247,9 @@ Namespace Parser.BlockParsing
       Dim sampleMethod As Method = TestHelper.GetSample(Of BlockParserSample)("DeclarationWithReturn", New TypeNode() {})
       Dim initialBlock As Block = TryCast(sampleMethod.Body.Statements(0), Block)
       Dim initialBasicBlock As BasicBlock = Me._blockParser.Parse(initialBlock)
-      Dim local0FragmentType As String = initialBasicBlock.PostConditionSymbolTable.GetFragmentType("local$0")
-      Dim local1FragmentType As String = initialBasicBlock.PostConditionSymbolTable.GetFragmentType("local$1")
-      Dim correctPostConditions As Boolean = local0FragmentType = local1FragmentType AndAlso local0FragmentType = "__Literal__"
+      Dim local0FragmentType = initialBasicBlock.PostConditionSymbolTable.GetFragmentType("local$0")
+      Dim local1FragmentType = initialBasicBlock.PostConditionSymbolTable.GetFragmentType("local$1")
+      Dim correctPostConditions As Boolean = local0FragmentType = local1FragmentType AndAlso local0FragmentType = Fragment.CreateLiteral()
       Assert.That(correctPostConditions, [Is].[True])
     End Sub
 
@@ -254,7 +268,7 @@ Namespace Parser.BlockParsing
       Dim sampleMethod As Method = TestHelper.GetSample(Of BlockParserSample)("ValidReturnWithParameterAssignmentInsideIf", New TypeNode() {stringTypeNode})
       Dim ifBlock As Block = TryCast(sampleMethod.Body.Statements(1), Block)
       Dim ifBasicBlock As BasicBlock = Me._blockParser.Parse(ifBlock)
-      Dim postConditionFragmentType As String = ifBasicBlock.PostConditionSymbolTable.GetFragmentType("local$0")
+      Dim postConditionFragmentType = ifBasicBlock.PostConditionSymbolTable.GetFragmentType("local$0")
       Assert.That(postConditionFragmentType, [Is].EqualTo(SymbolTable.EMPTY_FRAGMENT))
     End Sub
 
@@ -273,8 +287,8 @@ Namespace Parser.BlockParsing
       Dim sampleMethod As Method = TestHelper.GetSample(Of BlockParserSample)("ValidReturnWithParameterResetAndAssignmentInsideIf", New TypeNode() {stringTypeNode})
       Dim ifBlock As Block = TryCast(sampleMethod.Body.Statements(1), Block)
       Dim ifBasicBlock As BasicBlock = Me._blockParser.Parse(ifBlock)
-      Dim postConditionFragmentType As String = ifBasicBlock.PostConditionSymbolTable.GetFragmentType("local$0")
-      Assert.That(postConditionFragmentType, [Is].EqualTo("__Literal__"))
+      Dim postConditionFragmentType = ifBasicBlock.PostConditionSymbolTable.GetFragmentType("local$0")
+      Assert.That(postConditionFragmentType, [Is].EqualTo(Fragment.CreateLiteral()))
     End Sub
 
     <Test()>
@@ -283,8 +297,8 @@ Namespace Parser.BlockParsing
       Dim returnBlock As Block = TryCast(sampleMethod.Body.Statements(1), Block)
       Dim returnBasicBlock As BasicBlock = Me._blockParser.Parse(returnBlock)
       Dim preConditionSymbol As String = returnBasicBlock.PreConditions(1).Symbol
-      Dim preConditionFragmentType As String = returnBasicBlock.PreConditions(1).FragmentType
-      Dim correctPrecondition As Boolean = preConditionSymbol = Me._returnPreCondition.Symbol AndAlso preConditionFragmentType = Me._returnPreCondition.FragmentType
+      Dim preConditionFragmentType = returnBasicBlock.PreConditions(1).Fragment
+      Dim correctPrecondition As Boolean = preConditionSymbol = Me._returnPreCondition.Symbol AndAlso preConditionFragmentType = Me._returnPreCondition.Fragment
       Assert.That(correctPrecondition, [Is].[True])
     End Sub
 
@@ -325,8 +339,8 @@ Namespace Parser.BlockParsing
       Dim returnBlock As Block = TryCast(sampleMethod.Body.Statements(2), Block)
       Dim returnBasicBlock As BasicBlock = Me._blockParser.Parse(returnBlock)
       Dim preConditionSymbol As String = returnBasicBlock.PreConditions(0).Symbol
-      Dim preConditionFragmentType As String = returnBasicBlock.PreConditions(0).FragmentType
-      Dim correctPrecondition As Boolean = preConditionSymbol = Me._returnPreCondition.Symbol AndAlso preConditionFragmentType = Me._returnPreCondition.FragmentType
+      Dim preConditionFragmentType = returnBasicBlock.PreConditions(0).Fragment
+      Dim correctPrecondition As Boolean = preConditionSymbol = Me._returnPreCondition.Symbol AndAlso preConditionFragmentType = Me._returnPreCondition.Fragment
       Assert.That(correctPrecondition, [Is].[True])
     End Sub
 
@@ -337,8 +351,8 @@ Namespace Parser.BlockParsing
       Dim returnBlock As Block = TryCast(sampleMethod.Body.Statements(3), Block)
       Dim returnBasicBlock As BasicBlock = Me._blockParser.Parse(returnBlock)
       Dim preConditionSymbol As String = returnBasicBlock.PreConditions(0).Symbol
-      Dim preConditionFragmentType As String = returnBasicBlock.PreConditions(0).FragmentType
-      Dim correctPrecondition As Boolean = preConditionSymbol = Me._returnPreCondition.Symbol AndAlso preConditionFragmentType = Me._returnPreCondition.FragmentType
+      Dim preConditionFragmentType = returnBasicBlock.PreConditions(0).Fragment
+      Dim correctPrecondition As Boolean = preConditionSymbol = Me._returnPreCondition.Symbol AndAlso preConditionFragmentType = Me._returnPreCondition.Fragment
       Assert.That(correctPrecondition, [Is].[True])
     End Sub
 
@@ -349,8 +363,8 @@ Namespace Parser.BlockParsing
       Dim returnBlock As Block = TryCast(sampleMethod.Body.Statements(2), Block)
       Dim returnBasicBlock As BasicBlock = Me._blockParser.Parse(returnBlock)
       Dim preConditionSymbol As String = returnBasicBlock.PreConditions(0).Symbol
-      Dim preConditionFragmentType As String = returnBasicBlock.PreConditions(0).FragmentType
-      Dim correctPrecondition As Boolean = preConditionSymbol = Me._returnPreCondition.Symbol AndAlso preConditionFragmentType = Me._returnPreCondition.FragmentType
+      Dim preConditionFragmentType = returnBasicBlock.PreConditions(0).Fragment
+      Dim correctPrecondition As Boolean = preConditionSymbol = Me._returnPreCondition.Symbol AndAlso preConditionFragmentType = Me._returnPreCondition.Fragment
       Assert.That(correctPrecondition, [Is].[True])
     End Sub
 
@@ -391,8 +405,8 @@ Namespace Parser.BlockParsing
       Dim returnBlock As Block = TryCast(sampleMethod.Body.Statements(2), Block)
       Dim returnBasicBlock As BasicBlock = Me._blockParser.Parse(returnBlock)
       Dim preConditionSymbol As String = returnBasicBlock.PreConditions(0).Symbol
-      Dim preConditionFragmentType As String = returnBasicBlock.PreConditions(0).FragmentType
-      Dim correctPrecondition As Boolean = preConditionSymbol = Me._returnPreCondition.Symbol AndAlso preConditionFragmentType = Me._returnPreCondition.FragmentType
+      Dim preConditionFragmentType = returnBasicBlock.PreConditions(0).Fragment
+      Dim correctPrecondition As Boolean = preConditionSymbol = Me._returnPreCondition.Symbol AndAlso preConditionFragmentType = Me._returnPreCondition.Fragment
       Assert.That(correctPrecondition, [Is].[True])
     End Sub
 
@@ -403,8 +417,8 @@ Namespace Parser.BlockParsing
       Dim returnBlock As Block = TryCast(sampleMethod.Body.Statements(3), Block)
       Dim returnBasicBlock As BasicBlock = Me._blockParser.Parse(returnBlock)
       Dim preConditionSymbol As String = returnBasicBlock.PreConditions(0).Symbol
-      Dim preConditionFragmentType As String = returnBasicBlock.PreConditions(0).FragmentType
-      Dim correctPrecondition As Boolean = preConditionSymbol = Me._returnPreCondition.Symbol AndAlso preConditionFragmentType = Me._returnPreCondition.FragmentType
+      Dim preConditionFragmentType = returnBasicBlock.PreConditions(0).Fragment
+      Dim correctPrecondition As Boolean = preConditionSymbol = Me._returnPreCondition.Symbol AndAlso preConditionFragmentType = Me._returnPreCondition.Fragment
       Assert.That(correctPrecondition, [Is].[True])
     End Sub
 
@@ -415,8 +429,8 @@ Namespace Parser.BlockParsing
       Dim returnBlock As Block = TryCast(sampleMethod.Body.Statements(2), Block)
       Dim returnBasicBlock As BasicBlock = Me._blockParser.Parse(returnBlock)
       Dim preConditionSymbol As String = returnBasicBlock.PreConditions(0).Symbol
-      Dim preConditionFragmentType As String = returnBasicBlock.PreConditions(0).FragmentType
-      Dim correctPrecondition As Boolean = preConditionSymbol = Me._returnPreCondition.Symbol AndAlso preConditionFragmentType = Me._returnPreCondition.FragmentType
+      Dim preConditionFragmentType = returnBasicBlock.PreConditions(0).Fragment
+      Dim correctPrecondition As Boolean = preConditionSymbol = Me._returnPreCondition.Symbol AndAlso preConditionFragmentType = Me._returnPreCondition.Fragment
       Assert.That(correctPrecondition, [Is].[True])
     End Sub
   End Class

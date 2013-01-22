@@ -73,7 +73,7 @@ Namespace Utilities
     Public Sub GetFragmentType_ContainsFragmentParameter_ReturnsType()
       Dim stringTypeNode As TypeNode = IntrospectionUtility.TypeNodeFactory(Of String)()
       Dim sample As Method = TestHelper.GetSample(Of FragmentUtilitySample)("ContainsFragmentParameter", New TypeNode() {stringTypeNode})
-      Dim fragmentType As String = FragmentUtility.GetFragmentType(sample.Parameters(0).Attributes)
+      Dim fragmentType = FragmentUtility.GetFragmentType(sample.Parameters(0).Attributes)
       Assert.That(fragmentType, [Is].EqualTo("FragmentType"))
     End Sub
 
@@ -81,7 +81,7 @@ Namespace Utilities
     Public Sub GetFragmentType_ContainsStronglyTypedSqlFragmentParameter_True()
       Dim stringTypeNode As TypeNode = IntrospectionUtility.TypeNodeFactory(Of String)()
       Dim sample As Method = TestHelper.GetSample(Of FragmentUtilitySample)("ContainsStronglyTypedSqlFragmentParameter", New TypeNode() {stringTypeNode})
-      Dim fragmentType As String = FragmentUtility.GetFragmentType(sample.Parameters(0).Attributes)
+      Dim fragmentType = FragmentUtility.GetFragmentType(sample.Parameters(0).Attributes)
       Assert.That(fragmentType, [Is].EqualTo("SqlFragment"))
     End Sub
 
@@ -89,35 +89,35 @@ Namespace Utilities
     Public Sub GetFragmentType_ContainsNonFragmentParameter_ThrowsException()
       Dim stringTypeNode As TypeNode = IntrospectionUtility.TypeNodeFactory(Of String)()
       Dim sample As Method = TestHelper.GetSample(Of FragmentUtilitySample)("ContainsNonFragmentParameter", New TypeNode() {stringTypeNode})
-      Dim returnedFragment As String = FragmentUtility.GetFragmentType(sample.Parameters(0).Attributes)
+      Dim returnedFragment = FragmentUtility.GetFragmentType(sample.Parameters(0).Attributes)
       Assert.That(returnedFragment, [Is].EqualTo(SymbolTable.EMPTY_FRAGMENT))
     End Sub
 
     <Test()>
     Public Sub ReturnFragmentType_NonAnnotatedMethod_ReturnsEmptyFragment()
       Dim sample As Method = TestHelper.GetSample(Of FragmentUtilitySample)("NoReturnFragment", New TypeNode() {})
-      Dim returnFragment As String = FragmentUtility.ReturnFragmentType(sample)
+      Dim returnFragment = FragmentUtility.ReturnFragmentType(sample)
       Assert.That(returnFragment, [Is].EqualTo(SymbolTable.EMPTY_FRAGMENT))
     End Sub
 
     <Test()>
     Public Sub ReturnFragmentType_MethodWithAnnotatedReturn_ReturnsNull()
       Dim sample As Method = TestHelper.GetSample(Of FragmentUtilitySample)("ReturnFragment", New TypeNode() {})
-      Dim returnFragment As String = FragmentUtility.ReturnFragmentType(sample)
+      Dim returnFragment = FragmentUtility.ReturnFragmentType(sample)
       Assert.That(returnFragment, [Is].EqualTo("ReturnFragmentType"))
     End Sub
 
     <Test()>
     Public Sub ReturnFragmentType_ImplementedInterfaceMethod_ReturnsFragment()
       Dim sample As Method = TestHelper.GetSample(Of ClassWithMethodReturningFragment)("MethodWithReturnFragment", New TypeNode() {})
-      Dim returnFragment As String = FragmentUtility.ReturnFragmentType(sample)
+      Dim returnFragment = FragmentUtility.ReturnFragmentType(sample)
       Assert.That(returnFragment, [Is].EqualTo("ReturnFragmentType"))
     End Sub
 
     <Test()>
     Public Sub ReturnFragmentType_ExplicitlyImplementedInterfaceMethod_ReturnsFragment()
       Dim sample As Method = TestHelper.GetSample(Of ClassWithExplicitlyDeclaredMethodReturningFragment)("MethodWithReturnFragment", New TypeNode() {})
-      Dim returnFragment As String = FragmentUtility.ReturnFragmentType(sample)
+      Dim returnFragment = FragmentUtility.ReturnFragmentType(sample)
       Assert.That(returnFragment, [Is].EqualTo("ReturnFragmentType"))
     End Sub
   End Class
