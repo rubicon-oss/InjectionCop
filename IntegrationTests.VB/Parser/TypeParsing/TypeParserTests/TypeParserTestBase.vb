@@ -26,6 +26,7 @@ Namespace Parser.TypeParsing.TypeParserTests
 		Public Sub SetUp()
 			Me._typeParser = New TypeParser()
 			Me._typeParser.InitializeBlacklistManager(IntrospectionUtility.TypeNodeFactory(Of TypeParserTestBase)())
-		End Sub
+      _typeParser.BeforeAnalysis()
+    End Sub
 	End Class
 End Namespace
