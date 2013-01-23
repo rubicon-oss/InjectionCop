@@ -17,7 +17,7 @@ using System;
 namespace InjectionCop.Attributes
 {
   [AttributeUsage (AttributeTargets.Method)]
-  public class TrustedSqlGeneration : Attribute
+  public class TrustedSqlGenerationAttribute : Attribute
   {
   }
 }

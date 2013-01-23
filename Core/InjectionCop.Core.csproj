@@ -57,7 +57,7 @@
     <Compile Include="Attributes\FragmentAttribute.cs" />
     <Compile Include="Attributes\FragmentGeneratorAttribute.cs" />
     <Compile Include="Attributes\SqlFragmentAttribute.cs" />
-    <Compile Include="Attributes\TrustedSqlGeneration.cs" />
+    <Compile Include="Attributes\TrustedSqlGenerationAttribute.cs" />
     <Compile Include="Config\IBlacklistManager.cs" />
     <Compile Include="Config\IDbCommandBlacklistManagerStub.cs" />
     <Compile Include="Parser\BlockParsing\MethodCallAnalyzer.cs" />
