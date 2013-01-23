@@ -43,7 +43,7 @@ Namespace Parser.MethodParsing.EmbeddedInitialSymbolTableBuilderTest
 			Dim sampleMethod As Method = TestHelper.GetSample(Of SymbolTableBuilderSample)("ParameterizedMethod", New TypeNode() { Me._floatType, Me._objectType })
 			Dim embeddedInitialSymbolTableBuilder As EmbeddedInitialSymbolTableBuilder = New EmbeddedInitialSymbolTableBuilder(sampleMethod, Me._blacklistManager, Me._environment)
 			Dim resultSymbolTable As ISymbolTable = embeddedInitialSymbolTableBuilder.GetResult()
-			Assert.That(resultSymbolTable.GetFragmentType("_fragmentField"), [Is].EqualTo(SymbolTable.EMPTY_FRAGMENT))
+      Assert.That(resultSymbolTable.GetFragmentType("_fragmentField"), [Is].EqualTo(Fragment.CreateEmpty()))
 		End Sub
 
 		<Test()>
@@ -52,7 +52,7 @@ Namespace Parser.MethodParsing.EmbeddedInitialSymbolTableBuilderTest
 			Dim embeddedInitialSymbolTableBuilder As EmbeddedInitialSymbolTableBuilder = New EmbeddedInitialSymbolTableBuilder(sampleMethod, Me._blacklistManager, Me._environment)
       Me._environment.MakeSafe("_fragmentField", Fragment.CreateNamed("ThisShouldBeIgnored"))
 			Dim resultSymbolTable As ISymbolTable = embeddedInitialSymbolTableBuilder.GetResult()
-			Assert.That(resultSymbolTable.GetFragmentType("_fragmentField"), [Is].EqualTo(SymbolTable.EMPTY_FRAGMENT))
+      Assert.That(resultSymbolTable.GetFragmentType("_fragmentField"), [Is].EqualTo(Fragment.CreateEmpty()))
 		End Sub
 
 		<Test()>
@@ -61,7 +61,7 @@ Namespace Parser.MethodParsing.EmbeddedInitialSymbolTableBuilderTest
 			Dim embeddedInitialSymbolTableBuilder As EmbeddedInitialSymbolTableBuilder = New EmbeddedInitialSymbolTableBuilder(sampleMethod, Me._blacklistManager, Me._environment)
       Me._environment.MakeSafe("_nonFragmentField", Fragment.CreateNamed("ThisShouldBeIgnored"))
 			Dim resultSymbolTable As ISymbolTable = embeddedInitialSymbolTableBuilder.GetResult()
-			Assert.That(resultSymbolTable.GetFragmentType("_fragmentField"), [Is].EqualTo(SymbolTable.EMPTY_FRAGMENT))
+      Assert.That(resultSymbolTable.GetFragmentType("_fragmentField"), [Is].EqualTo(Fragment.CreateEmpty()))
 		End Sub
 
 		<Test()>
@@ -69,42 +69,42 @@ Namespace Parser.MethodParsing.EmbeddedInitialSymbolTableBuilderTest
 			Dim sampleMethod As Method = TestHelper.GetSample(Of SymbolTableBuilderSample)("ParameterizedMethod", New TypeNode() { Me._floatType, Me._objectType })
 			Dim embeddedInitialSymbolTableBuilder As EmbeddedInitialSymbolTableBuilder = New EmbeddedInitialSymbolTableBuilder(sampleMethod, Me._blacklistManager, Me._environment)
 			Dim resultSymbolTable As ISymbolTable = embeddedInitialSymbolTableBuilder.GetResult()
-			Assert.That(resultSymbolTable.GetFragmentType("_nonFragmentField"), [Is].EqualTo(SymbolTable.EMPTY_FRAGMENT))
-		End Sub
+      Assert.That(resultSymbolTable.GetFragmentType("_nonFragmentField"), [Is].EqualTo(Fragment.CreateEmpty()))
+    End Sub
 
-		<Test()>
-		Public Sub GetResult_ParameterizedMethodSymbolTableBuiltWithNonOverlappingEnvironment_EnvironmentSymbolIsPropagated()
-			Dim sampleMethod As Method = TestHelper.GetSample(Of SymbolTableBuilderSample)("ParameterizedMethod", New TypeNode() { Me._floatType, Me._objectType })
-			Dim embeddedInitialSymbolTableBuilder As EmbeddedInitialSymbolTableBuilder = New EmbeddedInitialSymbolTableBuilder(sampleMethod, Me._blacklistManager, Me._environment)
+    <Test()>
+    Public Sub GetResult_ParameterizedMethodSymbolTableBuiltWithNonOverlappingEnvironment_EnvironmentSymbolIsPropagated()
+      Dim sampleMethod As Method = TestHelper.GetSample(Of SymbolTableBuilderSample)("ParameterizedMethod", New TypeNode() {Me._floatType, Me._objectType})
+      Dim embeddedInitialSymbolTableBuilder As EmbeddedInitialSymbolTableBuilder = New EmbeddedInitialSymbolTableBuilder(sampleMethod, Me._blacklistManager, Me._environment)
       Me._environment.MakeSafe("environmentSymbol", Fragment.CreateNamed("DummyType"))
-			Dim resultSymbolTable As ISymbolTable = embeddedInitialSymbolTableBuilder.GetResult()
+      Dim resultSymbolTable As ISymbolTable = embeddedInitialSymbolTableBuilder.GetResult()
       Assert.That(resultSymbolTable.GetFragmentType("environmentSymbol"), [Is].EqualTo(Fragment.CreateNamed("DummyType")))
-		End Sub
+    End Sub
 
-		<Test()>
-		Public Sub GetResult_ParameterizedMethodSymbolTableBuiltWithOverlappingNonFragmentField_EnvironmentSymbolIsPropagated()
-			Dim sampleMethod As Method = TestHelper.GetSample(Of SymbolTableBuilderSample)("ParameterizedMethod", New TypeNode() { Me._floatType, Me._objectType })
-			Dim embeddedInitialSymbolTableBuilder As EmbeddedInitialSymbolTableBuilder = New EmbeddedInitialSymbolTableBuilder(sampleMethod, Me._blacklistManager, Me._environment)
+    <Test()>
+    Public Sub GetResult_ParameterizedMethodSymbolTableBuiltWithOverlappingNonFragmentField_EnvironmentSymbolIsPropagated()
+      Dim sampleMethod As Method = TestHelper.GetSample(Of SymbolTableBuilderSample)("ParameterizedMethod", New TypeNode() {Me._floatType, Me._objectType})
+      Dim embeddedInitialSymbolTableBuilder As EmbeddedInitialSymbolTableBuilder = New EmbeddedInitialSymbolTableBuilder(sampleMethod, Me._blacklistManager, Me._environment)
       Me._environment.MakeSafe("_nonFragmentField", Fragment.CreateNamed("OverlappingType"))
-			Dim resultSymbolTable As ISymbolTable = embeddedInitialSymbolTableBuilder.GetResult()
+      Dim resultSymbolTable As ISymbolTable = embeddedInitialSymbolTableBuilder.GetResult()
       Assert.That(resultSymbolTable.GetFragmentType("_nonFragmentField"), [Is].EqualTo(Fragment.CreateNamed("OverlappingType")))
-		End Sub
+    End Sub
 
-		<Test()>
-		Public Sub GetResult_ParameterizedMethodSymbolTableBuiltWithEmptyEnvironment_UnknownSymbolIsEmptyFragment()
-			Dim sampleMethod As Method = TestHelper.GetSample(Of SymbolTableBuilderSample)("ParameterizedMethod", New TypeNode() { Me._floatType, Me._objectType })
-			Dim embeddedInitialSymbolTableBuilder As EmbeddedInitialSymbolTableBuilder = New EmbeddedInitialSymbolTableBuilder(sampleMethod, Me._blacklistManager, Me._environment)
-			Dim resultSymbolTable As ISymbolTable = embeddedInitialSymbolTableBuilder.GetResult()
-			Assert.That(resultSymbolTable.GetFragmentType("unknownSymbol"), [Is].EqualTo(SymbolTable.EMPTY_FRAGMENT))
-		End Sub
+    <Test()>
+    Public Sub GetResult_ParameterizedMethodSymbolTableBuiltWithEmptyEnvironment_UnknownSymbolIsEmptyFragment()
+      Dim sampleMethod As Method = TestHelper.GetSample(Of SymbolTableBuilderSample)("ParameterizedMethod", New TypeNode() {Me._floatType, Me._objectType})
+      Dim embeddedInitialSymbolTableBuilder As EmbeddedInitialSymbolTableBuilder = New EmbeddedInitialSymbolTableBuilder(sampleMethod, Me._blacklistManager, Me._environment)
+      Dim resultSymbolTable As ISymbolTable = embeddedInitialSymbolTableBuilder.GetResult()
+      Assert.That(resultSymbolTable.GetFragmentType("unknownSymbol"), [Is].EqualTo(Fragment.CreateEmpty()))
+    End Sub
 
-		<Test()>
-		Public Sub GetResult_ParameterizedMethodSymbolTableBuiltWithNonOverlappingEnvironment_NonFragmentParameterIsEmptyFragment()
-			Dim sampleMethod As Method = TestHelper.GetSample(Of SymbolTableBuilderSample)("ParameterizedMethod", New TypeNode() { Me._floatType, Me._objectType })
-			Dim embeddedInitialSymbolTableBuilder As EmbeddedInitialSymbolTableBuilder = New EmbeddedInitialSymbolTableBuilder(sampleMethod, Me._blacklistManager, Me._environment)
-			Dim resultSymbolTable As ISymbolTable = embeddedInitialSymbolTableBuilder.GetResult()
-			Assert.That(resultSymbolTable.GetFragmentType("nonFragmentParameter"), [Is].EqualTo(SymbolTable.EMPTY_FRAGMENT))
-		End Sub
+    <Test()>
+    Public Sub GetResult_ParameterizedMethodSymbolTableBuiltWithNonOverlappingEnvironment_NonFragmentParameterIsEmptyFragment()
+      Dim sampleMethod As Method = TestHelper.GetSample(Of SymbolTableBuilderSample)("ParameterizedMethod", New TypeNode() {Me._floatType, Me._objectType})
+      Dim embeddedInitialSymbolTableBuilder As EmbeddedInitialSymbolTableBuilder = New EmbeddedInitialSymbolTableBuilder(sampleMethod, Me._blacklistManager, Me._environment)
+      Dim resultSymbolTable As ISymbolTable = embeddedInitialSymbolTableBuilder.GetResult()
+      Assert.That(resultSymbolTable.GetFragmentType("nonFragmentParameter"), [Is].EqualTo(Fragment.CreateEmpty()))
+    End Sub
 
 		<Test()>
 		Public Sub GetResult_ParameterizedMethodSymbolTableBuiltWithNonOverlappingEnvironment_FragmentParameterIsOfCorrectFragmentType()

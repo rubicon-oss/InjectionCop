@@ -25,7 +25,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.SymbolTableTests.Infe
   public class SymbolTableTest
   {
     private SymbolTable _symbolTable;
-    private static readonly Fragment _emptyFragment = null;
+    private static readonly Fragment _emptyFragment = Fragment.CreateEmpty();
     private static readonly Fragment _literal = Fragment.CreateLiteral();
 
     public static Fragment EmptyFragment
@@ -279,7 +279,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.SymbolTableTests.Infe
       AssignmentStatement assignment = (AssignmentStatement)assignmentBlock.Statements[1];
       Expression sampleExpression = assignment.Source;
       var fragmentType = _symbolTable.InferFragmentType(sampleExpression);
-      Assert.That(fragmentType, Is.EqualTo(SymbolTable.EMPTY_FRAGMENT));
+      Assert.That(fragmentType, Is.EqualTo(Fragment.CreateEmpty()));
     }
 
     [Test]

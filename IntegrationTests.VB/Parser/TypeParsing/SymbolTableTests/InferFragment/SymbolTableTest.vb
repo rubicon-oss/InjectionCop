@@ -23,7 +23,7 @@ Namespace Parser.TypeParsing.SymbolTableTests.InferFragment
   Public Class SymbolTableTest
     Private _symbolTable As SymbolTable
 
-    Private Shared _emptyFragment As Fragment = Nothing
+    Private Shared _emptyFragment As Fragment = Fragment.CreateEmpty()
 
     Private Shared _literal As Fragment = Fragment.CreateLiteral()
 
@@ -256,7 +256,7 @@ Namespace Parser.TypeParsing.SymbolTableTests.InferFragment
       Dim assignment As AssignmentStatement = CType(assignmentBlock.Statements(1), AssignmentStatement)
       Dim sampleExpression As Expression = assignment.Source
       Dim fragmentType = Me._symbolTable.InferFragmentType(sampleExpression)
-      Assert.That(fragmentType, [Is].EqualTo(SymbolTable.EMPTY_FRAGMENT))
+      Assert.That(fragmentType, [Is].EqualTo(Fragment.CreateEmpty()))
     End Sub
 
     <Test()>

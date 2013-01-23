@@ -47,7 +47,7 @@ namespace InjectionCop.UnitTests.Parser.MethodParsing
       _blacklistManager = new IDbCommandBlacklistManagerStub();
       _methodPreConditions = new SymbolTable (_blacklistManager);
       _methodPreConditions.MakeSafe ("x", Fragment.CreateNamed("SqlFragment"));
-      _methodPreConditions.MakeSafe ("l", SymbolTable.LITERAL);
+      _methodPreConditions.MakeSafe ("l", Fragment.CreateLiteral());
       _methodPreConditions.MakeUnsafe ("y");
       _problemPipeStub = new ProblemPipeStub();
       _methodGraphAnalyzer = new MethodGraphAnalyzer (_problemPipeStub);

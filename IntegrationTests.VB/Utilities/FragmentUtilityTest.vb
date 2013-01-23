@@ -90,14 +90,14 @@ Namespace Utilities
       Dim stringTypeNode As TypeNode = IntrospectionUtility.TypeNodeFactory(Of String)()
       Dim sample As Method = TestHelper.GetSample(Of FragmentUtilitySample)("ContainsNonFragmentParameter", New TypeNode() {stringTypeNode})
       Dim returnedFragment = FragmentUtility.GetFragmentType(sample.Parameters(0).Attributes)
-      Assert.That(returnedFragment, [Is].EqualTo(SymbolTable.EMPTY_FRAGMENT))
+      Assert.That(returnedFragment, [Is].EqualTo(Fragment.CreateEmpty()))
     End Sub
 
     <Test()>
     Public Sub ReturnFragmentType_NonAnnotatedMethod_ReturnsEmptyFragment()
       Dim sample As Method = TestHelper.GetSample(Of FragmentUtilitySample)("NoReturnFragment", New TypeNode() {})
       Dim returnFragment = FragmentUtility.ReturnFragmentType(sample)
-      Assert.That(returnFragment, [Is].EqualTo(SymbolTable.EMPTY_FRAGMENT))
+      Assert.That(returnFragment, [Is].EqualTo(Fragment.CreateEmpty()))
     End Sub
 
     <Test()>

@@ -77,6 +77,7 @@
     <Compile Include="Parser\BlockParsing\StatementHandler\StatementHandlerBase.cs" />
     <Compile Include="Parser\BlockParsing\StatementHandler\StatementHandlerDictionaryBuilder.cs" />
     <Compile Include="Parser\BlockParsing\StatementHandler\SwitchStatementHandler.cs" />
+    <Compile Include="Parser\FragmentType.cs" />
     <Compile Include="Parser\ISymbolTable.cs" />
     <Compile Include="Parser\MethodParsing\EmbeddedInitialSymbolTableBuilder.cs" />
     <Compile Include="Parser\MethodParsing\IMethodGraph.cs" />

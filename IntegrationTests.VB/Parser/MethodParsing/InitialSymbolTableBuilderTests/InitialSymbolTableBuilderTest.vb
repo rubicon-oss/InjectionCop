@@ -40,7 +40,7 @@ Namespace Parser.MethodParsing.InitialSymbolTableBuilderTests
 			Dim sampleMethod As Method = TestHelper.GetSample(Of SymbolTableBuilderSample)("ParameterizedMethod", New TypeNode() { Me._floatType, Me._objectType })
 			Dim initialSymbolTableBuilder As InitialSymbolTableBuilder = New InitialSymbolTableBuilder(sampleMethod, Me._blacklistManager)
 			Dim resultSymbolTable As ISymbolTable = initialSymbolTableBuilder.GetResult()
-			Assert.That(resultSymbolTable.GetFragmentType("_fragmentField"), [Is].EqualTo(SymbolTable.EMPTY_FRAGMENT))
+			Assert.That(resultSymbolTable.GetFragmentType("_fragmentField"), [Is].EqualTo(Fragment.CreateEmpty()))
 		End Sub
 
 		<Test()>
@@ -48,7 +48,7 @@ Namespace Parser.MethodParsing.InitialSymbolTableBuilderTests
 			Dim sampleMethod As Method = TestHelper.GetSample(Of SymbolTableBuilderSample)("ParameterizedMethod", New TypeNode() { Me._floatType, Me._objectType })
 			Dim initialSymbolTableBuilder As InitialSymbolTableBuilder = New InitialSymbolTableBuilder(sampleMethod, Me._blacklistManager)
 			Dim resultSymbolTable As ISymbolTable = initialSymbolTableBuilder.GetResult()
-			Assert.That(resultSymbolTable.GetFragmentType("_nonFragmentField"), [Is].EqualTo(SymbolTable.EMPTY_FRAGMENT))
+			Assert.That(resultSymbolTable.GetFragmentType("_nonFragmentField"), [Is].EqualTo(Fragment.CreateEmpty()))
 		End Sub
 
 		<Test()>
@@ -56,7 +56,7 @@ Namespace Parser.MethodParsing.InitialSymbolTableBuilderTests
 			Dim sampleMethod As Method = TestHelper.GetSample(Of SymbolTableBuilderSample)("ParameterizedMethod", New TypeNode() { Me._floatType, Me._objectType })
 			Dim initialSymbolTableBuilder As InitialSymbolTableBuilder = New InitialSymbolTableBuilder(sampleMethod, Me._blacklistManager)
 			Dim resultSymbolTable As ISymbolTable = initialSymbolTableBuilder.GetResult()
-			Assert.That(resultSymbolTable.GetFragmentType("unknownSymbol"), [Is].EqualTo(SymbolTable.EMPTY_FRAGMENT))
+			Assert.That(resultSymbolTable.GetFragmentType("unknownSymbol"), [Is].EqualTo(Fragment.CreateEmpty()))
 		End Sub
 
 		<Test()>
@@ -64,7 +64,7 @@ Namespace Parser.MethodParsing.InitialSymbolTableBuilderTests
 			Dim sampleMethod As Method = TestHelper.GetSample(Of SymbolTableBuilderSample)("ParameterizedMethod", New TypeNode() { Me._floatType, Me._objectType })
 			Dim initialSymbolTableBuilder As InitialSymbolTableBuilder = New InitialSymbolTableBuilder(sampleMethod, Me._blacklistManager)
 			Dim resultSymbolTable As ISymbolTable = initialSymbolTableBuilder.GetResult()
-			Assert.That(resultSymbolTable.GetFragmentType("nonFragmentParameter"), [Is].EqualTo(SymbolTable.EMPTY_FRAGMENT))
+			Assert.That(resultSymbolTable.GetFragmentType("nonFragmentParameter"), [Is].EqualTo(Fragment.CreateEmpty()))
 		End Sub
 
 		<Test()>

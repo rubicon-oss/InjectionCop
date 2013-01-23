@@ -45,7 +45,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.InitialSymbolTableB
       InitialSymbolTableBuilder initialSymbolTableBuilder = new InitialSymbolTableBuilder(sampleMethod, _blacklistManager);
       ISymbolTable resultSymbolTable = initialSymbolTableBuilder.GetResult();
 
-      Assert.That(resultSymbolTable.GetFragmentType("_fragmentField"), Is.EqualTo(SymbolTable.EMPTY_FRAGMENT));
+      Assert.That(resultSymbolTable.GetFragmentType("_fragmentField"), Is.EqualTo(Fragment.CreateEmpty()));
     }
 
     [Test]
@@ -55,7 +55,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.InitialSymbolTableB
       InitialSymbolTableBuilder initialSymbolTableBuilder = new InitialSymbolTableBuilder(sampleMethod, _blacklistManager);
       ISymbolTable resultSymbolTable = initialSymbolTableBuilder.GetResult();
 
-      Assert.That(resultSymbolTable.GetFragmentType("_nonFragmentField"), Is.EqualTo(SymbolTable.EMPTY_FRAGMENT));
+      Assert.That(resultSymbolTable.GetFragmentType("_nonFragmentField"), Is.EqualTo(Fragment.CreateEmpty()));
     }
 
     [Test]
@@ -65,7 +65,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.InitialSymbolTableB
       InitialSymbolTableBuilder initialSymbolTableBuilder = new InitialSymbolTableBuilder(sampleMethod, _blacklistManager);
       ISymbolTable resultSymbolTable = initialSymbolTableBuilder.GetResult();
 
-      Assert.That(resultSymbolTable.GetFragmentType("unknownSymbol"), Is.EqualTo(SymbolTable.EMPTY_FRAGMENT));
+      Assert.That(resultSymbolTable.GetFragmentType("unknownSymbol"), Is.EqualTo(Fragment.CreateEmpty()));
     }
 
     [Test]
@@ -75,7 +75,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.InitialSymbolTableB
       InitialSymbolTableBuilder initialSymbolTableBuilder = new InitialSymbolTableBuilder(sampleMethod, _blacklistManager);
       ISymbolTable resultSymbolTable = initialSymbolTableBuilder.GetResult();
 
-      Assert.That(resultSymbolTable.GetFragmentType("nonFragmentParameter"), Is.EqualTo(SymbolTable.EMPTY_FRAGMENT));
+      Assert.That(resultSymbolTable.GetFragmentType("nonFragmentParameter"), Is.EqualTo(Fragment.CreateEmpty()));
     }
 
     [Test]

@@ -102,7 +102,7 @@ namespace InjectionCop.IntegrationTests.Utilities
       TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
       Method sample = TestHelper.GetSample<FragmentUtilitySample>("ContainsNonFragmentParameter", stringTypeNode);
       var returnedFragment = FragmentUtility.GetFragmentType(sample.Parameters[0].Attributes);
-      Assert.That (returnedFragment, Is.EqualTo (SymbolTable.EMPTY_FRAGMENT));
+      Assert.That (returnedFragment, Is.EqualTo (Fragment.CreateEmpty()));
     }
 
     [Test]
@@ -111,7 +111,7 @@ namespace InjectionCop.IntegrationTests.Utilities
       Method sample = TestHelper.GetSample<FragmentUtilitySample> ("NoReturnFragment");
       var returnFragment = FragmentUtility.ReturnFragmentType (sample);
 
-      Assert.That (returnFragment, Is.EqualTo(SymbolTable.EMPTY_FRAGMENT));
+      Assert.That (returnFragment, Is.EqualTo(Fragment.CreateEmpty()));
     }
 
     [Test]

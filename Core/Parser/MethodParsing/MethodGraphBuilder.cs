@@ -29,7 +29,7 @@ namespace InjectionCop.Parser.MethodParsing
     private readonly Block _methodBody;
     private readonly IBlacklistManager _blacklistManager;
     private readonly IProblemPipe _problemPipe;
-    private readonly Fragment _returnFragmentType;
+    private readonly Fragment _returnFragment;
     private readonly List<ReturnCondition> _referenceAndOutConditions;
 
     public MethodGraphBuilder (Method method, IBlacklistManager blacklistManager, IProblemPipe problemPipe)
@@ -48,13 +48,15 @@ namespace InjectionCop.Parser.MethodParsing
       {
         _result = new MethodGraph (-1, new Dictionary<int, BasicBlock>());
       }
-      _returnFragmentType = FragmentUtility.ReturnFragmentType (method);
+      _returnFragment = FragmentUtility.ReturnFragmentType (method);
     }
 
-    public MethodGraphBuilder(Method method, IBlacklistManager blacklistManager, IProblemPipe problemPipe, Fragment returnFragmentType)
+    public MethodGraphBuilder(Method method, IBlacklistManager blacklistManager, IProblemPipe problemPipe, Fragment returnFragment)
       : this(method, blacklistManager, problemPipe)
     {
-      _returnFragmentType = returnFragmentType;
+      ArgumentUtility.CheckNotNull ("returnFragment", returnFragment);
+
+      _returnFragment = returnFragment;
     }
 
     public IMethodGraph GetResult ()
@@ -67,7 +69,7 @@ namespace InjectionCop.Parser.MethodParsing
     {
       if (_result == null)
       {
-        BlockParser parser = new BlockParser (_blacklistManager, _problemPipe, _returnFragmentType, _referenceAndOutConditions);
+        BlockParser parser = new BlockParser (_blacklistManager, _problemPipe, _returnFragment, _referenceAndOutConditions);
         Dictionary<int, BasicBlock> graph = new Dictionary<int, BasicBlock>();
         int initialBlockId;
         List<Block> blockList = GetBlocks(_methodBody.Statements);

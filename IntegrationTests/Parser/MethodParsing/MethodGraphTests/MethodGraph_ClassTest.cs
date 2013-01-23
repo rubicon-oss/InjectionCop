@@ -364,7 +364,7 @@ namespace InjectionCop.IntegrationTests.Parser.MethodParsing.MethodGraphTests
         BasicBlock preReturnBasicBlock = methodGraph.GetBasicBlockById (preReturnBlock.UniqueKey);
         var postConditionFragmentType = preReturnBasicBlock.PostConditionSymbolTable.GetFragmentType("local$1");
 
-        Assert.That (postConditionFragmentType, Is.EqualTo(SymbolTable.EMPTY_FRAGMENT));
+        Assert.That (postConditionFragmentType, Is.EqualTo(Fragment.CreateEmpty()));
       }
       else
       {

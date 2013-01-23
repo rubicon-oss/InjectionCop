@@ -27,6 +27,8 @@ namespace InjectionCop.Parser.ProblemPipe
 
     public ProblemMetadata (int sourceExpressionId, SourceContext sourceContext, Fragment expectedFragment, Fragment givenFragment)
     {
+      ArgumentUtility.CheckNotNull ("givenFragment", givenFragment);
+
       _sourceExpressionId = sourceExpressionId;
       _sourceContext = ArgumentUtility.CheckNotNull ("sourceContext", sourceContext);
       _expectedFragment = expectedFragment;

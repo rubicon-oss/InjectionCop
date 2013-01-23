@@ -74,7 +74,7 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
 
     private Fragment GetDelegateTypesReturnFragment (DelegateNode sourceDelegateType)
     {
-      Fragment returnFragment = null;
+      var returnFragment = Fragment.CreateEmpty();
       foreach (Member member in sourceDelegateType.Members)
       {
         if (member.Name.Name == "Invoke")

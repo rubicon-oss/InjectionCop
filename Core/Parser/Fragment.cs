@@ -1,37 +1,52 @@
-﻿using System;
+﻿// Copyright 2013 rubicon informationstechnologie gmbh
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+using System;
 
 namespace InjectionCop.Parser
 {
   public class Fragment
   {
+    private static readonly Fragment s_emptyFragment = new Fragment (FragmentType.Empty, null);
+
     public static Fragment CreateNamed (string fragmentName)
     {
-      return new Fragment (Type.NamedFragment, fragmentName);
+      return new Fragment (FragmentType.Named, fragmentName);
     }
 
     public static Fragment CreateLiteral ()
     {
-      return new Fragment (Type.Literal, null);
+      return new Fragment (FragmentType.Literal, null);
     }
 
-    public enum Type
+    public static Fragment CreateEmpty ()
     {
-      Literal = 0,
-      NamedFragment = 1
+      return s_emptyFragment;
     }
 
-    private readonly Type _type;
+    private readonly FragmentType _fragmentType;
     private readonly string _fragmentName;
 
-    private Fragment (Type type, string fragmentName)
+    private Fragment (FragmentType fragmentType, string fragmentName)
     {
-      _type = type;
+      _fragmentType = fragmentType;
       _fragmentName = fragmentName;
     }
 
-    public Type FragmentType
+    public FragmentType Type
     {
-      get { return _type; }
+      get { return _fragmentType; }
     }
 
     public string FragmentName
@@ -41,7 +56,7 @@ namespace InjectionCop.Parser
 
     protected bool Equals (Fragment other)
     {
-      return _type == other._type && string.Equals (_fragmentName, other._fragmentName);
+      return _fragmentType == other._fragmentType && string.Equals (_fragmentName, other._fragmentName);
     }
 
     public override bool Equals (object obj)
@@ -59,24 +74,31 @@ namespace InjectionCop.Parser
     {
       unchecked
       {
-        return ((int) _type * 397) ^ (_fragmentName != null ? _fragmentName.GetHashCode() : 0);
+        return ((int) _fragmentType * 397) ^ (_fragmentName != null ? _fragmentName.GetHashCode() : 0);
       }
     }
 
     public static bool operator == (Fragment a, Fragment b)
     {
-      return object.Equals (a, b);
+      return Equals (a, b);
     }
-    
+
     public static bool operator != (Fragment a, Fragment b)
     {
-      return !object.Equals (a, b);
+      return !Equals (a, b);
     }
 
     public override string ToString ()
     {
-      return _type == Type.Literal ? "Literal" : _fragmentName;
+      switch (_fragmentType)
+      {
+        case FragmentType.Literal:
+          return "Literal";
+        case FragmentType.Empty:
+          return "Empty";
+        default:
+          return _fragmentName;
+      }
     }
-
   }
 }

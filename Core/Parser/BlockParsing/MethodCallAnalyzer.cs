@@ -66,8 +66,8 @@ namespace InjectionCop.Parser.BlockParsing
         Fragment operandFragmentType = _symbolTable.InferFragmentType (operand);
         Fragment parameterFragmentType = parameterFragmentTypes[i];
 
-        if (operandFragmentType != SymbolTable.LITERAL
-            && parameterFragmentType != SymbolTable.EMPTY_FRAGMENT
+        if (operandFragmentType != Fragment.CreateLiteral()
+            && parameterFragmentType != Fragment.CreateEmpty()
             && operandFragmentType != parameterFragmentType)
         {
           string variableName;

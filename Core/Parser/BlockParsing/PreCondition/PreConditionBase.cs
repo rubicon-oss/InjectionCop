@@ -26,7 +26,10 @@ namespace InjectionCop.Parser.BlockParsing.PreCondition
 
     protected PreConditionBase (string symbol, Fragment fragment)
     {
-      _symbol = ArgumentUtility.CheckNotNullOrEmpty ("symbol", symbol);
+      ArgumentUtility.CheckNotNullOrEmpty ("symbol", symbol);
+      ArgumentUtility.CheckNotNull ("fragment", fragment);
+      
+      _symbol = symbol;
       _fragment =  fragment;
     }
 

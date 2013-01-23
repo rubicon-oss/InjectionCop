@@ -43,7 +43,7 @@ namespace InjectionCop.Utilities
 
     public static Fragment GetFragmentType (AttributeNodeCollection attributes)
     {
-      Fragment fragmentType = null;
+      var fragmentType = Fragment.CreateEmpty();
       if (attributes != null && ContainsFragment (attributes))
       {
         string fragmentFullName = typeof (FragmentAttribute).FullName;
@@ -76,7 +76,7 @@ namespace InjectionCop.Utilities
     public static Fragment ReturnFragmentType (Method method)
     {
       ArgumentUtility.CheckNotNull ("method", method);
-      Fragment returnFragment = null;
+      var returnFragment = Fragment.CreateEmpty();
       Method determiningMethod;
 
       Method[] interfaceDeclarations = IntrospectionUtility.InterfaceDeclarations (method);
@@ -141,7 +141,7 @@ namespace InjectionCop.Utilities
       }
       else
       {
-        fragmentType = null;
+        fragmentType = Fragment.CreateEmpty();
       }
 
       return fragmentType;
@@ -149,7 +149,8 @@ namespace InjectionCop.Utilities
 
     public static Fragment GetMemberBindingFragmentType(MemberBinding memberBinding)
     {
-      Fragment fragmentType = null;
+      var fragmentType = Fragment.CreateEmpty();
+
       if (memberBinding.BoundMember is Field)
       {
         Field field = (Field)memberBinding.BoundMember;
@@ -188,9 +189,12 @@ namespace InjectionCop.Utilities
 
     public static bool FragmentTypesAssignable (Fragment givenFragmentType, Fragment targetFragmentType)
     {
+      ArgumentUtility.CheckNotNull ("givenFragmentType", givenFragmentType);
+      ArgumentUtility.CheckNotNull ("targetFragmentType", targetFragmentType);
+
       return targetFragmentType == givenFragmentType
-             || targetFragmentType == null
-             || givenFragmentType == SymbolTable.LITERAL;
+             || targetFragmentType == Fragment.CreateEmpty()
+             || givenFragmentType == Fragment.CreateLiteral();
     }
 
     private static bool ContainsFragmentGeneratorAttribute(AttributeNodeCollection attributes)

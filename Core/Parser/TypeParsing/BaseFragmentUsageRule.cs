@@ -29,12 +29,12 @@ namespace InjectionCop.Parser.TypeParsing
       {
         var fragmentType = FragmentUtility.GetFragmentType (parameter.Attributes);
 
-        if (fragmentType != SymbolTable.EMPTY_FRAGMENT)
+        if (fragmentType != Fragment.CreateEmpty())
         {
           var overriddenParameter = overridingMethod.Parameters[parameter.ParameterListIndex];
           var overriddenFragmentType = FragmentUtility.GetFragmentType (overriddenParameter.Attributes);
 
-          if (overriddenFragmentType != fragmentType && overriddenFragmentType != SymbolTable.EMPTY_FRAGMENT)
+          if (overriddenFragmentType != fragmentType && overriddenFragmentType != Fragment.CreateEmpty())
             AddProblem (new ProblemMetadata (overridingMethod.UniqueKey, overridingMethod.SourceContext, fragmentType, overriddenFragmentType));
         }
       }

@@ -23,11 +23,6 @@ namespace InjectionCop.Parser
 {
   public class SymbolTable : ISymbolTable
   {
-    [Obsolete]
-    public static readonly Fragment LITERAL = Fragment.CreateLiteral();
-    [Obsolete]
-    public static readonly Fragment EMPTY_FRAGMENT = null;
-
     private readonly IBlacklistManager _blacklistManager;
 
     private Dictionary<string, Fragment> _safenessMap;
@@ -47,10 +42,10 @@ namespace InjectionCop.Parser
     {
       ArgumentUtility.CheckNotNull ("expression", expression);
 
-      Fragment fragmentType = EMPTY_FRAGMENT;
+      var fragmentType = Fragment.CreateEmpty();
       if (expression is Literal)
       {
-        fragmentType = LITERAL;
+        fragmentType = Fragment.CreateLiteral();
       }
       else if (expression is Local)
       {
@@ -89,6 +84,7 @@ namespace InjectionCop.Parser
     public bool IsAssignableTo(string symbolName, Fragment fragmentType)
     {
       ArgumentUtility.CheckNotNull("symbolName", symbolName);
+      ArgumentUtility.CheckNotNull ("fragmentType", fragmentType);
 
       return FragmentUtility.FragmentTypesAssignable (GetFragmentType(symbolName), fragmentType);
     }
@@ -122,7 +118,7 @@ namespace InjectionCop.Parser
 
     public Fragment GetFragmentType (string symbolName)
     {
-      Fragment fragmentType = EMPTY_FRAGMENT;
+      var fragmentType = Fragment.CreateEmpty();
       if (symbolName != null)
       {
         if (_safenessMap.ContainsKey (symbolName))
@@ -136,12 +132,14 @@ namespace InjectionCop.Parser
     public void MakeUnsafe (string symbolName)
     {
       ArgumentUtility.CheckNotNull ("symbolName", symbolName);
-      _safenessMap[symbolName] = EMPTY_FRAGMENT;
+      _safenessMap[symbolName] = Fragment.CreateEmpty();
     }
 
     public void MakeSafe (string symbolName, Fragment fragmentType)
     {
       ArgumentUtility.CheckNotNull ("symbolName", symbolName);
+      ArgumentUtility.CheckNotNull ("fragmentType", fragmentType);
+      
       _safenessMap[symbolName] = fragmentType;
     }
     
@@ -160,7 +158,7 @@ namespace InjectionCop.Parser
 
     private Fragment Lookup (string name)
     {
-      Fragment fragmentType = EMPTY_FRAGMENT;
+      var fragmentType = Fragment.CreateEmpty();
       if (_safenessMap.ContainsKey (name))
       {
         fragmentType = _safenessMap[name];
@@ -181,7 +179,7 @@ namespace InjectionCop.Parser
       }
       else
       {
-        parameterFragmentTypes = signature.ParameterFragmentTypes.Select(name => name != null ? Fragment.CreateNamed(name) : null).ToArray();
+        parameterFragmentTypes = signature.ParameterFragmentTypes.Select(name => name != null ? Fragment.CreateNamed(name) : Fragment.CreateEmpty()).ToArray();
       }
       return parameterFragmentTypes;
     }

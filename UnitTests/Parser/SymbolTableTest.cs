@@ -52,9 +52,9 @@ namespace InjectionCop.UnitTests.Parser
     }
 
     [Test]
-    public void GetSafenessMap_NonExistingEntry_ReturnsEmptyString ()
+    public void GetSafenessMap_NonExistingEntry_ReturnsEmptyFragment ()
     {
-      Assert.That(_symbolTable.GetFragmentType ("key"), Is.Null);
+      Assert.That(_symbolTable.GetFragmentType ("key"), Is.EqualTo(Fragment.CreateEmpty()));
     }
   }
 }

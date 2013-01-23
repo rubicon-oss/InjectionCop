@@ -82,7 +82,7 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
     {
       Field targetField = IntrospectionUtility.GetField (assignmentStatement.Target);
       Fragment targetFragmentType = FragmentUtility.GetFragmentType (targetField.Attributes);
-      if (targetFragmentType != SymbolTable.EMPTY_FRAGMENT)
+      if (targetFragmentType != Fragment.CreateEmpty())
       {
         ProblemMetadata problemMetadata = new ProblemMetadata (
             assignmentStatement.UniqueKey,

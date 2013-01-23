@@ -327,7 +327,7 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing
       BasicBlock ifBasicBlock = _blockParser.Parse (ifBlock);
       var postConditionFragmentType = ifBasicBlock.PostConditionSymbolTable.GetFragmentType("local$0");
 
-      Assert.That (postConditionFragmentType, Is.EqualTo(SymbolTable.EMPTY_FRAGMENT));
+      Assert.That (postConditionFragmentType, Is.EqualTo(Fragment.CreateEmpty()));
     }
 
       [Test]

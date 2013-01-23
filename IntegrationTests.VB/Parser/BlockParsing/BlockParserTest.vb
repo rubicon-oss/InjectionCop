@@ -269,7 +269,7 @@ Namespace Parser.BlockParsing
       Dim ifBlock As Block = TryCast(sampleMethod.Body.Statements(1), Block)
       Dim ifBasicBlock As BasicBlock = Me._blockParser.Parse(ifBlock)
       Dim postConditionFragmentType = ifBasicBlock.PostConditionSymbolTable.GetFragmentType("local$0")
-      Assert.That(postConditionFragmentType, [Is].EqualTo(SymbolTable.EMPTY_FRAGMENT))
+      Assert.That(postConditionFragmentType, [Is].EqualTo(Fragment.CreateEmpty()))
     End Sub
 
     <Test()>

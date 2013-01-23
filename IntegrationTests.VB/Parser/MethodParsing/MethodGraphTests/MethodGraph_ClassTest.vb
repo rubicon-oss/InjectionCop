@@ -288,7 +288,7 @@ Namespace Parser.MethodParsing.MethodGraphTests
         Dim methodGraph As IMethodGraph = MyBase.BuildMethodGraph(sampleMethod)
         Dim preReturnBasicBlock As BasicBlock = methodGraph.GetBasicBlockById(preReturnBlock.UniqueKey)
         Dim postConditionFragmentType = preReturnBasicBlock.PostConditionSymbolTable.GetFragmentType("local$1")
-        Assert.That(postConditionFragmentType, [Is].EqualTo(SymbolTable.EMPTY_FRAGMENT))
+        Assert.That(postConditionFragmentType, [Is].EqualTo(Fragment.CreateEmpty()))
       Else
         Assert.Ignore("Bad Sample")
       End If
