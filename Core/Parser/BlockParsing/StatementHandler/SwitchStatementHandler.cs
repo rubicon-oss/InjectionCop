@@ -34,13 +34,7 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
     {
     }
 
-    protected override void HandleStatement (
-        Statement statement,
-        ISymbolTable symbolTable,
-        List<IPreCondition> preConditions,
-        List<string> assignmentTargetVariables,
-        List<BlockAssignment> blockAssignments,
-        List<int> successors)
+    protected override void HandleStatement (Statement statement, ISymbolTable symbolTable, List<IPreCondition> preConditions, List<string> assignmentTargetVariables, List<BlockAssignment> blockAssignments, List<int> successors, Dictionary<string, Fragment> locallyInitializedArrays)
     {
       SwitchInstruction switchInstruction = (SwitchInstruction) statement;
       successors.AddRange (switchInstruction.Targets.Select (caseBlock => caseBlock.UniqueKey));

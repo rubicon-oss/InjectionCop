@@ -107,5 +107,15 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Index
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
+    
+    [Test]
+    public void Parse_UnsafeLocallyInitializedArray_ReturnsProblem()
+    {
+      Method sample = TestHelper.GetSample<IndexerSample>("UnsafeLocallyInitializedArray");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
   }
 }

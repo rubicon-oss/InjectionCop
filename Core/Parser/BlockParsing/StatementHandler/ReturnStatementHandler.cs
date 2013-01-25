@@ -40,7 +40,8 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
         List<IPreCondition> preConditions,
         List<string> assignmentTargetVariables,
         List<BlockAssignment> blockAssignments,
-        List<int> successors)
+        List<int> successors,
+        Dictionary<string, Fragment> locallyInitializedArrays)
     {
       ReturnNode returnNode = (ReturnNode) statement;
       bool memberHasReturnType = returnNode.Expression != null;

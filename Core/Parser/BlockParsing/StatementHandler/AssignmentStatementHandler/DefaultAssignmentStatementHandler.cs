@@ -40,7 +40,8 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
         List<IPreCondition> preConditions,
         List<string> assignmentTargetVariables,
         List<BlockAssignment> blockAssignments,
-        List<int> successors)
+        List<int> successors,
+        Dictionary<string, Fragment> locallyInitializedArrays)
     {
       AssignmentStatement assignmentStatement = (AssignmentStatement) statement;
 
@@ -88,7 +89,7 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
             assignmentStatement.UniqueKey,
             assignmentStatement.SourceContext,
             targetFragmentType,
-            Fragment.CreateNamed("??"));
+            Fragment.CreateNamed ("??"));
         string sourceSymbol = IntrospectionUtility.GetVariableName (assignmentStatement.Source);
         if (sourceSymbol != null)
         {

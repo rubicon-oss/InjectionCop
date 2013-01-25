@@ -39,7 +39,8 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
         List<IPreCondition> preConditions,
         List<string> assignmentTargetVariables,
         List<BlockAssignment> blockAssignments,
-        List<int> successors)
+        List<int> successors,
+        Dictionary<string, Fragment> locallyInitializedArrays)
     {
       ExpressionStatement expressionStatement = (ExpressionStatement) statement;
       _inspect (expressionStatement.Expression);

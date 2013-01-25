@@ -39,7 +39,7 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
     {
       _blacklistManager = ArgumentUtility.CheckNotNull ("blacklistManager", blacklistManager);
       _problemPipe = ArgumentUtility.CheckNotNull ("typeParser", problemPipe);
-      _returnFragmentType =  returnFragmentType;
+      _returnFragmentType = returnFragmentType;
       _returnConditions = returnConditions;
       _inspect = inspect;
     }

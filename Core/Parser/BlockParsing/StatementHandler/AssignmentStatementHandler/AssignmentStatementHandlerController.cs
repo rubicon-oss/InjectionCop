@@ -26,6 +26,7 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
     private readonly DefaultAssignmentStatementHandler _defaultAssignmentStatementHandler;
     private readonly DelegateAssignmentStatementHandler _delegateAssignmentStatementHandler;
     private readonly IndexerAssignmentStatementHandler _indexerAssignmentStatementHandler;
+    private readonly ArrayConstructStatementHandler _arrayConstructStatementHandler;
 
     public AssignmentStatementHandlerController (
         IProblemPipe problemPipe,
@@ -41,6 +42,8 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
           _problemPipe, _returnFragmentType, _returnConditions, _blacklistManager, inspect);
       _indexerAssignmentStatementHandler = new IndexerAssignmentStatementHandler (
           _problemPipe, _returnFragmentType, _returnConditions, _blacklistManager, inspect);
+      _arrayConstructStatementHandler = new ArrayConstructStatementHandler (
+          _problemPipe, _returnFragmentType, _returnConditions, _blacklistManager, inspect);
     }
 
     protected override void HandleStatement (
@@ -49,23 +52,34 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
         List<IPreCondition> preConditions,
         List<string> assignmentTargetVariables,
         List<BlockAssignment> blockAssignments,
-        List<int> successors)
+        List<int> successors,
+        Dictionary<string, Fragment> locallyInitializedArrays)
     {
       AssignmentStatement assignmentStatement = (AssignmentStatement) statement;
       bool sourceIsDelegate = assignmentStatement.Source.NodeType == NodeType.Construct
                               && assignmentStatement.Source.Type.NodeType == NodeType.DelegateNode;
+      bool arrayInitialization = assignmentStatement.Source.NodeType == NodeType.ConstructArray
+                                 && assignmentStatement.Target.NodeType == NodeType.Local;
 
       if (sourceIsDelegate)
       {
-        _delegateAssignmentStatementHandler.Handle (statement, symbolTable, preConditions, assignmentTargetVariables, blockAssignments, successors);
+        _delegateAssignmentStatementHandler.Handle (
+            statement, symbolTable, preConditions, assignmentTargetVariables, blockAssignments, successors, locallyInitializedArrays);
+      }
+      else if (arrayInitialization)
+      {
+        _arrayConstructStatementHandler.Handle  (
+            statement, symbolTable, preConditions, assignmentTargetVariables, blockAssignments, successors, locallyInitializedArrays);
       }
       else if (assignmentStatement.Target is Indexer)
       {
-        _indexerAssignmentStatementHandler.Handle (statement, symbolTable, preConditions, assignmentTargetVariables, blockAssignments, successors);
+        _indexerAssignmentStatementHandler.Handle (
+            statement, symbolTable, preConditions, assignmentTargetVariables, blockAssignments, successors, locallyInitializedArrays);
       }
       else
       {
-        _defaultAssignmentStatementHandler.Handle (statement, symbolTable, preConditions, assignmentTargetVariables, blockAssignments, successors);
+        _defaultAssignmentStatementHandler.Handle (
+            statement, symbolTable, preConditions, assignmentTargetVariables, blockAssignments, successors, locallyInitializedArrays);
       }
     }
   }

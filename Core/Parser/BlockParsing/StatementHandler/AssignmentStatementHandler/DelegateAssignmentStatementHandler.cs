@@ -41,7 +41,8 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
         List<IPreCondition> preConditions,
         List<string> assignmentTargetVariables,
         List<BlockAssignment> blockAssignments,
-        List<int> successors)
+        List<int> successors,
+        Dictionary<string, Fragment> locallyInitializedArrays)
     {
       AssignmentStatement assignmentStatement = (AssignmentStatement) statement;
       Method assignedMethod = GetAssignedDelegateMethod (assignmentStatement);

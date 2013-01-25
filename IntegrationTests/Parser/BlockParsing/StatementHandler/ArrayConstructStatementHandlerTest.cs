@@ -18,7 +18,6 @@ using InjectionCop.Config;
 using InjectionCop.Parser;
 using InjectionCop.Parser.BlockParsing;
 using InjectionCop.Parser.BlockParsing.PreCondition;
-using InjectionCop.Parser.BlockParsing.StatementHandler;
 using InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementHandler;
 using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
@@ -28,22 +27,27 @@ using Rhino.Mocks;
 namespace InjectionCop.IntegrationTests.Parser.BlockParsing.StatementHandler
 {
   [TestFixture]
-  public class StatementHandlerBaseTest
+  public class ArrayConstructStatementHandlerTest
   {
     [Test]
-    [ExpectedException(typeof(InjectionCopException), ExpectedMessage = "Expected to handle AssignmentStatement but got ReturnNode")]
-    public void Handle_WrongStatementType_ThrowsException ()
+    public void ArrayConstructIsParsed ()
     {
       MockRepository mocks = new MockRepository();
       IBlacklistManager blacklistManager = mocks.Stub<IBlacklistManager>();
-      StatementHandlerBase<AssignmentStatement> handler = new AssignmentStatementHandlerController (
+      Dictionary<string, Fragment> locallyInitializedArrays = new Dictionary<string, Fragment>();
+      ArrayConstructStatementHandler handler = new ArrayConstructStatementHandler (
           new ProblemPipeStub(), Fragment.CreateNamed ("returnFragmentType"), new List<ReturnCondition>(), blacklistManager, delegate { });
-      Method sampleMethod = IntrospectionUtility.MethodFactory<StatementHandlerBaseSample> ("ContainsReturnStatement");
-      Block sampleBlock = (Block) sampleMethod.Body.Statements[1];
-      Statement sample = sampleBlock.Statements[0];
+      
+      Method sampleMethod = IntrospectionUtility.MethodFactory<ArrayConstructStatementHandlerSample> ("LocallyInitializedArray");
+      Block sampleBlock = (Block) sampleMethod.Body.Statements[0];
+      Statement sample = sampleBlock.Statements[1];
 
       ISymbolTable symbolTable = mocks.Stub<ISymbolTable>();
-      handler.Handle (sample, symbolTable, new List<IPreCondition>(), new List<string>(), new List<BlockAssignment>(), new List<int>(), new Dictionary<string, Fragment>());
+      handler.Handle (
+          sample, symbolTable, new List<IPreCondition>(), new List<string>(), new List<BlockAssignment>(), new List<int>(), locallyInitializedArrays);
+
+      bool locallyInitializedArrayAdded = locallyInitializedArrays.ContainsKey ("local$2") && locallyInitializedArrays["local$2"] == null;
+      Assert.That (locallyInitializedArrayAdded, Is.True);
     }
   }
 }

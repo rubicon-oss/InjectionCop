@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+
 using System;
 using System.Collections.Generic;
 using InjectionCop.Config;
@@ -19,11 +20,11 @@ using InjectionCop.Parser.BlockParsing.PreCondition;
 using InjectionCop.Parser.ProblemPipe;
 using Microsoft.FxCop.Sdk;
 
-namespace InjectionCop.Parser.BlockParsing.StatementHandler
+namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementHandler
 {
-  public class BranchStatementHandler : StatementHandlerBase<Branch>
+  public class ArrayConstructStatementHandler: StatementHandlerBase<AssignmentStatement>
   {
-    public BranchStatementHandler (
+    public ArrayConstructStatementHandler (
         IProblemPipe problemPipe,
         Fragment returnFragmentType,
         List<ReturnCondition> returnConditions,
@@ -32,7 +33,7 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
         : base (problemPipe, returnFragmentType, returnConditions, blacklistManager, inspect)
     {
     }
-
+    
     protected override void HandleStatement (
         Statement statement,
         ISymbolTable symbolTable,
@@ -40,10 +41,16 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
         List<string> assignmentTargetVariables,
         List<BlockAssignment> blockAssignments,
         List<int> successors,
-        Dictionary<string, Fragment> locallyInitializedArrays)
+        Dictionary<string,Fragment> initializedArrays )
     {
-      Branch branch = (Branch) statement;
-      successors.Add (branch.Target.UniqueKey);
+      AssignmentStatement assignmentStatement = (AssignmentStatement) statement;
+      if (assignmentStatement.Target is Local && assignmentStatement.Source is ConstructArray)
+      {
+        var target = (Local) assignmentStatement.Target;
+        initializedArrays[target.Name.Name] = null;
+        assignmentTargetVariables.Add (target.Name.Name);
+      }
     }
+
   }
 }

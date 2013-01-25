@@ -40,22 +40,47 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
         List<IPreCondition> preConditions,
         List<string> assignmentTargetVariables,
         List<BlockAssignment> blockAssignments,
-        List<int> successors)
+        List<int> successors,
+        Dictionary<string, Fragment> locallyInitializedArrays)
     {
       AssignmentStatement assignmentStatement = (AssignmentStatement) statement;
       Indexer targetIndexer = (Indexer) assignmentStatement.Target;
       string targetName = IntrospectionUtility.GetVariableName (targetIndexer.Object);
-      Fragment targetFragmentType = symbolTable.GetFragmentType (targetName);
-      Fragment sourceFragmentType = symbolTable.InferFragmentType (assignmentStatement.Source);
-      if (targetFragmentType != sourceFragmentType)
+      
+      if (locallyInitializedArrays.ContainsKey (targetName))
       {
-        symbolTable.MakeUnsafe (targetName);
+        InferArrayFragment(assignmentStatement, targetName, locallyInitializedArrays, symbolTable);
       }
       else
       {
-        SetPreConditionForIndexerObject (assignmentStatement, targetName, sourceFragmentType, preConditions);
+        CheckAssignment(assignmentStatement, symbolTable, preConditions, targetName); 
       }
+
       _inspect (assignmentStatement.Source);
+    }
+
+    private void InferArrayFragment (AssignmentStatement assignmentStatement, string targetName, Dictionary<string, Fragment> locallyInitializedArrays, ISymbolTable symbolTable)
+    {
+      Fragment targetFragmentType = symbolTable.InferFragmentType (assignmentStatement.Source);
+      if (locallyInitializedArrays[targetName] == null)
+      {
+        symbolTable.MakeSafe (targetName, targetFragmentType);
+      }
+    }
+
+    private void CheckAssignment (AssignmentStatement assignmentStatement, ISymbolTable symbolTable, List<IPreCondition> preConditions, string targetName)
+    {
+      Fragment targetFragmentType = symbolTable.GetFragmentType (targetName);
+      Fragment sourceFragmentType = symbolTable.InferFragmentType (assignmentStatement.Source);
+
+      if (targetFragmentType != sourceFragmentType)
+        {
+          symbolTable.MakeUnsafe (targetName);
+        }
+        else
+        {
+          SetPreConditionForIndexerObject (assignmentStatement, targetName, sourceFragmentType, preConditions);
+        }
     }
 
     private void SetPreConditionForIndexerObject (
@@ -67,8 +92,8 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
             assignmentStatement.UniqueKey,
             assignmentStatement.SourceContext,
             sourceFragmentType,
-            Fragment.CreateNamed("??"));
-        
+            Fragment.CreateNamed ("??"));
+
         var preCondition = new EqualityPreCondition (targetName, sourceFragmentType, problemMetadata);
         preConditions.Add (preCondition);
       }

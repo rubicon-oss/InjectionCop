@@ -91,28 +91,17 @@ namespace InjectionCop.Parser.CustomInferenceRules
 
     private Fragment FragmentIntersection (Fragment fragmentA, Fragment fragmentB)
     {
-      Fragment intersection;
       bool fragmentAIsSuperior = fragmentA != fragmentB && fragmentA == Fragment.CreateLiteral();
       bool fragmentBIsSuperior = fragmentA != fragmentB && fragmentB == Fragment.CreateLiteral();
       
       if (fragmentA == fragmentB)
-      {
-        intersection = fragmentA;
-      }
+        return fragmentA;
       else if (fragmentAIsSuperior)
-      {
-        intersection = fragmentB;
-      }
+        return fragmentB;
       else if (fragmentBIsSuperior)
-      {
-        intersection = fragmentA;
-      }
+        return fragmentA;
       else
-      {
-        intersection = Fragment.CreateEmpty();
-      }
-
-      return intersection;
+        return Fragment.CreateEmpty();
     }
   }
 }

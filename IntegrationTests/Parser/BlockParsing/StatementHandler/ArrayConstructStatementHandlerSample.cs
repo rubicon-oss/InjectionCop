@@ -13,23 +13,15 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using InjectionCop.Parser.BlockParsing.PreCondition;
-using Microsoft.FxCop.Sdk;
 
-namespace InjectionCop.Parser.BlockParsing.StatementHandler
+namespace InjectionCop.IntegrationTests.Parser.BlockParsing.StatementHandler
 {
-  public interface IStatementHandler
+  public class ArrayConstructStatementHandlerSample
   {
-    Type HandledStatementType { get; }
-
-    void Handle (
-        Statement statement,
-        ISymbolTable symbolTable,
-        List<IPreCondition> preConditions,
-        List<string> assignmentTargetVariables,
-        List<BlockAssignment> blockAssignments,
-        List<int> successors,
-        Dictionary<string, Fragment> locallyInitializedArrays);
+    public string[] LocallyInitializedArray ()
+    {
+      string[] array = { "dummy", "dummy" };
+      return array;
+    }
   }
 }
