@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Rules FriendlyName="InjectionCop">
-  <Rule TypeName="TypeParser" Category="InjectionCop.SQLi" CheckId="IC0001">
+  <Rule TypeName="TypeParser" Category="InjectionCop.Analysis" CheckId="IC0001">
     <Name>Check for Fragment Violations</Name>
     <Description>See injectincop.codeplex.com for quick introduction</Description>
     <Url>injectioncop.codeplex.com</Url>
@@ -10,7 +10,7 @@
     <Email />
     <Owner />
   </Rule>
-  <Rule TypeName="OverridingMethodFragmentUsageRule" Category="InjectionCop.SQLi" CheckId="IC0002">
+  <Rule TypeName="OverridingMethodFragmentUsageRule" Category="InjectionCop.Usage" CheckId="IC0002">
     <Name>Check for Fragment Usage</Name>
     <Description>See injectincop.codeplex.com for quick introduction</Description>
     <Url>injectioncop.codeplex.com</Url>
@@ -20,7 +20,7 @@
     <Email />
     <Owner />
   </Rule>
-  <Rule TypeName="InterfaceImplementingMethodFragmentUsageRule" Category="InjectionCop.SQLi" CheckId="IC0003">
+  <Rule TypeName="InterfaceImplementingMethodFragmentUsageRule" Category="InjectionCop.Usage" CheckId="IC0003">
     <Name>Check for Fragment Usage</Name>
     <Description>See injectincop.codeplex.com for quick introduction</Description>
     <Url>injectioncop.codeplex.com</Url>
@@ -30,7 +30,7 @@
     <Email />
     <Owner />
   </Rule>
-  <Rule TypeName="MulitpleFragmentUsageRule" Category="InjectionCop.SQLi" CheckId="IC0004">
+  <Rule TypeName="MulitpleFragmentUsageRule" Category="InjectionCop.Usage" CheckId="IC0004">
     <Name>Check for multiple Fragment Usage</Name>
     <Description>See injectincop.codeplex.com for quick introduction</Description>
     <Url>injectioncop.codeplex.com</Url>

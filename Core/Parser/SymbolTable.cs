@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using InjectionCop.Config;
+using InjectionCop.Parser.CustomInferenceRules;
 using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
 
@@ -64,8 +65,8 @@ namespace InjectionCop.Parser
       }
       else if (expression is MethodCall)
       {
-        Method calleeMethod = IntrospectionUtility.ExtractMethod ((MethodCall) expression);
-        fragmentType = FragmentUtility.InferReturnFragmentType (calleeMethod);
+        MethodCall methodCall = (MethodCall) expression;
+        fragmentType = InferMethodCallReturnFragmentType(methodCall);
       }
       else if (expression is UnaryExpression)
       {
@@ -79,6 +80,23 @@ namespace InjectionCop.Parser
       }
      
       return fragmentType;
+    }
+
+    private Fragment InferMethodCallReturnFragmentType (MethodCall methodCall)
+    {
+      Fragment returnFragment;
+      Method calleeMethod = IntrospectionUtility.ExtractMethod (methodCall);
+
+      var binaryConcatInference = new FragmentParameterInference();
+      if (binaryConcatInference.Covers(calleeMethod.FullName))
+      {
+        returnFragment = binaryConcatInference.InferMethodCallReturnFragmentType (methodCall, this);
+      }
+      else
+      {
+        returnFragment = FragmentUtility.InferReturnFragmentType (calleeMethod);
+      }
+      return returnFragment;
     }
 
     public bool IsAssignableTo(string symbolName, Fragment fragmentType)
