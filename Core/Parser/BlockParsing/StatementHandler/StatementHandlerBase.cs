@@ -56,11 +56,11 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
         List<string> assignmentTargetVariables,
         List<BlockAssignment> blockAssignments,
         List<int> successors,
-        Dictionary<string, Fragment> locallyInitializedArrays)
+        Dictionary<string, bool> arrayFragmentTypeDefined)
     {
       if (statement is T)
       {
-        HandleStatement (statement, symbolTable, preConditions, assignmentTargetVariables, blockAssignments, successors, locallyInitializedArrays);
+        HandleStatement (statement, symbolTable, preConditions, assignmentTargetVariables, blockAssignments, successors, arrayFragmentTypeDefined);
       }
       else
       {
@@ -75,7 +75,7 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
         List<string> assignmentTargetVariables,
         List<BlockAssignment> blockAssignments,
         List<int> successors,
-        Dictionary<string, Fragment> locallyInitializedArrays);
+        Dictionary<string, bool> arrayFragmentTypeDefined);
   }
 }
 

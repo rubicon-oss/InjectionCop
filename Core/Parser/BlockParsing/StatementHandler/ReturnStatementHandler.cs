@@ -41,7 +41,7 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
         List<string> assignmentTargetVariables,
         List<BlockAssignment> blockAssignments,
         List<int> successors,
-        Dictionary<string, Fragment> locallyInitializedArrays)
+        Dictionary<string, bool> locallyInitializedArrays)
     {
       ReturnNode returnNode = (ReturnNode) statement;
       bool memberHasReturnType = returnNode.Expression != null;

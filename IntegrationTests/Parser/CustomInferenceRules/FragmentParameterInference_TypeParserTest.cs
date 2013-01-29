@@ -251,6 +251,46 @@ namespace InjectionCop.IntegrationTests.Parser.CustomInferenceRules
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
+        
+    [Test]
+    public void Parse_UnsafeConcatCallWithArray_ReturnsProblem()
+    {
+      Method sample = TestHelper.GetSample<FragmentParameterInferenceSample>("UnsafeConcatCallWithArray");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
     
+    [Test]
+    public void Parse_SafeFormatCallWithArray_NoProblem()
+    {
+      Method sample = TestHelper.GetSample<FragmentParameterInferenceSample>("SafeFormatCallWithArray");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
+
+    [Test]
+    public void Parse_SafeStringFormatPattern_NoProblem()
+    {
+      Method sample = TestHelper.GetSample<FragmentParameterInferenceSample>("SafeStringFormatPattern");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
+       
+    [Test]
+    public void Parse_UnsafeStringFormatPattern_ReturnsProblem()
+    {
+      Method sample = TestHelper.GetSample<FragmentParameterInferenceSample>("UnsafeStringFormatPattern");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
+
   }
 }

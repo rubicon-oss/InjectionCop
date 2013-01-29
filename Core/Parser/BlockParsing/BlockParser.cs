@@ -42,7 +42,7 @@ namespace InjectionCop.Parser.BlockParsing
     private List<int> _successors;
     private List<BlockAssignment> _blockAssignments;
     private List<string> _assignmentTargetVariables;
-    private Dictionary<string, Fragment> _locallyInitializedArrays;
+    private Dictionary<string, bool> _locallyInitializedArrays;
 
     public BlockParser (
         IBlacklistManager blacklistManager, IProblemPipe problemPipe, Fragment returnFragmentType, List<ReturnCondition> returnConditions)
@@ -85,7 +85,7 @@ namespace InjectionCop.Parser.BlockParsing
       _successors = new List<int>();
       _blockAssignments = new List<BlockAssignment>();
       _assignmentTargetVariables = new List<string>();
-      _locallyInitializedArrays = new Dictionary<string, Fragment>();
+      _locallyInitializedArrays = new Dictionary<string, bool>();
     }
 
     private void Inspect (Block methodBodyBlock)

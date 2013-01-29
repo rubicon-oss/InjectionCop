@@ -30,6 +30,6 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
         List<string> assignmentTargetVariables,
         List<BlockAssignment> blockAssignments,
         List<int> successors,
-        Dictionary<string, Fragment> locallyInitializedArrays);
+        Dictionary<string, bool> arrayFragmentTypeDefined);
   }
 }

@@ -53,7 +53,7 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
         List<string> assignmentTargetVariables,
         List<BlockAssignment> blockAssignments,
         List<int> successors,
-        Dictionary<string, Fragment> locallyInitializedArrays)
+        Dictionary<string, bool> locallyInitializedArrays)
     {
       AssignmentStatement assignmentStatement = (AssignmentStatement) statement;
       bool sourceIsDelegate = assignmentStatement.Source.NodeType == NodeType.Construct

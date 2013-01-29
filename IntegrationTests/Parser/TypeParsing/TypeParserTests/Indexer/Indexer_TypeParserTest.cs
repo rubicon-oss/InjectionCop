@@ -117,5 +117,45 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Index
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
+    
+    [Test]
+    public void Parse_UnsafeLocallyInitializedArrayFirstIndexerAssignmentUnsafe_ReturnsProblem()
+    {
+      Method sample = TestHelper.GetSample<IndexerSample>("UnsafeLocallyInitializedArrayFirstIndexerAssignmentUnsafe");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
+
+    [Test]
+    public void Parse_SafeLocallyInitializedArrayEqualFragmentTypes_NoProblem()
+    {
+      Method sample = TestHelper.GetSample<IndexerSample>("SafeLocallyInitializedArrayEqualFragmentTypes");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
+
+    [Test]
+    public void Parse_UnsafeLocallyInitializedArrayDifferentFragmentTypes_ReturnsProblem()
+    {
+      Method sample = TestHelper.GetSample<IndexerSample>("UnsafeLocallyInitializedArrayDifferentFragmentTypes");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
+
+    [Test]
+    public void Parse_SafeLocallyInitializedBiggerArray_NoProblem()
+    {
+      Method sample = TestHelper.GetSample<IndexerSample>("SafeLocallyInitializedBiggerArray");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
   }
 }

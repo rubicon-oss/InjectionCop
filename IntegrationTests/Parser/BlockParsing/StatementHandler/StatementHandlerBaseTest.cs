@@ -43,7 +43,7 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing.StatementHandler
       Statement sample = sampleBlock.Statements[0];
 
       ISymbolTable symbolTable = mocks.Stub<ISymbolTable>();
-      handler.Handle (sample, symbolTable, new List<IPreCondition>(), new List<string>(), new List<BlockAssignment>(), new List<int>(), new Dictionary<string, Fragment>());
+      handler.Handle (sample, symbolTable, new List<IPreCondition>(), new List<string>(), new List<BlockAssignment>(), new List<int>(), new Dictionary<string, bool>());
     }
   }
 }

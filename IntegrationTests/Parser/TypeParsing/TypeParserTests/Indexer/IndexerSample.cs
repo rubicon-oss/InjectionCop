@@ -78,6 +78,30 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Index
       string[] unsafeArray = { "dummy", UnsafeSource() };
       RequiresIndexerFragmentArray (unsafeArray);
     }
+
+    public void UnsafeLocallyInitializedArrayFirstIndexerAssignmentUnsafe()
+    {
+      string[] unsafeArray = { UnsafeSource(), "dummy" };
+      RequiresIndexerFragmentArray(unsafeArray);
+    }
+
+    public void SafeLocallyInitializedArrayEqualFragmentTypes()
+    {
+      string[] safeArray = { SafeIndexerFragmentSource(), SafeIndexerFragmentSource() };
+      RequiresIndexerFragmentArray(safeArray);
+    }
+
+    public void UnsafeLocallyInitializedArrayDifferentFragmentTypes()
+    {
+      string[] unSafeArray = { ReturnsHtmlFragment(), SafeIndexerFragmentSource() };
+      RequiresIndexerFragmentArray(unSafeArray);
+    }
+
+    public void SafeLocallyInitializedBiggerArray()
+    {
+      string[] safeArray = { "literal", SafeIndexerFragmentSource(), "literal", SafeIndexerFragmentSource(), "literal" };
+      RequiresIndexerFragmentArray(safeArray);
+    }
     
     [return: Fragment("IndexerFragment")]
     private string SafeIndexerFragmentSource ()

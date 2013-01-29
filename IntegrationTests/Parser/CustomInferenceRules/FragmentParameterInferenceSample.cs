@@ -14,6 +14,8 @@
 
 using System;
 
+using InjectionCop.Attributes;
+
 namespace InjectionCop.IntegrationTests.Parser.CustomInferenceRules
 {
   public class FragmentParameterInferenceSample: ParserSampleBase
@@ -143,9 +145,24 @@ namespace InjectionCop.IntegrationTests.Parser.CustomInferenceRules
       RequiresSqlFragment ("literal" + SafeSource() + "literal" + SafeSource() + "literal");
     }
 
-    /*
-     * pattern to support
-    public void TernaryStringFormatSafeCall ()
+    public void UnsafeConcatCallWithArray()
+    {
+      RequiresSqlFragment("literal" + SafeSource() + UnsafeSource() + SafeSource() + "literal");
+    }
+
+    public void SafeFormatCallWithArray()
+    {
+      RequiresSqlFragment(String.Format("{0}{1}{2}{3}", SafeSource(), "literal", "literal", SafeSource()));
+    }
+
+    public void SafeStringFormatPattern()
+    {
+      var format = "{0}{1}";
+      var strings = new[] { "literal", SafeSource() };
+      RequiresSqlFragment(CreateString(format, strings));
+    }
+
+    public void UnsafeStringFormatPattern ()
     {
       var format = "{0}{1}";
       var strings = new[] { "literal", SafeSource() };
@@ -153,14 +170,11 @@ namespace InjectionCop.IntegrationTests.Parser.CustomInferenceRules
       RequiresSqlFragment (CreateString(format, strings));
     }
 
+    [return: SqlFragment]
     private static string CreateString ([SqlFragment] string format, [SqlFragment] string[] strings)
     {
       return String.Format(format, strings);
     }
-     * 
-     */
-
-
 
   }
 }

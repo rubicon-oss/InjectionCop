@@ -28,10 +28,11 @@ namespace InjectionCop.Parser.CustomInferenceRules
                                                        "System.String.Concat(System.String,System.String)",
                                                        "System.String.Concat(System.String,System.String,System.String)",
                                                        "System.String.Concat(System.String,System.String,System.String,System.String)",
-                                                       "System.String.Concat(System.String,System.String[])",
+                                                       "System.String.Concat(System.String[])",
                                                        "System.String.Format(System.String,System.Object)",
                                                        "System.String.Format(System.String,System.Object,System.Object)",
-                                                       "System.String.Format(System.String,System.Object,System.Object,System.Object)"
+                                                       "System.String.Format(System.String,System.Object,System.Object,System.Object)",
+                                                       "System.String.Format(System.String,System.Object[])"
                                                    };
 
     public bool Covers (string methodFullname)

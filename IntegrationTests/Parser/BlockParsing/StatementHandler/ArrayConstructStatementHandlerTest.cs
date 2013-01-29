@@ -34,7 +34,7 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing.StatementHandler
     {
       MockRepository mocks = new MockRepository();
       IBlacklistManager blacklistManager = mocks.Stub<IBlacklistManager>();
-      Dictionary<string, Fragment> locallyInitializedArrays = new Dictionary<string, Fragment>();
+      Dictionary<string, bool> locallyInitializedArrays = new Dictionary<string, bool>();
       ArrayConstructStatementHandler handler = new ArrayConstructStatementHandler (
           new ProblemPipeStub(), Fragment.CreateNamed ("returnFragmentType"), new List<ReturnCondition>(), blacklistManager, delegate { });
       
@@ -46,7 +46,7 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing.StatementHandler
       handler.Handle (
           sample, symbolTable, new List<IPreCondition>(), new List<string>(), new List<BlockAssignment>(), new List<int>(), locallyInitializedArrays);
 
-      bool locallyInitializedArrayAdded = locallyInitializedArrays.ContainsKey ("local$2") && locallyInitializedArrays["local$2"] == null;
+      bool locallyInitializedArrayAdded = locallyInitializedArrays.ContainsKey ("local$2") && locallyInitializedArrays["local$2"] == false;
       Assert.That (locallyInitializedArrayAdded, Is.True);
     }
   }

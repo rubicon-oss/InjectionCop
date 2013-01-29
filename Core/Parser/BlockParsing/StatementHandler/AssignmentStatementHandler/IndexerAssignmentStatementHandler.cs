@@ -41,15 +41,15 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
         List<string> assignmentTargetVariables,
         List<BlockAssignment> blockAssignments,
         List<int> successors,
-        Dictionary<string, Fragment> locallyInitializedArrays)
+        Dictionary<string, bool> arrayFragmentTypeDefined)
     {
       AssignmentStatement assignmentStatement = (AssignmentStatement) statement;
       Indexer targetIndexer = (Indexer) assignmentStatement.Target;
       string targetName = IntrospectionUtility.GetVariableName (targetIndexer.Object);
       
-      if (locallyInitializedArrays.ContainsKey (targetName))
+      if (arrayFragmentTypeDefined.ContainsKey (targetName))
       {
-        InferArrayFragment(assignmentStatement, targetName, locallyInitializedArrays, symbolTable);
+        InferArrayFragment(assignmentStatement, targetName, arrayFragmentTypeDefined, symbolTable);
       }
       else
       {
@@ -59,12 +59,21 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
       _inspect (assignmentStatement.Source);
     }
 
-    private void InferArrayFragment (AssignmentStatement assignmentStatement, string targetName, Dictionary<string, Fragment> locallyInitializedArrays, ISymbolTable symbolTable)
+    private void InferArrayFragment (AssignmentStatement assignmentStatement, string targetName, Dictionary<string, bool> arrayFragmentTypeDefined, ISymbolTable symbolTable)
     {
       Fragment targetFragmentType = symbolTable.InferFragmentType (assignmentStatement.Source);
-      if (locallyInitializedArrays[targetName] == null)
+      if (arrayFragmentTypeDefined[targetName] == false)
       {
-        symbolTable.MakeSafe (targetName, targetFragmentType);
+        symbolTable.MakeSafe(targetName, targetFragmentType);
+        arrayFragmentTypeDefined[targetName] = true;
+      }
+      else if (symbolTable.GetFragmentType(targetName) == Fragment.CreateLiteral())
+      {
+        symbolTable.MakeSafe(targetName, targetFragmentType);
+      }
+      else if (symbolTable.GetFragmentType(targetName) != targetFragmentType && targetFragmentType != Fragment.CreateLiteral())
+      {
+        symbolTable.MakeUnsafe(targetName);
       }
     }
 

@@ -50,33 +50,33 @@ namespace InjectionCop.Parser
       }
       else if (expression is Local)
       {
-        Local local = (Local) expression;
-        fragmentType = Lookup (local.Name.Name);
+        Local local = (Local)expression;
+        fragmentType = Lookup(local.Name.Name);
       }
       else if (expression is Parameter)
       {
-        Parameter parameter = (Parameter) expression;
-        fragmentType = Lookup (parameter.Name.Name);
+        Parameter parameter = (Parameter)expression;
+        fragmentType = Lookup(parameter.Name.Name);
       }
       else if (expression is MemberBinding)
       {
-        MemberBinding memberBinding = (MemberBinding) expression;
+        MemberBinding memberBinding = (MemberBinding)expression;
         fragmentType = FragmentUtility.GetMemberBindingFragmentType(memberBinding);
       }
       else if (expression is MethodCall)
       {
-        MethodCall methodCall = (MethodCall) expression;
+        MethodCall methodCall = (MethodCall)expression;
         fragmentType = InferMethodCallReturnFragmentType(methodCall);
       }
       else if (expression is UnaryExpression)
       {
-        UnaryExpression unaryExpression = (UnaryExpression) expression;
-        fragmentType = InferFragmentType (unaryExpression.Operand);
+        UnaryExpression unaryExpression = (UnaryExpression)expression;
+        fragmentType = InferFragmentType(unaryExpression.Operand);
       }
       else if (expression is Indexer)
       {
-        Indexer indexer = (Indexer) expression;
-        fragmentType = InferFragmentType (indexer.Object);
+        Indexer indexer = (Indexer)expression;
+        fragmentType = InferFragmentType(indexer.Object);
       }
      
       return fragmentType;
@@ -87,10 +87,10 @@ namespace InjectionCop.Parser
       Fragment returnFragment;
       Method calleeMethod = IntrospectionUtility.ExtractMethod (methodCall);
 
-      var binaryConcatInference = new FragmentParameterInference();
-      if (binaryConcatInference.Covers(calleeMethod.FullName))
+      var fragmentParameterInference = new FragmentParameterInference();
+      if (fragmentParameterInference.Covers(calleeMethod.FullName))
       {
-        returnFragment = binaryConcatInference.InferMethodCallReturnFragmentType (methodCall, this);
+        returnFragment = fragmentParameterInference.InferMethodCallReturnFragmentType (methodCall, this);
       }
       else
       {

@@ -41,13 +41,13 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
         List<string> assignmentTargetVariables,
         List<BlockAssignment> blockAssignments,
         List<int> successors,
-        Dictionary<string,Fragment> initializedArrays )
+        Dictionary<string,bool> arrayFragmentTypeDefined )
     {
       AssignmentStatement assignmentStatement = (AssignmentStatement) statement;
       if (assignmentStatement.Target is Local && assignmentStatement.Source is ConstructArray)
       {
         var target = (Local) assignmentStatement.Target;
-        initializedArrays[target.Name.Name] = null;
+        arrayFragmentTypeDefined[target.Name.Name] = false;
         assignmentTargetVariables.Add (target.Name.Name);
       }
     }
