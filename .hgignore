@@ -73,3 +73,14 @@ IntegrationTests/bin/
 packages/
 IntegrationTests.VB/bin/
 IntegrationTests.VB/obj/
+TestResults/InjectionCop.TE.Tests_log.ldf
+TestResults/InjectionCop.TE.Tests.mdf
+TestResults/74d916c6-1950-40fe-b03f-88fdf2a20105/michael.racz_W0384 2012-12-14 15_49_57.coverage
+TestResults/12d3a39d-3ef6-43d4-a883-09e1571363c0/michael.racz_W0384 2012-12-14 16_04_45.coverage
+TestResult.xml
+IntegrationTests/InjectionCop.IntegrationTests.csproj.VisualState.xml
+IntegrationTests/InjectionCop.IntegrationTests.VisualState.xml
+IntegrationTests.VB/InjectionCop.IntegrationTests.VB.vbproj.user
+InjectionCopTest.VisualState.xml
+Core/bin/Debug/InjectionCop.instr.pdb
+Core/InjectionCop.Core.csproj.DotSettings.user
