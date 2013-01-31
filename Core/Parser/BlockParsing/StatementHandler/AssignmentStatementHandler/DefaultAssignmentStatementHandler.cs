@@ -13,8 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using InjectionCop.Config;
 using InjectionCop.Parser.BlockParsing.PreCondition;
 using Microsoft.FxCop.Sdk;
 using InjectionCop.Utilities;
@@ -24,13 +22,8 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
 {
   public class DefaultAssignmentStatementHandler : StatementHandlerBase<AssignmentStatement>
   {
-    public DefaultAssignmentStatementHandler (
-        IProblemPipe problemPipe,
-        Fragment returnFragmentType,
-        List<ReturnCondition> returnConditions,
-        IBlacklistManager blacklistManager,
-        BlockParser.InspectCallback inspect)
-        : base (problemPipe, returnFragmentType, returnConditions, blacklistManager, inspect)
+    public DefaultAssignmentStatementHandler (BlockParserContext blockParserContext)
+        : base (blockParserContext)
     {
     }
 
@@ -69,7 +62,7 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
           context.SymbolTable.InferSafeness (targetSymbol, assignmentStatement.Source);
         }
       }
-      _inspect (assignmentStatement.Source);
+      _blockParserContext.Inspect (assignmentStatement.Source);
     }
 
     private void AddAssignmentPreCondition (AssignmentStatement assignmentStatement, HandleContext context)
@@ -116,7 +109,7 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
             targetField.SourceContext,
             targetFragmentType,
             givenFragmentType);
-        _problemPipe.AddProblem (problemMetadata);
+        _blockParserContext.ProblemPipe.AddProblem (problemMetadata);
       }
     }
   }

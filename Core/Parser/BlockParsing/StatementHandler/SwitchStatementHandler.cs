@@ -13,24 +13,15 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using InjectionCop.Config;
-using InjectionCop.Parser.BlockParsing.PreCondition;
-using InjectionCop.Parser.ProblemPipe;
 using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser.BlockParsing.StatementHandler
 {
   public class SwitchStatementHandler : StatementHandlerBase<SwitchInstruction>
   {
-    public SwitchStatementHandler (
-        IProblemPipe problemPipe,
-        Fragment returnFragmentType,
-        List<ReturnCondition> returnConditions,
-        IBlacklistManager blacklistManager,
-        BlockParser.InspectCallback inspect)
-        : base (problemPipe, returnFragmentType, returnConditions, blacklistManager, inspect)
+    public SwitchStatementHandler (BlockParserContext blockParserContext)
+        : base (blockParserContext)
     {
     }
 

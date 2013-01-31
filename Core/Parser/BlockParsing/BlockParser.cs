@@ -51,8 +51,10 @@ namespace InjectionCop.Parser.BlockParsing
       _problemPipe = ArgumentUtility.CheckNotNull ("typeParser", problemPipe);
       _returnFragmentType = returnFragmentType;
       _returnConditions = returnConditions;
-      StatementHandlerDictionaryBuilder handlerBuilder = new StatementHandlerDictionaryBuilder (
-          _blacklistManager, _problemPipe, _returnFragmentType, _returnConditions, Inspect);
+      BlockParserContext blockParserContext = new BlockParserContext (
+          _problemPipe, _returnFragmentType, _returnConditions, _blacklistManager, Inspect
+          );
+      StatementHandlerDictionaryBuilder handlerBuilder = new StatementHandlerDictionaryBuilder (blockParserContext);
       _statementHandlers = handlerBuilder.Build();
       _methodCallAnalyzer = new MethodCallAnalyzer (_problemPipe);
     }

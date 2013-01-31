@@ -13,8 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using InjectionCop.Config;
 using InjectionCop.Parser.BlockParsing.PreCondition;
 using Microsoft.FxCop.Sdk;
 using InjectionCop.Parser.ProblemPipe;
@@ -24,13 +22,8 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
 {
   public class ReturnStatementHandler : StatementHandlerBase<ReturnNode>
   {
-    public ReturnStatementHandler (
-        IProblemPipe problemPipe,
-        Fragment returnFragmentType,
-        List<ReturnCondition> returnConditions,
-        IBlacklistManager blacklistManager,
-        BlockParser.InspectCallback inspect)
-        : base (problemPipe, returnFragmentType, returnConditions, blacklistManager, inspect)
+    public ReturnStatementHandler (BlockParserContext blockParserContext)
+        : base (blockParserContext)
     {
     }
 
@@ -50,28 +43,29 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
 
     private void HandleReturnType (ReturnNode returnNode, HandleContext context)
     {
-      _inspect (returnNode.Expression);
+      _blockParserContext.Inspect (returnNode.Expression);
       string returnSymbol = IntrospectionUtility.GetVariableName (returnNode.Expression);
       if (returnSymbol != null)
       {
         ProblemMetadata problemMetadata = new ProblemMetadata (
-            returnNode.UniqueKey, returnNode.SourceContext, _returnFragmentType, context.SymbolTable.GetFragmentType (returnSymbol));
-        AssignabilityPreCondition returnBlockCondition = new AssignabilityPreCondition (returnSymbol, _returnFragmentType, problemMetadata);
+            returnNode.UniqueKey, returnNode.SourceContext, _blockParserContext.ReturnFragmentType, context.SymbolTable.GetFragmentType (returnSymbol));
+        AssignabilityPreCondition returnBlockCondition = new AssignabilityPreCondition (
+            returnSymbol, _blockParserContext.ReturnFragmentType, problemMetadata);
         context.PreConditions.Add (returnBlockCondition);
-        context.PreConditions.AddRange (_returnConditions);
+        context.PreConditions.AddRange (_blockParserContext.ReturnConditions);
       }
     }
 
     private void HandleVoidReturn (ReturnNode returnNode, HandleContext context)
     {
-      foreach (var returnCondition in _returnConditions)
+      foreach (var returnCondition in _blockParserContext.ReturnConditions)
       {
         Fragment blockInternalFragmentType = context.SymbolTable.GetFragmentType (returnCondition.Symbol);
 
         if (!FragmentUtility.FragmentTypesAssignable (blockInternalFragmentType, returnCondition.Fragment))
         {
           ProcessBlockInternalPreConditionViolation (
-              returnNode, returnCondition, blockInternalFragmentType, context.AssignmentTargetVariables, context.PreConditions);
+              returnNode, returnCondition, blockInternalFragmentType, context);
         }
       }
     }
@@ -80,8 +74,7 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
         ReturnNode returnNode,
         ReturnCondition returnCondition,
         Fragment blockInternalFragmentType,
-        List<string> assignmentTargetVariables,
-        List<IPreCondition> preConditions)
+        HandleContext context)
     {
       ProblemMetadata problemMetadata = new ProblemMetadata (
           returnNode.UniqueKey,
@@ -90,13 +83,13 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
           blockInternalFragmentType);
       returnCondition.ProblemMetadata = problemMetadata;
 
-      if (!assignmentTargetVariables.Contains (returnCondition.Symbol))
+      if (!context.AssignmentTargetVariables.Contains (returnCondition.Symbol))
       {
-        preConditions.Add (returnCondition);
+        context.PreConditions.Add (returnCondition);
       }
       else
       {
-        _problemPipe.AddProblem (problemMetadata);
+        _blockParserContext.ProblemPipe.AddProblem (problemMetadata);
       }
     }
   }

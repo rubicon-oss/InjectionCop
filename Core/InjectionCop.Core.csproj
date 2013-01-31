@@ -53,6 +53,7 @@
     <Compile Include="Config\FragmentSignature.cs" />
     <Compile Include="Config\IConfigurationFileLocator.cs" />
     <Compile Include="Config\LayeredConfigurationAdapter.cs" />
+    <Compile Include="Parser\BlockParsing\BlockParserContext.cs" />
     <Compile Include="Parser\BlockParsing\StatementHandler\AssignmentStatementHandler\ArrayConstructStatementHandler.cs" />
     <Compile Include="Parser\BlockParsing\StatementHandler\HandleContext.cs" />
     <Compile Include="Parser\CustomInferenceRules\FragmentParameterInference.cs" />

@@ -14,50 +14,28 @@
 
 using System;
 using System.Collections.Generic;
-using InjectionCop.Config;
-using InjectionCop.Parser.BlockParsing.PreCondition;
 using InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementHandler;
-using InjectionCop.Parser.ProblemPipe;
-using InjectionCop.Utilities;
 
 namespace InjectionCop.Parser.BlockParsing.StatementHandler
 {
   public class StatementHandlerDictionaryBuilder
   {
-    private readonly IBlacklistManager _blacklistManager;
-    private readonly IProblemPipe _problemPipe;
-    private readonly Fragment _returnFragmentType;
-    private readonly List<ReturnCondition> _returnConditions;
-    private readonly BlockParser.InspectCallback _inspect;
+    private readonly BlockParserContext _blockParserContext;
 
-    public StatementHandlerDictionaryBuilder (
-        IBlacklistManager blacklistManager,
-        IProblemPipe problemPipe,
-        Fragment returnFragmentType,
-        List<ReturnCondition> returnConditions,
-        BlockParser.InspectCallback inspect)
+    public StatementHandlerDictionaryBuilder (BlockParserContext blockParserContext)
     {
-      _blacklistManager = ArgumentUtility.CheckNotNull ("blacklistManager", blacklistManager);
-      _problemPipe = ArgumentUtility.CheckNotNull ("typeParser", problemPipe);
-      _returnFragmentType = returnFragmentType;
-      _returnConditions = returnConditions;
-      _inspect = inspect;
+      _blockParserContext = blockParserContext;
     }
 
     public Dictionary<Type, IStatementHandler> Build ()
     {
       Dictionary<Type, IStatementHandler> statementHandlers = new Dictionary<Type, IStatementHandler>();
 
-      ReturnStatementHandler returnStatementHandler = new ReturnStatementHandler (
-          _problemPipe, _returnFragmentType, _returnConditions, _blacklistManager, _inspect);
-      AssignmentStatementHandlerController assignmentStatementHandler = new AssignmentStatementHandlerController (
-          _problemPipe, _returnFragmentType, _returnConditions, _blacklistManager, _inspect);
-      ExpressionStatementHandler expressionStatementHandler = new ExpressionStatementHandler (
-          _problemPipe, _returnFragmentType, _returnConditions, _blacklistManager, _inspect);
-      BranchStatementHandler branchStatementHandler = new BranchStatementHandler (
-          _problemPipe, _returnFragmentType, _returnConditions, _blacklistManager, _inspect);
-      SwitchStatementHandler switchStatementHandler = new SwitchStatementHandler (
-          _problemPipe, _returnFragmentType, _returnConditions, _blacklistManager, _inspect);
+      ReturnStatementHandler returnStatementHandler = new ReturnStatementHandler (_blockParserContext);
+      AssignmentStatementHandlerController assignmentStatementHandler = new AssignmentStatementHandlerController (_blockParserContext);
+      ExpressionStatementHandler expressionStatementHandler = new ExpressionStatementHandler (_blockParserContext);
+      BranchStatementHandler branchStatementHandler = new BranchStatementHandler (_blockParserContext);
+      SwitchStatementHandler switchStatementHandler = new SwitchStatementHandler (_blockParserContext);
 
       statementHandlers[returnStatementHandler.HandledStatementType] = returnStatementHandler;
       statementHandlers[assignmentStatementHandler.HandledStatementType] = assignmentStatementHandler;

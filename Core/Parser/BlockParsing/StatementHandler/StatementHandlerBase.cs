@@ -13,10 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using InjectionCop.Config;
-using InjectionCop.Parser.BlockParsing.PreCondition;
-using InjectionCop.Parser.ProblemPipe;
 using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser.BlockParsing.StatementHandler
@@ -24,24 +20,11 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
   public abstract class StatementHandlerBase<T> : IStatementHandler
       where T : Statement
   {
-    protected readonly IProblemPipe _problemPipe;
-    protected readonly Fragment _returnFragmentType;
-    protected readonly List<ReturnCondition> _returnConditions;
-    protected readonly IBlacklistManager _blacklistManager;
-    protected BlockParser.InspectCallback _inspect;
+    protected readonly BlockParserContext _blockParserContext;
 
-    protected StatementHandlerBase (
-        IProblemPipe problemPipe,
-        Fragment returnFragmentType,
-        List<ReturnCondition> returnConditions,
-        IBlacklistManager blacklistManager,
-        BlockParser.InspectCallback inspect)
+    protected StatementHandlerBase (BlockParserContext blockParserContext)
     {
-      _problemPipe = problemPipe;
-      _returnFragmentType = returnFragmentType;
-      _returnConditions = returnConditions;
-      _blacklistManager = blacklistManager;
-      _inspect = inspect;
+      _blockParserContext = blockParserContext;
     }
 
     public Type HandledStatementType

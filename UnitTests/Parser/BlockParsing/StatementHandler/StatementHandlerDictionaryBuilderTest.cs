@@ -35,8 +35,13 @@ namespace InjectionCop.UnitTests.Parser.BlockParsing.StatementHandler
       MockRepository mocks = new MockRepository();
       IBlacklistManager blacklistManager = mocks.Stub<IBlacklistManager>();
       IProblemPipe problemPipe = mocks.Stub<IProblemPipe>();
-      StatementHandlerDictionaryBuilder builder = new StatementHandlerDictionaryBuilder (
-          blacklistManager, problemPipe, Fragment.CreateNamed( "returnFragmentType"), new List<ReturnCondition>(), delegate (Expression expression) { });
+      BlockParserContext blockParserContext = new BlockParserContext (
+          problemPipe,
+          Fragment.CreateNamed ("returnFragmentType"),
+          new List<ReturnCondition>(),
+          blacklistManager,
+          delegate { });
+      StatementHandlerDictionaryBuilder builder = new StatementHandlerDictionaryBuilder (blockParserContext);
 
       Dictionary<Type, IStatementHandler> handlers = builder.Build();
       bool assignmentStatementSupported = handlers.ContainsKey (typeof (AssignmentStatement));

@@ -13,30 +13,21 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using InjectionCop.Config;
-using InjectionCop.Parser.BlockParsing.PreCondition;
-using InjectionCop.Parser.ProblemPipe;
 using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser.BlockParsing.StatementHandler
 {
   public class ExpressionStatementHandler : StatementHandlerBase<ExpressionStatement>
   {
-    public ExpressionStatementHandler (
-        IProblemPipe problemPipe,
-        Fragment returnFragmentType,
-        List<ReturnCondition> returnConditions,
-        IBlacklistManager blacklistManager,
-        BlockParser.InspectCallback inspect)
-        : base (problemPipe, returnFragmentType, returnConditions, blacklistManager, inspect)
+    public ExpressionStatementHandler (BlockParserContext blockParserContext)
+        : base (blockParserContext)
     {
     }
 
     protected override void HandleStatement (HandleContext context)
     {
       ExpressionStatement expressionStatement = (ExpressionStatement) context.Statement;
-      _inspect (expressionStatement.Expression);
+      _blockParserContext.Inspect (expressionStatement.Expression);
     }
   }
 }

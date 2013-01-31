@@ -14,23 +14,14 @@
 
 
 using System;
-using System.Collections.Generic;
-using InjectionCop.Config;
-using InjectionCop.Parser.BlockParsing.PreCondition;
-using InjectionCop.Parser.ProblemPipe;
 using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementHandler
 {
   public class ArrayConstructStatementHandler: StatementHandlerBase<AssignmentStatement>
   {
-    public ArrayConstructStatementHandler (
-        IProblemPipe problemPipe,
-        Fragment returnFragmentType,
-        List<ReturnCondition> returnConditions,
-        IBlacklistManager blacklistManager,
-        BlockParser.InspectCallback inspect)
-        : base (problemPipe, returnFragmentType, returnConditions, blacklistManager, inspect)
+    public ArrayConstructStatementHandler (BlockParserContext blockParserContext)
+        : base (blockParserContext)
     {
     }
     

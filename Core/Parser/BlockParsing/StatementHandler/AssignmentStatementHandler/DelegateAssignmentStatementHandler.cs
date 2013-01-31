@@ -13,25 +13,16 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using InjectionCop.Parser.BlockParsing.PreCondition;
 using Microsoft.FxCop.Sdk;
 using InjectionCop.Utilities;
-using InjectionCop.Parser.ProblemPipe;
 using InjectionCop.Parser.MethodParsing;
-using InjectionCop.Config;
 
 namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementHandler
 {
   public class DelegateAssignmentStatementHandler : StatementHandlerBase<AssignmentStatement>
   {
-    public DelegateAssignmentStatementHandler (
-        IProblemPipe problemPipe,
-        Fragment returnFragmentType,
-        List<ReturnCondition> returnConditions,
-        IBlacklistManager blacklistManager,
-        BlockParser.InspectCallback inspect)
-        : base (problemPipe, returnFragmentType, returnConditions, blacklistManager, inspect)
+    public DelegateAssignmentStatementHandler (BlockParserContext blockParserContext)
+        : base (blockParserContext)
     {
     }
 
@@ -43,9 +34,9 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
       Fragment returnFragment = GetDelegateTypesReturnFragment (sourceDelegateType);
       ISymbolTable environment = GetDelegatesEnvironment (sourceDelegateType);
 
-      IMethodGraphAnalyzer methodParser = new MethodGraphAnalyzer (_problemPipe);
-      IMethodGraphBuilder methodGraphBuilder = new MethodGraphBuilder (assignedMethod, _blacklistManager, _problemPipe, returnFragment);
-      IInitialSymbolTableBuilder parameterSymbolTableBuilder = new EmbeddedInitialSymbolTableBuilder (assignedMethod, _blacklistManager, environment);
+      IMethodGraphAnalyzer methodParser = new MethodGraphAnalyzer (_blockParserContext.ProblemPipe);
+      IMethodGraphBuilder methodGraphBuilder = new MethodGraphBuilder (assignedMethod, _blockParserContext.BlacklistManager, _blockParserContext.ProblemPipe, returnFragment);
+      IInitialSymbolTableBuilder parameterSymbolTableBuilder = new EmbeddedInitialSymbolTableBuilder (assignedMethod, _blockParserContext.BlacklistManager, environment);
       methodParser.Parse (methodGraphBuilder, parameterSymbolTableBuilder);
     }
 
@@ -82,7 +73,7 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
 
     private ISymbolTable GetDelegatesEnvironment (DelegateNode sourceDelegateType)
     {
-      ISymbolTable environment = new SymbolTable (_blacklistManager);
+      ISymbolTable environment = new SymbolTable (_blockParserContext.BlacklistManager);
       foreach (Parameter parameter in sourceDelegateType.Parameters)
       {
         if (parameter.Attributes != null)

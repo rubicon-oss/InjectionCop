@@ -36,8 +36,13 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing.StatementHandler
       MockRepository mocks = new MockRepository();
       IBlacklistManager blacklistManager = mocks.Stub<IBlacklistManager>();
       Dictionary<string, bool> locallyInitializedArrays = new Dictionary<string, bool>();
-      ArrayConstructStatementHandler handler = new ArrayConstructStatementHandler (
-          new ProblemPipeStub(), Fragment.CreateNamed ("returnFragmentType"), new List<ReturnCondition>(), blacklistManager, delegate { });
+      BlockParserContext blockParserContext = new BlockParserContext (
+          new ProblemPipeStub(),
+          Fragment.CreateNamed ("returnFragmentType"),
+          new List<ReturnCondition>(),
+          blacklistManager,
+          delegate { });
+      ArrayConstructStatementHandler handler = new ArrayConstructStatementHandler (blockParserContext);
       
       Method sampleMethod = IntrospectionUtility.MethodFactory<ArrayConstructStatementHandlerSample> ("LocallyInitializedArray");
       Block sampleBlock = (Block) sampleMethod.Body.Statements[0];

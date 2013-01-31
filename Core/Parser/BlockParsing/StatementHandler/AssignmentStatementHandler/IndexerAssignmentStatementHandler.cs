@@ -13,8 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using InjectionCop.Config;
 using InjectionCop.Parser.BlockParsing.PreCondition;
 using InjectionCop.Parser.ProblemPipe;
 using InjectionCop.Utilities;
@@ -24,13 +22,8 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
 {
   public class IndexerAssignmentStatementHandler : StatementHandlerBase<AssignmentStatement>
   {
-    public IndexerAssignmentStatementHandler (
-        IProblemPipe problemPipe,
-        Fragment returnFragmentType,
-        List<ReturnCondition> returnConditions,
-        IBlacklistManager blacklistManager,
-        BlockParser.InspectCallback inspect)
-        : base (problemPipe, returnFragmentType, returnConditions, blacklistManager, inspect)
+    public IndexerAssignmentStatementHandler (BlockParserContext blockParserContext)
+        : base (blockParserContext)
     {
     }
 
@@ -49,7 +42,7 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
         CheckAssignment(assignmentStatement, targetName, context); 
       }
 
-      _inspect (assignmentStatement.Source);
+      _blockParserContext.Inspect (assignmentStatement.Source);
     }
 
     private void InferArrayFragment (AssignmentStatement assignmentStatement, string targetName, HandleContext context)

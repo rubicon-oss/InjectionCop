@@ -13,10 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using InjectionCop.Config;
-using InjectionCop.Parser.BlockParsing.PreCondition;
-using InjectionCop.Parser.ProblemPipe;
 using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementHandler
@@ -28,22 +24,13 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
     private readonly IndexerAssignmentStatementHandler _indexerAssignmentStatementHandler;
     private readonly ArrayConstructStatementHandler _arrayConstructStatementHandler;
 
-    public AssignmentStatementHandlerController (
-        IProblemPipe problemPipe,
-        Fragment returnFragmentType,
-        List<ReturnCondition> returnConditions,
-        IBlacklistManager blacklistManager,
-        BlockParser.InspectCallback inspect)
-        : base (problemPipe, returnFragmentType, returnConditions, blacklistManager, inspect)
+    public AssignmentStatementHandlerController (BlockParserContext blockParserContext)
+        : base (blockParserContext)
     {
-      _defaultAssignmentStatementHandler = new DefaultAssignmentStatementHandler (
-          _problemPipe, _returnFragmentType, _returnConditions, _blacklistManager, inspect);
-      _delegateAssignmentStatementHandler = new DelegateAssignmentStatementHandler (
-          _problemPipe, _returnFragmentType, _returnConditions, _blacklistManager, inspect);
-      _indexerAssignmentStatementHandler = new IndexerAssignmentStatementHandler (
-          _problemPipe, _returnFragmentType, _returnConditions, _blacklistManager, inspect);
-      _arrayConstructStatementHandler = new ArrayConstructStatementHandler (
-          _problemPipe, _returnFragmentType, _returnConditions, _blacklistManager, inspect);
+      _defaultAssignmentStatementHandler = new DefaultAssignmentStatementHandler (blockParserContext);
+      _delegateAssignmentStatementHandler = new DelegateAssignmentStatementHandler (blockParserContext);
+      _indexerAssignmentStatementHandler = new IndexerAssignmentStatementHandler (blockParserContext);
+      _arrayConstructStatementHandler = new ArrayConstructStatementHandler (blockParserContext);
     }
 
     protected override void HandleStatement (HandleContext context)
