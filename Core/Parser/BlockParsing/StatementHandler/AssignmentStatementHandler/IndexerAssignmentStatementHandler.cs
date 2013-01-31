@@ -20,7 +20,7 @@ using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementHandler
 {
-  public class IndexerAssignmentStatementHandler : StatementHandlerBase<AssignmentStatement>
+  public class IndexerAssignmentStatementHandler : AssignmentStatementHandlerBase
   {
     public IndexerAssignmentStatementHandler (BlockParserContext blockParserContext)
         : base (blockParserContext)
@@ -30,6 +30,9 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
     protected override void HandleStatement (HandleContext context)
     {
       AssignmentStatement assignmentStatement = (AssignmentStatement) context.Statement;
+      if(!CoversAssignment(assignmentStatement))
+        return;
+
       Indexer targetIndexer = (Indexer) assignmentStatement.Target;
       string targetName = IntrospectionUtility.GetVariableName (targetIndexer.Object);
       
@@ -43,6 +46,11 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
       }
 
       _blockParserContext.Inspect (assignmentStatement.Source);
+    }
+
+    protected override bool CoversAssignment (AssignmentStatement assignmentStatement)
+    {
+      return assignmentStatement.Target is Indexer;
     }
 
     private void InferArrayFragment (AssignmentStatement assignmentStatement, string targetName, HandleContext context)

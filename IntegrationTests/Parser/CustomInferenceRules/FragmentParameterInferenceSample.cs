@@ -158,20 +158,20 @@ namespace InjectionCop.IntegrationTests.Parser.CustomInferenceRules
     public void SafeStringFormatPattern()
     {
       var format = "{0}{1}";
-      var strings = new[] { "literal", SafeSource() };
-      RequiresSqlFragment(CreateString(format, strings));
+      var objects = new object[] { "literal", SafeSource() };
+      RequiresSqlFragment(CreateString(format, objects));
     }
 
     public void UnsafeStringFormatPattern ()
     {
       var format = "{0}{1}";
-      var strings = new[] { "literal", SafeSource() };
-      strings[0]=UnsafeSource();
-      RequiresSqlFragment (CreateString(format, strings));
+      var objects = new object[] { "literal", SafeSource() };
+      objects[0]=UnsafeSource();
+      RequiresSqlFragment (CreateString(format, objects));
     }
 
     [return: SqlFragment]
-    private static string CreateString ([SqlFragment] string format, [SqlFragment] string[] strings)
+    private static string CreateString ([SqlFragment] string format, [SqlFragment] object[] strings)
     {
       return String.Format(format, strings);
     }

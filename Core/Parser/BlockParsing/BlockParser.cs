@@ -43,6 +43,7 @@ namespace InjectionCop.Parser.BlockParsing
     private List<BlockAssignment> _blockAssignments;
     private List<string> _assignmentTargetVariables;
     private Dictionary<string, bool> _locallyInitializedArrays;
+    private Dictionary<string, bool> _stringBuilderFragmentTypesDefined;
 
     public BlockParser (
         IBlacklistManager blacklistManager, IProblemPipe problemPipe, Fragment returnFragmentType, List<ReturnCondition> returnConditions)
@@ -88,6 +89,7 @@ namespace InjectionCop.Parser.BlockParsing
       _blockAssignments = new List<BlockAssignment>();
       _assignmentTargetVariables = new List<string>();
       _locallyInitializedArrays = new Dictionary<string, bool>();
+      _stringBuilderFragmentTypesDefined = new Dictionary<string, bool>();
     }
 
     private void Inspect (Block methodBodyBlock)
@@ -97,7 +99,14 @@ namespace InjectionCop.Parser.BlockParsing
         if (_statementHandlers.ContainsKey (statement.GetType()))
         {
           HandleContext context = new HandleContext (
-              statement, _symbolTableParser, _preConditions, _assignmentTargetVariables, _blockAssignments, _successors, _locallyInitializedArrays);
+              statement,
+              _symbolTableParser,
+              _preConditions,
+              _assignmentTargetVariables,
+              _blockAssignments,
+              _successors,
+              _locallyInitializedArrays,
+              _stringBuilderFragmentTypesDefined);
           _statementHandlers[statement.GetType()].Handle (context);
         }
       }

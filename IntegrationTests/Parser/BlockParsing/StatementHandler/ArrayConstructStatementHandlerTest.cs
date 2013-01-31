@@ -49,8 +49,15 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing.StatementHandler
       Statement sample = sampleBlock.Statements[1];
 
       ISymbolTable symbolTable = mocks.Stub<ISymbolTable>();
-      HandleContext context = new HandleContext(
-          sample, symbolTable, new List<IPreCondition>(), new List<string>(), new List<BlockAssignment>(), new List<int>(), locallyInitializedArrays);
+      HandleContext context = new HandleContext (
+          sample,
+          symbolTable,
+          new List<IPreCondition>(),
+          new List<string>(),
+          new List<BlockAssignment>(),
+          new List<int>(),
+          locallyInitializedArrays,
+          new Dictionary<string, bool>());
       handler.Handle (context);
 
       bool locallyInitializedArrayAdded = locallyInitializedArrays.ContainsKey ("local$2") && locallyInitializedArrays["local$2"] == false;

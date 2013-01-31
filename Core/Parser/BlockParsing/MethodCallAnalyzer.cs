@@ -29,10 +29,12 @@ namespace InjectionCop.Parser.BlockParsing
     private ISymbolTable _symbolTable;
     private List<IPreCondition> _preConditions;
     private Fragment[] _parameterFragmentTypes;
+    private CustomInferenceController _customInferenceController;
 
     public MethodCallAnalyzer (IProblemPipe problemPipe)
     {
       _problemPipe = problemPipe;
+      _customInferenceController = new CustomInferenceController();
     }
 
     public void Analyze (MethodCall methodCall, ISymbolTable symbolTable, List<IPreCondition> preConditions)
@@ -83,10 +85,10 @@ namespace InjectionCop.Parser.BlockParsing
         MethodCall methodCall = (MethodCall) operand;
         Method calleeMethod = IntrospectionUtility.ExtractMethod (methodCall);
 
-        var binaryConcatInference = new FragmentParameterInference();
-        if (binaryConcatInference.Covers(calleeMethod.FullName))
+        var fragmentParameterInference = new FragmentParameterInference();
+        if (_customInferenceController.Covers(calleeMethod))
         {
-          binaryConcatInference.PassProblem (methodCall, _preConditions, problemMetadata, _symbolTable, _problemPipe);
+          _customInferenceController.PassProblem (methodCall, _preConditions, problemMetadata, _symbolTable, _problemPipe);
         }
         else
         {

@@ -73,6 +73,9 @@
     <Compile Include="Parser\BlockParsing\StatementHandler\StatementHandlerBaseTest.cs" />
     <Compile Include="Parser\BlockParsing\StatementHandler\ArrayConstructStatementHandlerTest.cs" />
     <Compile Include="Parser\BlockParsing\StatementHandler\StringBuilderConstructStatementHandlerSample.cs" />
+    <Compile Include="Parser\BlockParsing\StatementHandler\StringBuilderConstructStatementHandlerTest.cs" />
+    <Compile Include="Parser\CustomInferenceRules\CustomInferenceControllerTest.cs" />
+    <Compile Include="Parser\CustomInferenceRules\CustomInferenceControllerSample.cs" />
     <Compile Include="Parser\MethodParsing\SymbolTableBuilderSample.cs" />
     <Compile Include="Parser\MethodParsing\EmbeddedInitialSymbolTableBuilderTest\EmbeddedInitialSymbolTableBuilderTest.cs" />
     <Compile Include="Parser\MethodParsing\MethodGraphTests\MethodGraph_ClassSample.cs" />
@@ -139,6 +142,8 @@
     <Compile Include="Parser\TypeParsing\TypeParserTests\Parameter\Out\Out_TypeParserTest.cs" />
     <Compile Include="Parser\CustomInferenceRules\FragmentParameterInferenceSample.cs" />
     <Compile Include="Parser\CustomInferenceRules\FragmentParameterInference_TypeParserTest.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\StringBuilderInference\StringBuilderSample.cs" />
+    <Compile Include="Parser\TypeParsing\TypeParserTests\StringBuilderInference\StringBuilder_TypeParserTest.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\TryCatchFinally\TryCatchFinallySample.cs" />
     <Compile Include="Parser\TypeParsing\TypeParserTests\TryCatchFinally\TryCatchFinally_TypeParserTest.cs" />
     <Compile Include="Utilities\FragmentUtilitySample.cs" />

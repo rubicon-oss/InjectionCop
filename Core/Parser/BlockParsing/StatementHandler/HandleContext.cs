@@ -29,6 +29,7 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
     private readonly List<BlockAssignment> _blockAssignments;
     private readonly List<int> _successors;
     private readonly Dictionary<string, bool> _arrayFragmentTypeDefined;
+    private readonly Dictionary<string, bool> _stringBuilderFragmentTypeDefined;
 
     public HandleContext (
         Statement statement,
@@ -37,7 +38,8 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
         List<string> assignmentTargetVariables,
         List<BlockAssignment> blockAssignments,
         List<int> successors,
-        Dictionary<string, bool> arrayFragmentTypeDefined)
+        Dictionary<string, bool> arrayFragmentTypeDefined,
+        Dictionary<string, bool> stringBuilderFragmentTypeDefined)
     {
       _statement = ArgumentUtility.CheckNotNull ("statement", statement);
       _symbolTable = ArgumentUtility.CheckNotNull ("symbolTable", symbolTable);
@@ -46,6 +48,7 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
       _blockAssignments = ArgumentUtility.CheckNotNull ("blockAssignments", blockAssignments);
       _successors = ArgumentUtility.CheckNotNull ("successors", successors);
       _arrayFragmentTypeDefined = ArgumentUtility.CheckNotNull ("arrayFragmentTypeDefined", arrayFragmentTypeDefined);
+      _stringBuilderFragmentTypeDefined = stringBuilderFragmentTypeDefined;
     }
 
     public Statement Statement
@@ -81,6 +84,11 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
     public Dictionary<string, bool> ArrayFragmentTypeDefined
     {
       get { return _arrayFragmentTypeDefined; }
+    }
+
+    public Dictionary<string, bool> StringBuilderFragmentTypeDefined
+    {
+      get { return _stringBuilderFragmentTypeDefined; }
     }
   }
 }

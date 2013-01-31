@@ -19,7 +19,7 @@ using InjectionCop.Parser.MethodParsing;
 
 namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementHandler
 {
-  public class DelegateAssignmentStatementHandler : StatementHandlerBase<AssignmentStatement>
+  public class DelegateAssignmentStatementHandler : AssignmentStatementHandlerBase
   {
     public DelegateAssignmentStatementHandler (BlockParserContext blockParserContext)
         : base (blockParserContext)
@@ -29,6 +29,9 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
     protected override void HandleStatement (HandleContext context)
     {
       AssignmentStatement assignmentStatement = (AssignmentStatement) context.Statement;
+      if(!CoversAssignment(assignmentStatement))
+        return;
+      
       Method assignedMethod = GetAssignedDelegateMethod (assignmentStatement);
       DelegateNode sourceDelegateType = (DelegateNode) assignmentStatement.Source.Type;
       Fragment returnFragment = GetDelegateTypesReturnFragment (sourceDelegateType);
@@ -38,6 +41,12 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
       IMethodGraphBuilder methodGraphBuilder = new MethodGraphBuilder (assignedMethod, _blockParserContext.BlacklistManager, _blockParserContext.ProblemPipe, returnFragment);
       IInitialSymbolTableBuilder parameterSymbolTableBuilder = new EmbeddedInitialSymbolTableBuilder (assignedMethod, _blockParserContext.BlacklistManager, environment);
       methodParser.Parse (methodGraphBuilder, parameterSymbolTableBuilder);
+    }
+
+    protected override bool CoversAssignment (AssignmentStatement assignmentStatement)
+    {
+      return assignmentStatement.Source.NodeType == NodeType.Construct
+             && assignmentStatement.Source.Type.NodeType == NodeType.DelegateNode;
     }
 
     private Method GetAssignedDelegateMethod (AssignmentStatement assignmentStatement)
@@ -83,5 +92,7 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
       }
       return environment;
     }
+
+    
   }
 }

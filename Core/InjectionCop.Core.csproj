@@ -55,8 +55,13 @@
     <Compile Include="Config\LayeredConfigurationAdapter.cs" />
     <Compile Include="Parser\BlockParsing\BlockParserContext.cs" />
     <Compile Include="Parser\BlockParsing\StatementHandler\AssignmentStatementHandler\ArrayConstructStatementHandler.cs" />
+    <Compile Include="Parser\BlockParsing\StatementHandler\AssignmentStatementHandler\AssignmentStatementHandlerBase.cs" />
+    <Compile Include="Parser\BlockParsing\StatementHandler\AssignmentStatementHandler\StringBuilderConstructStatementHandler.cs" />
     <Compile Include="Parser\BlockParsing\StatementHandler\HandleContext.cs" />
+    <Compile Include="Parser\CustomInferenceRules\CustomInferenceController.cs" />
     <Compile Include="Parser\CustomInferenceRules\FragmentParameterInference.cs" />
+    <Compile Include="Parser\CustomInferenceRules\ICustomInference.cs" />
+    <Compile Include="Parser\CustomInferenceRules\StringBuilderInference.cs" />
     <Compile Include="Parser\Fragment.cs" />
     <Compile Include="Attributes\FragmentAttribute.cs" />
     <Compile Include="Attributes\FragmentGeneratorAttribute.cs" />

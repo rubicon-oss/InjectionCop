@@ -14,49 +14,41 @@
 
 using System;
 using Microsoft.FxCop.Sdk;
+using System.Linq;
 
 namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementHandler
 {
   public class AssignmentStatementHandlerController : StatementHandlerBase<AssignmentStatement>
   {
     private readonly DefaultAssignmentStatementHandler _defaultAssignmentStatementHandler;
-    private readonly DelegateAssignmentStatementHandler _delegateAssignmentStatementHandler;
-    private readonly IndexerAssignmentStatementHandler _indexerAssignmentStatementHandler;
-    private readonly ArrayConstructStatementHandler _arrayConstructStatementHandler;
+    private readonly AssignmentStatementHandlerBase[] _specificHandlers;
 
     public AssignmentStatementHandlerController (BlockParserContext blockParserContext)
         : base (blockParserContext)
     {
       _defaultAssignmentStatementHandler = new DefaultAssignmentStatementHandler (blockParserContext);
-      _delegateAssignmentStatementHandler = new DelegateAssignmentStatementHandler (blockParserContext);
-      _indexerAssignmentStatementHandler = new IndexerAssignmentStatementHandler (blockParserContext);
-      _arrayConstructStatementHandler = new ArrayConstructStatementHandler (blockParserContext);
+      _specificHandlers = new AssignmentStatementHandlerBase[]
+      {
+          new DelegateAssignmentStatementHandler (blockParserContext),
+          new IndexerAssignmentStatementHandler (blockParserContext),
+          new ArrayConstructStatementHandler (blockParserContext),
+          new StringBuilderConstructStatementHandler(blockParserContext)
+      };
     }
 
     protected override void HandleStatement (HandleContext context)
     {
-      AssignmentStatement assignmentStatement = (AssignmentStatement) context.Statement;
-      bool sourceIsDelegate = assignmentStatement.Source.NodeType == NodeType.Construct
-                              && assignmentStatement.Source.Type.NodeType == NodeType.DelegateNode;
-      bool arrayInitialization = assignmentStatement.Source.NodeType == NodeType.ConstructArray
-                                 && assignmentStatement.Target.NodeType == NodeType.Local;
-
-      if (sourceIsDelegate)
+      IStatementHandler selectedHandler;
+      Func<AssignmentStatementHandlerBase, bool> handlerFilter =  handler => handler.Covers (context.Statement);
+      if (_specificHandlers.Any (handlerFilter))
       {
-        _delegateAssignmentStatementHandler.Handle (context);
-      }
-      else if (arrayInitialization)
-      {
-        _arrayConstructStatementHandler.Handle (context);
-      }
-      else if (assignmentStatement.Target is Indexer)
-      {
-        _indexerAssignmentStatementHandler.Handle (context);
+        selectedHandler = _specificHandlers.Single (handlerFilter);
       }
       else
       {
-        _defaultAssignmentStatementHandler.Handle (context);
+        selectedHandler = _defaultAssignmentStatementHandler;
       }
+      selectedHandler.Handle (context);
     }
   }
 }

@@ -14,18 +14,76 @@
 
 using System;
 using System.Text;
+using InjectionCop.Attributes;
 
 namespace InjectionCop.IntegrationTests.Parser.BlockParsing.StatementHandler
 {
   public class StringBuilderConstructStatementHandlerSample
   {
+    public string NonStringBuilderAssignment ()
+    {
+      string dummy = "dummy";
+      return dummy;
+    }
+
     public StringBuilder InitializationWithEmptyConstructor ()
     {
       StringBuilder stringBuilder = new StringBuilder();
       return stringBuilder;
     }
 
+    public StringBuilder InitializationWithCapacity ()
+    {
+      StringBuilder stringBuilder = new StringBuilder(128);
+      return stringBuilder;
+    }
 
+    public StringBuilder InitializationWithCapacityAndMaximum ()
+    {
+      StringBuilder stringBuilder = new StringBuilder(128, 256);
+      return stringBuilder;
+    }
+
+    public StringBuilder InitializationWithLiteral ()
+    {
+      StringBuilder stringBuilder = new StringBuilder("literal");
+      return stringBuilder;
+    }
+
+    public StringBuilder InitializationWithFragment ()
+    {
+      StringBuilder stringBuilder = new StringBuilder(ReturnsStringBuilderFragment());
+      return stringBuilder;
+    }
+    
+    public StringBuilder InitializationWithEmptyFragment ()
+    {
+      StringBuilder stringBuilder = new StringBuilder(ReturnsEmptyFragment());
+      return stringBuilder;
+    }
+
+    public StringBuilder InitializationWithLiteralAndInt ()
+    {
+      StringBuilder stringBuilder = new StringBuilder ("literal", 0);
+      return stringBuilder;
+    }
+
+    public StringBuilder InitializationWithFragmentAndInts ()
+    {
+      StringBuilder stringBuilder = new StringBuilder (ReturnsStringBuilderFragment(), 0, 0, 0);
+      return stringBuilder;
+    }
+
+    [return: Fragment ("StringBuilderFragment")]
+    private string ReturnsStringBuilderFragment ()
+    {
+      return "safe";
+    }
+
+    private string ReturnsEmptyFragment ()
+    {
+      return "dummy";
+    }
 
     // stringbuilder als parameter
   }

@@ -21,7 +21,7 @@ using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser.CustomInferenceRules
 {
-  public class FragmentParameterInference
+  public class FragmentParameterInference: ICustomInference
   {
     private readonly List<string> _coveredMethods = new List<string>
                                                    {
@@ -35,11 +35,11 @@ namespace InjectionCop.Parser.CustomInferenceRules
                                                        "System.String.Format(System.String,System.Object[])"
                                                    };
 
-    public bool Covers (string methodFullname)
+    public bool Covers (Method method)
     {
-      return _coveredMethods.Contains (methodFullname);
+      return _coveredMethods.Contains (method.FullName);
     }
-
+    
     public void PassProblem (
         MethodCall methodCall, List<IPreCondition> preConditions, ProblemMetadata problemMetadata, ISymbolTable symbolTable, IProblemPipe problemPipe)
     {
@@ -61,7 +61,7 @@ namespace InjectionCop.Parser.CustomInferenceRules
       }
     }
 
-    public Fragment InferMethodCallReturnFragmentType (MethodCall methodCall, ISymbolTable context)
+    public Fragment InferFragmentType (MethodCall methodCall, ISymbolTable context)
     {
       Fragment returnFragment = Fragment.CreateEmpty();
       Method calleeMethod = IntrospectionUtility.ExtractMethod (methodCall);

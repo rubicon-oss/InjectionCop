@@ -20,7 +20,7 @@ using InjectionCop.Parser.ProblemPipe;
 
 namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementHandler
 {
-  public class DefaultAssignmentStatementHandler : StatementHandlerBase<AssignmentStatement>
+  public class DefaultAssignmentStatementHandler : AssignmentStatementHandlerBase
   {
     public DefaultAssignmentStatementHandler (BlockParserContext blockParserContext)
         : base (blockParserContext)
@@ -111,6 +111,11 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
             givenFragmentType);
         _blockParserContext.ProblemPipe.AddProblem (problemMetadata);
       }
+    }
+
+    protected override bool CoversAssignment (AssignmentStatement assignmentStatement)
+    {
+      return true;
     }
   }
 }

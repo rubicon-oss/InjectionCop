@@ -18,23 +18,27 @@ using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementHandler
 {
-  public class ArrayConstructStatementHandler: StatementHandlerBase<AssignmentStatement>
+  public class ArrayConstructStatementHandler: AssignmentStatementHandlerBase
   {
     public ArrayConstructStatementHandler (BlockParserContext blockParserContext)
         : base (blockParserContext)
     {
     }
-    
+
     protected override void HandleStatement (HandleContext context)
     {
       AssignmentStatement assignmentStatement = (AssignmentStatement) context.Statement;
-      if (assignmentStatement.Target is Local && assignmentStatement.Source is ConstructArray)
-      {
-        var target = (Local) assignmentStatement.Target;
-        context.ArrayFragmentTypeDefined[target.Name.Name] = false;
-        context.AssignmentTargetVariables.Add (target.Name.Name);
-      }
+      if (!CoversAssignment (assignmentStatement))
+        return;
+
+      var target = (Local) assignmentStatement.Target;
+      context.ArrayFragmentTypeDefined[target.Name.Name] = false;
+      context.AssignmentTargetVariables.Add (target.Name.Name);
     }
 
+    protected override bool CoversAssignment (AssignmentStatement assignmentStatement)
+    {
+      return assignmentStatement.Target is Local && assignmentStatement.Source is ConstructArray;
+    }
   }
 }

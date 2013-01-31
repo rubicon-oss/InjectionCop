@@ -56,6 +56,7 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing.StatementHandler
           new List<string>(),
           new List<BlockAssignment>(),
           new List<int>(),
+          new Dictionary<string, bool>(),
           new Dictionary<string, bool>());
       handler.Handle (context);
     }

@@ -25,13 +25,14 @@ namespace InjectionCop.Parser
   public class SymbolTable : ISymbolTable
   {
     private readonly IBlacklistManager _blacklistManager;
-
     private Dictionary<string, Fragment> _safenessMap;
-    
+    private CustomInferenceController _customInferenceController;
+
     public SymbolTable (IBlacklistManager blacklistManager)
     {
       _blacklistManager = ArgumentUtility.CheckNotNull("blacklistManager", blacklistManager);
       _safenessMap = new Dictionary<string, Fragment>();
+      _customInferenceController = new CustomInferenceController();
     }
 
     public IEnumerable<string> Symbols
@@ -86,16 +87,16 @@ namespace InjectionCop.Parser
     {
       Fragment returnFragment;
       Method calleeMethod = IntrospectionUtility.ExtractMethod (methodCall);
-
-      var fragmentParameterInference = new FragmentParameterInference();
-      if (fragmentParameterInference.Covers(calleeMethod.FullName))
+      
+      if(_customInferenceController.Covers(calleeMethod))
       {
-        returnFragment = fragmentParameterInference.InferMethodCallReturnFragmentType (methodCall, this);
+        returnFragment = _customInferenceController.InferFragmentType (methodCall, this);
       }
       else
       {
         returnFragment = FragmentUtility.InferReturnFragmentType (calleeMethod);
       }
+
       return returnFragment;
     }
 
