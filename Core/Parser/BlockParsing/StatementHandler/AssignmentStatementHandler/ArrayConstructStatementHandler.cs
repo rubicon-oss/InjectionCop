@@ -34,21 +34,14 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
     {
     }
     
-    protected override void HandleStatement (
-        Statement statement,
-        ISymbolTable symbolTable,
-        List<IPreCondition> preConditions,
-        List<string> assignmentTargetVariables,
-        List<BlockAssignment> blockAssignments,
-        List<int> successors,
-        Dictionary<string,bool> arrayFragmentTypeDefined )
+    protected override void HandleStatement (HandleContext context)
     {
-      AssignmentStatement assignmentStatement = (AssignmentStatement) statement;
+      AssignmentStatement assignmentStatement = (AssignmentStatement) context.Statement;
       if (assignmentStatement.Target is Local && assignmentStatement.Source is ConstructArray)
       {
         var target = (Local) assignmentStatement.Target;
-        arrayFragmentTypeDefined[target.Name.Name] = false;
-        assignmentTargetVariables.Add (target.Name.Name);
+        context.ArrayFragmentTypeDefined[target.Name.Name] = false;
+        context.AssignmentTargetVariables.Add (target.Name.Name);
       }
     }
 

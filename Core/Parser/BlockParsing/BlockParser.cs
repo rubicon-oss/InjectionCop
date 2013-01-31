@@ -94,8 +94,9 @@ namespace InjectionCop.Parser.BlockParsing
       {
         if (_statementHandlers.ContainsKey (statement.GetType()))
         {
-          _statementHandlers[statement.GetType()].Handle (
+          HandleContext context = new HandleContext (
               statement, _symbolTableParser, _preConditions, _assignmentTargetVariables, _blockAssignments, _successors, _locallyInitializedArrays);
+          _statementHandlers[statement.GetType()].Handle (context);
         }
       }
     }

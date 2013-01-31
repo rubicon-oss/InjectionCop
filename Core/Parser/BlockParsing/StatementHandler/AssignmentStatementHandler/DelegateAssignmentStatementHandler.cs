@@ -35,16 +35,9 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
     {
     }
 
-    protected override void HandleStatement (
-        Statement statement,
-        ISymbolTable symbolTable,
-        List<IPreCondition> preConditions,
-        List<string> assignmentTargetVariables,
-        List<BlockAssignment> blockAssignments,
-        List<int> successors,
-        Dictionary<string, bool> locallyInitializedArrays)
+    protected override void HandleStatement (HandleContext context)
     {
-      AssignmentStatement assignmentStatement = (AssignmentStatement) statement;
+      AssignmentStatement assignmentStatement = (AssignmentStatement) context.Statement;
       Method assignedMethod = GetAssignedDelegateMethod (assignmentStatement);
       DelegateNode sourceDelegateType = (DelegateNode) assignmentStatement.Source.Type;
       Fragment returnFragment = GetDelegateTypesReturnFragment (sourceDelegateType);

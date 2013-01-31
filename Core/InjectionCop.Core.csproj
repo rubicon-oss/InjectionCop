@@ -54,6 +54,7 @@
     <Compile Include="Config\IConfigurationFileLocator.cs" />
     <Compile Include="Config\LayeredConfigurationAdapter.cs" />
     <Compile Include="Parser\BlockParsing\StatementHandler\AssignmentStatementHandler\ArrayConstructStatementHandler.cs" />
+    <Compile Include="Parser\BlockParsing\StatementHandler\HandleContext.cs" />
     <Compile Include="Parser\CustomInferenceRules\FragmentParameterInference.cs" />
     <Compile Include="Parser\Fragment.cs" />
     <Compile Include="Attributes\FragmentAttribute.cs" />

@@ -72,6 +72,7 @@
     <Compile Include="Parser\BlockParsing\StatementHandler\StatementHandlerBaseSample.cs" />
     <Compile Include="Parser\BlockParsing\StatementHandler\StatementHandlerBaseTest.cs" />
     <Compile Include="Parser\BlockParsing\StatementHandler\ArrayConstructStatementHandlerTest.cs" />
+    <Compile Include="Parser\BlockParsing\StatementHandler\StringBuilderConstructStatementHandlerSample.cs" />
     <Compile Include="Parser\MethodParsing\SymbolTableBuilderSample.cs" />
     <Compile Include="Parser\MethodParsing\EmbeddedInitialSymbolTableBuilderTest\EmbeddedInitialSymbolTableBuilderTest.cs" />
     <Compile Include="Parser\MethodParsing\MethodGraphTests\MethodGraph_ClassSample.cs" />

@@ -49,33 +49,19 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
       get { return typeof (T); }
     }
 
-    public void Handle (
-        Statement statement,
-        ISymbolTable symbolTable,
-        List<IPreCondition> preConditions,
-        List<string> assignmentTargetVariables,
-        List<BlockAssignment> blockAssignments,
-        List<int> successors,
-        Dictionary<string, bool> arrayFragmentTypeDefined)
+    public void Handle (HandleContext context)
     {
-      if (statement is T)
+      if (context.Statement is T)
       {
-        HandleStatement (statement, symbolTable, preConditions, assignmentTargetVariables, blockAssignments, successors, arrayFragmentTypeDefined);
+        HandleStatement (context);
       }
       else
       {
-        throw new InjectionCopException ("Expected to handle " + typeof (T).Name + " but got " + statement.GetType().Name);
+        throw new InjectionCopException ("Expected to handle " + typeof (T).Name + " but got " + context.Statement.GetType().Name);
       }
     }
 
-    protected abstract void HandleStatement (
-        Statement statement,
-        ISymbolTable symbolTable,
-        List<IPreCondition> preConditions,
-        List<string> assignmentTargetVariables,
-        List<BlockAssignment> blockAssignments,
-        List<int> successors,
-        Dictionary<string, bool> arrayFragmentTypeDefined);
+    protected abstract void HandleStatement (HandleContext context);
   }
 }
 

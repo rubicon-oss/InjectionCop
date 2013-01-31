@@ -18,6 +18,7 @@ using InjectionCop.Config;
 using InjectionCop.Parser;
 using InjectionCop.Parser.BlockParsing;
 using InjectionCop.Parser.BlockParsing.PreCondition;
+using InjectionCop.Parser.BlockParsing.StatementHandler;
 using InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementHandler;
 using InjectionCop.Utilities;
 using Microsoft.FxCop.Sdk;
@@ -43,8 +44,9 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing.StatementHandler
       Statement sample = sampleBlock.Statements[1];
 
       ISymbolTable symbolTable = mocks.Stub<ISymbolTable>();
-      handler.Handle (
+      HandleContext context = new HandleContext(
           sample, symbolTable, new List<IPreCondition>(), new List<string>(), new List<BlockAssignment>(), new List<int>(), locallyInitializedArrays);
+      handler.Handle (context);
 
       bool locallyInitializedArrayAdded = locallyInitializedArrays.ContainsKey ("local$2") && locallyInitializedArrays["local$2"] == false;
       Assert.That (locallyInitializedArrayAdded, Is.True);

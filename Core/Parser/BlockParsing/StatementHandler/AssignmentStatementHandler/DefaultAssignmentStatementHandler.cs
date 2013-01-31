@@ -34,23 +34,16 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
     {
     }
 
-    protected override void HandleStatement (
-        Statement statement,
-        ISymbolTable symbolTable,
-        List<IPreCondition> preConditions,
-        List<string> assignmentTargetVariables,
-        List<BlockAssignment> blockAssignments,
-        List<int> successors,
-        Dictionary<string, bool> locallyInitializedArrays)
+    protected override void HandleStatement (HandleContext context)
     {
-      AssignmentStatement assignmentStatement = (AssignmentStatement) statement;
+      AssignmentStatement assignmentStatement = (AssignmentStatement) context.Statement;
 
       string targetSymbol = IntrospectionUtility.GetVariableName (assignmentStatement.Target);
-      assignmentTargetVariables.Add (targetSymbol);
+      context.AssignmentTargetVariables.Add (targetSymbol);
       string sourceSymbol = IntrospectionUtility.GetVariableName (assignmentStatement.Source);
       bool localSourceVariableNotAssignedInsideCurrentBlock =
           sourceSymbol != null
-          && !assignmentTargetVariables.Contains (sourceSymbol)
+          && !context.AssignmentTargetVariables.Contains (sourceSymbol)
           && !IntrospectionUtility.IsField (assignmentStatement.Source);
       bool targetIsField = IntrospectionUtility.IsField (assignmentStatement.Target);
 
@@ -58,28 +51,28 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
       {
         if (targetIsField)
         {
-          AddAssignmentPreCondition (assignmentStatement, preConditions);
+          AddAssignmentPreCondition (assignmentStatement, context);
         }
         else
         {
-          AddBlockAssignment (assignmentStatement, blockAssignments);
+          AddBlockAssignment (assignmentStatement, context);
         }
       }
       else
       {
         if (targetIsField)
         {
-          ValidateAssignmentOnField (assignmentStatement, symbolTable);
+          ValidateAssignmentOnField (assignmentStatement, context);
         }
         else
         {
-          symbolTable.InferSafeness (targetSymbol, assignmentStatement.Source);
+          context.SymbolTable.InferSafeness (targetSymbol, assignmentStatement.Source);
         }
       }
       _inspect (assignmentStatement.Source);
     }
 
-    private void AddAssignmentPreCondition (AssignmentStatement assignmentStatement, List<IPreCondition> preConditions)
+    private void AddAssignmentPreCondition (AssignmentStatement assignmentStatement, HandleContext context)
     {
       Field targetField = IntrospectionUtility.GetField (assignmentStatement.Target);
       Fragment targetFragmentType = FragmentUtility.GetFragmentType (targetField.Attributes);
@@ -94,27 +87,27 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
         if (sourceSymbol != null)
         {
           AssignabilityPreCondition preCondition = new AssignabilityPreCondition (sourceSymbol, targetFragmentType, problemMetadata);
-          preConditions.Add (preCondition);
+          context.PreConditions.Add (preCondition);
         }
       }
     }
 
-    private void AddBlockAssignment (AssignmentStatement assignmentStatement, List<BlockAssignment> blockAssignments)
+    private void AddBlockAssignment (AssignmentStatement assignmentStatement, HandleContext context)
     {
       string targetSymbol = IntrospectionUtility.GetVariableName (assignmentStatement.Target);
       string sourceSymbol = IntrospectionUtility.GetVariableName (assignmentStatement.Source);
       if (targetSymbol != null && sourceSymbol != null)
       {
         BlockAssignment blockAssignment = new BlockAssignment (sourceSymbol, targetSymbol);
-        blockAssignments.Add (blockAssignment);
+        context.BlockAssignments.Add (blockAssignment);
       }
     }
 
-    private void ValidateAssignmentOnField (AssignmentStatement assignmentStatement, ISymbolTable symbolTable)
+    private void ValidateAssignmentOnField (AssignmentStatement assignmentStatement, HandleContext context)
     {
       Field targetField = IntrospectionUtility.GetField (assignmentStatement.Target);
       Fragment targetFragmentType = FragmentUtility.GetFragmentType (targetField.Attributes);
-      Fragment givenFragmentType = symbolTable.InferFragmentType (assignmentStatement.Source);
+      Fragment givenFragmentType = context.SymbolTable.InferFragmentType (assignmentStatement.Source);
 
       if (!FragmentUtility.FragmentTypesAssignable (givenFragmentType, targetFragmentType))
       {

@@ -17,7 +17,7 @@ using InjectionCop.Attributes;
 
 namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Indexer
 {
-  class IndexerSample: ParserSampleBase
+  public class IndexerSample: ParserSampleBase
   {
     [return: Fragment("IndexerFragment")]
     public string[] IndexerSafeAssignmentOnParameter ([Fragment("IndexerFragment")] string[] arrayParameter)

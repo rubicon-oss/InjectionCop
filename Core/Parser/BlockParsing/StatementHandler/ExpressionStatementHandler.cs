@@ -33,16 +33,9 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
     {
     }
 
-    protected override void HandleStatement (
-        Statement statement,
-        ISymbolTable symbolTable,
-        List<IPreCondition> preConditions,
-        List<string> assignmentTargetVariables,
-        List<BlockAssignment> blockAssignments,
-        List<int> successors,
-        Dictionary<string, bool> locallyInitializedArrays)
+    protected override void HandleStatement (HandleContext context)
     {
-      ExpressionStatement expressionStatement = (ExpressionStatement) statement;
+      ExpressionStatement expressionStatement = (ExpressionStatement) context.Statement;
       _inspect (expressionStatement.Expression);
     }
   }

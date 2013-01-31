@@ -13,13 +13,20 @@
 // limitations under the License.
 
 using System;
+using System.Text;
 
-namespace InjectionCop.Parser.BlockParsing.StatementHandler
+namespace InjectionCop.IntegrationTests.Parser.BlockParsing.StatementHandler
 {
-  public interface IStatementHandler
+  public class StringBuilderConstructStatementHandlerSample
   {
-    Type HandledStatementType { get; }
+    public StringBuilder InitializationWithEmptyConstructor ()
+    {
+      StringBuilder stringBuilder = new StringBuilder();
+      return stringBuilder;
+    }
 
-    void Handle (HandleContext context);
+
+
+    // stringbuilder als parameter
   }
 }

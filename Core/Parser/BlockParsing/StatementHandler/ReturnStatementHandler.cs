@@ -34,51 +34,44 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
     {
     }
 
-    protected override void HandleStatement (
-        Statement statement,
-        ISymbolTable symbolTable,
-        List<IPreCondition> preConditions,
-        List<string> assignmentTargetVariables,
-        List<BlockAssignment> blockAssignments,
-        List<int> successors,
-        Dictionary<string, bool> locallyInitializedArrays)
+    protected override void HandleStatement (HandleContext context)
     {
-      ReturnNode returnNode = (ReturnNode) statement;
+      ReturnNode returnNode = (ReturnNode) context.Statement;
       bool memberHasReturnType = returnNode.Expression != null;
       if (memberHasReturnType)
       {
-        HandleReturnType (returnNode, symbolTable, preConditions);
+        HandleReturnType (returnNode, context);
       }
       else
       {
-        HandleVoidReturn (returnNode, symbolTable, assignmentTargetVariables, preConditions);
+        HandleVoidReturn (returnNode, context);
       }
     }
 
-    private void HandleReturnType (ReturnNode returnNode, ISymbolTable symbolTable, List<IPreCondition> preConditions)
+    private void HandleReturnType (ReturnNode returnNode, HandleContext context)
     {
       _inspect (returnNode.Expression);
       string returnSymbol = IntrospectionUtility.GetVariableName (returnNode.Expression);
       if (returnSymbol != null)
       {
         ProblemMetadata problemMetadata = new ProblemMetadata (
-            returnNode.UniqueKey, returnNode.SourceContext, _returnFragmentType, symbolTable.GetFragmentType (returnSymbol));
+            returnNode.UniqueKey, returnNode.SourceContext, _returnFragmentType, context.SymbolTable.GetFragmentType (returnSymbol));
         AssignabilityPreCondition returnBlockCondition = new AssignabilityPreCondition (returnSymbol, _returnFragmentType, problemMetadata);
-        preConditions.Add (returnBlockCondition);
-        preConditions.AddRange (_returnConditions);
+        context.PreConditions.Add (returnBlockCondition);
+        context.PreConditions.AddRange (_returnConditions);
       }
     }
 
-    private void HandleVoidReturn (
-        ReturnNode returnNode, ISymbolTable symbolTable, List<string> assignmentTargetVariables, List<IPreCondition> preConditions)
+    private void HandleVoidReturn (ReturnNode returnNode, HandleContext context)
     {
       foreach (var returnCondition in _returnConditions)
       {
-        Fragment blockInternalFragmentType = symbolTable.GetFragmentType (returnCondition.Symbol);
+        Fragment blockInternalFragmentType = context.SymbolTable.GetFragmentType (returnCondition.Symbol);
 
         if (!FragmentUtility.FragmentTypesAssignable (blockInternalFragmentType, returnCondition.Fragment))
         {
-          ProcessBlockInternalPreConditionViolation (returnNode, returnCondition, blockInternalFragmentType, assignmentTargetVariables, preConditions);
+          ProcessBlockInternalPreConditionViolation (
+              returnNode, returnCondition, blockInternalFragmentType, context.AssignmentTargetVariables, context.PreConditions);
         }
       }
     }

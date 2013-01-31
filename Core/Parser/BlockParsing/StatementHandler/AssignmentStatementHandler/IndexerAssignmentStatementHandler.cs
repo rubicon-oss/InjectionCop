@@ -34,38 +34,32 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
     {
     }
 
-    protected override void HandleStatement (
-        Statement statement,
-        ISymbolTable symbolTable,
-        List<IPreCondition> preConditions,
-        List<string> assignmentTargetVariables,
-        List<BlockAssignment> blockAssignments,
-        List<int> successors,
-        Dictionary<string, bool> arrayFragmentTypeDefined)
+    protected override void HandleStatement (HandleContext context)
     {
-      AssignmentStatement assignmentStatement = (AssignmentStatement) statement;
+      AssignmentStatement assignmentStatement = (AssignmentStatement) context.Statement;
       Indexer targetIndexer = (Indexer) assignmentStatement.Target;
       string targetName = IntrospectionUtility.GetVariableName (targetIndexer.Object);
       
-      if (arrayFragmentTypeDefined.ContainsKey (targetName))
+      if (context.ArrayFragmentTypeDefined.ContainsKey (targetName))
       {
-        InferArrayFragment(assignmentStatement, targetName, arrayFragmentTypeDefined, symbolTable);
+        InferArrayFragment(assignmentStatement, targetName, context);
       }
       else
       {
-        CheckAssignment(assignmentStatement, symbolTable, preConditions, targetName); 
+        CheckAssignment(assignmentStatement, targetName, context); 
       }
 
       _inspect (assignmentStatement.Source);
     }
 
-    private void InferArrayFragment (AssignmentStatement assignmentStatement, string targetName, Dictionary<string, bool> arrayFragmentTypeDefined, ISymbolTable symbolTable)
+    private void InferArrayFragment (AssignmentStatement assignmentStatement, string targetName, HandleContext context)
     {
+      ISymbolTable symbolTable = context.SymbolTable;
       Fragment targetFragmentType = symbolTable.InferFragmentType (assignmentStatement.Source);
-      if (arrayFragmentTypeDefined[targetName] == false)
+      if (context.ArrayFragmentTypeDefined[targetName] == false)
       {
         symbolTable.MakeSafe(targetName, targetFragmentType);
-        arrayFragmentTypeDefined[targetName] = true;
+        context.ArrayFragmentTypeDefined[targetName] = true;
       }
       else if (symbolTable.GetFragmentType(targetName) == Fragment.CreateLiteral())
       {
@@ -77,8 +71,9 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
       }
     }
 
-    private void CheckAssignment (AssignmentStatement assignmentStatement, ISymbolTable symbolTable, List<IPreCondition> preConditions, string targetName)
+    private void CheckAssignment (AssignmentStatement assignmentStatement, string targetName, HandleContext context)
     {
+      ISymbolTable symbolTable = context.SymbolTable;
       Fragment targetFragmentType = symbolTable.GetFragmentType (targetName);
       Fragment sourceFragmentType = symbolTable.InferFragmentType (assignmentStatement.Source);
 
@@ -88,12 +83,12 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
         }
         else
         {
-          SetPreConditionForIndexerObject (assignmentStatement, targetName, sourceFragmentType, preConditions);
+          SetPreConditionForIndexerObject (assignmentStatement, targetName, sourceFragmentType, context);
         }
     }
 
     private void SetPreConditionForIndexerObject (
-        AssignmentStatement assignmentStatement, string targetName, Fragment sourceFragmentType, List<IPreCondition> preConditions)
+        AssignmentStatement assignmentStatement, string targetName, Fragment sourceFragmentType, HandleContext context)
     {
       if (targetName != null)
       {
@@ -104,7 +99,7 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
             Fragment.CreateNamed ("??"));
 
         var preCondition = new EqualityPreCondition (targetName, sourceFragmentType, problemMetadata);
-        preConditions.Add (preCondition);
+        context.PreConditions.Add (preCondition);
       }
     }
   }

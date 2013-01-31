@@ -33,17 +33,10 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler
     {
     }
 
-    protected override void HandleStatement (
-        Statement statement,
-        ISymbolTable symbolTable,
-        List<IPreCondition> preConditions,
-        List<string> assignmentTargetVariables,
-        List<BlockAssignment> blockAssignments,
-        List<int> successors,
-        Dictionary<string, bool> locallyInitializedArrays)
+    protected override void HandleStatement (HandleContext context)
     {
-      Branch branch = (Branch) statement;
-      successors.Add (branch.Target.UniqueKey);
+      Branch branch = (Branch) context.Statement;
+      context.Successors.Add (branch.Target.UniqueKey);
     }
   }
 }
