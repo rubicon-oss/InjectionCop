@@ -24,12 +24,13 @@ namespace InjectionCop.Parser.BlockParsing
 {
   public class MethodCallAnalyzer
   {
-     private readonly IProblemPipe _problemPipe;
+    private readonly IProblemPipe _problemPipe;
+    private readonly CustomInferenceController _customInferenceController;
 
     private ISymbolTable _symbolTable;
     private List<IPreCondition> _preConditions;
     private Fragment[] _parameterFragmentTypes;
-    private CustomInferenceController _customInferenceController;
+    
 
     public MethodCallAnalyzer (IProblemPipe problemPipe)
     {
@@ -41,10 +42,24 @@ namespace InjectionCop.Parser.BlockParsing
     {
       _symbolTable = symbolTable;
       _preConditions = preConditions;
+      Method calleeMethod = IntrospectionUtility.ExtractMethod (methodCall);
+      
+      if (_customInferenceController.Covers (calleeMethod))
+      {
+        _customInferenceController.InferFragmentType(methodCall, symbolTable);
+      }
+      else
+      {
+        AnalyzeOrdinaryMethodCall (methodCall);
+      }
+    }
+
+    private void AnalyzeOrdinaryMethodCall (MethodCall methodCall)
+    {
       CheckParameters (methodCall);
       UpdateOutAndRefSymbols (methodCall);
     }
-    
+
     private void CheckParameters (MethodCall methodCall)
     {
       ArgumentUtility.CheckNotNull ("methodCall", methodCall);
@@ -71,21 +86,20 @@ namespace InjectionCop.Parser.BlockParsing
       }
     }
 
-    private void PassProblem (Expression operand, ProblemMetadata problemMetadata)
+    private void PassProblem (Expression problemSource, ProblemMetadata problemMetadata)
     {
       string variableName;
       Fragment expectedFragment = problemMetadata.ExpectedFragment;
 
-      if (OperandIsVariableFromPrecedingBlock (operand, out variableName))
+      if (ExpressionIsVariableFromPrecedingBlock (problemSource, out variableName))
       {
         _preConditions.Add (new AssignabilityPreCondition (variableName, expectedFragment, problemMetadata));
       }
-      else if (operand is MethodCall)
+      else if (problemSource is MethodCall)
       {
-        MethodCall methodCall = (MethodCall) operand;
+        MethodCall methodCall = (MethodCall) problemSource;
         Method calleeMethod = IntrospectionUtility.ExtractMethod (methodCall);
-
-        var fragmentParameterInference = new FragmentParameterInference();
+        
         if (_customInferenceController.Covers(calleeMethod))
         {
           _customInferenceController.PassProblem (methodCall, _preConditions, problemMetadata, _symbolTable, _problemPipe);
@@ -101,7 +115,7 @@ namespace InjectionCop.Parser.BlockParsing
       }
     }
 
-    private bool OperandIsVariableFromPrecedingBlock (Expression operand, out string variableName)
+    private bool ExpressionIsVariableFromPrecedingBlock (Expression operand, out string variableName)
     {
       return IntrospectionUtility.IsVariable (operand, out variableName)
              && !_symbolTable.Contains (variableName);

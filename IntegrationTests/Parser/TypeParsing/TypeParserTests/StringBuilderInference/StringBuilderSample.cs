@@ -61,7 +61,35 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Strin
       if(SafeSource() == "dummy")
         RequiresBuilderFragment (stringBuilder);
     }
-    
+
+    public void BooleanAppend ()
+    {
+      StringBuilder stringBuilder = new StringBuilder (ReturnsBuilderFragment());
+      stringBuilder.Append (true);
+      RequiresBuilderFragment (stringBuilder);
+    }
+
+    public void DoubleAppend ()
+    {
+      StringBuilder stringBuilder = new StringBuilder (ReturnsBuilderFragment());
+      stringBuilder.Append (0.0d);
+      RequiresBuilderFragment (stringBuilder);
+    }
+
+    public void SafeStringAppend ()
+    {
+      StringBuilder stringBuilder = new StringBuilder (ReturnsBuilderFragment());
+      stringBuilder.Append ("literal");
+      RequiresBuilderFragment (stringBuilder);
+    }
+
+    public void UnsafeStringAppend ()
+    {
+      StringBuilder stringBuilder = new StringBuilder (ReturnsBuilderFragment());
+      stringBuilder.Append (UnsafeSource());
+      RequiresBuilderFragment (stringBuilder);
+    }
+
     public string RequiresBuilderFragment ([Fragment ("BuilderFragment")] StringBuilder stringBuilder)
     {
       return stringBuilder.ToString();

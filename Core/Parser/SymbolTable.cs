@@ -26,7 +26,7 @@ namespace InjectionCop.Parser
   {
     private readonly IBlacklistManager _blacklistManager;
     private Dictionary<string, Fragment> _safenessMap;
-    private CustomInferenceController _customInferenceController;
+    private readonly CustomInferenceController _customInferenceController;
 
     public SymbolTable (IBlacklistManager blacklistManager)
     {

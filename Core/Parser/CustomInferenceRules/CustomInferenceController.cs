@@ -28,7 +28,11 @@ namespace InjectionCop.Parser.CustomInferenceRules
 
     public CustomInferenceController ()
     {
-      _inferenceRules = new ICustomInference[] { new FragmentParameterInference() };
+      _inferenceRules = new ICustomInference[]
+                        {
+                            new FragmentParameterInference(),
+                            new StringBuilderInference()
+                        };
     }
 
     public bool Covers (Method method)

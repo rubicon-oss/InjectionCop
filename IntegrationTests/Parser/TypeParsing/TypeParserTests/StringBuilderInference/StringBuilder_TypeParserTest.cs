@@ -81,5 +81,45 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Strin
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
     }
+    
+    [Test]
+    public void Parse_AppendOfSafeType_NoProblem()
+    {
+      Method sample = TestHelper.GetSample<StringBuilderSample>("BooleanAppend");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
+
+    [Test]
+    public void Parse_AppendOfUnsafeType_ReturnsProblem()
+    {
+      Method sample = TestHelper.GetSample<StringBuilderSample>("DoubleAppend");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
+    
+    [Test]
+    public void Parse_SafeStringAppend_NoProblem()
+    {
+      Method sample = TestHelper.GetSample<StringBuilderSample>("SafeStringAppend");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
+
+    [Test]
+    public void Parse_UnsafeStringAppend_ReturnsProblem()
+    {
+      Method sample = TestHelper.GetSample<StringBuilderSample>("UnsafeStringAppend");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
   }
 }

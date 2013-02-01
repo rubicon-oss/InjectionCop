@@ -12,10 +12,119 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 using System;
+using System.Linq;
+using System.Collections.Generic;
+using InjectionCop.Parser.BlockParsing.PreCondition;
+using InjectionCop.Parser.ProblemPipe;
+using InjectionCop.Utilities;
+using Microsoft.FxCop.Sdk;
 
 namespace InjectionCop.Parser.CustomInferenceRules
 {
-  public class StringBuilderInference
+  public class StringBuilderInference: ICustomInference
   {
+    private readonly string[] _safeMethods;
+    private readonly string[] _unsafeMethods;
+    private readonly string[] _fragmentParameterInferenceMethods;
+
+    public StringBuilderInference ()
+    {
+      _safeMethods = new[]
+                     {
+                         "System.Text.StringBuilder.Append(System.Boolean)",
+                         "System.Text.StringBuilder.Append(System.Byte)",
+                         "System.Text.StringBuilder.Append(System.SByte)",
+                         "System.Text.StringBuilder.Append(System.Int16)",
+                         "System.Text.StringBuilder.Append(System.Int32)",
+                         "System.Text.StringBuilder.Append(System.Int64)",
+                         "System.Text.StringBuilder.Append(System.UInt16)",
+                         "System.Text.StringBuilder.Append(System.UInt32)",
+                         "System.Text.StringBuilder.Append(System.UInt64)"
+                     };
+
+      _unsafeMethods = new[]
+                       {
+                           "System.Text.StringBuilder.Append(System.Decimal)",
+                           "System.Text.StringBuilder.Append(System.Double)",
+                           "System.Text.StringBuilder.Append(System.Single)"
+                       };
+
+      _fragmentParameterInferenceMethods = new[]
+                                  {
+                                      "System.Text.StringBuilder.Append(System.String)",
+                                      "System.Text.StringBuilder.AppendFormat(System.String,System.Object)",
+                                      "System.Text.StringBuilder.AppendFormat(System.String,System.Object,System.Object)",
+                                      "System.Text.StringBuilder.AppendFormat(System.String,System.Object,System.Object,System.Object)",
+                                      "System.Text.StringBuilder.AppendFormat(System.String,System.Object[])"
+                                  };
+    }
+
+    public bool Covers (Method method)
+    {
+      return IsSafeMethod (method) || IsUnsafeMethod (method) || IsFragmentParameterInferenceMethod (method);
+    }
+
+    public Fragment InferFragmentType (MethodCall methodCall, ISymbolTable context)
+    {
+      Fragment returnFragment = Fragment.CreateEmpty();
+      Method method = IntrospectionUtility.ExtractMethod (methodCall);
+      if (Covers(method) && methodCall.Callee is MemberBinding)
+      {
+        MemberBinding memberBinding = (MemberBinding) methodCall.Callee;
+        //if (IsUnsafeMethod (method))
+        if (!IsSafeMethod(method))
+        {
+          string variableName;
+          if (IntrospectionUtility.IsVariable (memberBinding.TargetObject, out variableName))
+          {
+            context.MakeUnsafe (variableName);
+          }
+        }
+        else if (IsFragmentParameterInferenceMethod (method))
+        {
+          string variableName;
+          if (IntrospectionUtility.IsVariable (memberBinding.TargetObject, out variableName))
+          {
+            Fragment parameterFragment = ParameterFragmentUtility.ParameterFragmentIntersection (methodCall, context);
+            Fragment targetObjectFragment = context.GetFragmentType (variableName);
+            if (targetObjectFragment == Fragment.CreateLiteral())
+            {
+              context.MakeSafe (variableName, parameterFragment);
+            }
+            else if (parameterFragment != Fragment.CreateLiteral())
+            {
+              if (targetObjectFragment != parameterFragment)
+              {
+                context.MakeUnsafe (variableName);
+              }
+            }
+            // bei empty fragment PreCondition adden
+
+          }
+        }
+      }
+      return returnFragment;
+    }
+
+    public void PassProblem (MethodCall methodCall, List<IPreCondition> preConditions, ProblemMetadata problemMetadata, ISymbolTable symbolTable, IProblemPipe problemPipe)
+    {
+      throw new NotImplementedException();
+    }
+
+    private bool IsSafeMethod (Method method)
+    {
+      return _safeMethods.Any (safeMethod => safeMethod == method.FullName);
+    }
+
+    private bool IsUnsafeMethod (Method method)
+    {
+      return _unsafeMethods.Any (unsafeMethod => unsafeMethod == method.FullName);
+    }
+
+    private bool IsFragmentParameterInferenceMethod (Method method)
+    {
+      return _fragmentParameterInferenceMethods.Any (coveredMethodFullName => coveredMethodFullName == method.FullName);
+    }
+
   }
 }

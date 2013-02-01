@@ -67,7 +67,7 @@ namespace InjectionCop.Parser.CustomInferenceRules
       Method calleeMethod = IntrospectionUtility.ExtractMethod (methodCall);
       if(_coveredMethods.Contains(calleeMethod.FullName))
       {
-        returnFragment = ParameterFragmentIntersection (methodCall, context);
+        returnFragment = ParameterFragmentUtility.ParameterFragmentIntersection (methodCall, context);
       }
       return returnFragment;
     }
@@ -76,33 +76,6 @@ namespace InjectionCop.Parser.CustomInferenceRules
     {
       return IntrospectionUtility.IsVariable (operand, out variableName)
              && !symbolTable.Contains (variableName);
-    }
-
-    private Fragment ParameterFragmentIntersection (MethodCall methodCall, ISymbolTable context)
-    {
-      Fragment current = context.InferFragmentType (methodCall.Operands[0]);
-      Fragment intersection = current;
-      for (int i = 1; i < methodCall.Operands.Count; i++)
-      {
-        Fragment next = context.InferFragmentType (methodCall.Operands[i]);
-        intersection = FragmentIntersection (current, next);
-      }
-      return intersection;
-    }
-
-    private Fragment FragmentIntersection (Fragment fragmentA, Fragment fragmentB)
-    {
-      bool fragmentAIsSuperior = fragmentA != fragmentB && fragmentA == Fragment.CreateLiteral();
-      bool fragmentBIsSuperior = fragmentA != fragmentB && fragmentB == Fragment.CreateLiteral();
-      
-      if (fragmentA == fragmentB)
-        return fragmentA;
-      else if (fragmentAIsSuperior)
-        return fragmentB;
-      else if (fragmentBIsSuperior)
-        return fragmentA;
-      else
-        return Fragment.CreateEmpty();
     }
   }
 }
