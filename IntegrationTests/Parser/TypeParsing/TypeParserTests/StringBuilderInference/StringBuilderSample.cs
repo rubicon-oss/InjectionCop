@@ -90,6 +90,36 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Strin
       RequiresBuilderFragment (stringBuilder);
     }
 
+    public void SafeStringAppendAcrossBlocks()
+    {
+      StringBuilder stringBuilder = new StringBuilder(ReturnsBuilderFragment());
+      //stringBuilder.Append("literal");
+      if (ReturnsBuilderFragment() == "dummy")
+      {
+        //stringBuilder.Append("literal");
+      }
+      else
+      {
+        stringBuilder.Append(ReturnsBuilderFragment());
+      }
+      RequiresBuilderFragment(stringBuilder);
+    }
+
+    public void UnsafeStringAppendAcrossBlocks()
+    {
+      StringBuilder stringBuilder = new StringBuilder(ReturnsBuilderFragment());
+      stringBuilder.Append("literal");
+      if (ReturnsBuilderFragment() == "dummy")
+      {
+        stringBuilder.Append("literal");
+      }
+      else
+      {
+        stringBuilder.Append(ReturnsHtmlFragment());
+      }
+      RequiresBuilderFragment(stringBuilder);
+    }
+
     public string RequiresBuilderFragment ([Fragment ("BuilderFragment")] StringBuilder stringBuilder)
     {
       return stringBuilder.ToString();

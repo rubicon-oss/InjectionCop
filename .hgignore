@@ -103,3 +103,7 @@ Core/bin/Release/Microsoft.Cci.dll
 Core/bin/Release/InjectionCop.pdb
 Core/bin/Release/InjectionCop.dll
 Core/bin/Release/FxCopSdk.dll
+UnitTests/obj/Release/InjectionCop.UnitTests.csproj.FileListAbsolute.txt
+UnitTests/obj/Release/InjectionCop.UnitTests.csprojResolveAssemblyReference.cache
+UnitTests/obj/Release/InjectionCop.UnitTests.dll
+UnitTests/obj/Release/InjectionCop.UnitTests.pdb

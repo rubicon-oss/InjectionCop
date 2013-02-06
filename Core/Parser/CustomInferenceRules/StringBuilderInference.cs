@@ -64,7 +64,7 @@ namespace InjectionCop.Parser.CustomInferenceRules
       return IsSafeMethod (method) || IsUnsafeMethod (method) || IsFragmentParameterInferenceMethod (method);
     }
 
-    public Fragment InferFragmentType (MethodCall methodCall, ISymbolTable context)
+    public Fragment InferFragmentType(MethodCall methodCall, ISymbolTable context)
     {
       Fragment returnFragment = Fragment.CreateEmpty();
       Method method = IntrospectionUtility.ExtractMethod (methodCall);
@@ -72,15 +72,8 @@ namespace InjectionCop.Parser.CustomInferenceRules
       {
         MemberBinding memberBinding = (MemberBinding) methodCall.Callee;
         //if (IsUnsafeMethod (method))
-        if (!IsSafeMethod(method))
-        {
-          string variableName;
-          if (IntrospectionUtility.IsVariable (memberBinding.TargetObject, out variableName))
-          {
-            context.MakeUnsafe (variableName);
-          }
-        }
-        else if (IsFragmentParameterInferenceMethod (method))
+        
+        if (IsFragmentParameterInferenceMethod (method))
         {
           string variableName;
           if (IntrospectionUtility.IsVariable (memberBinding.TargetObject, out variableName))
@@ -91,15 +84,30 @@ namespace InjectionCop.Parser.CustomInferenceRules
             {
               context.MakeSafe (variableName, parameterFragment);
             }
-            else if (parameterFragment != Fragment.CreateLiteral())
+            else 
             {
-              if (targetObjectFragment != parameterFragment)
+              if (targetObjectFragment == Fragment.CreateEmpty()) // && parameterFragment != Fragment.CreateEmpty()
               {
-                context.MakeUnsafe (variableName);
+                ProblemMetadata problemMetadata = new ProblemMetadata(methodCall.UniqueKey, methodCall.SourceContext, parameterFragment, targetObjectFragment);
+                IPreCondition precondition = new AssignabilityPreCondition(variableName, parameterFragment, problemMetadata);
+                //preConditions.Add(precondition);
+                //context.
+              }
+              else if (targetObjectFragment != parameterFragment)
+              {
+                context.MakeUnsafe(variableName);
               }
             }
-            // bei empty fragment PreCondition adden
+            
 
+          }
+        }
+        else if (!IsSafeMethod(method))
+        {
+          string variableName;
+          if (IntrospectionUtility.IsVariable(memberBinding.TargetObject, out variableName))
+          {
+            context.MakeUnsafe(variableName);
           }
         }
       }

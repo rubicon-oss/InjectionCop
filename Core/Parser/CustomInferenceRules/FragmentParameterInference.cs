@@ -61,7 +61,7 @@ namespace InjectionCop.Parser.CustomInferenceRules
       }
     }
 
-    public Fragment InferFragmentType (MethodCall methodCall, ISymbolTable context)
+    public Fragment InferFragmentType(MethodCall methodCall, ISymbolTable context)
     {
       Fragment returnFragment = Fragment.CreateEmpty();
       Method calleeMethod = IntrospectionUtility.ExtractMethod (methodCall);

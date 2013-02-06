@@ -107,6 +107,7 @@ namespace InjectionCop.Parser.BlockParsing
               _successors,
               _locallyInitializedArrays,
               _stringBuilderFragmentTypesDefined);
+
           _statementHandlers[statement.GetType()].Handle (context);
         }
       }

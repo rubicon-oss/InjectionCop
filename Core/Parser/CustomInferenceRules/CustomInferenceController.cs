@@ -40,7 +40,7 @@ namespace InjectionCop.Parser.CustomInferenceRules
       return _inferenceRules.Any (rule => rule.Covers (method));
     }
 
-    public Fragment InferFragmentType (MethodCall methodCall, ISymbolTable context)
+    public Fragment InferFragmentType(MethodCall methodCall, ISymbolTable context)
     {
       Fragment fragmentType = Fragment.CreateEmpty();
       Method calleeMethod = IntrospectionUtility.ExtractMethod (methodCall);
