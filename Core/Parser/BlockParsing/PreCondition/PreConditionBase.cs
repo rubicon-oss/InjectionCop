@@ -63,17 +63,23 @@ namespace InjectionCop.Parser.BlockParsing.PreCondition
       bool preConditionViolated = ViolationCheckStrategy (context);
       if (preConditionViolated)
       {
-        _problemMetadata.GivenFragment = context.GetFragmentType (_symbol);
+        SetProblemMetadatasGivenFragment (context);
       }
       return preConditionViolated;
     }
-
+    
     public virtual void HandleViolation (ISymbolTable context, IProblemPipe problemPipe)
     {
       if (_problemMetadata != null)
       {
         problemPipe.AddProblem (_problemMetadata);
       }
+    }
+
+    private void SetProblemMetadatasGivenFragment (ISymbolTable context)
+    {
+      if(_problemMetadata != null)
+        _problemMetadata.GivenFragment = context.GetFragmentType (_symbol);
     }
   }
 }
