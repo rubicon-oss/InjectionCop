@@ -44,7 +44,7 @@ namespace InjectionCop.Parser.BlockParsing
       _preConditions = preConditions;
       Method calleeMethod = IntrospectionUtility.ExtractMethod (methodCall);
       
-      if (_customInferenceController.Covers (calleeMethod))
+      if (_customInferenceController.Analyzes (calleeMethod))
       {
         //_customInferenceController.InferFragmentType(methodCall, symbolTable);
         _customInferenceController.Analyze (methodCall, symbolTable, preConditions);
@@ -101,7 +101,7 @@ namespace InjectionCop.Parser.BlockParsing
         MethodCall methodCall = (MethodCall) problemSource;
         Method calleeMethod = IntrospectionUtility.ExtractMethod (methodCall);
         
-        if (_customInferenceController.Covers(calleeMethod))
+        if (_customInferenceController.Analyzes(calleeMethod))
         {
           _customInferenceController.PassProblem (methodCall, _preConditions, problemMetadata, _symbolTable, _problemPipe);
         }

@@ -26,6 +26,7 @@ namespace InjectionCop.Parser.CustomInferenceRules
     private readonly string[] _safeMethods;
     private readonly string[] _unsafeMethods;
     private readonly string[] _fragmentParameterInferenceMethods;
+    private readonly string[] _fragmentInferringMethods;
 
     public StringBuilderInference ()
     {
@@ -57,9 +58,12 @@ namespace InjectionCop.Parser.CustomInferenceRules
                                       "System.Text.StringBuilder.AppendFormat(System.String,System.Object,System.Object,System.Object)",
                                       "System.Text.StringBuilder.AppendFormat(System.String,System.Object[])"
                                   };
+
+      _fragmentInferringMethods = new[]
+                       { "System.Text.StringBuilder.ToString()" };
     }
 
-    public bool Covers (Method method)
+    public bool Analyzes (Method method)
     {
       return IsSafeMethod (method) || IsUnsafeMethod (method) || IsFragmentParameterInferenceMethod (method);
     }
@@ -67,55 +71,19 @@ namespace InjectionCop.Parser.CustomInferenceRules
     public Fragment InferFragmentType(MethodCall methodCall, ISymbolTable context)
     {
       Fragment returnFragment = Fragment.CreateEmpty();
-      /*
       Method method = IntrospectionUtility.ExtractMethod (methodCall);
-      if (Covers(method) && methodCall.Callee is MemberBinding)
+      if (Infers (method) && methodCall.Callee is MemberBinding)
       {
         MemberBinding memberBinding = (MemberBinding) methodCall.Callee;
-        //if (IsUnsafeMethod (method))
-        
-        if (IsFragmentParameterInferenceMethod (method))
+        string variableName;
+        if (IntrospectionUtility.IsVariable (memberBinding.TargetObject, out variableName))
         {
-          string variableName;
-          if (IntrospectionUtility.IsVariable (memberBinding.TargetObject, out variableName))
-          {
-            Fragment parameterFragment = ParameterFragmentUtility.ParameterFragmentIntersection (methodCall, context);
-            Fragment targetObjectFragment = context.GetFragmentType (variableName);
-            if (targetObjectFragment == Fragment.CreateLiteral())
-            {
-              context.MakeSafe (variableName, parameterFragment);
-            }
-            else 
-            {
-              if (targetObjectFragment == Fragment.CreateEmpty()) // && parameterFragment != Fragment.CreateEmpty()
-              {
-                ProblemMetadata problemMetadata = new ProblemMetadata(methodCall.UniqueKey, methodCall.SourceContext, parameterFragment, targetObjectFragment);
-                IPreCondition precondition = new AssignabilityPreCondition(variableName, parameterFragment, problemMetadata);
-                //preConditions.Add(precondition);
-                //context.
-              }
-              else if (targetObjectFragment != parameterFragment)
-              {
-                context.MakeUnsafe(variableName);
-              }
-            }
-            
-
-          }
-        }
-        else if (!IsSafeMethod(method))
-        {
-          string variableName;
-          if (IntrospectionUtility.IsVariable(memberBinding.TargetObject, out variableName))
-          {
-            context.MakeUnsafe(variableName);
-          }
+          returnFragment = context.GetFragmentType (variableName);
         }
       }
-       */
       return returnFragment;
     }
-
+    
     public void PassProblem (MethodCall methodCall, List<IPreCondition> preConditions, ProblemMetadata problemMetadata, ISymbolTable symbolTable, IProblemPipe problemPipe)
     {
       throw new NotImplementedException();
@@ -124,10 +92,9 @@ namespace InjectionCop.Parser.CustomInferenceRules
     public void Analyze (MethodCall methodCall, ISymbolTable context, List<IPreCondition> preConditions)
     {
       Method method = IntrospectionUtility.ExtractMethod (methodCall);
-      if (Covers(method) && methodCall.Callee is MemberBinding)
+      if (Analyzes(method) && methodCall.Callee is MemberBinding)
       {
         MemberBinding memberBinding = (MemberBinding) methodCall.Callee;
-        //if (IsUnsafeMethod (method))
         
         if (IsFragmentParameterInferenceMethod (method))
         {
@@ -136,7 +103,7 @@ namespace InjectionCop.Parser.CustomInferenceRules
           {
             Fragment parameterFragment = ParameterFragmentUtility.ParameterFragmentIntersection (methodCall, context);
             Fragment targetObjectFragment = context.GetFragmentType (variableName);
-            if (targetObjectFragment == Fragment.CreateLiteral())
+            if (targetObjectFragment == Fragment.CreateLiteral() || targetObjectFragment.Undefined)
             {
               context.MakeSafe (variableName, parameterFragment);
             }
@@ -147,8 +114,6 @@ namespace InjectionCop.Parser.CustomInferenceRules
                 ProblemMetadata problemMetadata = new ProblemMetadata(methodCall.UniqueKey, methodCall.SourceContext, parameterFragment, targetObjectFragment);
                 IPreCondition precondition = new CustomInferencePreCondition(variableName, parameterFragment, problemMetadata);
                 preConditions.Add(precondition);
-                //context.
-                //context.MakeUnsafe (variableName);
               }
               else if (!FragmentUtility.FragmentTypesAssignable(parameterFragment, targetObjectFragment))
               {
@@ -184,6 +149,11 @@ namespace InjectionCop.Parser.CustomInferenceRules
     private bool IsFragmentParameterInferenceMethod (Method method)
     {
       return _fragmentParameterInferenceMethods.Any (coveredMethodFullName => coveredMethodFullName == method.FullName);
+    }
+
+    public bool Infers (Method method)
+    {
+      return _fragmentInferringMethods.Any (methodFullName => methodFullName == method.FullName);
     }
 
   }

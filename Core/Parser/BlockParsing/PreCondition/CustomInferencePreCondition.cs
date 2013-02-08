@@ -41,9 +41,27 @@ namespace InjectionCop.Parser.BlockParsing.PreCondition
       if (!IsViolated (context))
         return;
 
+      bool symbolIsUndefined = context.Contains (_symbol) && context.GetFragmentType (_symbol).Undefined;
+      if (symbolIsUndefined)
+      {
+        SetSymbolFragmentType(context);
+      }
+      else
+      {
+        HandleFragmentConflict (context, problemPipe);
+      }
+    }
+    
+    private void SetSymbolFragmentType (ISymbolTable context)
+    {
+      context.MakeSafe (_symbol, _fragment);
+    }
+
+    private void HandleFragmentConflict (ISymbolTable context, IProblemPipe problemPipe)
+    {
       if (ProblemMetadata != null)
         problemPipe.AddProblem (_problemMetadata);
-      
+
       context.MakeUnsafe (_symbol);
     }
   }

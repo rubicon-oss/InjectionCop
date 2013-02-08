@@ -43,13 +43,13 @@ namespace InjectionCop.Parser
 
     private readonly FragmentType _fragmentType;
     private readonly string _fragmentName;
-    private readonly bool _isUndefined;
+    private readonly bool _undefined;
 
-    protected Fragment (FragmentType fragmentType, string fragmentName, bool isUndefined)
+    protected Fragment (FragmentType fragmentType, string fragmentName, bool undefined)
     {
       _fragmentType = fragmentType;
       _fragmentName = fragmentName;
-      _isUndefined = isUndefined;
+      _undefined = undefined;
     }
 
     public FragmentType Type
@@ -60,6 +60,11 @@ namespace InjectionCop.Parser
     public string FragmentName
     {
       get { return _fragmentName; }
+    }
+
+    public bool Undefined
+    {
+      get { return _undefined; }
     }
 
     protected bool Equals (Fragment other)

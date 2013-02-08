@@ -22,116 +22,116 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Strin
   {
     public void SafeStringBuilderInference ()
     {
-      StringBuilder stringBuilder = new StringBuilder (ReturnsBuilderFragment());
-      RequiresBuilderFragment (stringBuilder);
+      StringBuilder stringBuilder = new StringBuilder (ReturnsSafeFragment());
+      RequiresSafeFragmentBuilder (stringBuilder);
     }
 
     public void UnsafeStringBuilderInference ()
     {
       StringBuilder stringBuilder = new StringBuilder (UnsafeSource());
-      RequiresBuilderFragment (stringBuilder);
+      RequiresSafeFragmentBuilder (stringBuilder);
     }
 
     public void SafeStringBuilderReset ()
     {
-      StringBuilder stringBuilder = new StringBuilder (ReturnsBuilderFragment());
-      RequiresBuilderFragment (stringBuilder);
+      StringBuilder stringBuilder = new StringBuilder (ReturnsSafeFragment());
+      RequiresSafeFragmentBuilder (stringBuilder);
       stringBuilder = new StringBuilder ("literal");
-      RequiresBuilderFragment (stringBuilder);
+      RequiresSafeFragmentBuilder (stringBuilder);
     }
 
     public void UnsafeStringBuilderReset ()
     {
-      StringBuilder stringBuilder = new StringBuilder (ReturnsBuilderFragment());
-      RequiresBuilderFragment (stringBuilder);
+      StringBuilder stringBuilder = new StringBuilder (ReturnsSafeFragment());
+      RequiresSafeFragmentBuilder (stringBuilder);
       stringBuilder = new StringBuilder (ReturnsHtmlFragment());
-      RequiresBuilderFragment (stringBuilder);
+      RequiresSafeFragmentBuilder (stringBuilder);
     }
 
     public void SafeStringBuilderAcrossBlocks ()
     {
-      StringBuilder stringBuilder = new StringBuilder (ReturnsBuilderFragment());
+      StringBuilder stringBuilder = new StringBuilder (ReturnsSafeFragment());
       if(SafeSource() == "dummy")
-        RequiresBuilderFragment (stringBuilder);
+        RequiresSafeFragmentBuilder (stringBuilder);
     }
 
     public void UnsafeStringBuilderAcrossBlocks ()
     {
       StringBuilder stringBuilder = new StringBuilder (UnsafeSource());
       if(SafeSource() == "dummy")
-        RequiresBuilderFragment (stringBuilder);
+        RequiresSafeFragmentBuilder (stringBuilder);
     }
 
     public void BooleanAppend ()
     {
-      StringBuilder stringBuilder = new StringBuilder (ReturnsBuilderFragment());
+      StringBuilder stringBuilder = new StringBuilder (ReturnsSafeFragment());
       stringBuilder.Append (true);
-      RequiresBuilderFragment (stringBuilder);
+      RequiresSafeFragmentBuilder (stringBuilder);
     }
 
     public void DoubleAppend ()
     {
-      StringBuilder stringBuilder = new StringBuilder (ReturnsBuilderFragment());
+      StringBuilder stringBuilder = new StringBuilder (ReturnsSafeFragment());
       stringBuilder.Append (0.0d);
-      RequiresBuilderFragment (stringBuilder);
+      RequiresSafeFragmentBuilder (stringBuilder);
     }
 
     public void SafeStringAppend ()
     {
-      StringBuilder stringBuilder = new StringBuilder (ReturnsBuilderFragment());
+      StringBuilder stringBuilder = new StringBuilder (ReturnsSafeFragment());
       stringBuilder.Append ("literal");
-      RequiresBuilderFragment (stringBuilder);
+      RequiresSafeFragmentBuilder (stringBuilder);
     }
 
     public void UnsafeStringAppend ()
     {
-      StringBuilder stringBuilder = new StringBuilder (ReturnsBuilderFragment());
+      StringBuilder stringBuilder = new StringBuilder (ReturnsSafeFragment());
       stringBuilder.Append (UnsafeSource());
-      RequiresBuilderFragment (stringBuilder);
+      RequiresSafeFragmentBuilder (stringBuilder);
     }
 
     public void AppendingLiteralDoesNotChangeSafeFragmentType()
     {
-      StringBuilder stringBuilder = new StringBuilder(ReturnsBuilderFragment());
+      StringBuilder stringBuilder = new StringBuilder(ReturnsSafeFragment());
       stringBuilder.Append("literal");
-      if (ReturnsBuilderFragment() == "dummy")
+      if (ReturnsSafeFragment() == "dummy")
       {
         stringBuilder.Append("literal");
       }
-      RequiresBuilderFragment(stringBuilder);
+      RequiresSafeFragmentBuilder(stringBuilder);
     }
 
     public void AppendingLiteralDoesNotChangeUnsafeFragmentType()
     {
       StringBuilder stringBuilder = new StringBuilder(ReturnsHtmlFragment());
       stringBuilder.Append("literal");
-      if (ReturnsBuilderFragment() == "dummy")
+      if (ReturnsSafeFragment() == "dummy")
       {
         stringBuilder.Append("literal");
       }
-      RequiresBuilderFragment(stringBuilder);
+      RequiresSafeFragmentBuilder(stringBuilder);
     }
 
     public void SafeStringAppendAcrossBlocks()
     {
-      StringBuilder stringBuilder = new StringBuilder(ReturnsBuilderFragment());
+      StringBuilder stringBuilder = new StringBuilder(ReturnsSafeFragment());
       stringBuilder.Append("literal");
-      if (ReturnsBuilderFragment() == "dummy")
+      if (ReturnsSafeFragment() == "dummy")
       {
         stringBuilder.Append("literal");
       }
       else
       {
-        stringBuilder.Append(ReturnsBuilderFragment());
+        stringBuilder.Append(ReturnsSafeFragment());
       }
-      RequiresBuilderFragment(stringBuilder);
+      RequiresSafeFragmentBuilder(stringBuilder);
     }
 
     public void UnsafeStringAppendAcrossBlocks()
     {
-      StringBuilder stringBuilder = new StringBuilder(ReturnsBuilderFragment());
+      StringBuilder stringBuilder = new StringBuilder(ReturnsSafeFragment());
       stringBuilder.Append("literal");
-      if (ReturnsBuilderFragment() == "dummy")
+      if (ReturnsSafeFragment() == "dummy")
       {
         stringBuilder.Append("literal");
       }
@@ -139,46 +139,85 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Strin
       {
         stringBuilder.Append(ReturnsHtmlFragment());
       }
-      RequiresBuilderFragment(stringBuilder);
+      RequiresSafeFragmentBuilder(stringBuilder);
     }
     
     public void SafeCallsInDifferentBlocks()
     {
-      StringBuilder stringBuilder = new StringBuilder(ReturnsBuilderFragment());
+      StringBuilder stringBuilder = new StringBuilder(ReturnsSafeFragment());
       stringBuilder.Append("literal");
-      if (ReturnsBuilderFragment() == "dummy")
+      if (ReturnsSafeFragment() == "dummy")
       {
-        stringBuilder.Append(ReturnsBuilderFragment());
-        RequiresBuilderFragment (stringBuilder);
+        stringBuilder.Append(ReturnsSafeFragment());
+        RequiresSafeFragmentBuilder (stringBuilder);
       }
       
-      RequiresBuilderFragment(stringBuilder);
+      RequiresSafeFragmentBuilder(stringBuilder);
     }
 
     public void StringBuilderBlockConflict()
     {
-      StringBuilder stringBuilder = new StringBuilder(ReturnsBuilderFragment());
+      StringBuilder stringBuilder = new StringBuilder(ReturnsSafeFragment());
       stringBuilder.Append("literal");
-      if (ReturnsBuilderFragment() == "dummy")
+      if (ReturnsSafeFragment() == "dummy")
       {
         stringBuilder.Append(ReturnsHtmlFragment());
         RequiresHtmlBuilder (stringBuilder);
       }
       
-      RequiresBuilderFragment(stringBuilder);
+      RequiresSafeFragmentBuilder(stringBuilder);
     }
 
     public void SafeFragmentTypeDefinitionAcrossBlocks ()
     {
       StringBuilder stringBuilder = new StringBuilder();
-      if (ReturnsBuilderFragment() == "dummy")
+      if (ReturnsSafeFragment() == "dummy")
       {
-        stringBuilder.Append(ReturnsBuilderFragment());
+        stringBuilder.Append(ReturnsSafeFragment());
       }
-      RequiresBuilderFragment(stringBuilder);
+      RequiresSafeFragmentBuilder(stringBuilder);
     }
 
-    public string RequiresBuilderFragment ([Fragment ("BuilderFragment")] StringBuilder stringBuilder)
+    public void UnsafeFragmentTypeDefinitionAcrossBlocks ()
+    {
+      StringBuilder stringBuilder = new StringBuilder();
+      if (ReturnsSafeFragment() == "dummy")
+      {
+        stringBuilder.Append(ReturnsHtmlFragment());
+      }
+      RequiresSafeFragmentBuilder(stringBuilder);
+    }
+    
+    public void UndefinedInitializationSetSafe ()
+    {
+      StringBuilder stringBuilder = new StringBuilder();
+      stringBuilder.Append(ReturnsSafeFragment());
+      RequiresSafeFragmentBuilder(stringBuilder);
+    }
+
+    public void UndefinedInitializationSetUnsafe ()
+    {
+      StringBuilder stringBuilder = new StringBuilder();
+      stringBuilder.Append(ReturnsHtmlFragment());
+      RequiresSafeFragmentBuilder(stringBuilder);
+    }
+
+    public void UnsafeAppendChain ()
+    {
+      StringBuilder stringBuilder = new StringBuilder();
+      stringBuilder.Append (UnsafeSource());
+      stringBuilder.Append(ReturnsHtmlFragment());
+      stringBuilder.Append (ReturnsHtmlFragment());
+      RequiresSafeFragmentBuilder(stringBuilder);
+    }
+
+    public void SafeStringBuilderToString ()
+    {
+      StringBuilder builder = new StringBuilder(ReturnsSafeFragment());
+      RequiresSafeFragment (builder.ToString());
+    }
+
+    public string RequiresSafeFragmentBuilder ([Fragment ("BuilderFragment")] StringBuilder stringBuilder)
     {
       return stringBuilder.ToString();
     }
@@ -188,9 +227,14 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Strin
       return stringBuilder.ToString();
     }
 
+    public string RequiresSafeFragment ([Fragment ("BuilderFragment")] string parameter)
+    {
+      return parameter;
+    }
+    
     [FragmentGenerator]
     [return: Fragment("BuilderFragment")]
-    private string ReturnsBuilderFragment ()
+    private string ReturnsSafeFragment ()
     {
       return "dummy";
     }

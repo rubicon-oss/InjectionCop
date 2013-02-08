@@ -34,12 +34,32 @@ namespace InjectionCop.Parser.CustomInferenceRules
                                                        "System.String.Format(System.String,System.Object,System.Object,System.Object)",
                                                        "System.String.Format(System.String,System.Object[])"
                                                    };
+    
+    public bool Analyzes (Method method)
+    {
+      return false;
+    }
 
-    public bool Covers (Method method)
+    public void Analyze (MethodCall methodCall, ISymbolTable context, List<IPreCondition> preConditions)
+    {
+    }
+
+    public bool Infers (Method method)
     {
       return _coveredMethods.Contains (method.FullName);
     }
-    
+
+    public Fragment InferFragmentType(MethodCall methodCall, ISymbolTable context)
+    {
+      Fragment returnFragment = Fragment.CreateEmpty();
+      Method calleeMethod = IntrospectionUtility.ExtractMethod (methodCall);
+      if(_coveredMethods.Contains(calleeMethod.FullName))
+      {
+        returnFragment = ParameterFragmentUtility.ParameterFragmentIntersection (methodCall, context);
+      }
+      return returnFragment;
+    }
+
     public void PassProblem (
         MethodCall methodCall, List<IPreCondition> preConditions, ProblemMetadata problemMetadata, ISymbolTable symbolTable, IProblemPipe problemPipe)
     {
@@ -60,26 +80,13 @@ namespace InjectionCop.Parser.CustomInferenceRules
         }
       }
     }
-
-    public void Analyze (MethodCall methodCall, ISymbolTable context, List<IPreCondition> preConditions)
-    {
-    }
-
-    public Fragment InferFragmentType(MethodCall methodCall, ISymbolTable context)
-    {
-      Fragment returnFragment = Fragment.CreateEmpty();
-      Method calleeMethod = IntrospectionUtility.ExtractMethod (methodCall);
-      if(_coveredMethods.Contains(calleeMethod.FullName))
-      {
-        returnFragment = ParameterFragmentUtility.ParameterFragmentIntersection (methodCall, context);
-      }
-      return returnFragment;
-    }
-
+    
     private bool OperandIsVariableFromPrecedingBlock (Expression operand, ISymbolTable symbolTable, out string variableName)
     {
       return IntrospectionUtility.IsVariable (operand, out variableName)
              && !symbolTable.Contains (variableName);
     }
+
+
   }
 }

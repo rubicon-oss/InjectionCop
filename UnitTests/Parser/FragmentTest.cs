@@ -38,5 +38,17 @@ namespace InjectionCop.UnitTests.Parser
     {
       Assert.That (Fragment.CreateUndefined() == Fragment.CreateNamed("dummy"), Is.False);
     }
+
+    [Test]
+    public void UndefinedFragmentIsUndefined ()
+    {
+      Assert.That (Fragment.CreateUndefined().Undefined, Is.True);
+    }
+
+    [Test]
+    public void DefinedFragmentIsNotUndefined ()
+    {
+      Assert.That (Fragment.CreateLiteral().Undefined, Is.False);
+    }
   }
 }

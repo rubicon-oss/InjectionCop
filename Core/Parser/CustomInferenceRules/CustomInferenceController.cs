@@ -35,16 +35,21 @@ namespace InjectionCop.Parser.CustomInferenceRules
                         };
     }
 
-    public bool Covers (Method method)
+    public bool Analyzes (Method method)
     {
-      return _inferenceRules.Any (rule => rule.Covers (method));
+      return _inferenceRules.Any (rule => rule.Analyzes (method));
+    }
+
+    public bool Infers (Method method)
+    {
+      return _inferenceRules.Any (rule => rule.Infers (method));
     }
 
     public Fragment InferFragmentType(MethodCall methodCall, ISymbolTable context)
     {
       Fragment fragmentType = Fragment.CreateEmpty();
       Method calleeMethod = IntrospectionUtility.ExtractMethod (methodCall);
-      ICustomInference matchingRule = MatchingRule (calleeMethod);
+      ICustomInference matchingRule = MatchingInferRule (calleeMethod);
       if (matchingRule != null)
       {
         fragmentType = matchingRule.InferFragmentType (methodCall, context);
@@ -56,7 +61,7 @@ namespace InjectionCop.Parser.CustomInferenceRules
         MethodCall methodCall, List<IPreCondition> preConditions, ProblemMetadata problemMetadata, ISymbolTable symbolTable, IProblemPipe problemPipe)
     {
       Method calleeMethod = IntrospectionUtility.ExtractMethod (methodCall);
-      ICustomInference matchingRule = MatchingRule (calleeMethod);
+      ICustomInference matchingRule = MatchingAnalyzeRule (calleeMethod);
       if (matchingRule != null)
       {
         matchingRule.PassProblem (methodCall, preConditions, problemMetadata, symbolTable, problemPipe);
@@ -66,18 +71,30 @@ namespace InjectionCop.Parser.CustomInferenceRules
     public void Analyze (MethodCall methodCall, ISymbolTable context, List<IPreCondition> preConditions)
     {
       Method calleeMethod = IntrospectionUtility.ExtractMethod (methodCall);
-      ICustomInference matchingRule = MatchingRule (calleeMethod);
+      ICustomInference matchingRule = MatchingAnalyzeRule (calleeMethod);
       if (matchingRule != null)
       {
         matchingRule.Analyze (methodCall, context, preConditions);
       }
     }
 
-    private ICustomInference MatchingRule (Method method)
+    private ICustomInference MatchingAnalyzeRule (Method method)
     {
-      if (Covers (method))
+      if (Analyzes (method))
       {
-        return _inferenceRules.Single (rule => rule.Covers (method));
+        return _inferenceRules.Single (rule => rule.Analyzes (method));
+      }
+      else
+      {
+        return null;
+      }
+    }
+
+    private ICustomInference MatchingInferRule (Method method)
+    {
+      if (Infers (method))
+      {
+        return _inferenceRules.Single (rule => rule.Infers (method));
       }
       else
       {

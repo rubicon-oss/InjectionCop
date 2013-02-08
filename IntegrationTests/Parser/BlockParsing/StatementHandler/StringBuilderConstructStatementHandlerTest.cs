@@ -93,8 +93,8 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing.StatementHandler
       
       _handler.Handle (context);
 
-      bool mappingCorrect = _stringBuilderFragmentTypesDefined.ContainsKey ("local$0") && _stringBuilderFragmentTypesDefined["local$0"] == false;
-      Assert.That (mappingCorrect, Is.True);
+      bool variableUndefined = _symbolTable.GetFragmentType ("local$0").Undefined;
+      Assert.That (variableUndefined, Is.True);
     }
     
     [Test]
@@ -116,8 +116,8 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing.StatementHandler
       
       _handler.Handle (context);
 
-      bool mappingCorrect = _stringBuilderFragmentTypesDefined.ContainsKey ("local$0") && _stringBuilderFragmentTypesDefined["local$0"] == false;
-      Assert.That (mappingCorrect, Is.True);
+      bool variableUndefined = _symbolTable.GetFragmentType ("local$0").Undefined;
+      Assert.That (variableUndefined, Is.True);
     }
     
     [Test]
@@ -139,8 +139,8 @@ namespace InjectionCop.IntegrationTests.Parser.BlockParsing.StatementHandler
       
       _handler.Handle (context);
 
-      bool mappingCorrect = _stringBuilderFragmentTypesDefined.ContainsKey ("local$0") && _stringBuilderFragmentTypesDefined["local$0"] == false;
-      Assert.That (mappingCorrect, Is.True);
+      bool variableUndefined = _symbolTable.GetFragmentType ("local$0").Undefined;
+      Assert.That (variableUndefined, Is.True);
     }
     
     [Test]

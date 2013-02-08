@@ -39,20 +39,20 @@ namespace InjectionCop.IntegrationTests.Parser.CustomInferenceRules
     }
 
     [Test]
-    public void Covers_CoveredMethod_ReturnsTrue ()
+    public void Infers_CoveredMethod_ReturnsTrue ()
     {
       TypeNode stringTypeNode = IntrospectionUtility.TypeNodeFactory<string>();
       Method sample = IntrospectionUtility.MethodFactory<string> ("Concat", stringTypeNode, stringTypeNode);
 
-      Assert.That (_customInferenceController.Covers (sample), Is.True);
+      Assert.That (_customInferenceController.Infers (sample), Is.True);
     }
 
     [Test]
-    public void Covers_UncoveredMethod_ReturnsFalse ()
+    public void Infers_UncoveredMethod_ReturnsFalse ()
     {
       Method sample = IntrospectionUtility.MethodFactory<string> ("ToString");
       
-      Assert.That (_customInferenceController.Covers (sample), Is.False);
+      Assert.That (_customInferenceController.Infers (sample), Is.False);
     }
 
     [Test]

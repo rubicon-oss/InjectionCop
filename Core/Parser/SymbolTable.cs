@@ -88,10 +88,9 @@ namespace InjectionCop.Parser
       Fragment returnFragment;
       Method calleeMethod = IntrospectionUtility.ExtractMethod (methodCall);
       
-      if(_customInferenceController.Covers(calleeMethod))
+      if(_customInferenceController.Infers(calleeMethod))
       {
         returnFragment = _customInferenceController.InferFragmentType (methodCall, this);
-        
       }
       else
       {

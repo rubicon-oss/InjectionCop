@@ -22,12 +22,13 @@ namespace InjectionCop.Parser.CustomInferenceRules
 {
   public interface ICustomInference
   {
-    bool Covers (Method method);
+    bool Infers (Method method);
     Fragment InferFragmentType (MethodCall methodCall, ISymbolTable context);
+
+    bool Analyzes (Method method);
+    void Analyze (MethodCall methodCall, ISymbolTable context, List<IPreCondition> preConditions);
 
     void PassProblem (
         MethodCall methodCall, List<IPreCondition> preConditions, ProblemMetadata problemMetadata, ISymbolTable symbolTable, IProblemPipe problemPipe);
-
-    void Analyze (MethodCall methodCall, ISymbolTable context, List<IPreCondition> preConditions);
   }
 }

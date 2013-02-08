@@ -54,7 +54,8 @@ namespace InjectionCop.Parser.BlockParsing.StatementHandler.AssignmentStatementH
       }
       else
       {
-        context.StringBuilderFragmentTypeDefined[variableName] = false;
+        //context.StringBuilderFragmentTypeDefined[variableName] = false;
+        context.SymbolTable.MakeSafe (variableName, Fragment.CreateUndefined());
       }
     }
     

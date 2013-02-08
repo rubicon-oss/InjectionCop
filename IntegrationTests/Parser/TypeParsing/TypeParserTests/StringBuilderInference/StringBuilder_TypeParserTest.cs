@@ -191,5 +191,55 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Strin
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
+
+    [Test]
+    public void Parse_UnsafeFragmentTypeDefinitionAcrossBlocks_ReturnsProblem ()
+    {
+      Method sample = TestHelper.GetSample<StringBuilderSample> ("UnsafeFragmentTypeDefinitionAcrossBlocks");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
+
+    [Test]
+    public void Parse_UndefinedInitializationSetSafe_NoProblem ()
+    {
+      Method sample = TestHelper.GetSample<StringBuilderSample> ("UndefinedInitializationSetSafe");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
+    
+    [Test]
+    public void Parse_UndefinedInitializationSetUnsafe_ReturnsProblem ()
+    {
+      Method sample = TestHelper.GetSample<StringBuilderSample> ("UndefinedInitializationSetUnsafe");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
+    
+    [Test]
+    public void Parse_UnsafeAppendChain_ReturnsProblem ()
+    {
+      Method sample = TestHelper.GetSample<StringBuilderSample> ("UnsafeAppendChain");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
+    
+    [Test]
+    public void Parse_SafeStringBuilderToString_NoProblem ()
+    {
+      Method sample = TestHelper.GetSample<StringBuilderSample> ("SafeStringBuilderToString");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
   }
 }
