@@ -20,11 +20,10 @@ namespace InjectionCop.Parser.BlockParsing.PreCondition
   public interface IPreCondition
   {
     string Symbol { get; }
-
     Fragment Fragment { get; }
-
     ProblemMetadata ProblemMetadata { get; }
 
     bool IsViolated (ISymbolTable context);
+    void HandleViolation (ISymbolTable context, IProblemPipe problemPipe);
   }
 }

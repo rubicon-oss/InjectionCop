@@ -61,6 +61,10 @@ namespace InjectionCop.Parser.CustomInferenceRules
       }
     }
 
+    public void Analyze (MethodCall methodCall, ISymbolTable context, List<IPreCondition> preConditions)
+    {
+    }
+
     public Fragment InferFragmentType(MethodCall methodCall, ISymbolTable context)
     {
       Fragment returnFragment = Fragment.CreateEmpty();

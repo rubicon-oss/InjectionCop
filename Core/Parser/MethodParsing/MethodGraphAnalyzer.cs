@@ -14,20 +14,17 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Linq;
 using InjectionCop.Parser.BlockParsing;
 using InjectionCop.Parser.BlockParsing.PreCondition;
 using InjectionCop.Parser.ProblemPipe;
 using InjectionCop.Utilities;
-using System.Linq;
 
 namespace InjectionCop.Parser.MethodParsing
 {
   public class MethodGraphAnalyzer : IMethodGraphAnalyzer
   {
     private readonly IProblemPipe _problemPipe;
-
-    private Dictionary<int,int> recursioncalls;
 
     public MethodGraphAnalyzer (IProblemPipe problemPipe)
     {
@@ -41,42 +38,31 @@ namespace InjectionCop.Parser.MethodParsing
 
       var methodGraph = methodGraphBuilder.GetResult();
       var initialSymbolTable = initialSymbolTableBuilder.GetResult();
-
-      //Debugger.Launch();
-
+      
       if (methodGraph != null && !methodGraph.IsEmpty() && initialSymbolTable != null)
       {
-        /*
-        var analysisRequired =
-            methodGraph.Blocks.Any (
-                block =>
-                block.PreConditions.Any (
-                    preCondition => preCondition.FragmentType != SymbolTable.EMPTY_FRAGMENT && preCondition.FragmentType != SymbolTable.LITERAL));
-        */
-        var analysisRequired = true;
-        if (!analysisRequired)
+        if (!AnalysisRequired(methodGraph))
           return;
-
-        recursioncalls = new Dictionary<int, int>();
+        
         Parse (methodGraph, initialSymbolTable, methodGraph.InitialBlock, new Dictionary<int, int>());
       }
     }
 
+    private bool AnalysisRequired (IMethodGraph methodGraph)
+    {
+      return methodGraph.Blocks.Any (
+                block =>
+                block.PreConditions.Any (
+                    preCondition => preCondition.Fragment != Fragment.CreateEmpty() && preCondition.Fragment != Fragment.CreateLiteral()));
+    }
+
     private void Parse (IMethodGraph methodGraph, ISymbolTable context, BasicBlock currentBlock, Dictionary<int, int> visits)
     {
-      if (!recursioncalls.ContainsKey (currentBlock.Id))
-      {
-        recursioncalls[currentBlock.Id] = 1;
-      }
-      else
-      {
-        recursioncalls[currentBlock.Id]++;
-      }
       UpdateVisits (currentBlock.Id, visits);
       bool loopIterationsExceeded = visits[currentBlock.Id] > 1;
       if(!loopIterationsExceeded)
       {
-        CheckPreCoditions (currentBlock.PreConditions, context);
+        CheckPreConditions (currentBlock.PreConditions, context);
         ISymbolTable adjustedContext = UpdateContext (context, currentBlock.PostConditionSymbolTable, currentBlock.BlockAssignments);
         ParseSuccessors (currentBlock.SuccessorKeys, visits, methodGraph, adjustedContext);
       }
@@ -94,13 +80,13 @@ namespace InjectionCop.Parser.MethodParsing
       }
     }
 
-    private void CheckPreCoditions (IPreCondition[] preconditions, ISymbolTable context)
+    private void CheckPreConditions (IPreCondition[] preconditions, ISymbolTable context)
     {
-      foreach (IPreCondition precondition in preconditions)
+      foreach (IPreCondition preCondition in preconditions)
       {
-        if(precondition.IsViolated(context))
+        if(preCondition.IsViolated(context))
         {
-          _problemPipe.AddProblem(precondition.ProblemMetadata);
+          preCondition.HandleViolation (context, _problemPipe);
         }
       }
     }

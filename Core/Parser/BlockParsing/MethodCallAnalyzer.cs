@@ -46,7 +46,8 @@ namespace InjectionCop.Parser.BlockParsing
       
       if (_customInferenceController.Covers (calleeMethod))
       {
-        _customInferenceController.InferFragmentType(methodCall, symbolTable);
+        //_customInferenceController.InferFragmentType(methodCall, symbolTable);
+        _customInferenceController.Analyze (methodCall, symbolTable, preConditions);
       }
       else
       {

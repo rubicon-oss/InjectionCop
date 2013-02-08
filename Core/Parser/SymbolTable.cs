@@ -91,6 +91,7 @@ namespace InjectionCop.Parser
       if(_customInferenceController.Covers(calleeMethod))
       {
         returnFragment = _customInferenceController.InferFragmentType (methodCall, this);
+        
       }
       else
       {

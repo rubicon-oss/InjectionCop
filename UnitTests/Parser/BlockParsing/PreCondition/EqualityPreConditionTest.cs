@@ -17,12 +17,11 @@ using InjectionCop.Parser.BlockParsing.PreCondition;
 using NUnit.Framework;
 using InjectionCop.Parser.ProblemPipe;
 using InjectionCop.Parser;
-using InjectionCop.Parser.BlockParsing;
 using InjectionCop.Config;
 using Microsoft.FxCop.Sdk;
 using Rhino.Mocks;
 
-namespace InjectionCop.UnitTests.Parser.BlockParsing
+namespace InjectionCop.UnitTests.Parser.BlockParsing.PreCondition
 {
   [TestFixture]
   public class EqualityPreConditionTest

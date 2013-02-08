@@ -63,6 +63,16 @@ namespace InjectionCop.Parser.CustomInferenceRules
       }
     }
 
+    public void Analyze (MethodCall methodCall, ISymbolTable context, List<IPreCondition> preConditions)
+    {
+      Method calleeMethod = IntrospectionUtility.ExtractMethod (methodCall);
+      ICustomInference matchingRule = MatchingRule (calleeMethod);
+      if (matchingRule != null)
+      {
+        matchingRule.Analyze (methodCall, context, preConditions);
+      }
+    }
+
     private ICustomInference MatchingRule (Method method)
     {
       if (Covers (method))

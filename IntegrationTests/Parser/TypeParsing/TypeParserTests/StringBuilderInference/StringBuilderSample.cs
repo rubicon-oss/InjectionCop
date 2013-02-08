@@ -93,10 +93,10 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Strin
     public void SafeStringAppendAcrossBlocks()
     {
       StringBuilder stringBuilder = new StringBuilder(ReturnsBuilderFragment());
-      //stringBuilder.Append("literal");
+      stringBuilder.Append("literal");
       if (ReturnsBuilderFragment() == "dummy")
       {
-        //stringBuilder.Append("literal");
+        stringBuilder.Append("literal");
       }
       else
       {
@@ -108,10 +108,10 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Strin
     public void UnsafeStringAppendAcrossBlocks()
     {
       StringBuilder stringBuilder = new StringBuilder(ReturnsBuilderFragment());
-      stringBuilder.Append("literal");
+      //stringBuilder.Append("literal");
       if (ReturnsBuilderFragment() == "dummy")
       {
-        stringBuilder.Append("literal");
+        //stringBuilder.Append("literal");
       }
       else
       {

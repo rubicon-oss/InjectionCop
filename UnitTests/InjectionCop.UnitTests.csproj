@@ -75,8 +75,8 @@
     <Compile Include="Config\ConfigurationFileLocatorTest.cs" />
     <Compile Include="Config\ConfigurationTest.cs" />
     <Compile Include="Config\LayeredConfigurationAdapterTest.cs" />
-    <Compile Include="Parser\BlockParsing\AssignabilityPreConditionTest.cs" />
-    <Compile Include="Parser\BlockParsing\EqualityPreConditionTest.cs" />
+    <Compile Include="Parser\BlockParsing\PreCondition\AssignabilityPreConditionTest.cs" />
+    <Compile Include="Parser\BlockParsing\PreCondition\EqualityPreConditionTest.cs" />
     <Compile Include="Parser\BlockParsing\StatementHandler\StatementHandlerDictionaryBuilderTest.cs" />
     <Compile Include="Parser\MethodParsing\ProblemPipeStub.cs" />
     <Compile Include="Parser\ProblemPipe\ProblemDuplicateFilterTest.cs" />

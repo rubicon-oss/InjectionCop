@@ -31,6 +31,7 @@ namespace InjectionCop.Parser.BlockParsing.PreCondition
       
       _symbol = symbol;
       _fragment =  fragment;
+      _problemMetadata = null;
     }
 
     protected PreConditionBase (string symbol, Fragment fragment, ProblemMetadata problemMetadata)
@@ -65,6 +66,14 @@ namespace InjectionCop.Parser.BlockParsing.PreCondition
         _problemMetadata.GivenFragment = context.GetFragmentType (_symbol);
       }
       return preConditionViolated;
+    }
+
+    public virtual void HandleViolation (ISymbolTable context, IProblemPipe problemPipe)
+    {
+      if (_problemMetadata != null)
+      {
+        problemPipe.AddProblem (_problemMetadata);
+      }
     }
   }
 }

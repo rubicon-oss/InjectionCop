@@ -131,5 +131,15 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Strin
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
+    
+    [Test]
+    public void Parse_UnsafeStringAppendAcrossBlocks_ReturnsProblem()
+    {
+      Method sample = TestHelper.GetSample<StringBuilderSample>("UnsafeStringAppendAcrossBlocks");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
   }
 }

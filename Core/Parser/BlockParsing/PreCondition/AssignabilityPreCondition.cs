@@ -19,7 +19,7 @@ using Microsoft.FxCop.Sdk;
 namespace InjectionCop.Parser.BlockParsing.PreCondition
 {
   /// <summary>
-  /// Holds a symbol and the associated fragment type that needs to safe when entering a BasicBlock
+  /// Holds a symbol and the associated fragment type that needs to be safe when entering a BasicBlock
   /// </summary>
   public class AssignabilityPreCondition : PreConditionBase
   {

@@ -67,6 +67,7 @@ namespace InjectionCop.Parser.CustomInferenceRules
     public Fragment InferFragmentType(MethodCall methodCall, ISymbolTable context)
     {
       Fragment returnFragment = Fragment.CreateEmpty();
+      /*
       Method method = IntrospectionUtility.ExtractMethod (methodCall);
       if (Covers(method) && methodCall.Callee is MemberBinding)
       {
@@ -111,12 +112,63 @@ namespace InjectionCop.Parser.CustomInferenceRules
           }
         }
       }
+       */
       return returnFragment;
     }
 
     public void PassProblem (MethodCall methodCall, List<IPreCondition> preConditions, ProblemMetadata problemMetadata, ISymbolTable symbolTable, IProblemPipe problemPipe)
     {
       throw new NotImplementedException();
+    }
+
+    public void Analyze (MethodCall methodCall, ISymbolTable context, List<IPreCondition> preConditions)
+    {
+      Method method = IntrospectionUtility.ExtractMethod (methodCall);
+      if (Covers(method) && methodCall.Callee is MemberBinding)
+      {
+        MemberBinding memberBinding = (MemberBinding) methodCall.Callee;
+        //if (IsUnsafeMethod (method))
+        
+        if (IsFragmentParameterInferenceMethod (method))
+        {
+          string variableName;
+          if (IntrospectionUtility.IsVariable (memberBinding.TargetObject, out variableName))
+          {
+            Fragment parameterFragment = ParameterFragmentUtility.ParameterFragmentIntersection (methodCall, context);
+            Fragment targetObjectFragment = context.GetFragmentType (variableName);
+            if (targetObjectFragment == Fragment.CreateLiteral())
+            {
+              context.MakeSafe (variableName, parameterFragment);
+            }
+            else 
+            {
+              if (targetObjectFragment == Fragment.CreateEmpty()) // && parameterFragment != Fragment.CreateEmpty()
+              {
+                ProblemMetadata problemMetadata = new ProblemMetadata(methodCall.UniqueKey, methodCall.SourceContext, parameterFragment, targetObjectFragment);
+                IPreCondition precondition = new AssignabilityPreCondition(variableName, parameterFragment, problemMetadata);
+                //preConditions.Add(precondition);
+                //context.
+                context.MakeUnsafe (variableName);
+              }
+              else if (!FragmentUtility.FragmentTypesAssignable(parameterFragment, targetObjectFragment))
+              {
+                context.MakeUnsafe(variableName);
+              }
+            }
+            
+
+          }
+        }
+        else if (!IsSafeMethod(method))
+        {
+          string variableName;
+          if (IntrospectionUtility.IsVariable(memberBinding.TargetObject, out variableName))
+          {
+            context.MakeUnsafe(variableName);
+          }
+        }
+      }
+     
     }
 
     private bool IsSafeMethod (Method method)
