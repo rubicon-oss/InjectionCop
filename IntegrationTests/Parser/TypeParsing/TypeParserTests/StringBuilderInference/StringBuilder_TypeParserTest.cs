@@ -123,6 +123,26 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Strin
     }
 
     [Test]
+    public void Parse_AppendingLiteralDoesNotChangeSafeFragmentType_NoProblem()
+    {
+      Method sample = TestHelper.GetSample<StringBuilderSample>("AppendingLiteralDoesNotChangeSafeFragmentType");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
+    
+    [Test]
+    public void Parse_AppendingLiteralDoesNotChangeUnsafeFragmentType_ReturnsProblem()
+    {
+      Method sample = TestHelper.GetSample<StringBuilderSample>("AppendingLiteralDoesNotChangeUnsafeFragmentType");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
+
+    [Test]
     public void Parse_SafeStringAppendAcrossBlocks_NoProblem()
     {
       Method sample = TestHelper.GetSample<StringBuilderSample>("SafeStringAppendAcrossBlocks");
@@ -140,6 +160,36 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Strin
       ProblemCollection result = _typeParser.Problems;
 
       Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
+    
+    [Test]
+    public void Parse_SafeCallsInDifferentBlocks_NoProblem()
+    {
+      Method sample = TestHelper.GetSample<StringBuilderSample>("SafeCallsInDifferentBlocks");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
+    }
+
+    [Test]
+    public void Parse_StringBuilderBlockConflict_ReturnsProblem()
+    {
+      Method sample = TestHelper.GetSample<StringBuilderSample>("StringBuilderBlockConflict");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.True);
+    }
+    
+    [Test]
+    public void Parse_SafeFragmentTypeDefinitionAcrossBlocks_NoProblem()
+    {
+      Method sample = TestHelper.GetSample<StringBuilderSample>("SafeFragmentTypeDefinitionAcrossBlocks");
+      _typeParser.Parse (sample);
+      ProblemCollection result = _typeParser.Problems;
+
+      Assert.That (TestHelper.ContainsProblemID (c_InjectionCopRuleId, result), Is.False);
     }
   }
 }

@@ -142,13 +142,13 @@ namespace InjectionCop.Parser.CustomInferenceRules
             }
             else 
             {
-              if (targetObjectFragment == Fragment.CreateEmpty()) // && parameterFragment != Fragment.CreateEmpty()
+              if (targetObjectFragment == Fragment.CreateEmpty() && parameterFragment != Fragment.CreateLiteral()) // && parameterFragment != Fragment.CreateEmpty()
               {
                 ProblemMetadata problemMetadata = new ProblemMetadata(methodCall.UniqueKey, methodCall.SourceContext, parameterFragment, targetObjectFragment);
-                IPreCondition precondition = new AssignabilityPreCondition(variableName, parameterFragment, problemMetadata);
-                //preConditions.Add(precondition);
+                IPreCondition precondition = new CustomInferencePreCondition(variableName, parameterFragment, problemMetadata);
+                preConditions.Add(precondition);
                 //context.
-                context.MakeUnsafe (variableName);
+                //context.MakeUnsafe (variableName);
               }
               else if (!FragmentUtility.FragmentTypesAssignable(parameterFragment, targetObjectFragment))
               {
