@@ -141,17 +141,7 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Strin
       }
       RequiresBuilderFragment(stringBuilder);
     }
-
-    public void SafeFragmentTypeDefinitionAcrossBlocks ()
-    {
-      StringBuilder stringBuilder = new StringBuilder();
-      if (ReturnsBuilderFragment() == "dummy")
-      {
-        stringBuilder.Append(ReturnsBuilderFragment());
-      }
-      RequiresBuilderFragment(stringBuilder);
-    }
-
+    
     public void SafeCallsInDifferentBlocks()
     {
       StringBuilder stringBuilder = new StringBuilder(ReturnsBuilderFragment());
@@ -175,6 +165,16 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Strin
         RequiresHtmlBuilder (stringBuilder);
       }
       
+      RequiresBuilderFragment(stringBuilder);
+    }
+
+    public void SafeFragmentTypeDefinitionAcrossBlocks ()
+    {
+      StringBuilder stringBuilder = new StringBuilder();
+      if (ReturnsBuilderFragment() == "dummy")
+      {
+        stringBuilder.Append(ReturnsBuilderFragment());
+      }
       RequiresBuilderFragment(stringBuilder);
     }
 
