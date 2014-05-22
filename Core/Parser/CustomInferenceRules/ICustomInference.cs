@@ -23,6 +23,7 @@ namespace InjectionCop.Parser.CustomInferenceRules
   public interface ICustomInference
   {
     bool Infers (Method method);
+
     Fragment InferFragmentType (MethodCall methodCall, ISymbolTable context);
 
     bool Analyzes (Method method);

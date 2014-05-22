@@ -33,8 +33,10 @@ namespace InjectionCop.Config
         string assemblyName, string qualifiedTypeName, string methodName, IList<string> qualifiedParameterTypes)
     {
       var methodKey = GetMethodKey (assemblyName, qualifiedTypeName, methodName, qualifiedParameterTypes);
+      
       if (_fragmentSignatures.ContainsKey (methodKey))
         return _fragmentSignatures[methodKey];
+      
       return null;
     }
 
@@ -95,14 +97,16 @@ namespace InjectionCop.Config
                                          .Select (attribute => attribute.Value)
                                          .ToArray();
 
+        var isGenerator = bool.Parse(methodElement.Attribute("fragmentGenerator").Value);
+
         var key = GetMethodKey (assemblyName, typeName, methodName, parameterTypes);
 
-        AddFragmentSignature (typeName, key, fragmentTypes, returnFragmentType, methodName, parameterTypes);
+        AddFragmentSignature (typeName, key, fragmentTypes, returnFragmentType, methodName, parameterTypes, isGenerator );
       }
     }
 
     private void AddFragmentSignature (
-        string typeName, string key, string[] fragmentTypes, string returnFragmentType, string methodName, string[] parameterTypes)
+        string typeName, string key, string[] fragmentTypes, string returnFragmentType, string methodName, string[] parameterTypes, bool isGenerator)
     {
       if (_fragmentSignatures.ContainsKey (key))
         throw new ArgumentException (
@@ -112,7 +116,7 @@ namespace InjectionCop.Config
                 methodName,
                 string.Join (", ", parameterTypes)));
     
-      _fragmentSignatures.Add (key, new FragmentSignature (fragmentTypes, returnFragmentType, false));
+      _fragmentSignatures.Add (key, new FragmentSignature (fragmentTypes, returnFragmentType, isGenerator));
     }
   }
 }

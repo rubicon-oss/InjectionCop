@@ -155,6 +155,5 @@ namespace InjectionCop.Parser.CustomInferenceRules
     {
       return _fragmentInferringMethods.Any (methodFullName => methodFullName == method.FullName);
     }
-
   }
 }

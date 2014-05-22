@@ -51,7 +51,7 @@ namespace InjectionCop.UnitTests.Config
 <Blacklist xmlns=""http://injectioncop.codeplex.com/"">
   <Assembly name=""mscorlib"">
     <Type name=""System.IO.File"">
-      <Method name=""ReadAllText"" returnFragmentType=""ReturnFragmentType"" >
+      <Method name=""ReadAllText"" returnFragmentType=""ReturnFragmentType"" fragmentGenerator=""false"" >
         <Parameter type=""System.String"" fragmentType=""ParameterFragmentType"" />
       </Method>
     </Type>
@@ -78,11 +78,11 @@ namespace InjectionCop.UnitTests.Config
 <Blacklist xmlns=""http://injectioncop.codeplex.com/"">
   <Assembly name=""AssemlbyName"">
     <Type name=""TypeName"">
-      <Method name=""MethodName"" returnFragmentType=""ReturnFragmentType"" >
+      <Method name=""MethodName"" returnFragmentType=""ReturnFragmentType"" fragmentGenerator=""false"" >
         <Parameter type=""ParameterType1"" fragmentType=""ParameterFragmentType"" />
         <Parameter type=""ParameterType2"" fragmentType=""ParameterFragmentType"" />
       </Method>
-      <Method name=""MethodName"" returnFragmentType=""ReturnFragmentType"" >
+      <Method name=""MethodName"" returnFragmentType=""ReturnFragmentType"" fragmentGenerator=""false"" >
         <Parameter type=""ParameterType1"" fragmentType=""ParameterFragmentType"" />
         <Parameter type=""ParameterType2"" fragmentType=""ParameterFragmentType"" />
       </Method>
@@ -100,10 +100,10 @@ namespace InjectionCop.UnitTests.Config
 <Blacklist xmlns=""http://injectioncop.codeplex.com/"">
   <Assembly name=""AssemlbyName"">
     <Type name=""TypeName"">
-      <Method name=""MethodName"" returnFragmentType=""ReturnFragmentType"" >
-        <Parameter type=""ParameterType1"" fragmentType=""ParameterFragmentType"" />
+      <Method name=""MethodName"" returnFragmentType=""ReturnFragmentType"" fragmentGenerator=""false"" >
+        <Parameter type=""ParameterType1"" fragmentType=""ParameterFragmentType""/>
       </Method>
-      <Method name=""MethodName"" returnFragmentType=""ReturnFragmentType"" >
+      <Method name=""MethodName"" returnFragmentType=""ReturnFragmentType"" fragmentGenerator=""false"" >
         <Parameter type=""ParameterType2"" fragmentType=""ParameterFragmentType"" />
       </Method>
     </Type>
@@ -120,7 +120,7 @@ namespace InjectionCop.UnitTests.Config
 <Blacklist xmlns=""http://injectioncop.codeplex.com/"">
   <Assembly name=""AssemlbyName"">
     <Type name=""TypeName"">
-      <Method name=""MethodName"" returnFragmentType=""ReturnFragmentType"" >
+      <Method name=""MethodName"" returnFragmentType=""ReturnFragmentType"" fragmentGenerator=""false"" >
         <Parameter type=""ParameterType1"" fragmentType=""ParameterFragmentType"" />
       </Method>
     </Type>
@@ -131,7 +131,7 @@ namespace InjectionCop.UnitTests.Config
 <Blacklist xmlns=""http://injectioncop.codeplex.com/"">
   <Assembly name=""AssemlbyName"">
     <Type name=""TypeName"">
-      <Method name=""MethodName"" returnFragmentType=""ReturnFragmentType"" >
+      <Method name=""MethodName"" returnFragmentType=""ReturnFragmentType"" fragmentGenerator=""false"" >
         <Parameter type=""ParameterType2"" fragmentType=""ParameterFragmentType"" />
       </Method>
     </Type>
@@ -164,6 +164,28 @@ namespace InjectionCop.UnitTests.Config
 <Blacklist xmlns=""http://injectioncop.codeplex.com/"">
   <InvalidElement />
 </Blacklist>");
+    }
+
+    [Test]
+    [TestCase(true)]
+    [TestCase(false)]
+    public void LoadXml_IsGenerator (bool isFragmentGenerator)
+    {
+      var configuration = new Configuration();
+
+      configuration.LoadXml(string.Format(@"<?xml version=""1.0"" encoding=""utf-8"" ?>
+<Blacklist xmlns=""http://injectioncop.codeplex.com/"">
+  <Assembly name=""AssemlbyName"">
+    <Type name=""TypeName"">
+      <Method name=""MethodName"" returnFragmentType=""ReturnFragmentType"" fragmentGenerator=""{0}"">
+        <Parameter type=""ParameterType1"" fragmentType=""ParameterFragmentType"" />
+      </Method>
+    </Type>
+  </Assembly>
+</Blacklist>", isFragmentGenerator.ToString().ToLower()));
+
+      var fragmentSignature = configuration.GetFragmentTypes("AssemlbyName", "TypeName", "MethodName", new List<string> { "ParameterType1" });
+      Assert.That (fragmentSignature.IsGenerator, Is.EqualTo(isFragmentGenerator));
     }
   }
 }

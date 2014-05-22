@@ -14,6 +14,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Linq;
 using InjectionCop.Config;
 using InjectionCop.Parser.MethodParsing;
 using InjectionCop.Parser.ProblemPipe;
@@ -31,10 +32,15 @@ namespace InjectionCop.Parser.TypeParsing
     private IBlacklistManager _blacklistManager;
     private MethodProfilingResults _methodProfilingResults;
 
-    public TypeParser ()
+    public TypeParser () : this(null)
+    {
+    }
+
+    public TypeParser (IBlacklistManager blacklistManager)
         : base ("TypeParser")
     {
       _problemFilter = new ProblemDuplicateFilter (this);
+      _blacklistManager = blacklistManager;
     }
 
     public override ProblemCollection Check (TypeNode type)
@@ -52,16 +58,31 @@ namespace InjectionCop.Parser.TypeParsing
     {
       foreach (Member member in type.Members)
       {
-        if (member is Method && !FragmentUtility.IsFragmentGenerator ((Method) member))
+
+        if (member is Method)
         {
-          Stopwatch stopwatch = new Stopwatch();
-          stopwatch.Start();
-          Method method = (Method) member;
-          Parse (method);
-          stopwatch.Stop();
-          _methodProfilingResults.Add (method.FullName, stopwatch.Elapsed);
+          var method = (Method) member;
+          var fragmentSignature = GetFragmentSignatureFromConfiguration(type, method);
+
+          if (!FragmentUtility.IsFragmentGenerator (method)
+              && (fragmentSignature == null || !fragmentSignature.IsGenerator))
+          {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            Parse (method);
+            stopwatch.Stop();
+            _methodProfilingResults.Add (method.FullName, stopwatch.Elapsed);
+          }
         }
       }
+    }
+
+    private FragmentSignature GetFragmentSignatureFromConfiguration (TypeNode type, Method method)
+    {
+      var parameterTypes = method.Parameters.Select (_ => _.Type.FullName).ToList();
+      var fragmentSignature = _blacklistManager.GetFragmentTypes (type.DeclaringModule.Name, type.FullName, method.Name.Name, parameterTypes);
+      
+      return fragmentSignature;
     }
 
     public void InitializeBlacklistManager (TypeNode type)

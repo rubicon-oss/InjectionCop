@@ -35,9 +35,11 @@ namespace InjectionCop.Parser.CustomInferenceRules
                                                        "System.String.Format(System.String,System.Object[])"
                                                    };
     
+    // TODO: test this
     public bool Analyzes (Method method)
     {
-      return false;
+      return _coveredMethods.Contains (method.FullName);
+      //return false;
     }
 
     public void Analyze (MethodCall methodCall, ISymbolTable context, List<IPreCondition> preConditions)

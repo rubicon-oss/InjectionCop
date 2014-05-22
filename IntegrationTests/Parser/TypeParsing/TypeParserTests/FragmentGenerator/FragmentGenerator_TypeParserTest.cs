@@ -13,9 +13,14 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
+using InjectionCop.Config;
+using InjectionCop.Parser.TypeParsing;
 using NUnit.Framework;
 using Microsoft.FxCop.Sdk;
 using InjectionCop.Utilities;
+using Rhino.Mocks;
+using Is = NUnit.Framework.Is;
 
 namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.FragmentGenerator
 {
@@ -51,5 +56,56 @@ namespace InjectionCop.IntegrationTests.Parser.TypeParsing.TypeParserTests.Fragm
 
       Assert.That(TestHelper.ContainsProblemID(c_InjectionCopRuleId, result), Is.False);
     }
+
+    [Test]
+    public void Check_CallsBlackLisManagerToCheckForFragmentGenerator ()
+    {
+      TypeNode sample = IntrospectionUtility.TypeNodeFactory<FragmentGeneratorSample>();
+      var blacklistManager = MockRepository.GenerateStub<IBlacklistManager>();
+      const bool isGenerator = true;
+
+      blacklistManager.Stub (
+          manager =>
+              manager.GetFragmentTypes (
+                  Arg<string>.Is.Anything,
+                  Arg<string>.Is.Anything,
+                  Arg<string>.Matches (_ => _ != "UnsafeWithoutGenerator"),
+                  Arg<IList<string>>.Is.Anything)).Return (new FragmentSignature (new string[0], "", isGenerator));
+
+      blacklistManager.Stub (_ => _.GetFragmentTypes (sample.DeclaringModule.Name, sample.FullName, "UnsafeWithoutGenerator", new string[0]))
+          .Return (new FragmentSignature (new string[0], "", isGenerator));
+
+      _typeParser = new TypeParser (blacklistManager);
+      _typeParser.BeforeAnalysis();
+      _typeParser.Check (sample);
+
+      Assert.That(TestHelper.ContainsProblemID(c_InjectionCopRuleId, _typeParser.Problems), Is.False);
+    }
+
+    [Test]
+    public void Check_BlackListDoesNotContainMethod_RaisesProblem()
+    {
+      TypeNode sample = IntrospectionUtility.TypeNodeFactory<FragmentGeneratorSample>();
+      var blacklistManager = MockRepository.GenerateStub<IBlacklistManager>();
+      const bool isGenerator = true;
+
+      blacklistManager.Stub(
+          manager =>
+              manager.GetFragmentTypes(
+                  Arg<string>.Is.Anything,
+                  Arg<string>.Is.Anything,
+                  Arg<string>.Matches(_ => _ != "UnsafeWithoutGenerator"),
+                  Arg<IList<string>>.Is.Anything)).Return(new FragmentSignature(new string[0], "", isGenerator));
+
+      blacklistManager.Stub(_ => _.GetFragmentTypes(sample.DeclaringModule.Name, sample.FullName, "UnsafeWithoutGenerator", new string[0]))
+          .Return(null);
+
+      _typeParser = new TypeParser(blacklistManager);
+      _typeParser.BeforeAnalysis();
+      _typeParser.Check(sample);
+
+      Assert.That(TestHelper.ContainsProblemID(c_InjectionCopRuleId, _typeParser.Problems), Is.True);
+    }
+
   }
 }

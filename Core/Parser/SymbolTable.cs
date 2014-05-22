@@ -1,4 +1,4 @@
-﻿// Copyright 2012 rubicon informationstechnologie gmbh
+﻿// Copyright 2013 rubicon informationstechnologie gmbh
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -87,7 +87,7 @@ namespace InjectionCop.Parser
     {
       Fragment returnFragment;
       Method calleeMethod = IntrospectionUtility.ExtractMethod (methodCall);
-      
+
       if(_customInferenceController.Infers(calleeMethod))
       {
         returnFragment = _customInferenceController.InferFragmentType (methodCall, this);
