@@ -1,4 +1,3 @@
-syntax: glob
 Core/bin/Debug/FxCopSdk.dll
 Core/bin/Debug/InjectionCop.dll
 Core/bin/Debug/InjectionCop.pdb
